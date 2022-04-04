@@ -45,13 +45,13 @@ class AdminProcessLoggerController extends \ModuleAdminController
     public $className = 'YounitedpayClasslib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel';
 
     /** @var string Associated table name */
-    public $table = 'younitedpay-prestashop_processlogger';
+    public $table = 'younitedpay_processlogger';
 
     /** @var string|false Object identifier inside the associated table */
-    public $identifier = 'id_younitedpay-prestashop_processlogger';
+    public $identifier = 'id_younitedpay_processlogger';
 
     /** @var string Default ORDER BY clause when is not defined */
-    protected $_defaultOrderBy = 'id_younitedpay-prestashop_processlogger';
+    protected $_defaultOrderBy = 'id_younitedpay_processlogger';
 
     /** @var string Default ORDER WAY clause when is not defined */
     protected $_defaultOrderWay = 'DESC';
@@ -81,7 +81,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
         ];
 
         $this->fields_list = [
-            'id_younitedpay-prestashop_processlogger' => [
+            'id_younitedpay_processlogger' => [
                 'title' => $this->module->l('ID', 'AdminProcessLoggerController'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',

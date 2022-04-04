@@ -53,8 +53,8 @@ class ProcessMonitorObjectModel extends ObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = array(
-        'table'        => 'younitedpay-prestashop_processmonitor',
-        'primary'      => 'id_younitedpay-prestashop_processmonitor',
+        'table'        => 'younitedpay_processmonitor',
+        'primary'      => 'id_younitedpay_processmonitor',
         'fields'       => array(
             'name'     => array(
                 'type'     => ObjectModel::TYPE_STRING,

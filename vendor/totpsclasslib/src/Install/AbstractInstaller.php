@@ -264,7 +264,7 @@ abstract class AbstractInstaller
             if (in_array($parentClassName, $defaultTabLevel1) && version_compare(_PS_VERSION_, '1.7', '<')) {
                 continue;
             }
-            if ($tabData['class_name'] == 'younitedpay-prestashop' && version_compare(_PS_VERSION_, '1.7', '<')) {
+            if ($tabData['class_name'] == 'younitedpay' && version_compare(_PS_VERSION_, '1.7', '<')) {
                 $parentClassName = 'AdminParentModulesSf';
                 $tabData['parent_class_name'] = 'AdminParentModulesSf';
                 $tabData['visible'] = true;

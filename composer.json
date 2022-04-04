@@ -41,7 +41,7 @@
         ]
     },
     "scripts": {
-        "pre-autoload-dump": "if [ ${TOTPSCLASSLIB_DEV_PATH} ]; then php ${TOTPSCLASSLIB_DEV_PATH}/classlib/refresh.php .; find  ./vendor/totpsclasslib -name '*.php' -print0 | xargs -0  sed -ri -e 's!Younitedpay-prestashop!Younitedpay!g'; find  ./vendor/composer -name '*.php' -print0 | xargs -0  sed -ri -e 's!Younitedpay-prestashop!Younitedpay!g' ; rm ./controllers/admin/AdminYounitedpay-prestashopProcessLogger.php ; fi"
+        "pre-autoload-dump": "if [ ${TOTPSCLASSLIB_DEV_PATH} ]; then php ${TOTPSCLASSLIB_DEV_PATH}/classlib/refresh.php .; find  ./vendor/totpsclasslib -name '*.php' -print0 | xargs -0  sed -ri -e 's!ounitedpay-prestashop!ounitedpay!g'; find  ./vendor/composer -name '*.php' -print0 | xargs -0  sed -ri -e 's!ounitedpay-prestashop!ounitedpay!g' ; rm ./controllers/admin/AdminYounitedpay-prestashopProcessLogger.php ; fi"
     },
     "type": "prestashop-module",
     "author": "PrestaShop"

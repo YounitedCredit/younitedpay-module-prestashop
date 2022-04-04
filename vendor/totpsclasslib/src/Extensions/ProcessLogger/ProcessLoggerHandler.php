@@ -198,7 +198,7 @@ class ProcessLoggerHandler
             );
 
             $result = Db::getInstance()->insert(
-                'younitedpay-prestashop_processlogger',
+                'younitedpay_processlogger',
                 self::$logs
             );
 
@@ -217,7 +217,7 @@ class ProcessLoggerHandler
     {
         if (self::isAutoErasingEnabled()) {
             return Db::getInstance()->delete(
-                'younitedpay-prestashop_processlogger',
+                'younitedpay_processlogger',
                 sprintf(
                     'date_add <= NOW() - INTERVAL %d DAY',
                     self::getAutoErasingDelayInDays()

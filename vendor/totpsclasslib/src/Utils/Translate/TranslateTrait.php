@@ -45,7 +45,7 @@ trait TranslateTrait
             $class = $this->getClassShortName();
         }
 
-        return Translate::getModuleTranslation('younitedpay-prestashop', $textToTranslate, $class);
+        return Translate::getModuleTranslation('younitedpay', $textToTranslate, $class);
     }
 
     /**

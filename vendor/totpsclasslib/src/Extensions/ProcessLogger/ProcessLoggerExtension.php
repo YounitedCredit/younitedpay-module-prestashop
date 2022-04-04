@@ -42,7 +42,7 @@ class ProcessLoggerExtension extends AbstractModuleExtension
                 'fr' => 'Logger Younitedpay',
             ],
             'class_name' => 'AdminYounitedpayProcessLogger',
-            'parent_class_name' => 'younitedpay-prestashop',
+            'parent_class_name' => 'younitedpay',
             'visible' => true,
         ],
     ];

@@ -45,13 +45,13 @@ class DbTableDefinitionRelation
     protected $id;
 
     /**
-     * @var younitedpay-prestashopObjectModelDefinition
+     * @var younitedpayObjectModelDefinition
      */
     protected $def;
 
     /**
-     * Register younitedpay-prestashopObjectModelDefinition and the internal ID
-     * @param younitedpay-prestashopObjectModelDefinition $def
+     * Register younitedpayObjectModelDefinition and the internal ID
+     * @param younitedpayObjectModelDefinition $def
      * @param string                $id
      */
     public function __construct($def, $id)
@@ -61,7 +61,7 @@ class DbTableDefinitionRelation
     }
 
     /**
-     * Get key value from younitedpay-prestashopObjectModel::$definition['associations'][$this->id]
+     * Get key value from younitedpayObjectModel::$definition['associations'][$this->id]
      * @param string $key
      * @return array|null
      */

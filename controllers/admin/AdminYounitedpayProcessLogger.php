@@ -24,7 +24,7 @@
  * @version   release/2.3.1
  */
 
-use YounitedpayClasslib\Extensions\ProcessLogger\Controllers\AdminProcessLoggerController;
+use YounitedpayClasslib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
 
 class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerController
 {

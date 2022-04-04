@@ -72,7 +72,7 @@ class Younitedpay extends PaymentModule
                 'fr' => 'Younited',
             ],
             'class_name' => 'AdminYounitedParentMain',
-            'parent_class_name' => 'payment_gateways',
+            'parent_class_name' => 'CONFIGURE',
             'visible' => false,
         ],
         [
@@ -82,7 +82,7 @@ class Younitedpay extends PaymentModule
             ],
             'class_name' => 'AdminYounitedParent',
             'parent_class_name' => 'AdminYounitedParentMain',
-            'visible' => true,
+            'visible' => false,
         ],
         [
             'name' => [
@@ -107,7 +107,7 @@ class Younitedpay extends PaymentModule
                 'en' => 'FAQ',
                 'fr' => 'FAQ',
             ],
-            'class_name' => 'AdminYounitepayHelp',
+            'class_name' => 'AdminYounitedpayHelp',
             'parent_class_name' => 'AdminYounitedParent',
             'visible' => true,
         ],

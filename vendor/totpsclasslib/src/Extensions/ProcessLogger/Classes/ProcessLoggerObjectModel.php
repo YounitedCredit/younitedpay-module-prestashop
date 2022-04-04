@@ -57,8 +57,8 @@ class ProcessLoggerObjectModel extends ObjectModel
      * @see \ObjectModel::$definition
      */
     public static $definition = [
-        'table' => 'younitedpay-prestashop_processlogger',
-        'primary' => 'id_younitedpay-prestashop_processlogger',
+        'table' => 'younitedpay_processlogger',
+        'primary' => 'id_younitedpay_processlogger',
         'fields' => [
             'name' => [
                 'type' => ObjectModel::TYPE_STRING,
