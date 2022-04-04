@@ -1,0 +1,6 @@
+services:
+  younitedpay:
+    class: 'Younitedpay'
+    factory: ['Module', 'getInstanceByName']
+    arguments:
+      - 'younitedpay'

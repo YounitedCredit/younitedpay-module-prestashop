@@ -1,0 +1,13 @@
+/nbproject
+
+/202/build
+/config*.xml
+#/composer.json
+/.project
+/node_modules
+.php_cs.cache
+/*.log
+
+# Vendors (keep 202 !)
+/vendor/*
+!/vendor/totpsclasslib

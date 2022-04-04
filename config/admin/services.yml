@@ -1,0 +1,5 @@
+services:
+  YounitedpayAddon\Service\ConfigService:
+    class: 'YounitedpayAddon\Service\ConfigService'
+    arguments:
+      # - '@younitedpay'
