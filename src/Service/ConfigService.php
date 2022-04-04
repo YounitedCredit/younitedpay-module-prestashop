@@ -51,11 +51,10 @@ class ConfigService
     protected $requestFactory;
 
     public function __construct(
-        // ProcessLoggerHandler $logger,
-        // \PaymentModule $module
+        ProcessLoggerHandler $logger
     ) {
         $this->module = \Module::getInstanceByName('younitedpay');
-        // $this->logger = $logger;
+        $this->logger = $logger;
         $this->context = \Context::getContext();
     }
 
@@ -82,14 +81,14 @@ class ConfigService
                 $return['error_message'] = curl_error($curl);
             }
 
-            // $this->logger->openLogger();
-            // $this->logger->logError(
-            //     $return['error_message'],
-            //     (new \ReflectionClass($this))->getShortName(),
-            //     null,
-            //     'configuration - TLS test'
-            // );
-            // $this->logger->closeLogger();
+            $this->logger->openLogger();
+            $this->logger->logError(
+                $return['error_message'],
+                (new \ReflectionClass($this))->getShortName(),
+                null,
+                'configuration - TLS test'
+            );
+            $this->logger->closeLogger();
 
             $return['error_message'] = $this->module->l('TLS call failed');
         } else {

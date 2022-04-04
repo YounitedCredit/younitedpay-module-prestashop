@@ -1,5 +1,8 @@
 services:
+  YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler:
+    class: 'YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+
   YounitedpayAddon\Service\ConfigService:
     class: 'YounitedpayAddon\Service\ConfigService'
     arguments:
-      # - '@younitedpay'
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
