@@ -22,6 +22,7 @@ namespace YounitedpayAddon\Logger;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Younitedpay;
 
 class ApiLogger
 {
@@ -35,6 +36,8 @@ class ApiLogger
 
     private $stream;
 
+    public $module;
+
     /**
      * @var Logger
      */
@@ -42,7 +45,8 @@ class ApiLogger
 
     protected function __construct()
     {
-        $this->logname = 'bridge-' . date('Ymd') . '.log';
+        $this->module = \Module::getInstanceByName('younitedpay');
+        $this->logname = $this->module->name . '-' . date('Ymd') . '.log';
         $this->build();
     }
 
@@ -57,7 +61,7 @@ class ApiLogger
 
     protected function build()
     {
-        $logFile = _PS_MODULE_DIR_ . 'bridge/logs/' . $this->logname;
+        $logFile = _PS_MODULE_DIR_ . $this->module->name . '/logs/' . $this->logname;
         if (!is_dir(dirname($logFile))) {
             mkdir(dirname($logFile));
         }
@@ -71,14 +75,22 @@ class ApiLogger
         $this->logger = new Logger(self::LOGGER_NAME, [new StreamHandler($this->stream)]);
     }
 
-    public function logRequest($requestObject, $data)
+    public function log($object, $data, $type = 'Error', $isObject = false)
     {
-        $this->logger->addInfo((new \ReflectionClass($requestObject))->getShortName() . '; Data: ' . $data);
+        if (Younitedpay::IS_FILE_LOGGER_ACTIVE === false) {
+            return true;
+        }
+
+        if ($isObject === true) {
+            $data = json_encode($data);
+        }
+
+        $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $data);
     }
 
-    public function logResponse($responseObject, $data)
+    private function getClass($object)
     {
-        $this->logger->addInfo((new \ReflectionClass($responseObject))->getShortName() . '; Data: ' . json_encode($data));
+        return (new \ReflectionClass($object))->getShortName();
     }
 
     public static function getInstance()

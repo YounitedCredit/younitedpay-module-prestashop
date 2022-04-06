@@ -23,12 +23,22 @@
         "psr-4": {
             "YounitedpayClasslib\\": "vendor/totpsclasslib/src/",
             "YounitedpayAddon\\": "src/",
+            "YounitedPaySDK\\": "vendor/younitedpaysdk/src/",
             "Tests\\": "202/tests/"
-        }
+        },
+        "classmap": [
+            "controllers/",
+            "younitedpay.php"
+        ],
+        "files": [],
+        "exclude-from-classmap": [
+            "vendor/symfony/polyfill-php80/Resources/stubs/Attribute.php"
+        ]
     },
     "autoload": {
         "psr-4": {
             "YounitedpayClasslib\\": "vendor/totpsclasslib/src/",
+            "YounitedPaySDK\\": "vendor/younitedpaysdk/src/",
             "YounitedpayAddon\\": "src/"
         },
         "classmap": [

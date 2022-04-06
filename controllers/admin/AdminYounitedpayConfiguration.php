@@ -45,7 +45,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $webHookSecret;
 
     /** @var string */
-    public $productionMode;
+    public $isProductionMode;
 
     /**
      * @see AdminController::initPageHeaderToolbar()
@@ -66,11 +66,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     public function initContent()
     {
-        $cookieBridgeSave = Context::getContext()->cookie->__get('younitedsave');
+        $cookieBridgeSave = Context::getContext()->cookie->__get('younitedpaysave');
         if ($cookieBridgeSave == 'ok') {
             $this->confirmations[] = $this->module->l('Successful update.');
         }
-        Context::getContext()->cookie->__unset('younitedsave', '');
+        Context::getContext()->cookie->__unset('younitedpaysave', '');
 
         $this->content .= $this->renderConfiguration();
         parent::initContent();
@@ -93,14 +93,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $idShop,
             Tools::getValue('client_secret', '')
         );
-        $this->productionMode = (bool) Configuration::get(
+        $this->isProductionMode = (bool) Configuration::get(
             Younitedpay::PRODUCTION_MODE,
             null,
             null,
             $idShop,
             Tools::getValue('production_mode', false)
         );
-        $this->productionMode = (bool) Configuration::get(
+        $this->webHookSecret = (bool) Configuration::get(
             Younitedpay::WEBHOOK_SECRET,
             null,
             null,
@@ -117,7 +117,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_ALL) {
             $tplFile = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/configuration/multishop-and-not-selected.tpl';
             $tplVars = [
-                'bridge_imgfile' => $this->getImgNotSelected(),
+                'younitedpay_imgfile' => $this->getImgNotSelected(),
             ];
         } else {
             $urlWebhook = Context::getContext()->link->getModuleLink(
@@ -135,11 +135,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             ];
 
             Media::addJsDef([
-                'bridge' => [
+                'younitedpay' => [
                     'translations' => [
                         'copy_link_webhook' => $this->module->l(
                             'WebHook URL sent to clipboard',
-                            'AdminBridgeConfiguration'
+                            'AdminYounitedpayConfiguration'
                         ),
                     ],
                 ],
@@ -179,6 +179,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         : $this->module->l('SSL not enabled on all the shop');
         $infoSSLTLS .= $tlsCallCurl['error_message'] !== '' ? ' - ' . $tlsCallCurl['error_message'] : '';
 
+        $isApiConnected = $configService->isApiConnected();
+
         return [
             [
                 'name' => 'CURL',
@@ -191,9 +193,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'ok' => $versionOpenSSL !== -1 && $sslActivated === true && $tlsCallCurl['status'],
             ],
             [
+                'name' => $this->module->l('Connected to API'),
+                'info' => $isApiConnected['message'],
+                'ok' => (bool) $isApiConnected['status'],
+            ],
+            [
                 'name' => $this->module->l('Production environment'),
                 'info' => '',
-                'ok' => (bool) $this->productionMode,
+                'ok' => (bool) $this->isProductionMode,
             ],
         ];
     }
@@ -225,11 +232,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         if ($isSubmitted) {
             if (empty($this->_errors) === true) {
-                Context::getContext()->cookie->__set('younitedsave', 'ok');
+                Context::getContext()->cookie->__set('younitedpaysave', 'ok');
             } else {
-                Context::getContext()->cookie->__set('younitedsave', 'error');
+                Context::getContext()->cookie->__set('younitedpaysave', 'error');
             }
-            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminBridgeConfiguration'));
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminYounitedpayConfiguration'));
         }
     }
 
@@ -267,8 +274,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         );
 
         return [
-            'url_form_config' => $this->context->link->getAdminLink('AdminBridgeConfiguration'),
-            'production_mode' => $this->productionMode,
+            'url_form_config' => $this->context->link->getAdminLink('AdminYounitedpayConfiguration'),
+            'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
             'webhook_secret' => $this->webHookSecret,

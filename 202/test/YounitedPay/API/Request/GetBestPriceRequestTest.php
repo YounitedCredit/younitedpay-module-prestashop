@@ -17,7 +17,24 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-require_once __DIR__ . '../../../vendor/autoload.php';
-require_once __DIR__ . '/YounitedPay/YounitedTests.php';
-require_once __DIR__ . '/../younitedpaysdk/vendor/autoload.php';
-require_once __DIR__ . '/YounitedPay/MockProxy.php';
+
+namespace YounitedpayAddon\API\Request;
+
+use YounitedpayAddon\YounitedTests;
+use YounitedPaySDK\Response\BestPriceResponse;
+
+require_once __DIR__ . '../../../../bootstrap.php';
+
+class GetBestPriceRequestTest extends YounitedTests
+{
+    public function testGetPaymentValidRequest()
+    {
+        $response = $this->client->getBestPrice(149);
+        $this->assertNotNull($response);
+        $this->assertNotEmpty($response);
+        $this->assertInstanceOf(BestPriceResponse::class, $response);
+
+        $this->assertInstanceOf(ArrayCollection::class, $response->getModel());
+        $this->assertNotEmpty($response->getModel());
+    }
+}

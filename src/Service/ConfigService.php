@@ -20,14 +20,10 @@
 
 namespace YounitedpayAddon\Service;
 
-use YounitedpayAddon\API\Client\Client;
-use YounitedpayAddon\API\Factory\RequestFactory;
+use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Configuration;
-use Exception;
-use Younited;
-use Younitedpay;
 
 class ConfigService
 {
@@ -35,20 +31,11 @@ class ConfigService
 
     private $curl;
 
+    /** @var \Context */
     private $context;
 
     /** @var ProcessLoggerHandler */
     protected $logger;
-
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @var RequestFactory
-     */
-    protected $requestFactory;
 
     public function __construct(
         ProcessLoggerHandler $logger
@@ -98,6 +85,32 @@ class ConfigService
         return $return;
     }
 
+    public function isApiConnected()
+    {
+        $client = new YounitedClient($this->context->shop->id, $this->logger);
+        if ($client->isCrendentialsSet() === false) {
+            return [
+                'message' => $this->module->l('No credential saved'),
+                'status' => false
+            ];
+        }
+
+        /** @var BestPriceResponse $response */
+        $response = $client->getBestPrice(50);
+
+        if (empty($response) === true || null === $response) {
+            return [
+                'message' => $this->module->l('Response error'),
+                'status' => false
+            ];
+        }
+
+        return [
+            'message' => $this->module->l('Connexion Ok'),
+            'status' => false
+        ];
+    }
+
     public function callCURL($url)
     {
         if (defined('CURL_SSLVERSION_TLSv1_2') == false) {
@@ -115,8 +128,8 @@ class ConfigService
         $this->curl = $curl;
 
         $apiLogger = ApiLogger::getInstance();
-        if (\Bridge::IS_FILE_LOGGER_ACTIVE === true) {
-            $apiLogger->logResponse($this, $response);
+        if (\Younitedpay::IS_FILE_LOGGER_ACTIVE === true) {
+            $apiLogger->log($this, $response, 'Response', false);
         }
 
         return $response;
