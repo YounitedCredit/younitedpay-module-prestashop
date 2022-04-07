@@ -25,9 +25,27 @@ class HookFrontProduct extends AbstractHook
 {
     const AVAILABLE_HOOKS = [
         'displayProductPriceBlock',
+        'displayAfterProductThumbs',
+        'displayProductAdditionalInfo',
+        'displayReassurance',
     ];
 
     public function displayProductPriceBlock($params)
+    {
+
+    }
+
+    public function displayAfterProductThumbs($params)
+    {
+
+    }
+
+    public function displayProductAdditionalInfo($params)
+    {
+
+    }
+
+    public function displayReassurance($params)
     {
 
     }
