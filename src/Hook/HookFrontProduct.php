@@ -19,6 +19,8 @@
 
 namespace YounitedpayAddon\Hook;
 
+use Younitedpay;
+use Media;
 use YounitedpayClasslib\Hook\AbstractHook;
 
 class HookFrontProduct extends AbstractHook
@@ -32,21 +34,58 @@ class HookFrontProduct extends AbstractHook
 
     public function displayProductPriceBlock($params)
     {
-
+        $this->displaySelectedHook($params, 'displayProductPriceBlock');
     }
 
     public function displayAfterProductThumbs($params)
     {
-
+        $this->displaySelectedHook($params, 'displayAfterProductThumbs');
     }
 
     public function displayProductAdditionalInfo($params)
     {
-
+        $this->displaySelectedHook($params, 'displayProductAdditionalInfo');
     }
 
     public function displayReassurance($params)
     {
+        $this->displaySelectedHook($params, 'displayReassurance');
+    }
 
+    private function displaySelectedHook($params, $currentHook)
+    {
+        $context = \Context::getContext();
+        $hookConfiguration = $context->smarty->__get('younitedpay_hook');
+        if ($hookConfiguration === null) {
+            $hookConfiguration = \Configuration::get(Younitedpay::FRONT_HOOK);  
+            $context->smarty->assign(
+                ['younitedpay_hook' => $hookConfiguration]
+            );  
+        }
+        
+        if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook) {
+            return '';
+        }
+        
+        $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name / '/views/js/front/younitedpay_product.js';
+
+        $context->smarty->assign(
+            ['younitedpay_script' => $frontScriptURI]
+        );
+
+        $frontModuleLink = $context->link->getModuleLink(
+            $this->module->name,
+            'younitedpayproduct'            
+        );
+
+        $idProduct = $params['id_product'];
+        $product = new \Product($idProduct);
+
+        Media::addJsDef([
+            'younited_product_url' => $frontModuleLink,
+            'younited_product_price' => $product->getPrice()
+        ]);
+
+        $context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/template/front/credit_infos.tpl');
     }
 }

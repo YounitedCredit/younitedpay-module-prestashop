@@ -1,4 +1,6 @@
-{**
+<?php
+
+/**
  * Copyright Younited
  *
  * NOTICE OF LICENSE
@@ -14,8 +16,11 @@
  * @author    202 ecommerce <tech@202-ecommerce.com>
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
- *}
+ */
+use YounitedpayAddon\Utils\ServiceContainer;
 
- {include file='./status-and-headers.tpl' specifications=$config_check}
-
- {include file='./configuration.tpl' configuration=$configuration}
+class BridgeSuccessModuleFrontController extends ModuleFrontController
+{
+    /** @var \PaymentModule */
+    public $module;
+}

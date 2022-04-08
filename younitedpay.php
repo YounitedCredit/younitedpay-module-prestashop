@@ -176,6 +176,7 @@ class Younitedpay extends PaymentModule
         $orderDelivered = Configuration::get('PS_OS_DELIVERED');
 
         Configuration::updateGlobalValue(self::ORDER_STATE_DELIVERED, $orderDelivered);
+        Configuration::updateGlobalValue(self::FRONT_HOOK, 'disabled');
 
         $bridgeInitialiser = new ModuleInitialiser();
         $bridgeInitialiser->addIndexes();
@@ -185,7 +186,7 @@ class Younitedpay extends PaymentModule
 
     public function uninstall()
     {
-        return Module::uninstall();
+        return $this->pmUninstall();
     }
 
     public function addRadioCurrencyRestrictionsForModule(array $shops = [])

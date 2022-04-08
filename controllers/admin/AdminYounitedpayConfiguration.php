@@ -33,7 +33,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $table = 'configuration';
 
     /** @var string Associated table name */
-    public $bootstrap = true;
+    public $bootstrap = false;
 
     /** @var string */
     public $clientID;
@@ -46,6 +46,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     /** @var string */
     public $isProductionMode;
+
+    /** @var ConfigService */
+    public $configService;    
 
     /**
      * @see AdminController::initPageHeaderToolbar()
@@ -70,7 +73,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         if ($cookieBridgeSave == 'ok') {
             $this->confirmations[] = $this->module->l('Successful update.');
         }
-        Context::getContext()->cookie->__unset('younitedpaysave', '');
+        Context::getContext()->cookie->__unset('younitedpaysave', '');                
+
+        /** @var ConfigService $configService */
+        $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
         $this->content .= $this->renderConfiguration();
         parent::initContent();
@@ -133,17 +139,6 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
             ];
-
-            Media::addJsDef([
-                'younitedpay' => [
-                    'translations' => [
-                        'copy_link_webhook' => $this->module->l(
-                            'WebHook URL sent to clipboard',
-                            'AdminYounitedpayConfiguration'
-                        ),
-                    ],
-                ],
-            ]);
         }
 
         $tpl = Context::getContext()->smarty->createTemplate($tplFile);
@@ -165,21 +160,18 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function checkSpecifications()
     {
-        /** @var ConfigService $configService */
-        $configService = ServiceContainer::getInstance()->get(ConfigService::class);
-
         $curlInfos = curl_version();
         $versionOpenSSL = null !== OPENSSL_VERSION_NUMBER ? OPENSSL_VERSION_NUMBER : -1;
         $versionSSLCURL = $curlInfos !== false ? $curlInfos['version'] . ' ' . $curlInfos['ssl_version'] : '';
 
-        $sslActivated = $configService->isSslActive();
-        $tlsCallCurl = $configService->isTlsActive();
+        $sslActivated = $this->configService->isSslActive();
+        $tlsCallCurl = $this->configService->isTlsActive();
         $infoSSLTLS = $versionOpenSSL !== -1 && $sslActivated === true
         ? $this->module->l('SSL enabled')
         : $this->module->l('SSL not enabled on all the shop');
         $infoSSLTLS .= $tlsCallCurl['error_message'] !== '' ? ' - ' . $tlsCallCurl['error_message'] : '';
 
-        $isApiConnected = $configService->isApiConnected();
+        $isApiConnected = $this->configService->isApiConnected();
 
         return [
             [
@@ -191,6 +183,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'name' => 'SSL & TLS v1.2',
                 'info' => $infoSSLTLS,
                 'ok' => $versionOpenSSL !== -1 && $sslActivated === true && $tlsCallCurl['status'],
+            ],
+            [
+                'name' => $this->module->l('Encrypt functions'),
+                'info' => '',
+                'ok' => (bool) function_exists('hash_hmac'),
             ],
             [
                 'name' => $this->module->l('Connected to API'),
@@ -217,6 +214,35 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         }, $orderStates);
     }
 
+    protected function getDefaultMaturities()
+    {
+        return [
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 3,
+                'minimum' => 150,
+                'maximum' => 0,
+                'currency' => 'EUR',
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 10,
+                'minimum' => 3000,
+                'maximum' => 9000,
+                'currency' => 'EUR',
+            ],
+        ];
+    }
+
+    protected function getAllMaturities()
+    {
+        $allMaturities = $this->configService->getAllMaturities();
+
+        return empty($allMaturities) === false ? $allMaturities : $this->getDefaultMaturities();
+    }
+
     public function postProcess()
     {
         $idShop = $this->context->shop->id;
@@ -228,6 +254,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         } elseif (Tools::isSubmit('states_submit')) {
             $this->postStateSubmit($idShop);
             $isSubmitted = true;
+        } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
+            $this->ajaxDie($this->postAddNewMaturity($idShop));
+            return;
         }
 
         if ($isSubmitted) {
@@ -238,6 +267,24 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             }
             Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminYounitedpayConfiguration'));
         }
+    }
+
+    protected function postAddNewMaturity($idShop)
+    {
+        $this->context->smarty->assign([
+            'key' => Tools::getValue('younitedpay_maturities', 0),
+            'maturity' => [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $idShop,
+                'maturity' => 3,
+                'minimum' => 150,
+                'maximum' => 0,
+                'currency' => 'EUR',
+            ],
+        ]);
+        
+        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/configuration/maturity.tpl';
+        return $this->context->smarty->fetch($template);
     }
 
     protected function postAccountSubmit($idShop)
@@ -255,7 +302,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     protected function postStateSubmit($idShop)
     {
         $deliveredStatus = Tools::getValue('delivered_status');
+        $frontHook = Tools::getValue('front_hook');
+        $maturities = Tools::getValue('maturity');               
+
+        /** @var ConfigService $configService */
+        $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
+
+        // $this->configService->saveAllMaturities($maturities, $this->context->shop->id);
         Configuration::updateValue(Younitedpay::ORDER_STATE_DELIVERED, $deliveredStatus, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
+
     }
 
     protected function getConfigurationVariables()
@@ -273,14 +329,40 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $defaultdelivered
         );
 
+        $frontHook = Configuration::get(
+            Younitedpay::FRONT_HOOK,
+            null,
+            null,
+            $idShop,
+            'disabled'
+        );
+
+        $allMaturities = $this->getAllMaturities();
+        $urlFormConfig = $this->context->link->getAdminLink('AdminYounitedpayConfiguration');
+        
+        Media::addJsDef([
+            'younitedpay' => [
+                'maturities' => count($allMaturities) + 1,
+                'admin_url' => $urlFormConfig,
+                'translations' => [
+                    'copy_link_webhook' => $this->module->l(
+                        'WebHook URL sent to clipboard',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                ],
+            ]
+        ]);
+
         return [
-            'url_form_config' => $this->context->link->getAdminLink('AdminYounitedpayConfiguration'),
+            'url_form_config' => $urlFormConfig,
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
             'webhook_secret' => $this->webHookSecret,
             'order_states' => $this->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
+            'front_hook' => Tools::getValue('front_hook', $frontHook),
+            'maturities' => $allMaturities,
         ];
     }
 }

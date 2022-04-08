@@ -22,8 +22,10 @@ namespace YounitedpayAddon\Service;
 
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
+use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Configuration;
+use YounitedpayAddon\Entity\YounitedPayAvailability;
 
 class ConfigService
 {
@@ -37,12 +39,17 @@ class ConfigService
     /** @var ProcessLoggerHandler */
     protected $logger;
 
+    /** @var ConfigRepository */
+    protected $configRepository;
+
     public function __construct(
-        ProcessLoggerHandler $logger
+        ProcessLoggerHandler $logger,
+        ConfigRepository $configRepository
     ) {
         $this->module = \Module::getInstanceByName('younitedpay');
         $this->logger = $logger;
         $this->context = \Context::getContext();
+        $this->configRepository = $configRepository;
     }
 
     /**
@@ -95,10 +102,10 @@ class ConfigService
             ];
         }
 
-        /** @var BestPriceResponse $response */
-        $response = $client->getBestPrice(50);
+        /** @var array $response */
+        $response = $client->getBestPrice(150);
 
-        if (empty($response) === true || null === $response) {
+        if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
                 'message' => $this->module->l('Response error'),
                 'status' => false
@@ -107,7 +114,7 @@ class ConfigService
 
         return [
             'message' => $this->module->l('Connexion Ok'),
-            'status' => false
+            'status' => true
         ];
     }
 
@@ -138,5 +145,20 @@ class ConfigService
     public function isSslActive()
     {
         return Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+    }
+
+    public function getAllMaturities()
+    {
+        return $this->configRepository->getAllMaturities();
+    }
+
+    /**
+     * Save maturities from configuration
+     * @param array $maturities
+     * @param int $idShop
+     */
+    public function saveAllMaturities($maturities, $idShop)
+    {
+        $this->configRepository->saveAllMaturities($maturities, $idShop);
     }
 }

@@ -72,7 +72,7 @@ class YounitedClient
      }
 
     /**
-     * @return BestPriceResponse
+     * @return array
      */
     public function getBestPrice($amount)
     {
@@ -80,14 +80,16 @@ class YounitedClient
         $client = new Client();
         try {
             $body = new BestPrice();
-            $body->setBorrowedAmount($amount);
+            $body->setBorrowedAmount($amount);   
     
-            $request = (new BestPriceRequest())
+            if ($this->isProductionMode === false) {                
+                $request = (new BestPriceRequest())
+                ->enableSanbox()
                 ->setModel($body);
-    
-            if ($this->isProductionMode === false) {
-                $request->enableSanbox();
-            }        
+            } else {           
+                $request = (new BestPriceRequest())
+                ->setModel($body);
+            }
             
             $this->apiLogger->log($this, $request, 'Request', true);
 
@@ -98,8 +100,15 @@ class YounitedClient
             $this->apiLogger->log($this, $response, 'Response', true);
 
             if ($response->getStatusCode() === 200) {
-                var_dump($response->getModel());
+                return [
+                    'message' => $response->getBody(),
+                    'success' => true
+                ];
             }
+            return [
+                'message' => $response->getReasonPhrase(),
+                'success' => false
+            ];
         } catch (Exception $e) {    
             $this->logger->logError(
                 sprintf($e->getMessage()),

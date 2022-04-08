@@ -2,7 +2,11 @@ services:
   YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler:
     class: 'YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
 
+  YounitedpayAddon\Repository\ConfigRepository:
+    class: 'YounitedpayAddon\Repository\ConfigRepository'
+
   YounitedpayAddon\Service\ConfigService:
     class: 'YounitedpayAddon\Service\ConfigService'
     arguments:
       - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Repository\ConfigRepository'

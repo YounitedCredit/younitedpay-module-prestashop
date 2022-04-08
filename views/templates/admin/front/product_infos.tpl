@@ -16,6 +16,5 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
 
- {include file='./status-and-headers.tpl' specifications=$config_check}
-
- {include file='./configuration.tpl' configuration=$configuration}
+<script async type="text/javascript" src="{$younitedpay_script}"></script>
+ <div id="younitedpay_product_info"></div>

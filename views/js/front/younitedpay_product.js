@@ -1,4 +1,4 @@
-{**
+/**
  * Copyright Younited
  *
  * NOTICE OF LICENSE
@@ -14,8 +14,14 @@
  * @author    202 ecommerce <tech@202-ecommerce.com>
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
- *}
+ */
 
- {include file='./status-and-headers.tpl' specifications=$config_check}
-
- {include file='./configuration.tpl' configuration=$configuration}
+function getProductDetail() {
+    jQuery.ajax({
+        url: younited_product_url,
+        method: 'POST',
+        price: younited_product_price
+    }).done(
+        // @TODO: Add template fill with Best Prices Get
+    );
+}

@@ -1,5 +1,5 @@
 {**
- * Copyright Bridge
+ * Copyright Younited
  *
  * NOTICE OF LICENSE
  *
@@ -12,13 +12,33 @@
  * to tech@202-ecommerce.com so we can send you a copy immediately.
  *
  * @author    202 ecommerce <tech@202-ecommerce.com>
- * @copyright Bridge
- * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0) 
+ * @copyright Younited
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
-<div class="younitedpayApp mb-2 pt-2">
+<div class="younitedpayApp mb-2">
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12 pr-5 pl-5">
       <div class="row justify-content-center">
+        <div class="col-sm-4 d-flex">
+            <div class="card col-sm-12 pl-2 pr-2 d-flex flex-wrap flex-row">
+              <div class="card-block justify-content-start align-items-start pb-2 d-flex flex-wrap">  
+                <h3 class="row col-xl-12 justify-content-center mt-3">
+                  Account creation / informations
+                </h3>
+                <p class="row col-xl-12">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus lacus accumsan nunc fames tempor molestie mi, mattis erat. Mauris sit curabitur lectus aliquet quis.
+                </p>
+                <p class="row col-xl-12">
+                  Risus dictumst nunc maecenas quisque tellus sit metus. Venenatis, aliquam ac id quisque quis ultricies nec pretium.
+                </p>
+                <div class="col-xl-12 d-flex flex-wrap justify-content-end align-items-end">
+                    <button class="btn btn-lg btn-primary" type="submit">
+                        {l s='More informations' mod='younitedpay'}
+                    </button>
+                </div>
+              </div>
+            </div>
+          </div>
         <div class="col-sm-4">
           <svg width="386" height="292" viewBox="0 0 386 292" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="385" height="291" fill="#C4C4C4"/>
@@ -73,7 +93,7 @@
     </div> {* sm-12 *}
   </div> {* row *}  
   <div class="row mt-2">
-    <div class="col-sm-12">
+    <div class="col-sm-12 pr-5 pl-5">
       <div class="row justify-content-center">      
         <div class="col-xl-12">   
           <div class="card">
