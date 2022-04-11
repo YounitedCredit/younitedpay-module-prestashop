@@ -17,8 +17,6 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-use YounitedpayAddon\Utils\ServiceContainer;
-
 class BridgeSuccessModuleFrontController extends ModuleFrontController
 {
     /** @var \PaymentModule */

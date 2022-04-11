@@ -19,10 +19,10 @@
 
 namespace YounitedpayAddon;
 
-use YounitedpayAddon\API\YounitedClient;
-use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use YounitedpayAddon\API\YounitedClient;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 abstract class YounitedTests extends TestCase
 {
@@ -52,7 +52,7 @@ abstract class YounitedTests extends TestCase
             'production_mode' => false,
             'webhook_secret' => 'my-webhook-secret',
         ];
-        
+
         $secretFile = __DIR__ . 'YounitedPayAuth.php';
         if (is_file($secretFile) === true) {
             require $secretFile;

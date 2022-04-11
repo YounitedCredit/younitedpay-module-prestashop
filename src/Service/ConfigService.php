@@ -20,12 +20,11 @@
 
 namespace YounitedpayAddon\Service;
 
+use Configuration;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use Configuration;
-use YounitedpayAddon\Entity\YounitedPayAvailability;
 
 class ConfigService
 {
@@ -98,7 +97,7 @@ class ConfigService
         if ($client->isCrendentialsSet() === false) {
             return [
                 'message' => $this->module->l('No credential saved'),
-                'status' => false
+                'status' => false,
             ];
         }
 
@@ -108,13 +107,13 @@ class ConfigService
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
                 'message' => $this->module->l('Response error'),
-                'status' => false
+                'status' => false,
             ];
         }
 
         return [
             'message' => $this->module->l('Connexion Ok'),
-            'status' => true
+            'status' => true,
         ];
     }
 
@@ -154,6 +153,7 @@ class ConfigService
 
     /**
      * Save maturities from configuration
+     *
      * @param array $maturities
      * @param int $idShop
      */

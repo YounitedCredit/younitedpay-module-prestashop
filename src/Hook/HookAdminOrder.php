@@ -34,7 +34,6 @@ class HookAdminOrder extends AbstractHook
 
     public function displayAdminOrderTabOrder($params)
     {
-
     }
 
     public function displayAdminOrderTabLink($params)
@@ -44,7 +43,6 @@ class HookAdminOrder extends AbstractHook
 
     public function displayAdminOrderContentOrder($params)
     {
-
     }
 
     public function displayAdminOrderTabContent($params)
@@ -54,11 +52,9 @@ class HookAdminOrder extends AbstractHook
 
     public function actionOrderStatusPostUpdate($params)
     {
-
     }
 
     public function actionValidateOrder($params)
     {
-
     }
 }

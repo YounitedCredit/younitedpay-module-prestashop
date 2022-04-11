@@ -19,8 +19,8 @@
 
 namespace YounitedpayAddon\Hook;
 
-use Younitedpay;
 use Media;
+use Younitedpay;
 use YounitedpayClasslib\Hook\AbstractHook;
 
 class HookFrontProduct extends AbstractHook
@@ -57,16 +57,16 @@ class HookFrontProduct extends AbstractHook
         $context = \Context::getContext();
         $hookConfiguration = $context->smarty->__get('younitedpay_hook');
         if ($hookConfiguration === null) {
-            $hookConfiguration = \Configuration::get(Younitedpay::FRONT_HOOK);  
+            $hookConfiguration = \Configuration::get(Younitedpay::FRONT_HOOK);
             $context->smarty->assign(
                 ['younitedpay_hook' => $hookConfiguration]
-            );  
+            );
         }
-        
+
         if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook) {
             return '';
         }
-        
+
         $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name / '/views/js/front/younitedpay_product.js';
 
         $context->smarty->assign(
@@ -75,7 +75,7 @@ class HookFrontProduct extends AbstractHook
 
         $frontModuleLink = $context->link->getModuleLink(
             $this->module->name,
-            'younitedpayproduct'            
+            'younitedpayproduct'
         );
 
         $idProduct = $params['id_product'];
@@ -83,7 +83,7 @@ class HookFrontProduct extends AbstractHook
 
         Media::addJsDef([
             'younited_product_url' => $frontModuleLink,
-            'younited_product_price' => $product->getPrice()
+            'younited_product_price' => $product->getPrice(),
         ]);
 
         $context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/template/front/credit_infos.tpl');

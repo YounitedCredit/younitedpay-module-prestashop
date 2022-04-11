@@ -20,8 +20,8 @@
 
 namespace YounitedpayAddon\Utils;
 
-use YounitedpayAddon\Entity\YounitedPayContract;
 use Db;
+use YounitedpayAddon\Entity\YounitedPayContract;
 
 class ModuleInitialiser
 {

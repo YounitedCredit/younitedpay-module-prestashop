@@ -48,7 +48,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $isProductionMode;
 
     /** @var ConfigService */
-    public $configService;    
+    public $configService;
 
     /**
      * @see AdminController::initPageHeaderToolbar()
@@ -73,9 +73,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         if ($cookieBridgeSave == 'ok') {
             $this->confirmations[] = $this->module->l('Successful update.');
         }
-        Context::getContext()->cookie->__unset('younitedpaysave', '');                
+        Context::getContext()->cookie->__unset('younitedpaysave', '');
 
-        /** @var ConfigService $configService */
+        /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
         $this->content .= $this->renderConfiguration();
@@ -133,12 +133,17 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                     'secure_key' => $this->module->secure_key,
                 ]
             );
+
             $tplVars = [
                 'configuration' => $this->getConfigurationVariables(),
                 'config_check' => $this->checkSpecifications(),
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
             ];
+
+            $alertHere = empty($this->confirmations) && empty($this->errors);
+
+            $tplVars['config_check']['alert'] = $alertHere !== true;
         }
 
         $tpl = Context::getContext()->smarty->createTemplate($tplFile);
@@ -256,6 +261,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
             $this->ajaxDie($this->postAddNewMaturity($idShop));
+
             return;
         }
 
@@ -282,8 +288,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'currency' => 'EUR',
             ],
         ]);
-        
+
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/configuration/maturity.tpl';
+
         return $this->context->smarty->fetch($template);
     }
 
@@ -303,15 +310,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $deliveredStatus = Tools::getValue('delivered_status');
         $frontHook = Tools::getValue('front_hook');
-        $maturities = Tools::getValue('maturity');               
+        $maturities = Tools::getValue('maturity');
 
-        /** @var ConfigService $configService */
+        /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
-        // $this->configService->saveAllMaturities($maturities, $this->context->shop->id);
+        $this->configService->saveAllMaturities($maturities, $this->context->shop->id);
         Configuration::updateValue(Younitedpay::ORDER_STATE_DELIVERED, $deliveredStatus, false, null, $idShop);
         Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
-
     }
 
     protected function getConfigurationVariables()
@@ -339,7 +345,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         $allMaturities = $this->getAllMaturities();
         $urlFormConfig = $this->context->link->getAdminLink('AdminYounitedpayConfiguration');
-        
+
         Media::addJsDef([
             'younitedpay' => [
                 'maturities' => count($allMaturities) + 1,
@@ -350,7 +356,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                         'AdminYounitedpayConfiguration'
                     ),
                 ],
-            ]
+            ],
         ]);
 
         return [

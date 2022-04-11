@@ -24,10 +24,10 @@ require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 
 use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
-use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use YounitedpayAddon\Hook\HookDispatcher;
-use YounitedpayAddon\Utils\PaymentModuleTrait;
 use YounitedpayAddon\Utils\ModuleInitialiser;
+use YounitedpayAddon\Utils\PaymentModuleTrait;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
 class Younitedpay extends PaymentModule
 {
@@ -132,7 +132,7 @@ class Younitedpay extends PaymentModule
     const PREFERRED_ISO_CODE = 'FR';
 
     const AVAILABLE_CURRENCIES = [
-        'EUR'
+        'EUR',
     ];
 
     public function __construct()

@@ -22,12 +22,12 @@ namespace YounitedpayAddon\API;
 use Configuration;
 use Exception;
 use Younitedpay;
+use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Client;
+use YounitedPaySDK\Model\BestPrice;
 use YounitedPaySDK\Request\BestPriceRequest;
 use YounitedPaySDK\Response\BestPriceResponse;
-use YounitedPaySDK\Model\BestPrice;
-use YounitedpayAddon\Logger\ApiLogger;
 
 class YounitedClient
 {
@@ -47,10 +47,10 @@ class YounitedClient
     public $apiLogger;
 
     public function __construct($idShop, ProcessLoggerHandler $logger, $testCredentials = [])
-    {        
+    {
         $this->logger = $logger;
         $this->apiLogger = ApiLogger::getInstance();
-        
+
         if (empty($testCredentials) === false) {
             return $this->testCredentials($testCredentials);
         }
@@ -59,38 +59,37 @@ class YounitedClient
     }
 
     private function testCredentials($testCredentials)
-     {
+    {
         $this->clientId = $testCredentials['client_id'];
         $this->clientSecret = $testCredentials['client_secret'];
         $this->isProductionMode = $testCredentials['production_mode'];
         $this->webHookSecret = $testCredentials['webhook_secret'];
-     }
+    }
 
-     public function isCrendentialsSet()
-     {
-         return empty($this->clientId) === false && empty($this->clientSecret) === false;
-     }
+    public function isCrendentialsSet()
+    {
+        return empty($this->clientId) === false && empty($this->clientSecret) === false;
+    }
 
     /**
      * @return array
      */
     public function getBestPrice($amount)
     {
-
         $client = new Client();
         try {
             $body = new BestPrice();
-            $body->setBorrowedAmount($amount);   
-    
-            if ($this->isProductionMode === false) {                
+            $body->setBorrowedAmount($amount);
+
+            if ($this->isProductionMode === false) {
                 $request = (new BestPriceRequest())
                 ->enableSanbox()
                 ->setModel($body);
-            } else {           
+            } else {
                 $request = (new BestPriceRequest())
                 ->setModel($body);
             }
-            
+
             $this->apiLogger->log($this, $request, 'Request', true);
 
             /** @var BestPriceResponse $response */
@@ -102,14 +101,15 @@ class YounitedClient
             if ($response->getStatusCode() === 200) {
                 return [
                     'message' => $response->getBody(),
-                    'success' => true
+                    'success' => true,
                 ];
             }
+
             return [
                 'message' => $response->getReasonPhrase(),
-                'success' => false
+                'success' => false,
             ];
-        } catch (Exception $e) {    
+        } catch (Exception $e) {
             $this->logger->logError(
                 sprintf($e->getMessage()),
                 (new \ReflectionClass($this))->getShortName(),
@@ -121,11 +121,11 @@ class YounitedClient
                 'msg' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ];
             $this->apiLogger->log($this, $errorMsg, 'Error', true);
 
-            throw $e;       
+            throw $e;
         }
     }
 

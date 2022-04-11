@@ -19,9 +19,6 @@
 
 namespace YounitedpayAddon\Utils;
 
-use YounitedpayClasslib\Extensions\AbstractModuleExtension;
-use YounitedpayClasslib\Hook\AbstractHookDispatcher;
-use YounitedpayClasslib\Install\ModuleInstaller;
 use Configuration;
 use Context;
 use Language;
@@ -29,6 +26,9 @@ use OrderState;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use ReflectionClass;
 use Tools;
+use YounitedpayClasslib\Extensions\AbstractModuleExtension;
+use YounitedpayClasslib\Hook\AbstractHookDispatcher;
+use YounitedpayClasslib\Install\ModuleInstaller;
 
 trait PaymentModuleTrait
 {

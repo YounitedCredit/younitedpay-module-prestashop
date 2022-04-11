@@ -23,9 +23,10 @@ use Db;
 use YounitedpayAddon\Entity\YounitedPayAvailability;
 
 class ConfigRepository
-{    
+{
     /**
      * Get all Maturities saved in configuration
+     *
      * @return array
      */
     public function getAllMaturities()
@@ -41,17 +42,24 @@ class ConfigRepository
 
     public function saveAllMaturities($maturities, $idShop)
     {
-        foreach($maturities AS $maturity) {
+        foreach ($maturities as $maturity) {
             $maturityEntity = new YounitedPayAvailability($maturity['id_younitedpay_configuration']);
 
             if ((bool) $maturity['deleted'] === true) {
                 $maturityEntity->delete();
                 continue;
             }
-            
-            foreach($maturity AS $key => $value) {
-                $maturityEntity->$key = $value;
+
+            foreach ($maturity as $key => $value) {
+                if ($key !== 'deleted' && $key !== 'id_younitedpay_configuration') {
+                    $maturityEntity->$key = $value;
+                }
             }
+
+            if (empty($maturityEntity->maximum) === true) {
+                $maturityEntity->maximum = 0;
+            }
+
             $maturityEntity->currency = 'EUR';
             $maturityEntity->id_shop = $idShop;
 

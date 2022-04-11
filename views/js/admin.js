@@ -50,7 +50,7 @@ function deleteZoneMaturity()
     if (parseInt(idMaturity) <= 0) {
         $('#younitedpay_maturity' + parseInt(keyElement)).remove();
     } else {
-        $('#younitedpay_maturity' + parseInt(keyElement)).toggleClass('hided');
+        $('#younitedpay_maturity' + parseInt(keyElement)).css('display', 'none');
         $('#younitedpay_delete' + parseInt(keyElement)).val(1);
     }
 }

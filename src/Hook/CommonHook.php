@@ -19,8 +19,8 @@
 
 namespace YounitedpayAddon\Hook;
 
-use YounitedpayClasslib\Hook\AbstractHook;
 use Context;
+use YounitedpayClasslib\Hook\AbstractHook;
 
 class CommonHook extends AbstractHook
 {

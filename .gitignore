@@ -1,12 +1,14 @@
 /nbproject
 
 /202/build
+/202/younitedpaysdk
+/202/test/YounitedPay/YounitedPayAuth.php
 /config*.xml
 #/composer.json
 /.project
 /node_modules
 .php_cs.cache
-/*.log
+*.log
 
 # Vendors (keep 202 !)
 /vendor/*
