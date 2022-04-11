@@ -24,6 +24,7 @@ use YounitedpayClasslib\Hook\AbstractHookDispatcher;
 class HookDispatcher extends AbstractHookDispatcher
 {
     protected $hookClasses = [
+        CommonHook::class,
         HookAdminOrder::class,
         HookFrontProduct::class,
     ];

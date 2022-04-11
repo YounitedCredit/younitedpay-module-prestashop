@@ -53,7 +53,7 @@
               <h3 class="mt-2 ml-2 row col-xl-12">
                 {l s='Status' mod='younitedpay'}
               </h3>
-              <h4>
+              <h4 class="col-xl-12">
                 {foreach from=$specifications item=spec}
                   <div class="row col-xl-12 ml-2 mb-1">
                     {if $spec.ok == true}
@@ -76,7 +76,7 @@
                 </div>
                 <div class="row col-xl-12 ml-2 mb-1">
                   <span class="inline" style="font-size:14px;color:#00aff0;">
-                    <a href="#" id="copy-clip-younitedpay" data-clipboard-copy="{$webhook_url|escape:'htmlall':'UTF-8'}" title="{$webhook_url|escape:'htmlall':'UTF-8'}">
+                    <a href="#" title="{$webhook_url|escape:'htmlall':'UTF-8'}" data-clipboard-copy="{$webhook_url|escape:'htmlall':'UTF-8'}" data-message="{l s='WebHook URL copied to clipboard' mod='younitedpay'}" class="copy-clipboard">
                       <span class="truncate">{$webhook_url_text|escape:'htmlall':'UTF-8'}</span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 24 24">
                         <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -90,28 +90,6 @@
           </div> {* card *}
         </div> {* col-sm4 *}
       </div> {* row-justif *}
-    </div> {* sm-12 *}
-  </div> {* row *}  
-  <div class="row mt-2">
-    <div class="col-sm-12 pr-5 pl-5">
-      <div class="row justify-content-center">      
-        <div class="col-xl-12">   
-          <div class="card">
-            <div class="card-block row justify-content-left pl-4">
-              <h4 class="mt-2 row col-sm-12">
-                <img src="/modules/younitedpay/logo.png" class="text-md-center" alt="Younited Pay Official">
-                <span class="pt-2">{l s='Official Younited Pay' mod='younitedpay'}</span>
-              </h4>
-              <div class="row col-lg-6 pb-2 pt-1">
-                {l s='Easily add direct deposit payment for your customers.' mod='younitedpay'}
-              </div>
-              <div class="row col-lg-6 pb-2 pt-1">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus lacus accumsan nunc fames tempor molestie mi, mattis erat. Mauris sit curabitur lectus aliquet quis.
-              </div>
-            </div> {* card-block *}
-          </div> {* card *}        
-        </div> {* row-justif *}
-      </div> {* col-xl-12 *}
     </div> {* sm-12 *}
   </div> {* row *}  
 </div>

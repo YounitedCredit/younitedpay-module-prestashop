@@ -1,3 +1,20 @@
+{**
+ * Copyright Younited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to tech@202-ecommerce.com so we can send you a copy immediately.
+ *
+ * @author    202 ecommerce <tech@202-ecommerce.com>
+ * @copyright Younited
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
+ *}
 <div id="younitedpay_maturity{$key}" class="maturity_zone card card-header row{if $key >= 1} mt-2{/if}">
     <input 
         type="hidden" 
@@ -30,23 +47,30 @@
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][minimum]">
                 {l s='Minimum amount' mod='younitedpay'}
             </label>
-            <input type="text" class="col-lg-5 form-control" name="maturity[{$key}][minimum]" value="{$maturity.minimum}"/>
+            <input type="text" data-id="{$key}" id="min_amount_input_{$key}" 
+                class="col-lg-5 form-control younitedpay_maturity_change"
+                name="maturity[{$key}][minimum]" value="{$maturity.minimum}"/>
             <span class="currency d-flex align-items-center">€</span>
         </div>
         <div class="col-xl-6 form-group d-flex align-items-center">
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][maximum]">
                 {l s='Maximum amount' mod='younitedpay'}
             </label>
-            <input type="text" class="col-lg-5 form-control" name="maturity[{$key}][maximum]" 
-            placeholder="{l s='Infinite' mod='younitedpay'}" 
+            <input type="text" data-id="{$key}" class="col-lg-5 form-control younitedpay_maturity_change" 
+            id="max_amount_input_{$key}"
+            name="maturity[{$key}][maximum]" 
+            placeholder="{l s='Infinite' mod='younitedpay'}"
+            data-id-zone="{$key}" 
             value="{if $maturity.maximum > 0}{$maturity.maximum}{/if}" />
             <span class="currency">€</span>
         </div>
     </div>
     <small class="form-text">
-        {l s='Installments from ' mod='younitedpay'}{$maturity.minimum} €/{l s='month.' mod='younitedpay'}
-        {if $maturity.maximum > 0}
-            {l s='And up to ' mod=''}{$maturity.maximum} €/{l s='month.' mod='younitedpay'}
-        {/if}
+        {l s='Installments from ' mod='younitedpay'}
+        <span id="min_amount_{$key}">{$maturity.minimum}</span> €/{l s='month.' mod='younitedpay'}
+        <span id="max_amount_zone_{$key}"{if $maturity.maximum <= 0} class="hidden"{/if}>
+            {l s='And up to ' mod=''}<span id="max_amount_{$key}">
+            {$maturity.maximum}</span> €/{l s='month.' mod='younitedpay'}
+        </span>
     </small>
 </div>

@@ -21,6 +21,8 @@
       {include file="./settings-form.tpl" configuration=$configuration}
 
       {include file="./states-form.tpl" configuration=$configuration}
+
+      {include file="./appearence.tpl" configuration=$configuration}
     </div>
   </div>
 </div>

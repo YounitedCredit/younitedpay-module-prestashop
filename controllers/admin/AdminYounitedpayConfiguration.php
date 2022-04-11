@@ -47,6 +47,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var string */
     public $isProductionMode;
 
+    /** @var string */
+    public $whitelistIP;
+
+    /** @var bool */
+    public $isWhiteListOn;
+
+    /** @var bool */
+    public $isShownMonthly;
+
     /** @var ConfigService */
     public $configService;
 
@@ -111,7 +120,28 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             null,
             null,
             $idShop,
-            Tools::getValue('webhook_secret', false)
+            Tools::getValue('webhook_secret', '')
+        );
+        $this->whitelistIP = (bool) Configuration::get(
+            Younitedpay::IP_WHITELIST_CONTENT,
+            null,
+            null,
+            $idShop,
+            Tools::getValue('whitelist_ip', '')
+        );
+        $this->isWhiteListOn = (bool) Configuration::get(
+            Younitedpay::IP_WHITELIST_ENABLED,
+            null,
+            null,
+            $idShop,
+            Tools::getValue('whitelist_on', false)
+        );
+        $this->isShownMonthly = (bool) Configuration::get(
+            Younitedpay::SHOW_MONTHLY,
+            null,
+            null,
+            $idShop,
+            Tools::getValue('show_monthly', false)
         );
     }
 
@@ -157,7 +187,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $isoCode = strtolower($this->context->getContext()->language->iso_code);
         $fileImg = '/multishop-not-selected-' . $isoCode . '.jpg';
         if (is_file(_PS_MODULE_DIR_ . $this->module->name . '/' . $fileImg) === false) {
-            $isoCode = 'en'; // TODO
+            $isoCode = 'en';
         }
 
         return '/modules/' . $this->module->name . '/views/img/' . $fileImg;
@@ -209,14 +239,30 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function getOrderStates()
     {
-        $orderStates = OrderState::getOrderStates($this->context->language->id);
+        $statesStatus = OrderState::getOrderStates($this->context->language->id);
 
-        return array_map(function ($state) {
-            return [
-                'name' => $state['name'],
-                'id' => $state['id_order_state'],
-            ];
-        }, $orderStates);
+        $orderStates = ['selected' => [], 'unselected' => []];
+
+        $selectedOrders = Configuration::get(Younitedpay::ORDER_STATE_DELIVERED);
+        $aOrdersSel = json_decode($selectedOrders, true);
+        if ($aOrdersSel == null || is_array($aOrdersSel) === false) {
+            $aOrdersSel = [_PS_OS_DELIVERED_ !== null ? _PS_OS_DELIVERED_ : Configuration::get('_PS_OS_DELIVERED_')];
+        }
+
+        foreach ($statesStatus as $aState) {
+            if (!$aState['hidden'] && !$aState['deleted']) {
+                $sSelected = in_array($aState['id_order_state'], $aOrdersSel) !== false ? 'selected' : 'unselected';
+                $orderStates[$sSelected][] = [
+                    'value' => $aState['id_order_state'],
+                    'label' => $aState['name'],
+                ];
+            }
+        }
+
+        return [
+            'unselected' => $orderStates['unselected'],
+            'selected' => $orderStates['selected'],
+        ];
     }
 
     protected function getDefaultMaturities()
@@ -259,6 +305,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         } elseif (Tools::isSubmit('states_submit')) {
             $this->postStateSubmit($idShop);
             $isSubmitted = true;
+        } elseif (Tools::isSubmit('appearance_submit')) {
+            $this->postAppearance($idShop);
+            $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
             $this->ajaxDie($this->postAddNewMaturity($idShop));
 
@@ -294,30 +343,46 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         return $this->context->smarty->fetch($template);
     }
 
+    protected function postAppearance($idShop)
+    {
+        $frontHook = Tools::getValue('front_hook');
+        $isShownMonthly = Tools::getValue('show_monthly');
+        Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
+    }
+
     protected function postAccountSubmit($idShop)
     {
         $clientID = Tools::getValue('client_id');
         $clientSecret = Tools::getValue('client_secret');
         $webHookSecret = Tools::getValue('webhook_secret');
+        $ipWhiteList = Tools::getValue('whitelist_ip');
+        $isWhiteListOn = Tools::getValue('whitelist_on');
         $isProduction = Tools::getValue('production_mode');
         Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
         Configuration::updateValue(Younitedpay::PRODUCTION_MODE, $isProduction, false, null, $idShop);
     }
 
     protected function postStateSubmit($idShop)
     {
         $deliveredStatus = Tools::getValue('delivered_status');
-        $frontHook = Tools::getValue('front_hook');
         $maturities = Tools::getValue('maturity');
 
         /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
         $this->configService->saveAllMaturities($maturities, $this->context->shop->id);
-        Configuration::updateValue(Younitedpay::ORDER_STATE_DELIVERED, $deliveredStatus, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
+        Configuration::updateValue(
+            Younitedpay::ORDER_STATE_DELIVERED,
+            json_encode($deliveredStatus),
+            false,
+            null,
+            $idShop
+        );
     }
 
     protected function getConfigurationVariables()
@@ -365,6 +430,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
             'webhook_secret' => $this->webHookSecret,
+            'whitelist_on' => $this->isWhiteListOn,
+            'whitelist_ip' => $this->whitelistIP,
+            'show_monthly' => $this->isShownMonthly,
+            'widget_info' => '{widget name="younitedpay_offers" amount="149.90"}',
             'order_states' => $this->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),

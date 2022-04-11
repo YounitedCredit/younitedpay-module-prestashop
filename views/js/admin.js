@@ -23,9 +23,14 @@ document.onreadystatechange = function() {
         return false;
     }
     $('.younitedpay-collapse').click(toggleAccordion);
-    addEventsDelete();
+    addEventsMaturity();
+    addDoubleListEvent();
     $('#younitedpay_maturitybtn').click(function(e) {
         addMaturity(e);
+    });
+    $('.copy-clipboard').click(function(e) {
+        console.log(e);
+        copyToClipboard(e);
     });
     younitedEvents = true;
 };
@@ -55,10 +60,14 @@ function deleteZoneMaturity()
     }
 }
 
-function addEventsDelete()
+function addEventsMaturity()
 {    
     $('.younitedpay_delmaturity').off('click');
     $('.younitedpay_delmaturity').click(deleteZoneMaturity);
+
+    $('.younitedpay_maturity_change').off('keyup');
+    $('.younitedpay_maturity_change').off('change');
+    $('.younitedpay_maturity_change').on('change keyup', UpdateMaturity);
 }
 
 function addMaturity(event)
@@ -79,8 +88,107 @@ function addMaturity(event)
     url: younitedpay.admin_url,
     success: function(response){
         $("#younitedpay_maturities").append( response );
-        addEventsDelete();
+        addEventsMaturity();
         younitedpay.maturities += 1;  
     }
   });      
+}
+
+function UpdateMaturity()
+{
+    try {
+        var targetObject = $(this)[0];
+        console.log(targetObject);
+        var key = parseInt(targetObject.getAttribute('data-id'));
+        
+        var minAmountVal = $('#min_amount_input_' + key).val();
+        $('#min_amount_' + key).html(minAmountVal);
+
+        var maxAmountVal = $('#max_amount_input_' + key).val();
+        $('#max_amount_' + key).html(maxAmountVal);
+
+        if (parseInt(maxAmountVal) > 0) {
+            $('#max_amount_zone_' + key).removeClass('hidden');
+        } else {
+            $('#max_amount_zone_' + key).addClass('hidden');
+        }
+    } catch(error) {
+        console.log(error);
+    }
+}
+
+function copyToClipboard(event) {
+    var text = $(event.currentTarget).attr('data-clipboard-copy');
+    var message = $(event.currentTarget).attr('data-message');
+    console.log(event.currentTarget);
+    try {
+        jQueryCopy(text);
+        showConfZone(message);
+        return true;
+    } catch (errorjQuery) {
+        console.log('Error copy jQuery' + errorjQuery);
+    }
+    try {
+        navigator.clipboard.writeText(text);
+        showConfZone(message);
+        return true;
+    } catch(error) {
+        console.log('Error writeText' + error);
+    }
+    try {
+        navigator.clipboard.write(text);
+        showConfZone(message);
+        return true;
+    } catch(errorWrite) {
+        console.log('Error write' + errorWrite);
+    }
+}
+
+function showConfZone(msgInfo) {
+    $.growl({ message: msgInfo });
+}
+
+function jQueryCopy(text) {
+    var copyTextAreaBridge = document.createElement("textarea");
+    document.body.appendChild(copyTextAreaBridge);
+    copyTextAreaBridge.value = text;
+    copyTextAreaBridge.select();
+    document.execCommand("copy");
+    document.body.removeChild(copyTextAreaBridge);
+}
+
+function addDoubleListEvent()
+{
+	$(".double-list-group").each(function()
+    {
+		var doubleList = $(this);
+		var unselectedList = doubleList.find('.double-list-unselected');
+		var selectedList = doubleList.find('.double-list-selected');
+
+		doubleList.find('.double-list-btn-select').click(function(event) {
+            event.preventDefault();
+			unselectedList.find('option:selected').appendTo(selectedList);
+			statutorder_doubleListUpdate(doubleList);
+		});
+
+		doubleList.find('.double-list-btn-unselect').click(function(event) {
+            event.preventDefault();
+			selectedList.find('option:selected').appendTo(unselectedList);
+			statutorder_doubleListUpdate(doubleList);
+		});
+	});
+}
+
+function statutorder_doubleListUpdate(doubleList)
+{
+    var unselectedList = doubleList.find('.double-list-unselected');
+    var selectedList = doubleList.find('.double-list-selected');
+    var doubleListValues = doubleList.find('.double-list-values');
+
+    selectedList.find('option').each(function() {
+        doubleListValues.find("[value='"+this.value+"']").attr('checked', true);
+    });
+    unselectedList.find('option').each(function() {
+        doubleListValues.find("[value='"+this.value+"']").attr('checked', false);
+    });
 }

@@ -38,6 +38,9 @@ class YounitedClient
     public $clientSecret;
 
     /** @var string */
+    public $webHookSecret;
+
+    /** @var string */
     public $isProductionMode;
 
     /** @var ProcessLoggerHandler */

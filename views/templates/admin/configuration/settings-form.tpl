@@ -22,7 +22,7 @@
         <div class="col-xl-12 pr-5 pl-5">
             <div class="card">
                 <div class="card-header">
-                    <div class="col-sm-11">{l s='Connecting to Younited Pay API' mod='younitedpay'}</div>
+                    <div class="col-sm-11">{l s='1. Setting up' mod='younitedpay'}</div>
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12">
                     <div class="form-group mt-4 row">
@@ -83,6 +83,35 @@
                             <small class="form-text">
                                 {l s='This information is located in your Bridge dashboard: \'Settings\' > \'General
                                 settings\'' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="whitelist_on">
+                            {l s='Enable IP Whitelist' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">                        
+                            <span class="ps-switch ps-switch-lg">
+                                <input type="radio" name="whitelist_on" id="whitelist_on_off" 
+                                    value="0"{if $configuration.whitelist_on === false} checked{/if}/>
+                                <label for="whitelist_on_off">Disabled</label>
+                                <input type="radio" name="whitelist_on" id="whitelist_on_on" 
+                                    value="1"{if $configuration.whitelist_on === true} checked{/if}/>
+                                <label for="whitelist_on_on">Enabled</label>
+                                <span class="slide-button"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="whitelist_ip">
+                            {l s='IP Whitelist' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">
+                            <input type="text" class="form-control" id="whitelist_ip" name="whitelist_ip" 
+                                value="{$configuration.whitelist_ip|escape:'htmlall':'UTF-8'}" />
+                            <small class="form-text">
+                                {l s='When enabled, only the listed IPs will see the module’s components on the site' 
+                                    mod='younitedpay'}
                             </small>
                         </div>
                     </div>

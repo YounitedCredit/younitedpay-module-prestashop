@@ -127,6 +127,12 @@ class Younitedpay extends PaymentModule
 
     const FRONT_HOOK = 'YOUNITEDPAY_FRONT_HOOK';
 
+    const IP_WHITELIST_CONTENT = 'YOUNITEDPAY_IP_WHITELIST_CONTENT';
+
+    const IP_WHITELIST_ENABLED = 'YOUNITEDPAY_IP_WHITELIST_ENABLED';
+
+    const SHOW_MONTHLY = 'YOUNITEDPAY_SHOW_MONTHLY';
+
     const IS_FILE_LOGGER_ACTIVE = true;
 
     const PREFERRED_ISO_CODE = 'FR';
@@ -175,7 +181,7 @@ class Younitedpay extends PaymentModule
 
         $orderDelivered = Configuration::get('PS_OS_DELIVERED');
 
-        Configuration::updateGlobalValue(self::ORDER_STATE_DELIVERED, $orderDelivered);
+        Configuration::updateGlobalValue(self::ORDER_STATE_DELIVERED, json_encode([$orderDelivered]));
         Configuration::updateGlobalValue(self::FRONT_HOOK, 'disabled');
 
         $bridgeInitialiser = new ModuleInitialiser();
