@@ -11,4 +11,4 @@ parameters:
       - ../../src
 
   reportUnmatchedIgnoredErrors: false
-  level: 1
+  level: 3
