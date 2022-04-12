@@ -23,7 +23,7 @@ use YounitedpayAddon\Utils\ServiceContainer;
 
 class AdminYounitedpayConfigurationController extends ModuleAdminController
 {
-    /** @var \Module Instance of your module automatically set by ModuleAdminController */
+    /** @var \Younitedpay Instance of your module automatically set by ModuleAdminController */
     public $module;
 
     /** @var string Associated object class name */
@@ -32,7 +32,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var string Associated table name */
     public $table = 'configuration';
 
-    /** @var string Associated table name */
+    /** @var bool Is bootstrap enabled */
     public $bootstrap = false;
 
     /** @var string */
@@ -44,7 +44,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var string */
     public $webHookSecret;
 
-    /** @var string */
+    /** @var bool */
     public $isProductionMode;
 
     /** @var string */
@@ -115,14 +115,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $idShop,
             Tools::getValue('production_mode', false)
         );
-        $this->webHookSecret = (bool) Configuration::get(
+        $this->webHookSecret = Configuration::get(
             Younitedpay::WEBHOOK_SECRET,
             null,
             null,
             $idShop,
             Tools::getValue('webhook_secret', '')
         );
-        $this->whitelistIP = (bool) Configuration::get(
+        $this->whitelistIP = Configuration::get(
             Younitedpay::IP_WHITELIST_CONTENT,
             null,
             null,

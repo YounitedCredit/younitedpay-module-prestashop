@@ -40,7 +40,7 @@ class YounitedClient
     /** @var string */
     public $webHookSecret;
 
-    /** @var string */
+    /** @var bool */
     public $isProductionMode;
 
     /** @var ProcessLoggerHandler */
@@ -55,10 +55,10 @@ class YounitedClient
         $this->apiLogger = ApiLogger::getInstance();
 
         if (empty($testCredentials) === false) {
-            return $this->testCredentials($testCredentials);
-        }
-
-        $this->setApiCredentials($idShop);
+            $this->testCredentials($testCredentials);
+        } else {
+            $this->setApiCredentials($idShop);
+        }        
     }
 
     private function testCredentials($testCredentials)
@@ -155,7 +155,7 @@ class YounitedClient
             $idShop,
             false
         );
-        $this->webHookSecret = (bool) Configuration::get(
+        $this->webHookSecret = Configuration::get(
             Younitedpay::WEBHOOK_SECRET,
             null,
             null,

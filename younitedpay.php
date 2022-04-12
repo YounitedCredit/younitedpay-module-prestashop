@@ -152,7 +152,7 @@ class Younitedpay extends PaymentModule
             'min' => '1.7',
             'max' => _PS_VERSION_,
         ];
-        $this->need_instance = true;
+        $this->need_instance = 1;
 
         $this->__pmConstruct();
 

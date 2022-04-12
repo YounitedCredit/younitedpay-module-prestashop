@@ -41,7 +41,7 @@ class ApiLogger
      */
     private $logger;
 
-    protected function __construct()
+    final protected function __construct()
     {
         $this->module = \Module::getInstanceByName('younitedpay');
         $this->logname = $this->module->name . '-' . date('Ymd') . '.log';
