@@ -82,7 +82,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         if ($cookieSave == 'ok') {
             $this->confirmations[] = $this->module->l('Successful update.');
         }
-        Context::getContext()->cookie->__unset('younitedpaysave', '');
+        Context::getContext()->cookie->__unset('younitedpaysave');
 
         /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);

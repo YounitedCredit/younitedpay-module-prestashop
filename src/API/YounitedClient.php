@@ -58,7 +58,7 @@ class YounitedClient
             $this->testCredentials($testCredentials);
         } else {
             $this->setApiCredentials($idShop);
-        }        
+        }
     }
 
     private function testCredentials($testCredentials)
