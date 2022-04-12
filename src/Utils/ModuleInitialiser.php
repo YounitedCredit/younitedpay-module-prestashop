@@ -51,9 +51,9 @@ class ModuleInitialiser
     }
 
     public function addCurrencyRestrictions($shops, $availableCurrencies, $idModule)
-    {            
+    {
         $query = 'INSERT INTO `' . _DB_PREFIX_ . 'module_currency` 
-            (`id_module`, `id_shop`, `id_currency`) VALUES (%d, %d, %d)';        
+            (`id_module`, `id_shop`, `id_currency`) VALUES (%d, %d, %d)';
 
         $currencies = array_map(function ($currencyIso) {
             return (int) \Currency::getIdByIsoCode($currencyIso);

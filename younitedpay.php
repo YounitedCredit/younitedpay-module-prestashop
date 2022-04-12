@@ -22,8 +22,6 @@ if (!defined('_PS_VERSION_')) {
 
 require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
-use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Hook\HookDispatcher;

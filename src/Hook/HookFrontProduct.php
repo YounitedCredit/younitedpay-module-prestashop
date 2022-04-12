@@ -75,8 +75,8 @@ class HookFrontProduct extends AbstractHook
 
         $context->smarty->assign(
             [
-                'younitedpay_script' => $frontScriptURI,                
-                'younited_hook' => $currentHook,                
+                'younitedpay_script' => $frontScriptURI,
+                'younited_hook' => $currentHook,
             ]
         );
 
@@ -84,7 +84,7 @@ class HookFrontProduct extends AbstractHook
             $this->module->name,
             'younitedpayproduct'
         );
-        
+
         $product = new \Product($params['product']['id_product']);
 
         Media::addJsDef([
