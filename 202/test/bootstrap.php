@@ -19,5 +19,4 @@
  */
 require_once __DIR__ . '../../../vendor/autoload.php';
 require_once __DIR__ . '/YounitedPay/YounitedTests.php';
-require_once __DIR__ . '/../younitedpaysdk/vendor/autoload.php';
 require_once __DIR__ . '/YounitedPay/MockProxy.php';

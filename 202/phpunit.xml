@@ -7,7 +7,7 @@
     </php>
     <testsuites>
         <testsuite name="younited">
-            <directory suffix=".php">tests</directory>
+            <directory suffix=".php">test</directory>
         </testsuite>
     </testsuites>
 </phpunit>

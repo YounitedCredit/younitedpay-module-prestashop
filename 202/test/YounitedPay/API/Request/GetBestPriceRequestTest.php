@@ -27,14 +27,11 @@ require_once __DIR__ . '../../../../bootstrap.php';
 
 class GetBestPriceRequestTest extends YounitedTests
 {
-    public function testGetPaymentValidRequest()
+    public function testGetBestPriceRequestTest()
     {
         $response = $this->client->getBestPrice(149);
         $this->assertNotNull($response);
         $this->assertNotEmpty($response);
-        $this->assertInstanceOf(BestPriceResponse::class, $response);
-
-        $this->assertInstanceOf(ArrayCollection::class, $response->getModel());
-        $this->assertNotEmpty($response->getModel());
+        $this->assertTrue($response['success']) || $this->assertNotTrue($response['success']);
     }
 }
