@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Bridge
+ * Copyright Younited
  *
  * NOTICE OF LICENSE
  *
@@ -13,7 +13,7 @@
  * to tech@202-ecommerce.com so we can send you a copy immediately.
  *
  * @author    202 ecommerce <tech@202-ecommerce.com>
- * @copyright Bridge
+ * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
 

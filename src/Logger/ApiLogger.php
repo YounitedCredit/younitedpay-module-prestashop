@@ -28,8 +28,6 @@ class ApiLogger
 {
     public $logname;
 
-    const LOGGER_NAME = 'bridge';
-
     const MAX_LOG_FILE_SIZE = 2000000000;
 
     private static $instance = null;
@@ -72,7 +70,7 @@ class ApiLogger
             }
         }
         $this->stream = fopen($logFile, 'a+');
-        $this->logger = new Logger(self::LOGGER_NAME, [new StreamHandler($this->stream)]);
+        $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
     }
 
     public function log($object, $data, $type = 'Error', $isObject = false)

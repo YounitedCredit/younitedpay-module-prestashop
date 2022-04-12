@@ -26,7 +26,7 @@
                             <h4 class="panel-title">
                                 <a role="button" title="" data-parent="#accordion"
                                     href="#collapse0" aria-expanded="true" aria-controls="collapse0">
-                                    Quelle est la configuration n&eacute;cessaire pour utiliser le module de paiement Bridge ?
+                                    Quelle est la configuration n&eacute;cessaire pour utiliser le module de paiement YounitedPay ?
                                 </a>
                             </h4>
                         </div>
@@ -74,7 +74,9 @@
                                 <ul>
                                     <li>
                                         Notre centre d'aide : 
-                                        <a href="https://younitedpayapi.zendesk.com/" title="Lien vers le centre d'aide">
+                                        <a href="https://www.younited-pay.com/#contactModalFR" 
+                                            target="_blank"
+                                            title="Lien vers le centre d'aide">
                                             Cliquez ici
                                         </a>
                                     </li>
@@ -101,8 +103,10 @@
                                         Consulter les logs
                                     </li>
                                     <li>
-                                        Consulter notre centre d'aide : 
-                                        <a href="https://younitedpayapi.zendesk.com/" title="Lien vers le centre d'aide">
+                                        Notre centre d'aide : 
+                                        <a href="https://www.younited-group.com/about-us/" 
+                                            target="_blank"
+                                            title="Lien vers le centre d'aide">
                                             Cliquez ici
                                         </a>
                                     </li>

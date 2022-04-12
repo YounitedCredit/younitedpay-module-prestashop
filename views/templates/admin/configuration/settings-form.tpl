@@ -53,7 +53,7 @@
                                 placeholder="{l s='Fill in you Client ID' mod='younitedpay'}" id="client_id"
                                 name="client_id" value="{$configuration.client_id|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your Bridge dashboard: \'Settings\' > \'General
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General
                                 settings\'' mod='younitedpay'}
                             </small>
                         </div>
@@ -67,7 +67,7 @@
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="client_secret"
                                 name="client_secret" value="{$configuration.client_secret|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your Bridge dashboard: \'Settings\' > \'General
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General
                                 settings\'' mod='younitedpay'}
                             </small>
                         </div>
@@ -81,7 +81,7 @@
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret"
                                 name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your Bridge dashboard: \'Settings\' > \'General
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General
                                 settings\'' mod='younitedpay'}
                             </small>
                         </div>

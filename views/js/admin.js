@@ -149,12 +149,12 @@ function showConfZone(msgInfo) {
 }
 
 function jQueryCopy(text) {
-    var copyTextAreaBridge = document.createElement("textarea");
-    document.body.appendChild(copyTextAreaBridge);
-    copyTextAreaBridge.value = text;
-    copyTextAreaBridge.select();
+    var copyTextArea = document.createElement("textarea");
+    document.body.appendChild(copyTextArea);
+    copyTextArea.value = text;
+    copyTextArea.select();
     document.execCommand("copy");
-    document.body.removeChild(copyTextAreaBridge);
+    document.body.removeChild(copyTextArea);
 }
 
 function addDoubleListEvent()

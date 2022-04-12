@@ -78,8 +78,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     public function initContent()
     {
-        $cookieBridgeSave = Context::getContext()->cookie->__get('younitedpaysave');
-        if ($cookieBridgeSave == 'ok') {
+        $cookieSave = Context::getContext()->cookie->__get('younitedpaysave');
+        if ($cookieSave == 'ok') {
             $this->confirmations[] = $this->module->l('Successful update.');
         }
         Context::getContext()->cookie->__unset('younitedpaysave', '');
@@ -173,7 +173,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $alertHere = empty($this->confirmations) && empty($this->errors);
 
-            $tplVars['config_check']['alert'] = $alertHere !== true;
+            $tplVars['configuration']['alert'] = $alertHere !== true;
         }
 
         $tpl = Context::getContext()->smarty->createTemplate($tplFile);

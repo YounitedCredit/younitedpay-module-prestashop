@@ -17,7 +17,7 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-class BridgeSuccessModuleFrontController extends ModuleFrontController
+class YounitedpayProductModuleFrontController extends ModuleFrontController
 {
     /** @var \PaymentModule */
     public $module;

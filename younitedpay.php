@@ -22,6 +22,8 @@ if (!defined('_PS_VERSION_')) {
 
 require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
+use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Hook\HookDispatcher;
@@ -158,8 +160,8 @@ class Younitedpay extends PaymentModule
 
         $this->secure_key = Tools::encrypt($this->name);
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
-        $this->displayName = $this->l('Younited Pay');
-        $this->description = $this->l('Easily add direct deposit payment for your customers.');
+        $this->displayName = $this->l('Younited Pay - Instant credit');
+        $this->description = $this->l('Make an express request and get a definitive and immediate answer.');
         $this->hookDispatcher = new HookDispatcher($this);
         $this->hooks = array_merge($this->hooks, $this->hookDispatcher->getAvailableHooks());
     }
@@ -184,8 +186,8 @@ class Younitedpay extends PaymentModule
         Configuration::updateGlobalValue(self::ORDER_STATE_DELIVERED, json_encode([$orderDelivered]));
         Configuration::updateGlobalValue(self::FRONT_HOOK, 'disabled');
 
-        $bridgeInitialiser = new ModuleInitialiser();
-        $bridgeInitialiser->addIndexes();
+        $moduleInitialiser = new ModuleInitialiser();
+        $moduleInitialiser->addIndexes();
 
         return $result;
     }
@@ -201,23 +203,9 @@ class Younitedpay extends PaymentModule
             $shops = Shop::getShops(true, null, true);
         }
 
-        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`) VALUES (%d, %d, %d)';
+        $moduleInitialiser = new ModuleInitialiser();
 
-        $currencies = array_map(function ($currencyIso) {
-            return (int) Currency::getIdByIsoCode($currencyIso);
-        }, self::AVAILABLE_CURRENCIES);
-
-        $currencies = array_filter($currencies, function ($idCurrency) {
-            return $idCurrency > 0;
-        });
-
-        foreach ($shops as $idShop) {
-            if (!Db::getInstance()->execute(sprintf($query, $this->id, $idShop, $currencies))) {
-                return false;
-            }
-        }
-
-        return true;
+        return $moduleInitialiser->addCurrencyRestrictions($shops, self::AVAILABLE_CURRENCIES, $this->id);
     }
 
     /**

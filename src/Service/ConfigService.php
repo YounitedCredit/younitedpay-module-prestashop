@@ -135,7 +135,7 @@ class ConfigService
 
         $apiLogger = ApiLogger::getInstance();
         if (\Younitedpay::IS_FILE_LOGGER_ACTIVE === true) {
-            $apiLogger->log($this, $response, 'Response', false);
+            $apiLogger->log($this, $response, 'Config Response', false);
         }
 
         return $response;

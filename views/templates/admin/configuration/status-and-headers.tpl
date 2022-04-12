@@ -15,7 +15,7 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
-<div class="younitedpayApp mb-2{if $specifications.alert == false} mt-5{/if}">
+<div class="younitedpayApp mb-2{if $alert == false} mt-5{/if}">
   <div class="row">
     <div class="col-sm-12 pr-5 pl-5">
       <div class="row justify-content-center">
@@ -49,17 +49,17 @@
         </div>
         <div class="col-sm-4 d-flex">
           <div class="card col-xl-12 pl-2 pr-2 d-flex flex-wrap flex-row" id="younitedpay_status_zone">
-            <div class="card-block justify-content-start align-items-start d-flex flex-wrap">
+            <div class="card-block justify-content-start align-items-start">
               <h3 class="mt-2 ml-2 row col-xl-12">
                 {l s='Status' mod='younitedpay'}
               </h3>
-              <h4 class="col-xl-12">
+              {* <h4 class="col-xl-12"> *}
                 {foreach from=$specifications item=spec}
                   <div class="row col-xl-12 ml-2 mb-1">
                     {if $spec.ok == true}
-                        <i class="material-icons" style="color:green;">check</i>
+                        <i class="material-icons mt-1" style="color:green;">check</i>
                     {else}
-                        <i class="material-icons" style="color:red;">close</i>
+                        <i class="material-icons mt-1" style="color:red;">close</i>
                     {/if}
                     <span class="pt-1 inline"
                     {if empty($spec.title) != true}
@@ -85,7 +85,7 @@
                     </a>
                   </span>
                 </div>
-              </h4>
+              {* </h4> *}
             </div> {* card-block *}
           </div> {* card *}
         </div> {* col-sm4 *}

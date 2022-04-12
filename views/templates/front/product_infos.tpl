@@ -17,4 +17,4 @@
  *}
 
 <script async type="text/javascript" src="{$younitedpay_script}"></script>
- <div id="younitedpay_product_info"></div>
+ <div id="younitedpay_product_info" data-hook="{$hook}"></div>

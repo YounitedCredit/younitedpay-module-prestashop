@@ -25,6 +25,9 @@ use YounitedpayClasslib\Hook\AbstractHook;
 
 class HookFrontProduct extends AbstractHook
 {
+    /** @var \PaymentModule */
+    public $module;
+
     const AVAILABLE_HOOKS = [
         'displayProductPriceBlock',
         'displayAfterProductThumbs',
@@ -34,58 +37,63 @@ class HookFrontProduct extends AbstractHook
 
     public function displayProductPriceBlock($params)
     {
-        $this->displaySelectedHook($params, 'displayProductPriceBlock');
+        return $this->displaySelectedHook($params, 'displayProductPriceBlock');
     }
 
     public function displayAfterProductThumbs($params)
     {
-        $this->displaySelectedHook($params, 'displayAfterProductThumbs');
+        return $this->displaySelectedHook($params, 'displayAfterProductThumbs');
     }
 
     public function displayProductAdditionalInfo($params)
     {
-        $this->displaySelectedHook($params, 'displayProductAdditionalInfo');
+        return $this->displaySelectedHook($params, 'displayProductAdditionalInfo');
     }
 
     public function displayReassurance($params)
     {
-        $this->displaySelectedHook($params, 'displayReassurance');
+        return $this->displaySelectedHook($params, 'displayReassurance');
     }
 
     private function displaySelectedHook($params, $currentHook)
     {
         $context = \Context::getContext();
-        $hookConfiguration = $context->smarty->__get('younitedpay_hook');
-        if ($hookConfiguration === null) {
+        try {
+            $hookConfiguration = $context->smarty->tpl_vars['hookConfiguration'];
+        } catch (\Exception $ex) {
+        }
+        if (empty($hookConfiguration) === true) {
             $hookConfiguration = \Configuration::get(Younitedpay::FRONT_HOOK);
-            $context->smarty->assign(
-                ['younitedpay_hook' => $hookConfiguration]
-            );
+            $context->smarty->assign('hookConfiguration', $hookConfiguration);
         }
 
         if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook) {
             return '';
         }
 
-        $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name / '/views/js/front/younitedpay_product.js';
+        $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/front/younitedpay_product.js';
 
         $context->smarty->assign(
-            ['younitedpay_script' => $frontScriptURI]
+            [
+                'younitedpay_script' => $frontScriptURI,                
+                'younited_hook' => $currentHook,                
+            ]
         );
 
         $frontModuleLink = $context->link->getModuleLink(
             $this->module->name,
             'younitedpayproduct'
         );
-
-        $idProduct = $params['id_product'];
-        $product = new \Product($idProduct);
+        
+        $product = new \Product($params['product']['id_product']);
 
         Media::addJsDef([
             'younited_product_url' => $frontModuleLink,
             'younited_product_price' => $product->getPrice(),
         ]);
 
-        $context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/template/front/credit_infos.tpl');
+        return $context->smarty->fetch(
+            _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/product_infos.tpl'
+        );
     }
 }
