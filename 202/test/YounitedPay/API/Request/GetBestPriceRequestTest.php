@@ -32,6 +32,7 @@ class GetBestPriceRequestTest extends YounitedTests
         $response = $this->client->getBestPrice(149);
         $this->assertNotNull($response);
         $this->assertNotEmpty($response);
-        $this->assertTrue($response['success']) || $this->assertNotTrue($response['success']);
+        $this->assertArrayHasKey('success', $response);
+        $this->assertArrayHasKey('message', $response);
     }
 }
