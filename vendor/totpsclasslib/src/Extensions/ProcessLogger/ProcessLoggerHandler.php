@@ -233,7 +233,7 @@ class ProcessLoggerHandler
      */
     public static function isAutoErasingEnabled()
     {
-        return false === (bool)Configuration::get('YOUNITEDPAY-PRESTASHOP_EXTLOGS_ERASING_DISABLED');
+        return false === (bool)Configuration::get('YOUNITEDPAY_EXTLOGS_ERASING_DISABLED');
     }
 
     /**
@@ -241,7 +241,7 @@ class ProcessLoggerHandler
      */
     public static function getAutoErasingDelayInDays()
     {
-        $numberOfDays = Configuration::get('YOUNITEDPAY-PRESTASHOP_EXTLOGS_ERASING_DAYSMAX');
+        $numberOfDays = Configuration::get('YOUNITEDPAY_EXTLOGS_ERASING_DAYSMAX');
 
         if (empty($numberOfDays) || false === is_numeric($numberOfDays)) {
             return 5;

@@ -75,6 +75,7 @@ class YounitedClient
     }
 
     /**
+     * @param float $amount
      * @return array
      */
     public function getBestPrice($amount)
@@ -103,15 +104,20 @@ class YounitedClient
 
             if ($response->getStatusCode() === 200) {
                 return [
-                    'message' => $response->getBody(),
+                    'offers' => $response->getModel(),
                     'success' => true,
                 ];
             }
 
-            return [
+            $errorResponse = [
                 'message' => $response->getReasonPhrase(),
                 'success' => false,
             ];
+
+            $this->apiLogger->log($this, $errorResponse, 'Error Response', true);
+
+            return $errorResponse;
+
         } catch (Exception $e) {
             $this->logger->logError(
                 sprintf($e->getMessage()),
@@ -127,8 +133,11 @@ class YounitedClient
                 'trace' => $e->getTraceAsString(),
             ];
             $this->apiLogger->log($this, $errorMsg, 'Error', true);
-
-            throw $e;
+            
+            return [
+                'message' => $e->getMessage(),
+                'success' => false,
+            ];
         }
     }
 

@@ -21,6 +21,7 @@
 namespace YounitedpayAddon\Service;
 
 use Configuration;
+use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
@@ -43,9 +44,10 @@ class ConfigService
 
     public function __construct(
         ProcessLoggerHandler $logger,
-        ConfigRepository $configRepository
+        ConfigRepository $configRepository,
+        Younitedpay $module
     ) {
-        $this->module = \Module::getInstanceByName('younitedpay');
+        $this->module = $module;
         $this->logger = $logger;
         $this->context = \Context::getContext();
         $this->configRepository = $configRepository;
@@ -102,7 +104,7 @@ class ConfigService
         }
 
         /** @var array $response */
-        $response = $client->getBestPrice(150);
+        $response = $client->getBestPrice(150.00);
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [

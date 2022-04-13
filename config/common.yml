@@ -4,3 +4,23 @@ services:
     factory: ['Module', 'getInstanceByName']
     arguments:
       - 'younitedpay'
+
+  YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler:
+    class: 'YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+
+  YounitedpayAddon\Repository\ConfigRepository:
+    class: 'YounitedpayAddon\Repository\ConfigRepository'
+
+  YounitedpayAddon\Service\ConfigService:
+    class: 'YounitedpayAddon\Service\ConfigService'
+    arguments:
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Repository\ConfigRepository'
+      - '@younitedpay'
+
+  YounitedpayAddon\Service\ProductService:
+    class: 'YounitedpayAddon\Service\ProductService'
+    arguments:
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Repository\ConfigRepository'
+      - '@younitedpay'

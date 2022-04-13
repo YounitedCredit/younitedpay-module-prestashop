@@ -17,4 +17,7 @@
  *}
 
 <script async type="text/javascript" src="{$younitedpay_script}"></script>
- <div id="younitedpay_product_info" data-hook="{$hook}"></div>
+ <div id="younitedpay_product_info" data-hook="{$younited_hook}">
+    Hello i'm on hook {$younited_hook} !
+    {$credit_template nofilter}
+ </div>

@@ -79,11 +79,16 @@ class ApiLogger
             return true;
         }
 
+        $logData = $data;
         if ($isObject === true) {
-            $data = json_encode($data);
+            $logData = json_encode($data);            
         }
 
-        $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $data);
+        if ($type === 'Response') {
+            $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($data->getModel()));
+        }
+
+        $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);
     }
 
     private function getClass($object)

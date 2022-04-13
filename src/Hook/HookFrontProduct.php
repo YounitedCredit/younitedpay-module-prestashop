@@ -22,6 +22,8 @@ namespace YounitedpayAddon\Hook;
 use Media;
 use Younitedpay;
 use YounitedpayClasslib\Hook\AbstractHook;
+use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayAddon\Service\ProductService;
 
 class HookFrontProduct extends AbstractHook
 {
@@ -59,7 +61,7 @@ class HookFrontProduct extends AbstractHook
     {
         $context = \Context::getContext();
         try {
-            $hookConfiguration = $context->smarty->tpl_vars['hookConfiguration'];
+            $hookConfiguration = $context->smarty->tpl_vars['hookConfiguration']->value;
         } catch (\Exception $ex) {
         }
         if (empty($hookConfiguration) === true) {
@@ -67,16 +69,25 @@ class HookFrontProduct extends AbstractHook
             $context->smarty->assign('hookConfiguration', $hookConfiguration);
         }
 
-        if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook) {
+        if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook || $hookConfiguration === 'done') {
             return '';
         }
 
         $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/front/younitedpay_product.js';
 
+        $idProduct = \Tools::getValue('id_product');
+        $product = new \Product($idProduct);
+
+        /** @var ProductService $productservice */
+        $productservice = ServiceContainer::getInstance()->get(ProductService::class);
+
+        $templateCredit = $productservice->getProductBestPrice($product);
+
         $context->smarty->assign(
             [
                 'younitedpay_script' => $frontScriptURI,
                 'younited_hook' => $currentHook,
+                'credit_template' => $templateCredit,
             ]
         );
 
@@ -85,12 +96,12 @@ class HookFrontProduct extends AbstractHook
             'younitedpayproduct'
         );
 
-        $product = new \Product($params['product']['id_product']);
-
         Media::addJsDef([
             'younited_product_url' => $frontModuleLink,
             'younited_product_price' => $product->getPrice(),
         ]);
+
+        $context->smarty->assign('hookConfiguration', 'done');
 
         return $context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/product_infos.tpl'
