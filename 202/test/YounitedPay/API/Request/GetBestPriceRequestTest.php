@@ -29,7 +29,7 @@ class GetBestPriceRequestTest extends YounitedTests
 {
     public function testGetBestPriceRequestTest()
     {
-        $response = $this->client->getBestPrice(149);
+        $response = $this->client->getBestPrice(149.00);
         $this->assertNotNull($response);
         $this->assertNotEmpty($response);
         $this->assertArrayHasKey('success', $response);
