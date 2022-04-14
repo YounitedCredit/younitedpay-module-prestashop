@@ -23,8 +23,8 @@
     "autoload-dev": {
         "psr-4": {
             "YounitedpayClasslib\\": "vendor/totpsclasslib/src/",
-            "YounitedpayAddon\\": "src/",
             "YounitedPaySDK\\": "vendor/202ecommerce/younitedpaysdk/src/",
+            "YounitedpayAddon\\": "src/",
             "Tests\\": "202/tests/"
         },
         "classmap": [
@@ -52,7 +52,7 @@
         ]
     },
     "scripts": {
-        "pre-autoload-dump": "if [ ${TOTPSCLASSLIB_DEV_PATH} ]; then php ${TOTPSCLASSLIB_DEV_PATH}/classlib/refresh.php .; find  ./vendor/totpsclasslib -name '*.php' -print0 | xargs -0  sed -ri -e 's!ounitedpay-prestashop!ounitedpay!g'; find  ./vendor/composer -name '*.php' -print0 | xargs -0  sed -ri -e 's!ounitedpay-prestashop!ounitedpay!g' ; rm ./controllers/admin/AdminYounitedpay-prestashopProcessLogger.php ; fi"
+        "pre-autoload-dump": "bash before_autoload.sh"
     },
     "type": "prestashop-module",
     "author": "PrestaShop"

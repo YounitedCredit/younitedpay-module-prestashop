@@ -51,7 +51,7 @@ class ProductService
         $this->context = \Context::getContext();
         $this->configRepository = $configRepository;
     }
-    
+
     public function getProductBestPrice(\Product $product)
     {
         $client = new YounitedClient($this->context->shop->id, $this->logger);
@@ -59,7 +59,7 @@ class ProductService
             return '';
         }
 
-        $productPrice = (float) \Tools::ps_round($product->getPrice(),2);
+        $productPrice = (float) \Tools::ps_round($product->getPrice(), 2);
 
         $maturities = $this->getAllMaturities($productPrice);
 
@@ -75,7 +75,7 @@ class ProductService
             return '';
         }
 
-        $offers = $this->getValidOffers($response['offers'], array_column($maturities, 'maturity')); 
+        $offers = $this->getValidOffers($response['offers'], array_column($maturities, 'maturity'));
 
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/credit_propositions.tpl';
 
@@ -90,8 +90,8 @@ class ProductService
 
     protected function getValidOffers($offers, $maturities)
     {
-        $validOffers = [];        
-        foreach($offers AS $offer) {
+        $validOffers = [];
+        foreach ($offers as $offer) {
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if (in_array($maturityIn, $maturities) === true) {
@@ -101,6 +101,7 @@ class ProductService
                 ];
             }
         }
+
         return $validOffers;
     }
 

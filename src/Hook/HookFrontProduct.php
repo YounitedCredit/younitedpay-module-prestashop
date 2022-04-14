@@ -21,9 +21,9 @@ namespace YounitedpayAddon\Hook;
 
 use Media;
 use Younitedpay;
-use YounitedpayClasslib\Hook\AbstractHook;
-use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayAddon\Service\ProductService;
+use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayClasslib\Hook\AbstractHook;
 
 class HookFrontProduct extends AbstractHook
 {

@@ -35,7 +35,7 @@ class ConfigRepository
         $query->select('*')
             ->from(YounitedPayAvailability::$definition['table'])
             ->OrderBy('maturity ASC');
-        
+
         if ($productPrice > 0) {
             $query->where((int) pSQL($productPrice) . ' >= minimum');
             $query->where('maximum >= ' . (int) pSQL($productPrice));
