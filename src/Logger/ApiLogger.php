@@ -81,7 +81,7 @@ class ApiLogger
 
         $logData = $data;
         if ($isObject === true) {
-            $logData = json_encode($data);            
+            $logData = json_encode($data);
         }
 
         if ($type === 'Response') {
