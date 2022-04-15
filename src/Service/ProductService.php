@@ -95,9 +95,14 @@ class ProductService
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if (in_array($maturityIn, $maturities) === true) {
+                $totalAmount = $offer->getCreditTotalAmount() + $offer->getInterestsTotalAmount();
                 $validOffers[] = [
                     'maturity' => $offer->getMaturityInMonths(),
                     'installment_amount' => $offer->getMonthlyInstallmentAmount(),
+                    'total_amount' => $totalAmount,
+                    'interest_total' => $offer->getInterestsTotalAmount(),
+                    'taeg' => $offer->getAnnualPercentageRate(),
+                    'tdf' => $offer->getAnnualPercentageRate(),
                 ];
             }
         }
