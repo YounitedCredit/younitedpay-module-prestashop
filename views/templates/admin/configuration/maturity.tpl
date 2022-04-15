@@ -27,11 +27,10 @@
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][maturity]">
                 {l s='Installments' mod='younitedpay'}
             </label>
-            <select class="custom-select col-lg-5" name="maturity[{$key}][maturity]"> 
-                <option name="3x" value="3"{if $maturity.maturity == 3} selected{/if}>3x</option>
-                <option name="4x" value="4"{if $maturity.maturity == 4} selected{/if}>4x</option>
-                <option name="5x" value="5"{if $maturity.maturity == 5} selected{/if}>5x</option>
-                <option name="10x" value="10"{if $maturity.maturity == 10} selected{/if}>10x</option>
+            <select class="form-control col-lg-5" data-toggle="maturity" data-minimumresultsforsearch="3" aria-hidden="true" name="maturity[{$key}][maturity]">
+                {foreach $maturitylist item=maturityitem}
+                    <option name="{$maturityitem}" value="{$maturityitem}"{if $maturity.maturity == $maturityitem} selected{/if}>{$maturityitem}x</option>                
+                {/foreach}
             </select>  
         </div>
         <div class="col-xl-6 form-group d-flex align-items-center">                   

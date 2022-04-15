@@ -43,9 +43,7 @@
                             {l s='Cache' mod='younitedpay'}
                         </label>
                         <div class="col-lg-5 align-item-center">
-                            <button class="btn btn-lg btn-outline-primary" 
-                                onclick="{literal}$.growl({message: 'Coming soon !'}){/literal};return false;"
-                                type="submit">
+                            <button class="btn btn-lg btn-outline-primary" name="flush_cache_submmit" type="submit">
                                 {l s='Flush cache' mod='younitedpay'}
                             </button>
                             <small class="form-text">

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * NOTICE OF LICENSE
  *
  * This source file is subject to a commercial license from SARL 202 ecommerce
@@ -24,53 +24,10 @@
  * @version   release/2.3.2
  */
 
-namespace YounitedpayClasslib\Hook;
+namespace YounitedpayClasslib\Utils\CacheStorage\Exception;
 
-use YounitedpayClasslib\Extensions\AbstractModuleExtension;
-use YounitedpayClasslib\Module;
-use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-abstract class AbstractHook
+class CacheException extends DomainException
 {
-    use TranslateTrait;
-
-    const AVAILABLE_HOOKS = [];
-
-    /**
-     * @var Module
-     */
-    protected $module;
-
-    /**
-     * AbstractExtensionHook constructor.
-     *
-     * @param Module $module
-     */
-    public function __construct($module)
-    {
-        $this->module = $module;
-    }
-
-    /**
-     * Get all available hooks for current object
-     *
-     * @return array
-     */
-    public function getAvailableHooks()
-    {
-        return static::AVAILABLE_HOOKS;
-    }
-
-    /**
-     * Remove first 4 letters of hook function and replace the first letter by lower case
-     * TODO maybe we should delete this function, because it isn't used
-     *
-     * @param string $functionName
-     *
-     * @return string
-     */
-    protected function getHookNameFromFunction($functionName)
-    {
-        return lcfirst(substr($functionName, 4, strlen($functionName)));
-    }
 }

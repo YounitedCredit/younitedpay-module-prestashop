@@ -26,6 +26,7 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedpayClasslib\Utils\CacheStorage\CacheStorage;
 
 class ConfigService
 {
@@ -109,14 +110,26 @@ class ConfigService
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
                 'message' => $this->module->l('Response error'),
+                'maturityList' => [3,4,5,10],
                 'status' => false,
             ];
         }
 
         return [
             'message' => $this->module->l('Connexion Ok'),
+            'maturityList' => $this->getMaturitiesResponse($response['offers']),
             'status' => true,
         ];
+    }
+
+    private function getMaturitiesResponse($response)
+    {
+        $maturityList = [];
+        foreach ($response as $oneItem) {
+            /** @var OfferItem $oneItem */
+            $maturityList[] = $oneItem->getMaturityInMonths();
+        }
+        return $maturityList;
     }
 
     public function callCURL($url)
@@ -141,6 +154,81 @@ class ConfigService
         }
 
         return $response;
+    }
+
+    public function checkSpecifications($isProductionMode)
+    {
+        $curlInfos = curl_version();
+        $versionOpenSSL = null !== OPENSSL_VERSION_NUMBER ? OPENSSL_VERSION_NUMBER : -1;
+        $versionSSLCURL = $curlInfos !== false ? $curlInfos['version'] . ' ' . $curlInfos['ssl_version'] : '';
+
+        $sslActivated = $this->isSslActive();
+        $tlsCallCurl = $this->isTlsActive();
+        $infoSSLTLS = $versionOpenSSL !== -1 && $sslActivated === true
+        ? $this->module->l('SSL enabled')
+        : $this->module->l('SSL not enabled on all the shop');
+        $infoSSLTLS .= $tlsCallCurl['error_message'] !== '' ? ' - ' . $tlsCallCurl['error_message'] : '';
+
+        $isApiConnected = $this->isApiConnected();
+
+        return [
+            'maturityList' => $isApiConnected['maturityList'],
+            'specs' => [
+                [
+                    'name' => 'CURL',
+                    'info' => $versionSSLCURL !== '' ? 'version v.' . $versionSSLCURL : $this->module->l('not installed'),
+                    'ok' => $curlInfos !== false,
+                ],
+                [
+                    'name' => 'SSL & TLS v1.2',
+                    'info' => $infoSSLTLS,
+                    'ok' => $versionOpenSSL !== -1 && $sslActivated === true && $tlsCallCurl['status'],
+                ],
+                [
+                    'name' => $this->module->l('Encrypt functions'),
+                    'info' => '',
+                    'ok' => (bool) function_exists('hash_hmac'),
+                ],
+                [
+                    'name' => $this->module->l('Connected to API'),
+                    'info' => $isApiConnected['message'],
+                    'ok' => (bool) $isApiConnected['status'],
+                ],
+                [
+                    'name' => $this->module->l('Production environment'),
+                    'info' => '',
+                    'ok' => (bool) $isProductionMode,
+                ],
+            ],
+        ];
+    }
+
+    public function getOrderStates()
+    {
+        $statesStatus = \OrderState::getOrderStates($this->context->language->id);
+
+        $orderStates = ['selected' => [], 'unselected' => []];
+
+        $selectedOrders = Configuration::get(Younitedpay::ORDER_STATE_DELIVERED);
+        $aOrdersSel = json_decode($selectedOrders, true);
+        if ($aOrdersSel == null || is_array($aOrdersSel) === false) {
+            $aOrdersSel = [_PS_OS_DELIVERED_ !== null ? _PS_OS_DELIVERED_ : Configuration::get('_PS_OS_DELIVERED_')];
+        }
+
+        foreach ($statesStatus as $aState) {
+            if (!$aState['hidden'] && !$aState['deleted']) {
+                $sSelected = in_array($aState['id_order_state'], $aOrdersSel) !== false ? 'selected' : 'unselected';
+                $orderStates[$sSelected][] = [
+                    'value' => $aState['id_order_state'],
+                    'label' => $aState['name'],
+                ];
+            }
+        }
+
+        return [
+            'unselected' => $orderStates['unselected'],
+            'selected' => $orderStates['selected'],
+        ];
     }
 
     public function isSslActive()

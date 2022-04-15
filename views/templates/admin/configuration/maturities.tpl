@@ -4,7 +4,7 @@
     </label>
     <div class="col-lg-5 ml-3 align-item-center" id="younitedpay_maturities">
         {foreach from=$configuration.maturities item=maturity key=key}
-            {include file="./maturity.tpl" maturity=$maturity key=$key}
+            {include file="./maturity.tpl" maturity=$maturity maturitylist=$configuration.maturitylist key=$key}
         {/foreach}
     </div>
 </div>

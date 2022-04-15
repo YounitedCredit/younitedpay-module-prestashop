@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * NOTICE OF LICENSE
  *
  * This source file is subject to a commercial license from SARL 202 ecommerce
@@ -20,57 +20,21 @@
  * @author    202-ecommerce <tech@202-ecommerce.com>
  * @copyright Copyright (c) 202-ecommerce
  * @license   Commercial license
- *
  * @version   release/2.3.2
  */
 
-namespace YounitedpayClasslib\Hook;
+namespace YounitedpayAddon\Utils;
 
-use YounitedpayClasslib\Extensions\AbstractModuleExtension;
-use YounitedpayClasslib\Module;
-use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use YounitedpayClasslib\Utils\CacheStorage\CacheStorage;
 
-abstract class AbstractHook
+class CacheYounited extends CacheStorage
 {
-    use TranslateTrait;
-
-    const AVAILABLE_HOOKS = [];
+    //region Fields
 
     /**
-     * @var Module
-     */
-    protected $module;
-
-    /**
-     * AbstractExtensionHook constructor.
+     * Expired in seconds
      *
-     * @param Module $module
+     * @var null
      */
-    public function __construct($module)
-    {
-        $this->module = $module;
-    }
-
-    /**
-     * Get all available hooks for current object
-     *
-     * @return array
-     */
-    public function getAvailableHooks()
-    {
-        return static::AVAILABLE_HOOKS;
-    }
-
-    /**
-     * Remove first 4 letters of hook function and replace the first letter by lower case
-     * TODO maybe we should delete this function, because it isn't used
-     *
-     * @param string $functionName
-     *
-     * @return string
-     */
-    protected function getHookNameFromFunction($functionName)
-    {
-        return lcfirst(substr($functionName, 4, strlen($functionName)));
-    }
+    protected $expiry = 3600; // 1h
 }

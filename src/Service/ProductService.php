@@ -23,6 +23,7 @@ namespace YounitedpayAddon\Service;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
+use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Model\OfferItem;
 
@@ -61,21 +62,33 @@ class ProductService
 
         $productPrice = (float) \Tools::ps_round($product->getPrice(), 2);
 
-        $maturities = $this->getAllMaturities($productPrice);
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+        $cacheExists = $cachestorage->exist((string) $productPrice);
 
-        if (count($maturities) <= 0) {
-            return '';
+        if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
+            $maturities = $this->getAllMaturities($productPrice);
+
+            if (count($maturities) <= 0) {
+                return '';
+            }
+
+            /** @var array $response */
+            $response = $client->getBestPrice($productPrice);
+
+            if ($response['success'] === false) {
+                return '';
+            }
+
+            $offers = $this->getValidOffers($response['offers'], array_column($maturities, 'maturity'));
+
+            $cachestorage->set((string) $productPrice, [
+                'offers' => $offers,
+            ]);
+        } else {
+            $cacheInformations = $cachestorage->get((string) $productPrice);
+            $offers = $cacheInformations['content']['offers'];
         }
-
-        /** @var array $response */
-        $response = $client->getBestPrice($productPrice);
-        // $response = $client->getBestPrice(1500.00);
-
-        if ($response['success'] === false) {
-            return '';
-        }
-
-        $offers = $this->getValidOffers($response['offers'], array_column($maturities, 'maturity'));
 
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/credit_propositions.tpl';
 

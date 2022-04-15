@@ -30,7 +30,7 @@
                             {l s='Environment' mod='younitedpay'}
                         </label>
                         <div class="form-select col-lg-4 align-item-center">
-                            <select class="form-control" style="width:100px;">
+                            <select class="form-control" name="production_mode" style="width:130px;">
                                 <option value="0" {if $configuration.production_mode==false}selected{/if}>
                                     {l s='Test' mod='younitedpay'}
                                 </option>
