@@ -26,7 +26,7 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use YounitedpayClasslib\Utils\CacheStorage\CacheStorage;
+use YounitedPaySDK\Model\OfferItem;
 
 class ConfigService
 {
@@ -110,7 +110,7 @@ class ConfigService
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
                 'message' => $this->module->l('Response error'),
-                'maturityList' => [3,4,5,10],
+                'maturityList' => [3, 4, 5, 10],
                 'status' => false,
             ];
         }
@@ -122,13 +122,16 @@ class ConfigService
         ];
     }
 
+    /**
+     * @param OfferItem[] $response
+     * */
     private function getMaturitiesResponse($response)
     {
         $maturityList = [];
         foreach ($response as $oneItem) {
-            /** @var OfferItem $oneItem */
             $maturityList[] = $oneItem->getMaturityInMonths();
         }
+
         return $maturityList;
     }
 

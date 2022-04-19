@@ -19,8 +19,8 @@
  */
 
 use YounitedpayAddon\Service\ConfigService;
-use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayAddon\Utils\CacheYounited;
+use YounitedpayAddon\Utils\ServiceContainer;
 
 class AdminYounitedpayConfigurationController extends ModuleAdminController
 {
@@ -99,13 +99,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $idShop = $this->context->shop->id;
 
-        $this->clientID = $this->getValue(Younitedpay::CLIENT_ID,$idShop,'client_id', '');
-        $this->clientSecret = $this->getValue(Younitedpay::CLIENT_SECRET,$idShop,'client_secret', '');
-        $this->webHookSecret = $this->getValue(Younitedpay::WEBHOOK_SECRET,$idShop,'webhook_secret', '');
-        $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT,$idShop,'whitelist_ip', '');
-        $this->isProductionMode = (bool) $this->getValue(Younitedpay::PRODUCTION_MODE,$idShop,'production_mode', false);
-        $this->isWhiteListOn = (bool) $this->getValue(Younitedpay::IP_WHITELIST_ENABLED,$idShop,'whitelist_on', false);
-        $this->isShownMonthly = (bool) $this->getValue(Younitedpay::SHOW_MONTHLY,$idShop,'show_monthly',false);
+        $productionMode = Younitedpay::PRODUCTION_MODE;
+        $ipWhiteList = Younitedpay::IP_WHITELIST_ENABLED;
+
+        $this->clientID = $this->getValue(Younitedpay::CLIENT_ID, $idShop, 'client_id', '');
+        $this->clientSecret = $this->getValue(Younitedpay::CLIENT_SECRET, $idShop, 'client_secret', '');
+        $this->webHookSecret = $this->getValue(Younitedpay::WEBHOOK_SECRET, $idShop, 'webhook_secret', '');
+        $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
+        $this->isProductionMode = (bool) $this->getValue($productionMode, $idShop, 'production_mode', false);
+        $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
+        $this->isShownMonthly = (bool) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
     }
 
     /**
@@ -113,6 +116,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
      * @param int $idShop Id Shop concerned
      * @param string $param Param return in form while saving
      * @param string $defValue Default value if nothing's found
+     *
      * @return string|bool Value get by Configuration
      */
     protected function getValue($key, $idShop, $param, $defValue)
@@ -224,6 +228,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
             $this->ajaxDie($this->postAddNewMaturity($idShop));
+
             return;
         }
 
@@ -241,7 +246,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
-        
+
         return $cachestorage->cleanCacheDirectory();
     }
 
@@ -249,7 +254,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $this->maturitylist = $this->context->smarty->tpl_vars['maturitylist'];
 
-        $this->context->smarty->assign([            
+        $this->context->smarty->assign([
             'key' => Tools::getValue('younitedpay_maturities', 0),
             'maturitylist' => $this->maturitylist,
             'maturity' => [

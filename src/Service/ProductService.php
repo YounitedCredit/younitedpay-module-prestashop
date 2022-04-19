@@ -98,7 +98,10 @@ class ProductService
             'offers' => $offers,
         ]);
 
-        return $this->context->smarty->fetch($template);
+        return [
+            'template' => $this->context->smarty->fetch($template),
+            'offers' => $offers,
+        ];
     }
 
     protected function getValidOffers($offers, $maturities)

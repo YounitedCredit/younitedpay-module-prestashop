@@ -17,6 +17,9 @@
  *}
 
 <script async type="text/javascript" src="{$younitedpay_script}"></script>
+<script type="text/javascript">
+   var younited_product_offers_total = {$product_offers_total};
+</script>
  <div id="younitedpay_product_info" data-hook="{$younited_hook}">    
     {$credit_template nofilter}
  </div>

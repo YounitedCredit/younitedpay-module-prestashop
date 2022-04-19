@@ -633,6 +633,10 @@
     font-size: 30px !important
 }
 
+.atw-text-4xl {
+    font-size: 35px !important
+}
+
 .atw-text-5xl {
     font-size: 44px !important
 }
@@ -1024,7 +1028,6 @@
 }
 
 .younitedpay-text-highlight-md {
-    display: inline-block;
     border-bottom-width: 5px;
     --border-opacity: 1;
     border-color: #ff414d;

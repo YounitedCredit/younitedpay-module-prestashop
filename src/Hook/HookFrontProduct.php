@@ -19,7 +19,6 @@
 
 namespace YounitedpayAddon\Hook;
 
-use Media;
 use Younitedpay;
 use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -83,23 +82,25 @@ class HookFrontProduct extends AbstractHook
 
         $templateCredit = $productservice->getProductBestPrice($product);
 
-        $context->smarty->assign(
-            [
-                'younitedpay_script' => $frontScriptURI,
-                'younited_hook' => $currentHook,
-                'credit_template' => $templateCredit,
-            ]
-        );
-
         $frontModuleLink = $context->link->getModuleLink(
             $this->module->name,
             'younitedpayproduct'
         );
 
-        Media::addJsDef([
-            'younited_product_url' => $frontModuleLink,
-            'younited_product_price' => $product->getPrice(),
-        ]);
+        $totalOffers = $templateCredit['offers'];
+
+        $context->smarty->assign(
+            [
+                'younitedpay_script' => $frontScriptURI,
+                'younited_hook' => $currentHook,
+                'credit_template' => $templateCredit['template'],
+                'product_url' => $frontModuleLink,
+                'product_price' => $product->getPrice(),
+                'product_offers_total' => empty($totalOffers) === false && is_array($totalOffers)
+                    ? count($totalOffers) - 1
+                    : 0,
+            ]
+        );
 
         $context->smarty->assign('hookConfiguration', 'done');
 

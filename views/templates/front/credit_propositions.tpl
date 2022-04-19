@@ -29,7 +29,7 @@
                   {assign var="border_block" value=''}
                   {assign var="background_block" value='atw-bg-prple'}
                {/if}
-               <span class="atw-flex atw-flex-row atw-space-x-1 atw-mx-2 atw-mb-1 maturity_installment"
+               <span class="atw-flex atw-flex-row atw-space-x-1 atw-mx-2 atw-mb-1 maturity_installment maturity_installment{$key}"
                      data-key="{$key}"
                      data-mouseover="{$offer.installment_amount}€ x{$offer.maturity}">
                   <span class="atw-inline-block atw-h-7">
@@ -60,11 +60,14 @@
       </div>
    {/if}
    <div id="younited_popupzone"
-      class="atw-inset-0 atw-flex atw-fixed atw-justify-center atw-items-center atw-z-50 atw-bg-black atw-bg-opacity-50" style="display:none!important">
+      class="atw-inset-0 atw-flex atw-fixed atw-justify-center atw-items-center atw-z-50 atw-bg-black atw-bg-opacity-50" style="display:none!important;">
       <div
          class="atw-overflow-auto atw-relative atw-flex atw-flex-row atw-flex-wrap atw-rounded-sm atw-shadow-lg atw-w-screen atw-h-screen md:atw-h-800 lg:atw-w-11/12 md:atw-max-w-4xl atw-max-h-screen atw-bg-white atw-text-base">
-         <button
-            class="younited_btnhide atw-text-3xl atw-opacity-50 hover:atw-opacity-100 focus:atw-opacity-100 atw-absolute atw-top-3 atw-right-4 atw-outline-none atw-transform hover:atw-scale-125 focus:atw-scale-125 atw-transition-transform atw-duration-100 close-popup-you">×</button>
+         <button class="younited_btnhide atw-text-4xl atw-opacity-50 hover:atw-opacity-100 
+            focus:atw-opacity-100 atw-absolute atw-top-3 atw-right-4 atw-outline-none atw-transform 
+            hover:atw-scale-125 focus:atw-scale-125 atw-transition-transform atw-duration-100 close-popup-you">
+            x
+         </button>
          <div class="atw-w-full md:atw-w-1/2 atw-p-8">
             <span class="atw-justify-center atw-flex">
                <img class="atw-h-16 lazyloaded" src="{$shop_url}{$logo_younitedpay_url}" alt="youpay"
@@ -73,8 +76,11 @@
                   <img class="atw-h-8" src="{$shop_url}{$logo_younitedpay_url}" alt="youpay">
                </noscript>
             </span>
-            <div class="younitedpay-title-text atw-text-5xl atw-font-bold atw-mt-8">{l s='Younited, it\'s never been easier to pay ' mod='younitedpay'}
-<br> {l s='in' mod='younitedpay'} <span class="younitedpay-text-highlight-md atw-border-blue">{l s='several times.' mod='younitedpay'}</span></div>
+            <div class="younitedpay-title-text atw-text-4xl atw-font-bold atw-mt-8">
+               {l s='Younited, it\'s never been easier to pay ' mod='younitedpay'}{l s='in' mod='younitedpay'} 
+               <span class="younitedpay-text-highlight-md atw-border-blue">{l s='several times.' mod='younitedpay'}
+               </span>
+            </div>
             <ul class="younitedpay-howItWorks__steps atw-my-10">
                <li class="atw-pl-8 atw-mb-5">{l s='I validate my shopping cart.' mod='younitedpay'}</li>
                <li class="atw-pl-8 atw-mb-5">{l s='I choose to pay via Younited Pay.' mod='younitedpay'}</li>
