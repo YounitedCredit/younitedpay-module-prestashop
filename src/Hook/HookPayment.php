@@ -59,8 +59,8 @@ class HookPayment extends AbstractHook
 
         /** @var \Cart $cart */
         $cart = $params['cart'];
-
-        $this->cartPrice = $cart->getCartTotalPrice();
+        
+        $this->cartPrice = $cart->getOrderTotal();
 
         $templateCredit = $productservice->getBestPrice($this->cartPrice);
 
