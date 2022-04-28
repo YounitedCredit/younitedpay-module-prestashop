@@ -24,3 +24,9 @@ services:
       - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
       - '@YounitedpayAddon\Repository\ConfigRepository'
       - '@younitedpay'
+
+  YounitedpayAddon\Service\PaymentService:
+    class: 'YounitedpayAddon\Service\PaymentService'
+    arguments:
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@younitedpay'

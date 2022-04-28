@@ -25,13 +25,13 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedPaySDK\Model\BestPrice;
 use YounitedPaySDK\Model\OfferItem;
+use YounitedPaySDK\Request\BestPriceRequest;
 
 class ProductService
 {
     public $module;
-
-    private $curl;
 
     /** @var \Context */
     private $context;
@@ -53,14 +53,14 @@ class ProductService
         $this->configRepository = $configRepository;
     }
 
-    public function getProductBestPrice(\Product $product)
+    public function getBestPrice($product_price)
     {
         $client = new YounitedClient($this->context->shop->id, $this->logger);
         if ($client->isCrendentialsSet() === false) {
-            return '';
+            return $this->noOffers();
         }
 
-        $productPrice = (float) \Tools::ps_round($product->getPrice(), 2);
+        $productPrice = (float) \Tools::ps_round($product_price, 2);
 
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
@@ -70,17 +70,22 @@ class ProductService
             $maturities = $this->getAllMaturities($productPrice);
 
             if (count($maturities) <= 0) {
-                return '';
+                return $this->noOffers();
             }
 
-            /** @var array $response */
-            $response = $client->getBestPrice($productPrice);
+            $body = new BestPrice();
+            $body->setBorrowedAmount($productPrice);
+
+            $request = new BestPriceRequest();
+
+            /** @var array $response */        
+            $response = $client->sendRequest($body, $request);
 
             if ($response['success'] === false) {
-                return '';
+                return $this->noOffers();
             }
 
-            $offers = $this->getValidOffers($response['offers'], array_column($maturities, 'maturity'));
+            $offers = $this->getValidOffers($response['response'], array_column($maturities, 'maturity'));
 
             $cachestorage->set((string) $productPrice, [
                 'offers' => $offers,
@@ -104,6 +109,14 @@ class ProductService
         ];
     }
 
+    protected function noOffers()
+    {
+        return [
+            'template' => '',
+            'offers' => [],
+        ];
+    }
+
     protected function getValidOffers($offers, $maturities)
     {
         $validOffers = [];
@@ -118,7 +131,7 @@ class ProductService
                     'total_amount' => $totalAmount,
                     'interest_total' => $offer->getInterestsTotalAmount(),
                     'taeg' => $offer->getAnnualPercentageRate(),
-                    'tdf' => $offer->getAnnualPercentageRate(),
+                    'tdf' => $offer->getAnnualDebitRate(),
                 ];
             }
         }
@@ -129,5 +142,12 @@ class ProductService
     public function getAllMaturities($productPrice)
     {
         return $this->configRepository->getAllMaturities($productPrice);
+    }
+
+    public function addLog($msg, $objectModel = null, $objectId = null, $name = null, $level = 'info')
+    {
+        $this->logger->openLogger();
+        $this->logger->addLog($msg, $objectModel, $objectId, $name, $level);
+        $this->logger->closeLogger();
     }
 }

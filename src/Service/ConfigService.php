@@ -26,7 +26,9 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedPaySDK\Model\BestPrice;
 use YounitedPaySDK\Model\OfferItem;
+use YounitedPaySDK\Request\BestPriceRequest;
 
 class ConfigService
 {
@@ -100,12 +102,18 @@ class ConfigService
         if ($client->isCrendentialsSet() === false) {
             return [
                 'message' => $this->module->l('No credential saved'),
+                'maturityList' => [3, 4, 5, 10],
                 'status' => false,
             ];
         }
 
+        $body = new BestPrice();
+        $body->setBorrowedAmount(15000.00);
+
+        $request = new BestPriceRequest();   
+
         /** @var array $response */
-        $response = $client->getBestPrice(150.00);
+        $response = $client->sendRequest($body, $request);
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
@@ -117,7 +125,7 @@ class ConfigService
 
         return [
             'message' => $this->module->l('Connexion Ok'),
-            'maturityList' => $this->getMaturitiesResponse($response['offers']),
+            'maturityList' => $this->getMaturitiesResponse($response['response']),
             'status' => true,
         ];
     }

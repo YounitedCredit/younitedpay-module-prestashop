@@ -25,9 +25,8 @@ use Younitedpay;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Client;
-use YounitedPaySDK\Model\BestPrice;
-use YounitedPaySDK\Request\BestPriceRequest;
-use YounitedPaySDK\Response\BestPriceResponse;
+use YounitedPaySDK\Request\AbstractRequest;
+use YounitedPaySDK\Response\AbstractResponse;
 
 class YounitedClient
 {
@@ -75,70 +74,75 @@ class YounitedClient
     }
 
     /**
-     * @param float $amount
+     * Send API Requests
      *
-     * @return array
+     * @return array ['response' => mixed, 'success' => bool]
      */
-    public function getBestPrice($amount)
+    public function sendRequest($body, $requestObject)
     {
         $client = new Client();
         try {
-            $body = new BestPrice();
-            $body->setBorrowedAmount($amount);
-
             if ($this->isProductionMode === false) {
-                $request = (new BestPriceRequest())
-                ->enableSanbox()
-                ->setModel($body);
+                /** @var AbstractRequest $request */
+                $request = $requestObject
+                    ->enableSanbox()
+                    ->setModel($body);
             } else {
-                $request = (new BestPriceRequest())
-                ->setModel($body);
+                /** @var AbstractRequest $request */
+                $request = $requestObject->setModel($body);
             }
 
-            $this->apiLogger->log($this, $request, 'Request', true);
+            $classRequest = (new \ReflectionClass($requestObject))->getShortName();
 
-            /** @var BestPriceResponse $response */
+            $this->apiLogger->log($this, $request, 'Request ' . $classRequest, true);
+
+            /** @var AbstractResponse $response */
             $response = $client->setCredential($this->clientId, $this->clientSecret)
                 ->sendRequest($request);
 
-            $this->apiLogger->log($this, $response, 'Response', true);
+            $this->apiLogger->log($this, $response, 'Response' . $classRequest, true);
 
             if ($response->getStatusCode() === 200) {
                 return [
-                    'offers' => $response->getModel(),
+                    'response' => $response->getModel(),
                     'success' => true,
                 ];
             }
 
             $errorResponse = [
-                'message' => $response->getReasonPhrase(),
+                'response' => $response->getReasonPhrase(),
                 'success' => false,
             ];
 
-            $this->apiLogger->log($this, $errorResponse, 'Error Response', true);
+            $this->apiLogger->log($this, $errorResponse, 'Error Response ' . $classRequest, true);
 
             return $errorResponse;
         } catch (Exception $e) {
-            $this->logger->logError(
-                sprintf($e->getMessage()),
-                (new \ReflectionClass($this))->getShortName(),
-                null,
-                'Error BestPrice Request'
-            );
-
-            $errorMsg = [
-                'msg' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ];
-            $this->apiLogger->log($this, $errorMsg, 'Error', true);
-
-            return [
-                'message' => $e->getMessage(),
-                'success' => false,
-            ];
+            return $this->setErrorMessage($e, $requestObject);
         }
+    }
+
+    private function setErrorMessage($e, $requestObject)
+    {
+        $this->logger->logError(
+            sprintf($e->getMessage()),
+            (new \ReflectionClass($this))->getShortName(),
+            null,
+            'Error Request' . (new \ReflectionClass($requestObject))->getShortName()
+        );
+
+        $errorMsg = [
+            'msg' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString(),
+        ];
+        $this->apiLogger->log($this, $errorMsg, 'Error', true);
+
+        return [
+            'response' => $e->getMessage(),
+            'success' => false,
+        ];
     }
 
     private function setApiCredentials($idShop)

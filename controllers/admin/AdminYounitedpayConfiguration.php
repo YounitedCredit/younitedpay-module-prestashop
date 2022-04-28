@@ -151,6 +151,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $specsVariables = $this->configService->checkSpecifications($this->isProductionMode);
             $this->maturitylist = $specsVariables['maturityList'];
+
+            /** @var CacheYounited $cachestorage */
+            $cachestorage = new CacheYounited();
+            $cachestorage->set('maturitylist', $this->maturitylist);
+
             $tplVars = [
                 'configuration' => $this->getConfigurationVariables(),
                 'config_check' => $specsVariables['specs'],
@@ -252,7 +257,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function postAddNewMaturity($idShop)
     {
-        $this->maturitylist = $this->context->smarty->tpl_vars['maturitylist'];
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+        $cacheExists = $cachestorage->exist('maturitylist');
+
+        if ($cacheExists === false || $cachestorage->isExpired('maturitylist') === true) {
+            $this->maturitylist = [1, 3, 5, 10];
+        } else {
+            $cacheInformations = $cachestorage->get('maturitylist');
+            $this->maturitylist = $cacheInformations['content'];
+        }
 
         $this->context->smarty->assign([
             'key' => Tools::getValue('younitedpay_maturities', 0),

@@ -27,5 +27,6 @@ class HookDispatcher extends AbstractHookDispatcher
         CommonHook::class,
         HookAdminOrder::class,
         HookFrontProduct::class,
+        HookPayment::class,
     ];
 }

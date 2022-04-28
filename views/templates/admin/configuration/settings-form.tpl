@@ -26,18 +26,19 @@
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12">
                     <div class="form-group mt-4 row">
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="younitedpay_mode">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="bridge_mode">
                             {l s='Environment' mod='younitedpay'}
                         </label>
-                        <div class="form-select col-lg-4 align-item-center">
-                            <select class="form-control" name="production_mode" style="width:130px;">
-                                <option value="0" {if $configuration.production_mode==false}selected{/if}>
-                                    {l s='Test' mod='younitedpay'}
-                                </option>
-                                <option value="1" {if $configuration.production_mode==true}selected{/if}>
-                                    {l s='Production' mod='younitedpay'}
-                                </option>
-                            </select>
+                        <div class="col-lg-4 align-item-center">                        
+                            <span class="ps-switch ps-switch-lg" id="prod_switch">
+                                <input type="radio" name="production_mode" id="production_mode_off" 
+                                    value="0"{if $configuration.production_mode === false} checked{/if}/>
+                                <label for="production_mode_off">{l s='Test' mod='younitedpay'}</label>
+                                <input type="radio" name="production_mode" id="production_mode_on" 
+                                    value="1"{if $configuration.production_mode === true} checked{/if}/>
+                                <label for="production_mode_on">{l s='Production' mod='younitedpay'}</label>
+                                <span class="slide-button"></span>
+                            </span>
                             <small class="form-text">
                                 {l s='This option defines in whitch environment your module is configured'
                                 mod='younitedpay'}

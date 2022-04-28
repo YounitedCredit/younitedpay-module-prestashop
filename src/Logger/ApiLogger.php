@@ -84,7 +84,7 @@ class ApiLogger
             $logData = json_encode($data);
         }
 
-        if ($type === 'Response') {
+        if (substr($type, 0, 8) === 'Response') {
             $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($data->getModel()));
         }
 

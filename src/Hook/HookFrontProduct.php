@@ -22,6 +22,7 @@ namespace YounitedpayAddon\Hook;
 use Younitedpay;
 use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayClasslib\Hook\AbstractHook;
 
 class HookFrontProduct extends AbstractHook
@@ -56,6 +57,24 @@ class HookFrontProduct extends AbstractHook
         return $this->displaySelectedHook($params, 'displayReassurance');
     }
 
+    private function getHookConfiguration()
+    {
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+        $cacheExists = $cachestorage->exist('hookConfiguration');
+
+        if ($cacheExists === false || $cachestorage->isExpired('hookConfiguration') === true) {
+            $hookConfiguration = \Configuration::get(Younitedpay::FRONT_HOOK);
+
+            $cachestorage->set('hookConfiguration', $hookConfiguration);
+        } else {
+            $cacheInformations = $cachestorage->get('hookConfiguration');
+            $hookConfiguration = $cacheInformations['content'];
+        }
+
+        return $hookConfiguration;
+    }
+
     private function displaySelectedHook($params, $currentHook)
     {
         $context = \Context::getContext();
@@ -64,7 +83,7 @@ class HookFrontProduct extends AbstractHook
         } catch (\Exception $ex) {
         }
         if (empty($hookConfiguration) === true) {
-            $hookConfiguration = \Configuration::get(Younitedpay::FRONT_HOOK);
+            $hookConfiguration = $this->getHookConfiguration();
             $context->smarty->assign('hookConfiguration', $hookConfiguration);
         }
 
@@ -80,7 +99,7 @@ class HookFrontProduct extends AbstractHook
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
-        $templateCredit = $productservice->getProductBestPrice($product);
+        $templateCredit = $productservice->getBestPrice($product->getPrice());
 
         $frontModuleLink = $context->link->getModuleLink(
             $this->module->name,
