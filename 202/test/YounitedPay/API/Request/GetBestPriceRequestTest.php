@@ -21,7 +21,8 @@
 namespace YounitedpayAddon\API\Request;
 
 use YounitedpayAddon\YounitedTests;
-use YounitedPaySDK\Response\BestPriceResponse;
+use YounitedPaySDK\Request\BestPriceRequest;
+use YounitedPaySDK\Model\BestPrice;
 
 require_once __DIR__ . '../../../../bootstrap.php';
 
@@ -29,10 +30,16 @@ class GetBestPriceRequestTest extends YounitedTests
 {
     public function testGetBestPriceRequestTest()
     {
-        $response = $this->client->getBestPrice(149.00);
+        
+
+        $body = new BestPrice();
+        $body->setBorrowedAmount(1500.00);
+
+        $request = new BestPriceRequest();
+        $response = $this->client->sendRequest($body, $request);
         $this->assertNotNull($response);
         $this->assertNotEmpty($response);
         $this->assertArrayHasKey('success', $response);
-        $this->assertArrayHasKey('message', $response);
+        $this->assertArrayHasKey('response', $response);
     }
 }
