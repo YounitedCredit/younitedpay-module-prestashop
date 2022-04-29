@@ -22,6 +22,7 @@ document.onreadystatechange = function() {
     if (younitedEvents === true) {
         return false;
     }
+
     $('.younitedpay-collapse').click(toggleAccordion);
     addEventsMaturity();
     addDoubleListEvent();
@@ -29,11 +30,53 @@ document.onreadystatechange = function() {
         addMaturity(e);
     });
     $('.copy-clipboard').click(function(e) {
-        console.log(e);
         copyToClipboard(e);
     });
+    $('.disable_on_change').click(function(e) {
+        toggleDisabledZone(e);
+    });
+    $('#hide_requirements').click(HideRequirements);
+    $('#younitedpay_status_min').click(ShowRequirements);
     younitedEvents = true;
 };
+
+function HideRequirements()
+{
+    $('#younitedpay_status_block').attr('style','display:none!important;');
+    $('#younitedpay_status_min').show();
+}
+
+function ShowRequirements()
+{
+    $('#younitedpay_status_block').removeAttr('style');
+    $('#younitedpay_status_min').hide();
+}
+
+function toggleDisabledZone(event) 
+{
+    var clickedZone = event.currentTarget;
+    var zoneToToggle = $(clickedZone).attr('data-toggle');
+    var inputId = $(clickedZone).attr('data-input');
+    var inputValue = $('#' + inputId).not(':checked').length > 0;
+    console.log('zoneToToggle: data-'  + zoneToToggle);
+    console.log('inputId: '  + inputId);
+    console.log('inputValue: '  + inputValue);
+    if (inputValue === false) {
+        $('[data-' + zoneToToggle + ']').removeAttr('disabled');
+        if (zoneToToggle === 'month') {
+            $('#widget_input').prop('disabled', true);
+            $('#widget_input').removeClass('widget_disabled');
+            $('#widget_input').addClass('widget_enabled');
+        }
+    } else {
+        $('[data-' + zoneToToggle + ']').prop('disabled', true);
+        if (zoneToToggle === 'month') {
+            $('#widget_input').addClass('widget_disabled');
+            $('#widget_input').removeClass('widget_enabled');
+        }
+    }
+
+}
 
 function toggleAccordion()
 {

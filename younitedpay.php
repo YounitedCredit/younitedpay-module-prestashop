@@ -192,7 +192,7 @@ class Younitedpay extends PaymentModule
 
     public function uninstall()
     {
-        return $this->pmUninstall();
+        return \Module::uninstall();
     }
 
     public function addRadioCurrencyRestrictionsForModule(array $shops = [])

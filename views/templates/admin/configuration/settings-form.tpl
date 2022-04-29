@@ -92,7 +92,8 @@
                             {l s='Enable IP Whitelist' mod='younitedpay'}
                         </label>
                         <div class="col-lg-4 align-item-center">                        
-                            <span class="ps-switch ps-switch-lg">
+                            <span class="ps-switch ps-switch-lg disable_on_change" data-input="whitelist_on_on" 
+                                data-toggle="ipwebhook">
                                 <input type="radio" name="whitelist_on" id="whitelist_on_off" 
                                     value="0"{if $configuration.whitelist_on === false} checked{/if}/>
                                 <label for="whitelist_on_off">Disabled</label>
@@ -108,7 +109,8 @@
                             {l s='IP Whitelist' mod='younitedpay'}
                         </label>
                         <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control" id="whitelist_ip" name="whitelist_ip" 
+                            <input type="text" {if $configuration.whitelist_on === false} disabled{/if}
+                                class="form-control" data-ipwebhook id="whitelist_ip" name="whitelist_ip" 
                                 value="{$configuration.whitelist_ip|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='When enabled, only the listed IPs will see the module’s components on the site' 

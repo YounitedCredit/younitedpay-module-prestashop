@@ -47,12 +47,17 @@
           </svg>
           {* <img src="@TODO:MARKETING IMAGE IN SEVERAL LANGS ?" alt="marketting image" /> *}
         </div>
-        <div class="col-sm-4 d-flex">
+        <div class="col-sm-4 d-flex" id="younitedpay_status_block">
           <div class="card col-xl-12 pl-2 pr-2 d-flex flex-wrap flex-row" id="younitedpay_status_zone">
+            <h3 class="mt-2 ml-2 row col-xl-12">
+              <div class="col-xl-11">
+                {l s='Requirements' mod='younitedpay'}
+              </div>
+              <div class="col-xl-1">
+                  <i class="material-icons mt-1" id="hide_requirements">close</i>
+              </div>
+            </h3>
             <div class="card-block justify-content-start align-items-start">
-              <h3 class="mt-2 ml-2 row col-xl-12">
-                {l s='Status' mod='younitedpay'}
-              </h3>
               {* <h4 class="col-xl-12"> *}
                 {foreach from=$specifications item=spec}
                   <div class="row col-xl-12 ml-2 mb-1">
@@ -92,4 +97,4 @@
       </div> {* row-justif *}
     </div> {* sm-12 *}
   </div> {* row *}  
-</div>
+</div>      

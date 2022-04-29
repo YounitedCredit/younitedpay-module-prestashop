@@ -27,7 +27,7 @@
               </div>
               <div class="card-block row justify-content-center">
                 <div class="col-10 mb-3 mt-3">
-                  <div class="card-text">
+                  <div class="card-text row justify-content-center">
                     <h4>
                     {l s='To configure this module you need to select a sub shop' mod='younitedpay'}
                     </h4>

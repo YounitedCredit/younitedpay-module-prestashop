@@ -161,6 +161,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'config_check' => $specsVariables['specs'],
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
+                'shop_img_url' => __PS_BASE_URI__. 'modules/' . $this->module->name . '/views/img/',
+                'no_keys_text' => $this->l('Please enter your API credentials before changing the module’s settings'),
             ];
 
             $alertHere = empty($this->confirmations) && empty($this->errors);
@@ -182,7 +184,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $isoCode = 'en';
         }
 
-        return '/modules/' . $this->module->name . '/views/img/' . $fileImg;
+        return __PS_BASE_URI__. 'modules/' . $this->module->name . '/views/img/' . $fileImg;
     }
 
     protected function getDefaultMaturities()
@@ -377,6 +379,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'whitelist_ip' => $this->whitelistIP,
             'show_monthly' => $this->isShownMonthly,
             'widget_info' => '{widget name="younitedpay_offers" amount="149.90"}',
+            'no_config' => empty($this->clientID) || empty($this->clientSecret),
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),

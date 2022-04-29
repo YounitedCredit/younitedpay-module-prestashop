@@ -38,7 +38,7 @@ class ConfigRepository
 
         if ($productPrice > 0) {
             $query->where((int) pSQL($productPrice) . ' >= minimum');
-            $query->where('maximum >= ' . (int) pSQL($productPrice));
+            $query->where('( maximum >= ' . (int) pSQL($productPrice) . ' or maximum = 0 )');
         }
 
         $result = Db::getInstance()->executeS($query);
