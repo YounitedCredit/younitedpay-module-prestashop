@@ -78,6 +78,23 @@ class HookFrontProduct extends AbstractHook
     private function displaySelectedHook($params, $currentHook)
     {
         $context = \Context::getContext();
+
+        $controller = $context->controller;
+
+        switch (true) {
+            case $controller instanceof \ProductController:
+                $idProduct = \Tools::getValue('id_product');
+                $product = new \Product($idProduct);
+                $price = $product->getPrice();
+                break;
+            case $controller instanceof \CartController:
+                $price = $context->cart->getOrderTotal();
+                break;
+            case $controller instanceof \IndexController:
+            default:
+                return '';                
+        }
+
         try {
             $hookConfiguration = $context->smarty->tpl_vars['hookConfiguration']->value;
         } catch (\Exception $ex) {
@@ -93,13 +110,10 @@ class HookFrontProduct extends AbstractHook
 
         $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/front/younitedpay_product.js';
 
-        $idProduct = \Tools::getValue('id_product');
-        $product = new \Product($idProduct);
-
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
-        $templateCredit = $productservice->getBestPrice($product->getPrice());
+        $templateCredit = $productservice->getBestPrice($price);
 
         $frontModuleLink = $context->link->getModuleLink(
             $this->module->name,
@@ -114,7 +128,7 @@ class HookFrontProduct extends AbstractHook
                 'younited_hook' => $currentHook,
                 'credit_template' => $templateCredit['template'],
                 'product_url' => $frontModuleLink,
-                'product_price' => $product->getPrice(),
+                'product_price' => $price,
                 'product_offers_total' => empty($totalOffers) === false && is_array($totalOffers)
                     ? count($totalOffers) - 1
                     : 0,

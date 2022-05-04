@@ -78,7 +78,7 @@ class ProductService
 
             $request = new BestPriceRequest();
 
-            /** @var array $response */        
+            /** @var array $response */
             $response = $client->sendRequest($body, $request);
 
             if ($response['success'] === false) {

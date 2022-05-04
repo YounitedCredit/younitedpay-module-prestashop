@@ -34,11 +34,23 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
         $maturity = (int) Tools::getValue('maturity');
         $totalAmount = (float) Tools::getValue('amount');
 
-        $response = $paymentService->createContract($maturity, $totalAmount);
+        try {
+            $response = $paymentService->createContract($maturity, $totalAmount);
+        } catch (\Exception $ex) {
+            $response = [
+                'response' => $ex->getMessage(),
+                'success' => false
+            ];
+        }        
+
+        if ($response['success'] === true) {
+            $this->redirect_after = $response['url'];         
+            $this->redirect();
+        }
+
+        $this->errors[] = $this->l('Error while trying to get Credit URL :');
 
         $this->errors[] = $this->l(json_encode($response));
-
-        $this->errors[] = $this->l('Coming soon !');
 
         $this->redirectPayment();
     }

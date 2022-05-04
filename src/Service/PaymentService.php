@@ -20,11 +20,15 @@
 
 namespace YounitedpayAddon\Service;
 
+use Configuration;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
-use YounitedpayAddon\Repository\ConfigRepository;
+use YounitedpayAddon\Repository\PaymentRepository;
+use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Model\Address;
+use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
 use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
@@ -43,103 +47,212 @@ class PaymentService
     /** @var ProcessLoggerHandler */
     protected $logger;
 
-    /** @var ConfigRepository */
-    protected $configRepository;
+    /** @var PaymentRepository */
+    protected $repository;
 
     public function __construct(
         ProcessLoggerHandler $logger,
+        PaymentRepository $repository,
         Younitedpay $module
     ) {
         $this->module = $module;
         $this->logger = $logger;
+        $this->repository = $repository;
         $this->context = \Context::getContext();
     }
 
     public function createContract($maturity, $totalAmount)
     {
-        $client = new YounitedClient($this->context->shop->id, $this->logger);
-        if ($client->isCrendentialsSet() === false) {
-            return [
-                'success' => false,
-                'error' => ''
-            ];
-        }
+        $regValidPhone = '/^((\+|00)\d{1,3})?\d{6,12}$/';
 
         $customerAdress = new \Address($this->context->cart->id_address_delivery);
         $customer = $this->context->customer;
         $country = new \Country($customerAdress->id_country);
 
-        $birthdate = new \DateTime($customer->birthday);
-        
+        $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone);
+
+        if ($isPhoneInternational === 1) {
+            $cellPhone = $customerAdress->phone;
+        } else {
+            $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone_mobile);
+            if ($isPhoneInternational === 1) {
+                $cellPhone = $customerAdress->phone_mobile;
+            }
+        }
+
+        if ($isPhoneInternational === 0 || $isPhoneInternational === false) {
+            return [
+                'response' => $this->module->l('Error : Phone number is not in international format (+XXX)'),
+                'status' => 0,
+                'success' => false,
+            ];
+        }
+
+        $client = new YounitedClient($this->context->shop->id, $this->logger);
+        if ($client->isCrendentialsSet() === false) {
+            return [
+                'success' => false,
+                'response' => 'no credential set',
+            ];
+        }
+
+        $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
+            ? new \DateTime($customer->birthday . 'T00:00:00')
+            : null;
+
+        $adresseStreet = $customerAdress->address1;
+
         $address = (new Address())
             ->setStreetNumber('')
-            ->setStreetName($customerAdress->address1 . empty($customerAdress->address2))
-            ->setAdditionalAddress($customerAdress->other)
-            ->setCity($customerAdress->country)
+            ->setStreetName($adresseStreet)
+            ->setAdditionalAddress($customerAdress->address2 . ' ' . $customerAdress->other)
+            ->setCity($customerAdress->city)
             ->setPostalCode($customerAdress->postcode)
             ->setCountryCode($country->iso_code);
-        
+
         $personalInformation = (new PersonalInformation())
             ->setFirstName($customer->firstname)
             ->setLastName($customer->lastname)
             ->setGenderCode((new \Gender())->name[$customer->id_gender])
             ->setEmailAddress($customer->email)
-            ->setCellPhoneNumber($customerAdress->phone_mobile)
+            ->setCellPhoneNumber($cellPhone)
             ->setBirthDate($birthdate)
             ->setAddress($address);
-             
-        // $basketItem1 = (new BasketItem()) @TODO ADD BASKET ITEMS
-        //     ->setItemName('Item basket 1')
-        //     ->setQuantity(2)
-        //     ->setUnitPrice(45.0);
-        
-        // $basketItem2 = (new BasketItem())
-        //     ->setItemName('Item basket 2')
-        //     ->setQuantity(1)
-        //     ->setUnitPrice(33.0);
-        
+
+        $cartItems = $this->context->cart->getProducts();
+
+        $basketItems = [];
+        foreach ($cartItems as $productInCart) {
+            $basketItems[] = (new BasketItem())
+                ->setItemName($productInCart['name'])
+                ->setQuantity((int) $productInCart['cart_quantity'])
+                ->setUnitPrice((float) $productInCart['price']);
+        }
+
         $basket = (new Basket())
-            ->setBasketAmount($totalAmount)
-            ->setItems([]);
-            
+            ->setBasketAmount((float) $totalAmount)
+            ->setItems($basketItems);
+
         $merchantUrls = (new MerchantUrls())
-            ->setOnApplicationFailedRedirectUrl('on-application-failed-redirect-url.com')
-            ->setOnApplicationSucceededRedirectUrl('on-application-succeeded-redirect-url.com')
-            ->setOnCanceledWebhookUrl('on-canceled-webhook-url.com')
-            ->setOnWithdrawnWebhookUrl('on-withdrawn-webhook-url.com');
-            
+            ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
+            ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
+            ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
+            ->setOnWithdrawnWebhookUrl($this->getLink('webhook', ['widhdrawn' => 1]));
+
         $merchantOrderContext = (new MerchantOrderContext())
-            ->setChannel('test')
-            ->setShopCode('TEST')
-            ->setMerchantReference('MerchantReference')
-            ->setAgentEmailAddress('merchant@mail.com');
-            
+            ->setChannel('ONLINE')
+            // ->setShopCode((string) $this->context->shop->id)
+            ->setMerchantReference((string) $this->context->cart->id);
+
         $body = (new InitializeContract())
+            ->setRequestedMaturity((int) $maturity)
             ->setPersonalInformation($personalInformation)
             ->setBasket($basket)
             ->setMerchantUrls($merchantUrls)
             ->setMerchantOrderContext($merchantOrderContext);
-        
-        $isProductionMode = (bool) \Configuration::get(
-            Younitedpay::PRODUCTION_MODE,
-            null,
-            null,
-            $this->context->shop->id,
-            false
-        );
-
-        // if ($isProductionMode === false) {
-        //     $request = (new InitializeContractRequest())
-        //     ->enableSanbox()
-        //     ->setModel($body);
-        // } else {
-        //     $request = (new InitializeContractRequest())
-        //     ->setModel($body);
-        // }
 
         $request = new InitializeContractRequest();
 
-        return $client->sendRequest($body, $request);
+        $this->addLogAPI(json_encode($body), 'Info');
+
+        $response = $client->sendRequest($body, $request);
+
+        if ($response['success'] === false) {
+            return $response;
+        }
+
+        /** @var ArrayCollection $responseObject */
+        $responseObject = $response['response'];
+
+        $urlPayment = $responseObject['redirectUrl'];
+        
+        $contractRef = $responseObject['contractReference'];
+
+        $this->saveContractInit($contractRef);
+
+        $response['url'] = $urlPayment;
+
+        return $response;
+    }
+
+    protected function saveContractInit($contractRef)
+    {
+        /** @var YounitedPayContract $contractYounited */
+        $contractYounited = $this->getContractByCart();
+        $contractYounited->id_cart = $this->context->cart->id;
+        $contractYounited->id_external_younitedpay_contract = $contractRef;
+        $contractYounited->is_confirmed = false;
+        $contractYounited->is_activated = false;
+        $contractYounited->is_withdrawn = false;
+        $contractYounited->is_canceled = false;
+        $contractYounited->save();
+    }
+
+    /**
+     * Validate and create Order when we have confirmation by API return
+     * 
+     * @param \Cart $cart
+     * 
+     * @param \Customer $customer
+     * 
+     * @return bool Result of validation
+     * 
+     */
+    public function validateOrder($cart, $customer)
+    {
+        $context = \Context::getContext();
+        $currency = $context->currency;
+
+        $total = (float) $cart->getOrderTotal(true, \Cart::BOTH);
+        
+        $younitedContract = $this->getContractByCart();
+        if (empty($younitedContract->id_cart) === true) {
+            return false;
+        }
+
+        $extra_vars = [
+            'transaction_id' => $younitedContract->id_external_younitedpay_contract,
+            '{shop_domain}' => Configuration::get('PS_SHOP_DOMAIN'),
+        ];
+
+        $defaultDelivered = null !== _PS_OS_WS_PAYMENT_
+            ? _PS_OS_WS_PAYMENT_
+            : Configuration::getGlobalValue('PS_OS_WS_PAYMENT');
+
+        $orderCreated = $this->module->validateOrder(
+            $cart->id,
+            (int) $defaultDelivered,
+            $total,
+            $this->module->l('Payment via YounitedPay', []),
+            null,
+            $extra_vars,
+            (int) $currency->id,
+            false,
+            $customer->secure_key
+        );
+
+        if ($orderCreated === true) {
+            $younitedContract->is_confirmed = true;
+            $younitedContract->confirmation_date = new \Datetime();
+            $younitedContract->id_order = $this->module->currentOrder;
+            return $younitedContract->save();            
+        }
+    }
+
+    protected function getContractByCart()
+    {
+        return $this->repository->getContractByCart((int) $this->context->cart->id);
+    }
+
+    protected function getLink($controller, $params = [])
+    {
+        $params['id_cart'] = $this->context->cart->id;
+
+        return $this->context->link->getModuleLink(
+            $this->module->name,
+            $controller,
+            $params
+        );
     }
 
     public function addLog($msg, $objectModel = null, $objectId = null, $name = null, $level = 'info')
@@ -147,5 +260,13 @@ class PaymentService
         $this->logger->openLogger();
         $this->logger->addLog($msg, $objectModel, $objectId, $name, $level);
         $this->logger->closeLogger();
+        $this->addLogAPI($msg, $level);
+    }
+
+    protected function addLogAPI($msg, $type='Error')
+    {
+        /** @var ApiLogger $apiLogger */
+        $apiLogger = ApiLogger::getInstance();
+        $apiLogger->log($this, $msg, $type, false);
     }
 }

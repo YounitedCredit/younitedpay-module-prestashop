@@ -25,6 +25,7 @@ use Younitedpay;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Client;
+use YounitedPaySDK\Model\AbstractModel;
 use YounitedPaySDK\Request\AbstractRequest;
 use YounitedPaySDK\Response\AbstractResponse;
 
@@ -78,19 +79,15 @@ class YounitedClient
      *
      * @return array ['response' => mixed, 'success' => bool]
      */
-    public function sendRequest($body, $requestObject)
+    public function sendRequest(AbstractModel $body, AbstractRequest $requestObject)
     {
         $client = new Client();
         try {
+            /** @var AbstractRequest $request */
             if ($this->isProductionMode === false) {
-                /** @var AbstractRequest $request */
-                $request = $requestObject
-                    ->enableSanbox()
-                    ->setModel($body);
-            } else {
-                /** @var AbstractRequest $request */
-                $request = $requestObject->setModel($body);
+                $requestObject = $requestObject->enableSandbox();
             }
+            $request = $requestObject->setModel($body);
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
 
@@ -105,12 +102,14 @@ class YounitedClient
             if ($response->getStatusCode() === 200) {
                 return [
                     'response' => $response->getModel(),
+                    'status' => $response->getStatusCode(),
                     'success' => true,
                 ];
             }
 
             $errorResponse = [
                 'response' => $response->getReasonPhrase(),
+                'status' => $response->getStatusCode(),
                 'success' => false,
             ];
 

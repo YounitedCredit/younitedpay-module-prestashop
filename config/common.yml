@@ -11,6 +11,9 @@ services:
   YounitedpayAddon\Repository\ConfigRepository:
     class: 'YounitedpayAddon\Repository\ConfigRepository'
 
+  YounitedpayAddon\Repository\PaymentRepository:
+    class: 'YounitedpayAddon\Repository\PaymentRepository'
+
   YounitedpayAddon\Service\ConfigService:
     class: 'YounitedpayAddon\Service\ConfigService'
     arguments:
@@ -29,4 +32,5 @@ services:
     class: 'YounitedpayAddon\Service\PaymentService'
     arguments:
       - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Repository\PaymentRepository'
       - '@younitedpay'

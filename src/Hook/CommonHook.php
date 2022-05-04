@@ -31,21 +31,29 @@ class CommonHook extends AbstractHook
     public function actionFrontControllerSetMedia($params)
     {
         $controller = Context::getContext()->controller;
-        if ($controller instanceof \ProductController) {
-            $controller->registerJavascript(
-                'younitedpay-main',
-                'modules/' . $this->module->name . '/views/js/front/front.js',
-                [
-                    'priority' => 500,
-                ]
-            );
-            $controller->registerStylesheet(
-                'younitedpay-main',
-                'modules/' . $this->module->name . '/views/css/front.css',
-                [
-                    'priority' => 500,
-                ]
-            );
+        switch (true) {
+            case $controller instanceof \ProductController:
+            case $controller instanceof \CartController:
+                $this->registerMedia($controller);
+                break;
         }
+    }
+
+    protected function registerMedia(\FrontController $controller)
+    {
+        $controller->registerJavascript(
+            'younitedpay-main',
+            'modules/' . $this->module->name . '/views/js/front/front.js',
+            [
+                'priority' => 500,
+            ]
+        );
+        $controller->registerStylesheet(
+            'younitedpay-main',
+            'modules/' . $this->module->name . '/views/css/front.css',
+            [
+                'priority' => 500,
+            ]
+        );
     }
 }

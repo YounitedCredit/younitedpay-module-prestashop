@@ -110,7 +110,7 @@ class ConfigService
         $body = new BestPrice();
         $body->setBorrowedAmount(15000.00);
 
-        $request = new BestPriceRequest();   
+        $request = new BestPriceRequest();
 
         /** @var array $response */
         $response = $client->sendRequest($body, $request);
