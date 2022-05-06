@@ -43,7 +43,6 @@ class LoggerService
     public function __construct(ProcessLoggerHandler $logger)
     {
         $this->logger = $logger;
-        $this->context = \Context::getContext();
     }
 
     /**
@@ -52,8 +51,8 @@ class LoggerService
      * @param string $msg Message to log
      * @param string $objectModel object Model concerned (null default)
      * @param string $objectId object Model Id (null default)
-     * @param string name Name of message (null default)
-     * @param string level Level of log ('info' default)
+     * @param string $name Name of message (null default)
+     * @param string $level Level of log ('info' default)
      */
     public function addLog($msg, $name = null, $level = 'info', $class = null, $objectModel = null, $objectId = null)
     {

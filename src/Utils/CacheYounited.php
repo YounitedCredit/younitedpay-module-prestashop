@@ -34,7 +34,7 @@ class CacheYounited extends CacheStorage
     /**
      * Expired in seconds
      *
-     * @var null
+     * @var int
      */
     protected $expiry = 3600; // 1h
 }

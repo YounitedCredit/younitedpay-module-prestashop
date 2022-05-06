@@ -35,6 +35,8 @@ class OrderService
 {
     public $module;
 
+    public $context;
+
     /** @var LoggerService */
     protected $loggerservice;
 
@@ -52,6 +54,7 @@ class OrderService
         $this->module = $module;
         $this->paymentrepository = $paymentrepository;
         $this->loggerservice = $loggerservice;
+        $this->context = \Context::getContext();
     }
 
     /**
@@ -121,7 +124,7 @@ class OrderService
     /**
      * Activate the contract - Update the database and make a request to the API
      *
-     * @param $idOrder
+     * @param int $idOrder
      */
     public function activateOrder($idOrder)
     {

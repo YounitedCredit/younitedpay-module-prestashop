@@ -62,7 +62,7 @@ class HookAdminOrder extends AbstractHook
 
     public function actionOrderStatusPostUpdate($params)
     {
-        /** @var \OrderStatus $orderStatus */
+        /** @var \OrderState $orderStatus */
         $orderStatus = $params['newOrderStatus'];
 
         $order = new \Order((int) $params['id_order']);
@@ -94,7 +94,7 @@ class HookAdminOrder extends AbstractHook
 
     private function renderTemplate($params)
     {
-        /** @var $order \Order */
+        /** @var \Order $order */
         $order = new \Order((int) $params['id_order']);
         if ($order->module != $this->module->name) {
             return;

@@ -183,7 +183,7 @@ class PaymentService
         return $response;
     }
 
-    protected function isInternationalPhone($customerAdress)
+    protected function isInternationalPhone(\Address $customerAdress)
     {
         $regValidPhone = '/^\+\d{10,18}/';
 
@@ -218,18 +218,19 @@ class PaymentService
 
     protected function saveContractInit($contractRef)
     {
+        $dateNull = '0000-00-00 00:00:00';
         /** @var YounitedPayContract $contractYounited */
         $contractYounited = $this->getContractByCart($this->context->cart->id);
         $contractYounited->id_cart = $this->context->cart->id;
         $contractYounited->id_external_younitedpay_contract = $contractRef;
         $contractYounited->is_confirmed = false;
-        $contractYounited->confirmation_date = null;
         $contractYounited->is_activated = false;
-        $contractYounited->activation_date = null;
         $contractYounited->is_withdrawn = false;
-        $contractYounited->withdrawn_date = null;
         $contractYounited->is_canceled = false;
-        $contractYounited->canceled_date = null;
+        $contractYounited->confirmation_date = $dateNull;
+        $contractYounited->activation_date = $dateNull;
+        $contractYounited->withdrawn_date = $dateNull;
+        $contractYounited->canceled_date = $dateNull;
         $contractYounited->save();
     }
 
@@ -277,6 +278,8 @@ class PaymentService
         if ($orderCreated === true) {
             return $this->paymentrepository->confirmContract($this->context->cart->id, $this->module->currentOrder);
         }
+
+        return $orderCreated;
     }
 
     /**

@@ -75,8 +75,8 @@ class PaymentRepository
      * Modify the entity to confirm contract on the YounitedContract table
      * Update the id Order linked to the cart concerned
      *
-     * @param int idCart Id Of Cart concerned for confirmation
-     * @param int idOrder Id Of Order concerned for confirmation
+     * @param int $idCart Id Of Cart concerned for confirmation
+     * @param int $idOrder Id Of Order concerned for confirmation
      *
      * @return bool Operation done / fail
      */
@@ -99,7 +99,7 @@ class PaymentRepository
     /**
      * Modify the entity to activate contract on the YounitedContract table
      *
-     * @param int idOrder Id Of Order concerned for activation
+     * @param int $idOrder Id Of Order concerned for activation
      *
      * @return bool Operation done / fail
      */
@@ -111,8 +111,8 @@ class PaymentRepository
                 'is_activated' => true,
                 'activation_date' => date('Y-m-d H:i:s'),
                 'is_canceled' => false,
-                'is_activated' => false,
                 'is_withdrawn' => false,
+                'is_confirmed' => false,
             ],
             'id_order = ' . (int) pSQL($idOrder)
         );
@@ -121,7 +121,7 @@ class PaymentRepository
     /**
      * Modify the entity to cancel contract on the YounitedContract table
      *
-     * @param int idOrder Id Of Order concerned for cancelation
+     * @param int $idOrder Id Of Order concerned for cancelation
      *
      * @return bool Operation done / fail
      */

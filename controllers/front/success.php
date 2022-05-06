@@ -141,7 +141,6 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             ]
         );
 
-        $this->confirmations[] = $this->module->l('YounitedPay payment has been created (waiting shipping).');
         $this->redirectWithNotifications($linkOrder);
     }
 }
