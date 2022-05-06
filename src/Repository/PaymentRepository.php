@@ -20,57 +20,123 @@
 namespace YounitedpayAddon\Repository;
 
 use Db;
+use DbQuery;
 use YounitedpayAddon\Entity\YounitedPayContract;
 
 class PaymentRepository
 {
     /**
      * Get Contract linked to the cart
-     * 
+     *
      * @param int $idCart Id of cart concerned
      *
      * @return YounitedPayContract
      */
     public function getContractByCart($idCart)
     {
-        $query = new \DbQuery();
+        $query = new DbQuery();
         $query->select('id_younitedpay_contract')
             ->from(YounitedPayContract::$definition['table'])
-            ->where('id_cart = ' . pSQL($idCart));
+            ->where('id_cart = ' . (int) pSQL($idCart));
 
         $result = Db::getInstance()->getRow($query);
 
         $idYounitedContract = $result === false || $result === null || empty($result['id_younitedpay_contract'])
             ? 0
-            : $result['id_younitedpay_contract'];
-        
+            : (int) $result['id_younitedpay_contract'];
+
         return new YounitedPayContract($idYounitedContract);
     }
 
-    public function saveAllMaturities($maturities, $idShop)
+    /**
+     * Get Contract linked to the Order
+     *
+     * @param int $idOrder Id of Order concerned
+     *
+     * @return YounitedPayContract
+     */
+    public function getContractByOrder($idOrder)
     {
-        foreach ($maturities as $maturity) {
-            $maturityEntity = new YounitedPayAvailability($maturity['id_younitedpay_configuration']);
+        $query = new DbQuery();
+        $query->select('id_younitedpay_contract')
+            ->from(YounitedPayContract::$definition['table'])
+            ->where('id_order = ' . (int) pSQL($idOrder));
 
-            if ((bool) $maturity['deleted'] === true) {
-                $maturityEntity->delete();
-                continue;
-            }
+        $result = Db::getInstance()->getRow($query);
 
-            foreach ($maturity as $key => $value) {
-                if ($key !== 'deleted' && $key !== 'id_younitedpay_configuration') {
-                    $maturityEntity->$key = $value;
-                }
-            }
+        $idYounitedContract = $result === false || $result === null || empty($result['id_younitedpay_contract'])
+            ? 0
+            : (int) $result['id_younitedpay_contract'];
 
-            if (empty($maturityEntity->maximum) === true) {
-                $maturityEntity->maximum = 0;
-            }
+        return new YounitedPayContract($idYounitedContract);
+    }
 
-            $maturityEntity->currency = 'EUR';
-            $maturityEntity->id_shop = $idShop;
+    /**
+     * Modify the entity to confirm contract on the YounitedContract table
+     * Update the id Order linked to the cart concerned
+     *
+     * @param int idCart Id Of Cart concerned for confirmation
+     * @param int idOrder Id Of Order concerned for confirmation
+     *
+     * @return bool Operation done / fail
+     */
+    public function confirmContract($idCart, $idOrder)
+    {
+        return Db::getInstance()->update(
+            YounitedPayContract::$definition['table'],
+            [
+                'id_order' => (int) pSQL($idOrder),
+                'is_confirmed' => true,
+                'confirmation_date' => date('Y-m-d H:i:s'),
+                'is_canceled' => false,
+                'is_activated' => false,
+                'is_withdrawn' => false,
+            ],
+            'id_cart = ' . (int) pSQL($idCart)
+        );
+    }
 
-            $maturityEntity->save();
-        }
+    /**
+     * Modify the entity to activate contract on the YounitedContract table
+     *
+     * @param int idOrder Id Of Order concerned for activation
+     *
+     * @return bool Operation done / fail
+     */
+    public function activateContract($idOrder)
+    {
+        return Db::getInstance()->update(
+            YounitedPayContract::$definition['table'],
+            [
+                'is_activated' => true,
+                'activation_date' => date('Y-m-d H:i:s'),
+                'is_canceled' => false,
+                'is_activated' => false,
+                'is_withdrawn' => false,
+            ],
+            'id_order = ' . (int) pSQL($idOrder)
+        );
+    }
+
+    /**
+     * Modify the entity to cancel contract on the YounitedContract table
+     *
+     * @param int idOrder Id Of Order concerned for cancelation
+     *
+     * @return bool Operation done / fail
+     */
+    public function cancelContract($idOrder)
+    {
+        return Db::getInstance()->update(
+            YounitedPayContract::$definition['table'],
+            [
+                'is_canceled' => true,
+                'canceled_date' => date('Y-m-d H:i:s'),
+                'is_activated' => false,
+                'is_confirmed' => false,
+                'is_withdrawn' => false,
+            ],
+            'id_order = ' . (int) pSQL($idOrder)
+        );
     }
 }

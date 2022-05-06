@@ -161,7 +161,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'config_check' => $specsVariables['specs'],
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
-                'shop_img_url' => __PS_BASE_URI__. 'modules/' . $this->module->name . '/views/img/',
+                'shop_img_url' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/img/',
                 'no_keys_text' => $this->l('Please enter your API credentials before changing the module’s settings'),
             ];
 
@@ -184,7 +184,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $isoCode = 'en';
         }
 
-        return __PS_BASE_URI__. 'modules/' . $this->module->name . '/views/img/' . $fileImg;
+        return __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/img/' . $fileImg;
     }
 
     protected function getDefaultMaturities()
@@ -232,6 +232,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $isSubmitted = true;
         } elseif (Tools::isSubmit('appearance_submit')) {
             $this->postAppearance($idShop);
+            $this->deleteAllCache();
             $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
             $this->ajaxDie($this->postAddNewMaturity($idShop));
@@ -378,7 +379,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'whitelist_on' => $this->isWhiteListOn,
             'whitelist_ip' => $this->whitelistIP,
             'show_monthly' => $this->isShownMonthly,
-            'widget_info' => '{widget name="younitedpay_offers" amount="149.90"}',
+            'widget_info' => '{widget name="younitedpay" amount="149.90"}',
             'no_config' => empty($this->clientID) || empty($this->clientSecret),
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),

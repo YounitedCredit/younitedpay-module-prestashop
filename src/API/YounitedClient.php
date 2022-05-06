@@ -23,6 +23,7 @@ use Configuration;
 use Exception;
 use Younitedpay;
 use YounitedpayAddon\Logger\ApiLogger;
+use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Client;
 use YounitedPaySDK\Model\AbstractModel;
@@ -49,9 +50,8 @@ class YounitedClient
     /** @var ApiLogger */
     public $apiLogger;
 
-    public function __construct($idShop, ProcessLoggerHandler $logger, $testCredentials = [])
+    public function __construct($idShop, $testCredentials = [])
     {
-        $this->logger = $logger;
         $this->apiLogger = ApiLogger::getInstance();
 
         if (empty($testCredentials) === false) {
@@ -83,10 +83,10 @@ class YounitedClient
     {
         $client = new Client();
         try {
-            /** @var AbstractRequest $request */
             if ($this->isProductionMode === false) {
                 $requestObject = $requestObject->enableSandbox();
             }
+            /** @var AbstractRequest $request */
             $request = $requestObject->setModel($body);
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
@@ -123,6 +123,7 @@ class YounitedClient
 
     private function setErrorMessage($e, $requestObject)
     {
+        $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
         $this->logger->logError(
             sprintf($e->getMessage()),
             (new \ReflectionClass($this))->getShortName(),

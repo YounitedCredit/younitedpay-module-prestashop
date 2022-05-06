@@ -21,8 +21,8 @@ namespace YounitedpayAddon\Hook;
 
 use Younitedpay;
 use YounitedpayAddon\Service\ProductService;
-use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayAddon\Utils\CacheYounited;
+use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
 
 class HookFrontProduct extends AbstractHook
@@ -35,11 +35,14 @@ class HookFrontProduct extends AbstractHook
         'displayAfterProductThumbs',
         'displayProductAdditionalInfo',
         'displayReassurance',
+        'displayCartExtraProductActions',
     ];
 
     public function displayProductPriceBlock($params)
     {
-        return $this->displaySelectedHook($params, 'displayProductPriceBlock');
+        if ($params['type'] === 'after_price') {
+            return $this->displaySelectedHook($params, 'displayProductPriceBlock');
+        }
     }
 
     public function displayAfterProductThumbs($params)
@@ -55,6 +58,15 @@ class HookFrontProduct extends AbstractHook
     public function displayReassurance($params)
     {
         return $this->displaySelectedHook($params, 'displayReassurance');
+    }
+
+    public function displayCartExtraProductActions($params)
+    {
+        return $this->displayCart($params);
+    }
+
+    private function displayCart($params)
+    {
     }
 
     private function getHookConfiguration()
@@ -92,7 +104,7 @@ class HookFrontProduct extends AbstractHook
                 break;
             case $controller instanceof \IndexController:
             default:
-                return '';                
+                return '';
         }
 
         try {

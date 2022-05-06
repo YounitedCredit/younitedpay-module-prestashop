@@ -24,7 +24,6 @@ use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
-use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedPaySDK\Model\BestPrice;
 use YounitedPaySDK\Model\OfferItem;
 use YounitedPaySDK\Request\BestPriceRequest;
@@ -36,26 +35,26 @@ class ProductService
     /** @var \Context */
     private $context;
 
-    /** @var ProcessLoggerHandler */
-    protected $logger;
+    /** @var LoggerService */
+    protected $loggerservice;
 
     /** @var ConfigRepository */
     protected $configRepository;
 
     public function __construct(
-        ProcessLoggerHandler $logger,
+        LoggerService $loggerservice,
         ConfigRepository $configRepository,
         Younitedpay $module
     ) {
         $this->module = $module;
-        $this->logger = $logger;
+        $this->loggerservice = $loggerservice;
         $this->context = \Context::getContext();
         $this->configRepository = $configRepository;
     }
 
     public function getBestPrice($product_price)
     {
-        $client = new YounitedClient($this->context->shop->id, $this->logger);
+        $client = new YounitedClient($this->context->shop->id);
         if ($client->isCrendentialsSet() === false) {
             return $this->noOffers();
         }
@@ -130,8 +129,8 @@ class ProductService
                     'installment_amount' => $offer->getMonthlyInstallmentAmount(),
                     'total_amount' => $totalAmount,
                     'interest_total' => $offer->getInterestsTotalAmount(),
-                    'taeg' => $offer->getAnnualPercentageRate(),
-                    'tdf' => $offer->getAnnualDebitRate(),
+                    'taeg' => $offer->getAnnualPercentageRate() * 100,
+                    'tdf' => $offer->getAnnualDebitRate() * 100,
                 ];
             }
         }
@@ -142,12 +141,5 @@ class ProductService
     public function getAllMaturities($productPrice)
     {
         return $this->configRepository->getAllMaturities($productPrice);
-    }
-
-    public function addLog($msg, $objectModel = null, $objectId = null, $name = null, $level = 'info')
-    {
-        $this->logger->openLogger();
-        $this->logger->addLog($msg, $objectModel, $objectId, $name, $level);
-        $this->logger->closeLogger();
     }
 }

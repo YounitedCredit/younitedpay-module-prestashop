@@ -23,7 +23,7 @@ use Context;
 use Media;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use Younitedpay;
-use YounitedpayAddon\Logger\ApiLogger;
+use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
@@ -57,9 +57,12 @@ class HookPayment extends AbstractHook
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
+        /** @var LoggerService $loggerservice */
+        $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
+
         /** @var \Cart $cart */
         $cart = $params['cart'];
-        
+
         $this->cartPrice = $cart->getOrderTotal();
 
         $templateCredit = $productservice->getBestPrice($this->cartPrice);
@@ -74,11 +77,7 @@ class HookPayment extends AbstractHook
                 'code' => $ex->getCode(),
                 'error' => $ex->getMessage(),
             ];
-            $productservice->addLog('Error retrieving payment :' . json_encode($msg), null, null, null, 'error');
-            /** @var ApiLogger $apiLogger */
-            $apiLogger = ApiLogger::getInstance();
-            $msg['trace'] = $ex->getTraceAsString();
-            $apiLogger->log($this, $msg, 'Error Payments Display', true);
+            $loggerservice->addLog('Error retrieving payment :' . json_encode($msg), 'Payment Options', 'error', $this);
         }
 
         return $paymentOptions;
@@ -94,7 +93,7 @@ class HookPayment extends AbstractHook
             $paymentOption = new PaymentOption();
 
             $this->setPaymentNameAndAdditional($paymentOption, $maturity);
-            
+
             $context = Context::getContext();
             $creditLink = $context->link->getModuleLink(
                 $this->module->name,

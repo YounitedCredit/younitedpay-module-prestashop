@@ -18,6 +18,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
 
+use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
 
@@ -46,29 +47,33 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         $cart = new Cart($idCartYounited);
 
         /** @var PaymentService $paymentService */
-        $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);        
+        $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
 
         if (
             Validate::isLoadedObject($cart) === false || $this->module->active == 0 || $cart->id_address_delivery == 0
             || $cart->id_address_invoice == 0 || $cart->id_customer == 0
         ) {
             $this->errors[] = $this->module->l('Error with the cart. Please refresh your page.');
-            $paymentService->addLog(json_encode([
+            $this->logError(json_encode([
                 'isCartLoaded' => Validate::isLoadedObject($cart) === false,
                 'isModuleActive' => $this->module->active,
                 'idAddressDelivery' => $cart->id_address_delivery,
                 'idAddressInvoice' => $cart->id_address_invoice,
                 'idCustomer' => $cart->id_customer,
-            ]));
+                ]),
+                'Error comparing cart while payment'
+            );
             $this->redirectWithNotifications($orderUrl);
         }
 
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             $this->errors[] = $this->module->l('Error with the customer. Please verify your order.');
-            $paymentService->addLog(json_encode([
-                'isCustomerLoaded' => Validate::isLoadedObject($customer),
-            ]));
+            $this->logError(json_encode([
+                    'isCustomerLoaded' => Validate::isLoadedObject($customer),
+                ]),
+                'Error loading Customer'
+            );
             $this->redirectWithNotifications($orderUrl);
         }
 
@@ -82,21 +87,44 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         try {
             $orderCreated = $paymentService->validateOrder($cart, $customer);
         } catch (Exception $ex) {
-            $paymentService->addLog($ex->getMessage(), null, null, null, 'Error creating order');
+            $this->logError(json_encode([
+                'message' => $ex->getMessage(),
+                'file' => $ex->getFile(),
+                'line' => $ex->getLine(),
+                ]),
+                'Error creating order'
+            );
             $orderCreated = false;
         }
 
-        if ($orderCreated === true) {    
+        if ($orderCreated === true) {
             $this->redirectToOrder($cart, $customer);
+
+            return true;
         }
 
         $this->errors[] = $this->module->l('Error while creating Order. Please try again.');
-        $paymentService->addLog(json_encode([
-            'message' => 'Error creating order',
-            'cart' => $cart->id,
-            'customer' => $customer->id,
-        ]));
+        $this->logError(json_encode([
+                'message' => 'Error creating order',
+                'cart' => $cart->id,
+                'customer' => $customer->id,
+            ]),
+            'Error while creating order'
+        );
         $this->redirectWithNotifications($orderUrl);
+    }
+
+    protected function logError($error, $title = 'Error')
+    {
+        /** @var LoggerService $logService */
+        $logService = ServiceContainer::getInstance()->get(LoggerService::class);
+
+        $logService->addLog(
+            $error,
+            $title,
+            'error',
+            $this
+        );
     }
 
     protected function redirectToOrder($cart, $customer)

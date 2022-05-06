@@ -92,6 +92,6 @@ document.onreadystatechange = setTimeout(function() {
         });
         setTimeout(toggleInstallmentOffer, 2250);
     }
-}, 50);
+}, 75);
 
 window.__toggleInstallmentOffer = toggleInstallmentOffer;

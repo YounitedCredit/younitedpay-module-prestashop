@@ -31,12 +31,13 @@ class CommonHook extends AbstractHook
     public function actionFrontControllerSetMedia($params)
     {
         $controller = Context::getContext()->controller;
-        switch (true) {
-            case $controller instanceof \ProductController:
-            case $controller instanceof \CartController:
-                $this->registerMedia($controller);
-                break;
-        }
+        $this->registerMedia($controller);
+        // switch (true) {
+        //     case $controller instanceof \ProductController:
+        //     case $controller instanceof \CartController:
+        //         $this->registerMedia($controller);
+        //         break;
+        // }
     }
 
     protected function registerMedia(\FrontController $controller)

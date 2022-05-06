@@ -23,10 +23,8 @@ namespace YounitedpayAddon\Service;
 use Configuration;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
-use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayAddon\Entity\YounitedPayContract;
-use YounitedpayAddon\Logger\ApiLogger;
-use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedPaySDK\Model\Address;
 use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
@@ -44,57 +42,68 @@ class PaymentService
     /** @var \Context */
     private $context;
 
-    /** @var ProcessLoggerHandler */
-    protected $logger;
+    /** @var LoggerService */
+    protected $loggerservice;
 
     /** @var PaymentRepository */
-    protected $repository;
+    protected $paymentrepository;
+
+    /** @var string */
+    protected $cellPhone;
+
+    /** @var string */
+    protected $errorMessage;
 
     public function __construct(
-        ProcessLoggerHandler $logger,
-        PaymentRepository $repository,
+        LoggerService $loggerservice,
+        PaymentRepository $paymentrepository,
         Younitedpay $module
     ) {
         $this->module = $module;
-        $this->logger = $logger;
-        $this->repository = $repository;
+        $this->loggerservice = $loggerservice;
+        $this->paymentrepository = $paymentrepository;
         $this->context = \Context::getContext();
     }
 
+    /**
+     * Create contract payment with maturity choosed
+     */
     public function createContract($maturity, $totalAmount)
     {
-        $regValidPhone = '/^((\+|00)\d{1,3})?\d{6,12}$/';
-
         $customerAdress = new \Address($this->context->cart->id_address_delivery);
-        $customer = $this->context->customer;
-        $country = new \Country($customerAdress->id_country);
 
-        $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone);
+        $isPhoneInternational = $this->isInternationalPhone($customerAdress);
 
-        if ($isPhoneInternational === 1) {
-            $cellPhone = $customerAdress->phone;
-        } else {
-            $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone_mobile);
-            if ($isPhoneInternational === 1) {
-                $cellPhone = $customerAdress->phone_mobile;
-            }
-        }
-
-        if ($isPhoneInternational === 0 || $isPhoneInternational === false) {
+        if ($isPhoneInternational === false) {
             return [
-                'response' => $this->module->l('Error : Phone number is not in international format (+XXX)'),
+                'response' => $this->errorMessage,
                 'status' => 0,
                 'success' => false,
             ];
         }
 
-        $client = new YounitedClient($this->context->shop->id, $this->logger);
+        $client = new YounitedClient($this->context->shop->id);
         if ($client->isCrendentialsSet() === false) {
             return [
                 'success' => false,
-                'response' => 'no credential set',
+                'status' => 0,
+                'response' => $this->module->l('Please contact the shop owner payment is actually not possible'),
             ];
         }
+
+        $response = $this->sendContractRequest($maturity, $totalAmount, $customerAdress, $client);
+
+        if ($response['success'] === false) {
+            return $response;
+        }
+
+        return $this->treatResponse($response);
+    }
+
+    protected function sendContractRequest($maturity, $totalAmount, $customerAdress, $client)
+    {
+        $customer = $this->context->customer;
+        $country = new \Country($customerAdress->id_country);
 
         $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
             ? new \DateTime($customer->birthday . 'T00:00:00')
@@ -115,7 +124,7 @@ class PaymentService
             ->setLastName($customer->lastname)
             ->setGenderCode((new \Gender())->name[$customer->id_gender])
             ->setEmailAddress($customer->email)
-            ->setCellPhoneNumber($cellPhone)
+            ->setCellPhoneNumber($this->cellPhone)
             ->setBirthDate($birthdate)
             ->setAddress($address);
 
@@ -153,19 +162,18 @@ class PaymentService
 
         $request = new InitializeContractRequest();
 
-        $this->addLogAPI(json_encode($body), 'Info');
+        $this->loggerservice->addLogAPI(json_encode($body), 'Info', $this);
 
-        $response = $client->sendRequest($body, $request);
+        return $client->sendRequest($body, $request);
+    }
 
-        if ($response['success'] === false) {
-            return $response;
-        }
-
+    protected function treatResponse($response)
+    {
         /** @var ArrayCollection $responseObject */
         $responseObject = $response['response'];
 
         $urlPayment = $responseObject['redirectUrl'];
-        
+
         $contractRef = $responseObject['contractReference'];
 
         $this->saveContractInit($contractRef);
@@ -175,28 +183,63 @@ class PaymentService
         return $response;
     }
 
+    protected function isInternationalPhone($customerAdress)
+    {
+        $regValidPhone = '/^\+\d{10,18}/';
+
+        if (empty($customerAdress->phone) === true) {
+            $this->errorMessage = $this->module->l('Phone number is not filled.');
+            $this->errorMessage .= ' ';
+            $this->errorMessage .= $this->module->l('Please update your phone number of your address and try again.');
+
+            return false;
+        }
+
+        $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone);
+
+        if ($isPhoneInternational === 1) {
+            $this->cellPhone = $customerAdress->phone;
+
+            return true;
+        } else {
+            $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone_mobile);
+            if ($isPhoneInternational === 1) {
+                $this->cellPhone = $customerAdress->phone_mobile;
+
+                return true;
+            }
+        }
+        $this->errorMessage = $this->module->l('Phone number is not in international format (+XXX).');
+        $this->errorMessage .= ' ';
+        $this->errorMessage .= $this->module->l('Please update your phone number of your address and try again.');
+
+        return false;
+    }
+
     protected function saveContractInit($contractRef)
     {
         /** @var YounitedPayContract $contractYounited */
-        $contractYounited = $this->getContractByCart();
+        $contractYounited = $this->getContractByCart($this->context->cart->id);
         $contractYounited->id_cart = $this->context->cart->id;
         $contractYounited->id_external_younitedpay_contract = $contractRef;
         $contractYounited->is_confirmed = false;
+        $contractYounited->confirmation_date = null;
         $contractYounited->is_activated = false;
+        $contractYounited->activation_date = null;
         $contractYounited->is_withdrawn = false;
+        $contractYounited->withdrawn_date = null;
         $contractYounited->is_canceled = false;
+        $contractYounited->canceled_date = null;
         $contractYounited->save();
     }
 
     /**
      * Validate and create Order when we have confirmation by API return
-     * 
+     *
      * @param \Cart $cart
-     * 
      * @param \Customer $customer
-     * 
+     *
      * @return bool Result of validation
-     * 
      */
     public function validateOrder($cart, $customer)
     {
@@ -204,9 +247,9 @@ class PaymentService
         $currency = $context->currency;
 
         $total = (float) $cart->getOrderTotal(true, \Cart::BOTH);
-        
-        $younitedContract = $this->getContractByCart();
-        if (empty($younitedContract->id_cart) === true) {
+
+        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
 
@@ -232,16 +275,32 @@ class PaymentService
         );
 
         if ($orderCreated === true) {
-            $younitedContract->is_confirmed = true;
-            $younitedContract->confirmation_date = new \Datetime();
-            $younitedContract->id_order = $this->module->currentOrder;
-            return $younitedContract->save();            
+            return $this->paymentrepository->confirmContract($this->context->cart->id, $this->module->currentOrder);
         }
     }
 
-    protected function getContractByCart()
+    /**
+     * Get Contract linked to the cart
+     *
+     * @param int $idCart Id of cart concerned
+     *
+     * @return YounitedPayContract
+     */
+    public function getContractByCart($idCart)
     {
-        return $this->repository->getContractByCart((int) $this->context->cart->id);
+        return $this->paymentrepository->getContractByCart((int) $idCart);
+    }
+
+    /**
+     * Get Contract linked to the Order
+     *
+     * @param int $idOrder Id of Order concerned
+     *
+     * @return YounitedPayContract
+     */
+    public function getContractByOrder($idOrder)
+    {
+        return $this->paymentrepository->getContractByOrder((int) $idOrder);
     }
 
     protected function getLink($controller, $params = [])
@@ -253,20 +312,5 @@ class PaymentService
             $controller,
             $params
         );
-    }
-
-    public function addLog($msg, $objectModel = null, $objectId = null, $name = null, $level = 'info')
-    {
-        $this->logger->openLogger();
-        $this->logger->addLog($msg, $objectModel, $objectId, $name, $level);
-        $this->logger->closeLogger();
-        $this->addLogAPI($msg, $level);
-    }
-
-    protected function addLogAPI($msg, $type='Error')
-    {
-        /** @var ApiLogger $apiLogger */
-        $apiLogger = ApiLogger::getInstance();
-        $apiLogger->log($this, $msg, $type, false);
     }
 }

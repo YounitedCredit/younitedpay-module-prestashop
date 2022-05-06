@@ -39,18 +39,17 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
         } catch (\Exception $ex) {
             $response = [
                 'response' => $ex->getMessage(),
-                'success' => false
+                'success' => false,
             ];
-        }        
+        }
 
         if ($response['success'] === true) {
-            $this->redirect_after = $response['url'];         
+            $this->redirect_after = $response['url'];
             $this->redirect();
         }
 
-        $this->errors[] = $this->l('Error while trying to get Credit URL :');
-
-        $this->errors[] = $this->l(json_encode($response));
+        $this->errors[] = $this->l('Error during payment, please try again.');
+        $this->errors[] = $this->l($response['response']);
 
         $this->redirectPayment();
     }
@@ -65,7 +64,6 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
                 'step' => 4,
             ]
         );
-        $this->errors[] = $this->l('Error during payment, please try again.');
         $this->redirectWithNotifications($orderUrl);
     }
 }

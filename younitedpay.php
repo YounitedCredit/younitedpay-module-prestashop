@@ -22,14 +22,17 @@ if (!defined('_PS_VERSION_')) {
 
 require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Hook\HookDispatcher;
+use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ModuleInitialiser;
 use YounitedpayAddon\Utils\PaymentModuleTrait;
+use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
-class Younitedpay extends PaymentModule
+class Younitedpay extends PaymentModule implements WidgetInterface
 {
     use PaymentModuleTrait {
         PaymentModuleTrait::__construct as private __pmConstruct;
@@ -193,6 +196,50 @@ class Younitedpay extends PaymentModule
     public function uninstall()
     {
         return \Module::uninstall();
+    }
+
+    public function renderWidget($hookName, array $configuration)
+    {
+        $price = isset($configuration['amount']) ? (float) $configuration['amount'] : 0;
+
+        if ($price === 0) {
+            return '';
+        }
+
+        /** @var ProductService $productservice */
+        $productservice = ServiceContainer::getInstance()->get(ProductService::class);
+
+        $templateCredit = $productservice->getBestPrice($price);
+
+        $context = $this->context;
+
+        $frontModuleLink = $context->link->getModuleLink(
+            $this->name,
+            'younitedpayproduct'
+        );
+
+        $totalOffers = $templateCredit['offers'];
+
+        $context->smarty->assign(
+            [
+                'younitedpay_script' => '',
+                'younited_hook' => $hookName,
+                'credit_template' => $templateCredit['template'],
+                'product_url' => $frontModuleLink,
+                'product_price' => $price,
+                'product_offers_total' => empty($totalOffers) === false && is_array($totalOffers)
+                    ? count($totalOffers) - 1
+                    : 0,
+            ]
+        );
+
+        return $context->smarty->fetch(
+            _PS_MODULE_DIR_ . $this->name . '/views/templates/front/product_infos.tpl'
+        );
+    }
+
+    public function getWidgetVariables($hookName, array $configuration)
+    {
     }
 
     public function addRadioCurrencyRestrictionsForModule(array $shops = [])

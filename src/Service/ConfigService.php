@@ -96,9 +96,14 @@ class ConfigService
         return $return;
     }
 
+    /**
+     * Make a best price request to test if the API is connected
+     *
+     * @return array string message | array maturityList | bool status
+     */
     public function isApiConnected()
     {
-        $client = new YounitedClient($this->context->shop->id, $this->logger);
+        $client = new YounitedClient($this->context->shop->id);
         if ($client->isCrendentialsSet() === false) {
             return [
                 'message' => $this->module->l('No credential saved'),

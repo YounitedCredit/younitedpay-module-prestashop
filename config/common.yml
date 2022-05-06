@@ -14,6 +14,11 @@ services:
   YounitedpayAddon\Repository\PaymentRepository:
     class: 'YounitedpayAddon\Repository\PaymentRepository'
 
+  YounitedpayAddon\Service\LoggerService:
+    class: 'YounitedpayAddon\Service\LoggerService'
+    arguments:
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+
   YounitedpayAddon\Service\ConfigService:
     class: 'YounitedpayAddon\Service\ConfigService'
     arguments:
@@ -24,13 +29,20 @@ services:
   YounitedpayAddon\Service\ProductService:
     class: 'YounitedpayAddon\Service\ProductService'
     arguments:
-      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Service\LoggerService'
       - '@YounitedpayAddon\Repository\ConfigRepository'
       - '@younitedpay'
 
   YounitedpayAddon\Service\PaymentService:
     class: 'YounitedpayAddon\Service\PaymentService'
     arguments:
-      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Service\LoggerService'
+      - '@YounitedpayAddon\Repository\PaymentRepository'
+      - '@younitedpay'
+
+  YounitedpayAddon\Service\OrderService:
+    class: 'YounitedpayAddon\Service\OrderService'
+    arguments:
+      - '@YounitedpayAddon\Service\LoggerService'
       - '@YounitedpayAddon\Repository\PaymentRepository'
       - '@younitedpay'
