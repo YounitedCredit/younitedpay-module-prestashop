@@ -145,12 +145,11 @@ class PaymentService
         $merchantUrls = (new MerchantUrls())
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
-            ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
+            ->setOnCanceledWebhookUrl($this->getLink('error', ['cancel' => 1]))
             ->setOnWithdrawnWebhookUrl($this->getLink('webhook', ['widhdrawn' => 1]));
 
         $merchantOrderContext = (new MerchantOrderContext())
             ->setChannel('ONLINE')
-            // ->setShopCode((string) $this->context->shop->id)
             ->setMerchantReference((string) $this->context->cart->id);
 
         $body = (new InitializeContract())
@@ -227,10 +226,10 @@ class PaymentService
         $contractYounited->is_activated = false;
         $contractYounited->is_withdrawn = false;
         $contractYounited->is_canceled = false;
-        $contractYounited->confirmation_date = $dateNull;
-        $contractYounited->activation_date = $dateNull;
-        $contractYounited->withdrawn_date = $dateNull;
-        $contractYounited->canceled_date = $dateNull;
+        $contractYounited->confirmation_date = '';
+        $contractYounited->activation_date = '';
+        $contractYounited->withdrawn_date = '';
+        $contractYounited->canceled_date = '';
         $contractYounited->save();
     }
 
@@ -314,6 +313,16 @@ class PaymentService
             $this->module->name,
             $controller,
             $params
+        );
+    }
+
+    public function logError($error, $title = 'Error')
+    {
+        $this->loggerservice->addLog(
+            $error,
+            $title,
+            'error',
+            $this
         );
     }
 }

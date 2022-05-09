@@ -120,7 +120,7 @@ class HookFrontProduct extends AbstractHook
             return '';
         }
 
-        $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/front/younitedpay_product.js';
+        $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/front/front.js';
 
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
@@ -138,6 +138,7 @@ class HookFrontProduct extends AbstractHook
             [
                 'younitedpay_script' => $frontScriptURI,
                 'younited_hook' => $currentHook,
+                'widget_younited' => false,
                 'credit_template' => $templateCredit['template'],
                 'product_url' => $frontModuleLink,
                 'product_price' => $price,

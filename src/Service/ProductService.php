@@ -127,7 +127,8 @@ class ProductService
                 $validOffers[] = [
                     'maturity' => $offer->getMaturityInMonths(),
                     'installment_amount' => $offer->getMonthlyInstallmentAmount(),
-                    'total_amount' => $totalAmount,
+                    'initial_amount' => $offer->getRequestedAmount(),
+                    'total_amount' => $offer->getCreditAmountToFund(),
                     'interest_total' => $offer->getInterestsTotalAmount(),
                     'taeg' => $offer->getAnnualPercentageRate() * 100,
                     'tdf' => $offer->getAnnualDebitRate() * 100,

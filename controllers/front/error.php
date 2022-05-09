@@ -29,7 +29,11 @@ class YounitedpayErrorModuleFrontController extends ModuleFrontController
                 'step' => 4,
             ]
         );
-        $this->errors[] = $this->l('Error during payment, please try again.');
+        if (Tools::getValue('cancel') !== false) {
+            $this->errors[] = $this->l('You have cancelled the payment.');
+        } else {
+            $this->errors[] = $this->l('Payment refused, or error occurs during validation. Please try again.');
+        }
         $this->redirectWithNotifications($orderUrl);
 
         parent::initContent();

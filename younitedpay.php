@@ -223,6 +223,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         $context->smarty->assign(
             [
                 'younitedpay_script' => '',
+                'widget_younited' => true,
                 'younited_hook' => $hookName,
                 'credit_template' => $templateCredit['template'],
                 'product_url' => $frontModuleLink,
