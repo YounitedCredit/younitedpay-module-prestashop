@@ -40,4 +40,13 @@
                 mod='younitedpay'}
         </b>
     </p>
+    {if count($error) > 0}    
+        <div class="alert alert-warning">
+            <ul style="margin-bottom:auto!important;list-style:disc!important;">
+                {foreach $error item=oneerror}
+                    <li>{$oneerror nofilter}</li>
+                {/foreach}
+            </ul> 
+        </div>
+    {/if}
 </div>

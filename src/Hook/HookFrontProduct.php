@@ -93,6 +93,12 @@ class HookFrontProduct extends AbstractHook
 
         $controller = $context->controller;
 
+        /** @var \Currency $currency */
+        $currency = new \Currency($context->cart->id_currency);
+        if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
+            return;
+        }
+
         switch (true) {
             case $controller instanceof \ProductController:
                 $idProduct = \Tools::getValue('id_product');

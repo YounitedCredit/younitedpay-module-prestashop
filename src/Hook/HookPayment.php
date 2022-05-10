@@ -24,6 +24,7 @@ use Media;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use Younitedpay;
 use YounitedpayAddon\Service\LoggerService;
+use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
@@ -48,17 +49,32 @@ class HookPayment extends AbstractHook
             return;
         }
 
-        /** @var \Currency $currency */
-        $currency = new \Currency(Context::getContext()->cart->id_currency);
-        if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
-            return;
-        }
-
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
+        /** @var PaymentService $paymentservice */
+        $paymentservice = ServiceContainer::getInstance()->get(PaymentService::class);
+
         /** @var LoggerService $loggerservice */
         $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
+
+        $errorMessage = [];
+
+        /** @var \Currency $currency */
+        $currency = new \Currency(Context::getContext()->cart->id_currency);
+        if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
+            $errorMessage[] = $this->module->l('Not available in this currency (only EUR)');
+        }
+
+        $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
+        $country = new \Country($customerAdressInvoice->id_country);
+        if ($country->iso_code !== 'FR') {
+            $errorMessage[] = $this->module->l('Not available for this country (Only France for invoice address).');
+        }
+
+        if ($paymentservice->isInternationalPhone($customerAdressInvoice) === false) {
+            $errorMessage[] = $paymentservice->errorMessage;
+        }
 
         /** @var \Cart $cart */
         $cart = $params['cart'];
@@ -71,7 +87,7 @@ class HookPayment extends AbstractHook
 
         $paymentOptions = [];
         try {
-            $paymentOptions = $this->getYounitedPaymentOption($totalOffers);
+            $paymentOptions = $this->getYounitedPaymentOption($totalOffers, $errorMessage);
         } catch (\Exception $ex) {
             $msg = [
                 'code' => $ex->getCode(),
@@ -83,7 +99,7 @@ class HookPayment extends AbstractHook
         return $paymentOptions;
     }
 
-    protected function getYounitedPaymentOption($totalOffers)
+    protected function getYounitedPaymentOption($totalOffers, $errorMessage)
     {
         $younitedPaymentOptions = [];
         $logoPayment = Media::getMediaPath(
@@ -92,7 +108,7 @@ class HookPayment extends AbstractHook
         foreach ($totalOffers as $maturity) {
             $paymentOption = new PaymentOption();
 
-            $this->setPaymentNameAndAdditional($paymentOption, $maturity);
+            $this->setPaymentNameAndAdditional($paymentOption, $maturity, $errorMessage);
 
             $context = Context::getContext();
             $creditLink = $context->link->getModuleLink(
@@ -109,18 +125,23 @@ class HookPayment extends AbstractHook
             ->setAction($creditLink)
             ->setLogo($logoPayment);
 
+            if (empty($errorMessage) === false) {
+                $paymentOption->setBinary(true);
+            }
+
             $younitedPaymentOptions[] = $paymentOption;
         }
 
         return $younitedPaymentOptions;
     }
 
-    protected function setPaymentNameAndAdditional(PaymentOption $paymentOption, $maturity)
+    protected function setPaymentNameAndAdditional(PaymentOption $paymentOption, $maturity, $errorMessage)
     {
         $smarty = Context::getContext()->smarty;
         $maturity['total_order'] = $this->cartPrice;
         $smarty->assign([
             'credit' => $maturity,
+            'error' => $errorMessage,
         ]);
         $paymentInfoTemplate = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/payment_infos.tpl';
         $paymentOption->setAdditionalInformation($smarty->fetch($paymentInfoTemplate))

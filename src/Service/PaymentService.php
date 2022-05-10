@@ -52,7 +52,7 @@ class PaymentService
     protected $cellPhone;
 
     /** @var string */
-    protected $errorMessage;
+    public $errorMessage;
 
     public function __construct(
         LoggerService $loggerservice,
@@ -182,7 +182,7 @@ class PaymentService
         return $response;
     }
 
-    protected function isInternationalPhone(\Address $customerAdress)
+    public function isInternationalPhone(\Address $customerAdress)
     {
         $regValidPhone = '/^\+\d{10,18}/';
 

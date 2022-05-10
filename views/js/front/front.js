@@ -106,7 +106,7 @@ document.onreadystatechange = setTimeout(function() {
         $('.younited_btnhide').on("click", function(e) {
             hidePopup(e);
         });
-        setTimeout(toggleInstallmentOffer, 3500);
+        // setTimeout(toggleInstallmentOffer, 3500);
     }
 }, 75);
 
