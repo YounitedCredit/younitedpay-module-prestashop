@@ -52,6 +52,7 @@ class YounitedClient
 
     public function __construct($idShop, $testCredentials = [])
     {
+        $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
         $this->apiLogger = ApiLogger::getInstance();
 
         if (empty($testCredentials) === false) {
@@ -134,7 +135,6 @@ class YounitedClient
 
     private function setErrorMessage($e, $classRequest)
     {
-        $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
         $this->logger->logError(
             sprintf($e->getMessage()),
             (new \ReflectionClass($this))->getShortName(),
