@@ -145,7 +145,7 @@ class PaymentService
         $merchantUrls = (new MerchantUrls())
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
-            ->setOnCanceledWebhookUrl($this->getLink('error', ['cancel' => 1]))
+            ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
             ->setOnWithdrawnWebhookUrl($this->getLink('webhook', ['widhdrawn' => 1]));
 
         $merchantOrderContext = (new MerchantOrderContext())
@@ -258,9 +258,9 @@ class PaymentService
             '{shop_domain}' => Configuration::get('PS_SHOP_DOMAIN'),
         ];
 
-        $defaultDelivered = null !== _PS_OS_WS_PAYMENT_
-            ? _PS_OS_WS_PAYMENT_
-            : Configuration::getGlobalValue('PS_OS_WS_PAYMENT');
+        $defaultDelivered = null !== _PS_OS_PAYMENT_
+            ? _PS_OS_PAYMENT_
+            : Configuration::getGlobalValue('PS_OS_PAYMENT');
 
         $orderCreated = $this->module->validateOrder(
             $cart->id,

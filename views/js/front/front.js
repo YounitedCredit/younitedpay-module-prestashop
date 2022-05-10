@@ -85,7 +85,14 @@ function hidePopup(e)
     $('#younited_popupzone').attr('style','display:none!important;');
 }
 
+var younitedEvents = false;
+
 document.onreadystatechange = setTimeout(function() {
+    if (younitedEvents === true) {
+        return false;
+    }
+
+    younitedEvents = true;
     if ($(".younitedpay-widget-root").length) {
         try {
             totalOffers = window.younited_product_offers_total;

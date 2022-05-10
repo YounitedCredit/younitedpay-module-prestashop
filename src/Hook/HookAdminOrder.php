@@ -19,6 +19,7 @@
 
 namespace YounitedpayAddon\Hook;
 
+use Configuration;
 use Younitedpay;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -73,12 +74,20 @@ class HookAdminOrder extends AbstractHook
 
         $statusActivating = json_decode(\Configuration::get(Younitedpay::ORDER_STATE_DELIVERED), true);
 
-        if (in_array((string) $orderStatus->id, $statusActivating) === true) {
-            /** @var OrderService $orderservice */
-            $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
+        /** @var OrderService $orderservice */
+        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
-            $orderservice->activateOrder($order->id);
+        if (in_array((string) $orderStatus->id, $statusActivating) === true) {
+            return $orderservice->activateOrder($order->id);
         }
+
+        $idOrderCanceled = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : Configuration::get('_PS_OS_PAYMENT_');
+
+        if ((int) $idOrderCanceled === $orderStatus->id) {
+            return $orderservice->cancelContract($order->id, '');
+        }
+
+        return true;
     }
 
     public function actionValidateOrder($params)

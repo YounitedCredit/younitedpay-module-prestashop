@@ -79,15 +79,15 @@ class YounitedClient
      *
      * @return array ['response' => mixed, 'success' => bool]
      */
-    public function sendRequest(AbstractModel $body, AbstractRequest $requestObject)
+    public function sendRequest(AbstractModel $body, $requestObject)
     {
         $client = new Client();
         try {
-            if ($this->isProductionMode === false) {
-                $requestObject = $requestObject->enableSandbox();
-            }
             /** @var AbstractRequest $request */
             $request = $requestObject->setModel($body);
+            if ($this->isProductionMode === false) {
+                $request = $requestObject->setModel($body)->enableSandbox();
+            }
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
 
@@ -99,7 +99,11 @@ class YounitedClient
 
             $this->apiLogger->log($this, $response, 'Response' . $classRequest, true);
 
-            if ($response->getStatusCode() === 200) {
+            $statusCode = $response->getStatusCode();
+
+            $successStatuscode = [200, 201, 204];
+
+            if (in_array($statusCode, $successStatuscode) === true) {
                 return [
                     'response' => $response->getModel(),
                     'status' => $response->getStatusCode(),
@@ -113,6 +117,13 @@ class YounitedClient
                 'success' => false,
             ];
 
+            $this->logger->logError(
+                sprintf($response->getReasonPhrase()),
+                (new \ReflectionClass($this))->getShortName(),
+                null,
+                'Error Request' . $classRequest
+            );
+
             $this->apiLogger->log($this, $errorResponse, 'Error Response ' . $classRequest, true);
 
             return $errorResponse;
@@ -121,14 +132,14 @@ class YounitedClient
         }
     }
 
-    private function setErrorMessage($e, $requestObject)
+    private function setErrorMessage($e, $classRequest)
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
         $this->logger->logError(
             sprintf($e->getMessage()),
             (new \ReflectionClass($this))->getShortName(),
             null,
-            'Error Request' . (new \ReflectionClass($requestObject))->getShortName()
+            'Error Request' . $classRequest
         );
 
         $errorMsg = [

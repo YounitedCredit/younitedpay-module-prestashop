@@ -20,6 +20,7 @@
 
 namespace YounitedpayAddon\Service;
 
+use Exception;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
@@ -81,14 +82,18 @@ class OrderService
      * Confirm the contract - Update the database and make a request to the API
      *
      * @param \Order $order
+     *
+     * @return bool $response True if confirmation correctly sent to Younited
      */
     public function confirmOrder(\Order $order)
     {
         /** @var YounitedPayContract younitedContract */
-        $younitedContract = $this->paymentrepository->getContractByOrder($order->id);
+        $younitedContract = $this->paymentrepository->getContractByCart($order->id_cart);
 
-        if ($order->module !== $this->module->name) {
-            return $this->cancelContract($order->id, $younitedContract->id_external_younitedpay_contract);
+        if ($order !== null && $order->module !== $this->module->name) {
+            $this->cancelContract($order->id, $younitedContract->id_external_younitedpay_contract);
+
+            return false;
         }
 
         if ($younitedContract->is_confirmed === true) {
@@ -97,20 +102,60 @@ class OrderService
 
         $clientBuildReturn = $this->buildClient();
         if ($clientBuildReturn['success'] !== true) {
-            return $clientBuildReturn;
+            return false;
         }
 
         $body = (new ConfirmContract())
-            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract)
-            ->setMerchantOrderId((string) $order->id);
+            ->setMerchantOrderId((string) $order->reference)
+            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract);
 
         $request = new ConfirmContractRequest();
 
-        return $this->client->sendRequest($body, $request);
+        $response = $this->sendRequest($body, $request, 'confirm contract');
+
+        if ((bool) $response['success'] === false) {
+            return false;
+        }
+
+        return $this->paymentrepository->activateContract($order->id);
     }
 
-    protected function cancelContract($idOrder, $refContract)
+    protected function sendRequest($body, $request, $type)
     {
+        try {
+            $response = $this->client->sendRequest($body, $request);
+        } catch (Exception $ex) {
+            $response = [
+                'success' => false,
+                'response' => $ex->getMessage(),
+            ];
+        }
+
+        if ($response['success'] === false) {
+            $this->loggerservice->addLog(
+                $response['response'],
+                'error response ' . $type,
+                'error',
+                $this
+            );
+        }
+
+        return $response['success'];
+    }
+
+    public function cancelContract($idOrder, $refContract)
+    {
+        $clientBuildReturn = $this->buildClient();
+        if ($clientBuildReturn['success'] !== true) {
+            return true;
+        }
+
+        if ($refContract === '') {
+            /** @var YounitedPayContract $younitedContract */
+            $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
+            $refContract = $younitedContract->id_external_younitedpay_contract;
+        }
+
         $this->paymentrepository->cancelContract($idOrder);
 
         $body = (new CancelContract())
@@ -118,7 +163,9 @@ class OrderService
 
         $request = new CancelContractRequest();
 
-        return $this->client->sendRequest($body, $request);
+        $this->sendRequest($body, $request, 'cancel contract');
+
+        return true;
     }
 
     /**
@@ -137,17 +184,19 @@ class OrderService
 
         $clientBuildReturn = $this->buildClient();
         if ($clientBuildReturn['success'] !== true) {
-            return $clientBuildReturn;
+            return true;
         }
 
         $this->paymentrepository->activateContract($idOrder);
 
         $body = (new ActivateContract())
-            ->setContractReference($younitedContract->id_external_younitedpay_contract);
+            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract);
 
         $request = new ActivateContractRequest();
 
-        return $this->client->sendRequest($body, $request);
+        $this->sendRequest($body, $request, 'activate order');
+
+        return true;
     }
 
     public function renderTemplate($idOrder)
@@ -158,22 +207,22 @@ class OrderService
         $dateState = $younitedContract->date_upd;
         $state = $this->module->l('Awaiting');
         switch (true) {
-            case $younitedContract->is_activated === true:
+            case (bool) $younitedContract->is_activated === true:
                 $dateState = $younitedContract->activation_date;
                 $state = $this->module->l('Activated');
                 break;
 
-            case $younitedContract->is_confirmed === true:
+            case (bool) $younitedContract->is_confirmed === true:
                 $dateState = $younitedContract->confirmation_date;
                 $state = $this->module->l('Confirmed');
                 break;
 
-            case $younitedContract->is_withdrawn === true:
+            case (bool) $younitedContract->is_withdrawn === true:
                 $dateState = $younitedContract->withdrawn_date;
                 $state = $this->module->l('Withdrawed');
                 break;
 
-            case $younitedContract->is_canceled === true:
+            case (bool) $younitedContract->is_canceled === true:
                 $dateState = $younitedContract->canceled_date;
                 $state = $this->module->l('Canceled');
                 break;
