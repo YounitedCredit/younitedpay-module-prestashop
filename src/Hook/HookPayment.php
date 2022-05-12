@@ -69,7 +69,7 @@ class HookPayment extends AbstractHook
         $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
         $country = new \Country($customerAdressInvoice->id_country);
         if ($country->iso_code !== 'FR') {
-            $errorMessage[] = $this->module->l('Not available for this country (Only France for invoice address).');
+            // $errorMessage[] = $this->module->l('Not available for this country (Only France for invoice address).');
         }
 
         if ($paymentservice->isInternationalPhone($customerAdressInvoice) === false) {

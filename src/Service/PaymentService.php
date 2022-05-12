@@ -184,7 +184,7 @@ class PaymentService
 
     public function isInternationalPhone(\Address $customerAdress)
     {
-        $regValidPhone = '/^\+\d{10,18}/';
+        $regValidPhone = '/^\+33\d{9}/';
 
         if (empty($customerAdress->phone) === true) {
             $this->errorMessage = $this->module->l('Phone number is not filled.');
@@ -208,7 +208,9 @@ class PaymentService
                 return true;
             }
         }
-        $this->errorMessage = $this->module->l('Phone number is not in international format (+XXX).');
+        $this->errorMessage = $this->module->l(
+            'Cell Phone number is not french and in international format (+33X XX XX XX XX).'
+        );
         $this->errorMessage .= ' ';
         $this->errorMessage .= $this->module->l('Please update your phone number of your address and try again.');
 
