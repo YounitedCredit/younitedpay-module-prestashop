@@ -37,6 +37,7 @@ document.onreadystatechange = function() {
     });
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);
+    $('#younitedpay_prod_switch').click(YounitedhideZoneTest);
     younitedEvents = true;
 };
 
@@ -144,13 +145,15 @@ function UpdateMaturity()
         console.log(targetObject);
         var key = parseInt(targetObject.getAttribute('data-id'));
         
+        var maturity = parseInt($('#maturity' + key).val());
+        
         var minAmountVal = $('#min_amount_input_' + key).val();
-        $('#min_amount_' + key).html(minAmountVal);
+        $('#min_amount_' + key).html(minAmountVal / maturity);
 
         var maxAmountVal = $('#max_amount_input_' + key).val();
-        $('#max_amount_' + key).html(maxAmountVal);
+        $('#max_amount_' + key).html(maxAmountVal / maturity);
 
-        if (parseInt(maxAmountVal) > 0) {
+        if (parseInt(maxAmountVal / maturity) > 0) {
             $('#max_amount_zone_' + key).removeClass('hidden');
         } else {
             $('#max_amount_zone_' + key).addClass('hidden');
@@ -178,7 +181,7 @@ function copyToClipboard(event) {
     } catch(error) {
         console.log('Error writeText' + error);
     }
-    try {
+    try {YounitedhideZoneTest
         navigator.clipboard.write(text);
         showConfZone(message);
         return true;
@@ -234,4 +237,16 @@ function statutorder_doubleListUpdate(doubleList)
     unselectedList.find('option').each(function() {
         doubleListValues.find("[value='"+this.value+"']").attr('checked', false);
     });
+}
+
+function YounitedhideZoneTest() {
+    var valTest = $('#production_mode_on').not(':checked').length > 0;
+    var zoneToShow = 'data-test-zone';
+    var zoneToHide = 'data-prod-zone';
+    if (valTest === false) {
+        zoneToShow = 'data-prod-zone';
+        zoneToHide = 'data-test-zone';
+    }
+    $('div [' + zoneToShow + ']').removeClass('hidden');
+    $('div [' + zoneToHide + ']').addClass('hidden');
 }

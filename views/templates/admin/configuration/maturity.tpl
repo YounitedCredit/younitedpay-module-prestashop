@@ -27,7 +27,8 @@
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][maturity]">
                 {l s='Installments' mod='younitedpay'}
             </label>
-            <select class="form-control col-lg-5" data-toggle="maturity" data-minimumresultsforsearch="3" aria-hidden="true" name="maturity[{$key}][maturity]">
+            <select class="form-control col-lg-5" data-toggle="maturity" id="maturity{$key}"
+                data-minimumresultsforsearch="3" aria-hidden="true" name="maturity[{$key}][maturity]">
                 {foreach $maturitylist item=maturityitem}
                     <option name="{$maturityitem}" value="{$maturityitem}"{if $maturity.maturity == $maturityitem} selected{/if}>{$maturityitem}x</option>                
                 {/foreach}
@@ -66,10 +67,18 @@
     </div>
     <small class="form-text">
         {l s='Installments from ' mod='younitedpay'}
-        <span id="min_amount_{$key}">{$maturity.minimum}</span> €/{l s='month.' mod='younitedpay'}
-        <span id="max_amount_zone_{$key}"{if $maturity.maximum <= 0} class="hidden"{/if}>
+        {assign var="mininstallment" value=$maturity.minimum / $maturity.maturity}
+        {assign var="maxinstallment" value=$maturity.minimum / $maturity.maturity}
+        <span id="min_amount_{$key}">
+        {if $mininstallment >= 1}
+            {$mininstallment}
+        {else}
+            1
+        {/if}
+        </span> €/{l s='month.' mod='younitedpay'}
+        <span id="max_amount_zone_{$key}"{if $maxinstallment <= 0} class="hidden"{/if}>
             {l s='And up to ' mod=''}<span id="max_amount_{$key}">
-            {$maturity.maximum}</span> €/{l s='month.' mod='younitedpay'}
+            {$maxinstallment}</span> €/{l s='month.' mod='younitedpay'}
         </span>
     </small>
 </div>

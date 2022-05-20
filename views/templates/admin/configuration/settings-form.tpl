@@ -30,7 +30,7 @@
                             {l s='Environment' mod='younitedpay'}
                         </label>
                         <div class="col-lg-4 align-item-center">                        
-                            <span class="ps-switch ps-switch-lg" id="prod_switch">
+                            <span class="ps-switch ps-switch-lg" id="younitedpay_prod_switch">
                                 <input type="radio" name="production_mode" id="production_mode_off" 
                                     value="0"{if $configuration.production_mode === false} checked{/if}/>
                                 <label for="production_mode_off">{l s='Test' mod='younitedpay'}</label>
@@ -45,7 +45,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group mt-2 row">
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id">
                             {l s='Client ID' mod='younitedpay'}
                         </label>
@@ -59,7 +59,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group mt-2 row">
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret">
                             {l s='Client Secret' mod='younitedpay'}
                         </label>
@@ -73,7 +73,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group mt-2 row">
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret">
                             {l s='WebHook Secret' mod='younitedpay'}
                         </label>
@@ -81,6 +81,48 @@
                             <input type="text" class="form-control"
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret"
                                 name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
+                            <small class="form-text">
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General
+                                settings\'' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_production">
+                            {l s='Client ID' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">
+                            <input type="text" class="form-control"
+                                placeholder="{l s='Fill in you Client ID' mod='younitedpay'}" id="client_id_production"
+                                name="client_id_production" value="{$configuration.client_id_production|escape:'htmlall':'UTF-8'}" />
+                            <small class="form-text">
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General
+                                settings\'' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_production">
+                            {l s='Client Secret' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">
+                            <input type="text" class="form-control"
+                                placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="client_secret_production_production"
+                                name="client_secret_production" value="{$configuration.client_secret_production|escape:'htmlall':'UTF-8'}" />
+                            <small class="form-text">
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General
+                                settings\'' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_production">
+                            {l s='WebHook Secret' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">
+                            <input type="text" class="form-control"
+                                placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret_production"
+                                name="webhook_secret_production" value="{$configuration.webhook_secret_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General
                                 settings\'' mod='younitedpay'}

@@ -158,20 +158,6 @@ class YounitedClient
 
     private function setApiCredentials($idShop)
     {
-        $this->clientId = Configuration::get(
-            Younitedpay::CLIENT_ID,
-            null,
-            null,
-            $idShop,
-            ''
-        );
-        $this->clientSecret = Configuration::get(
-            Younitedpay::CLIENT_SECRET,
-            null,
-            null,
-            $idShop,
-            ''
-        );
         $this->isProductionMode = (bool) Configuration::get(
             Younitedpay::PRODUCTION_MODE,
             null,
@@ -179,8 +165,23 @@ class YounitedClient
             $idShop,
             false
         );
+        $suffix = $this->isProductionMode === true ? '_PRODUCTION' : '';
+        $this->clientId = Configuration::get(
+            Younitedpay::CLIENT_ID . $suffix,
+            null,
+            null,
+            $idShop,
+            ''
+        );
+        $this->clientSecret = Configuration::get(
+            Younitedpay::CLIENT_SECRET . $suffix,
+            null,
+            null,
+            $idShop,
+            ''
+        );
         $this->webHookSecret = Configuration::get(
-            Younitedpay::WEBHOOK_SECRET,
+            Younitedpay::WEBHOOK_SECRET . $suffix,
             null,
             null,
             $idShop,
