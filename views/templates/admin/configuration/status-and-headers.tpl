@@ -49,7 +49,7 @@
         </div>
         <div class="col-sm-4 d-flex" id="younitedpay_status_block">
           <div class="card col-xl-12 pl-2 pr-2 d-flex flex-wrap flex-row" id="younitedpay_status_zone">
-            <h3 class="mt-2 ml-2 row col-xl-12">
+            <h3 class="mt-2 row col-xl-12">
               <div class="col-xl-11">
                 {l s='Requirements' mod='younitedpay'}
               </div>
@@ -57,6 +57,9 @@
                   <i class="material-icons mt-1" id="hide_requirements">close</i>
               </div>
             </h3>
+            <div class="row col-xl-12 ml-2 mb-1">
+              Pour garantir le bon fonctionnement de votre module, veuillez respecter les exigences techniques suivantes
+            </div>
             <div class="card-block justify-content-start align-items-start">
               {* <h4 class="col-xl-12"> *}
                 {foreach from=$specifications item=spec}
@@ -73,13 +76,13 @@
                     >{$spec.name|escape:'htmlall':'UTF-8'}{if $spec.info != ''} - {/if}{$spec.info|escape:'htmlall':'UTF-8'}</span>
                   </div>
                 {/foreach}
-                <div class="row col-xl-12 ml-2">                  
+                {* <div class="row col-xl-12 ml-2">                  
                   <i class="material-icons" style="color:grey;">help</i>  
                   <span class="pt-1 inline">
                     {l s='URL for webhook' mod='younitedpay'} 
                   </span>
-                </div>
-                <div class="row col-xl-12 ml-2 mb-1">
+                </div> *}
+                {* <div class="row col-xl-12 ml-2 mb-1">
                   <span class="inline" style="font-size:14px;color:#00aff0;">
                     <a href="#" title="{$webhook_url|escape:'htmlall':'UTF-8'}" data-clipboard-copy="{$webhook_url|escape:'htmlall':'UTF-8'}" data-message="{l s='WebHook URL copied to clipboard' mod='younitedpay'}" class="copy-clipboard">
                       <span class="truncate">{$webhook_url_text|escape:'htmlall':'UTF-8'}</span>
@@ -89,7 +92,7 @@
                       </svg>
                     </a>
                   </span>
-                </div>
+                </div> *}
               {* </h4> *}
             </div> {* card-block *}
           </div> {* card *}

@@ -215,6 +215,10 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
+        if ($productservice->isWhiteListedIP() === false) {
+            return '';
+        }
+
         $templateCredit = $productservice->getBestPrice($price);
 
         $context = $this->context;

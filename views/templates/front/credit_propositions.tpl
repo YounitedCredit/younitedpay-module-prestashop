@@ -62,7 +62,7 @@
    <div id="younited_popupzone"
       class="yp-inset-0 yp-flex yp-fixed yp-justify-center yp-items-center yp-z-100 yp-bg-black yp-bg-opacity-50" style="display:none!important;">
       <div
-         class="yp-overflow-hidden yp-relative yp-flex yp-flex-row yp-flex-wrap yp-rounded-sm yp-shadow-lg yp-w-screen yp-h-screen md:yp-h-640 lg:yp-w-11/12 md:yp-max-w-4xl yp-max-h-screen yp-bg-white yp-text-base">
+         class="yp-overflow-auto yp-relative yp-flex yp-flex-row yp-flex-wrap yp-rounded-sm yp-shadow-lg yp-w-screen yp-h-screen md:yp-h-640 lg:yp-w-11/12 md:yp-max-w-4xl yp-max-h-screen yp-bg-white yp-text-base">
          <button class="younited_btnhide yp-text-4xl yp-opacity-50 hover:yp-opacity-100 
             focus:yp-opacity-100 yp-absolute yp-top-3 yp-right-4 yp-outline-none yp-transform 
             hover:yp-scale-125 focus:yp-scale-125 yp-transition-transform yp-duration-100 close-popup-you">

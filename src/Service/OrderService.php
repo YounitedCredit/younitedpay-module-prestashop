@@ -28,9 +28,11 @@ use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedPaySDK\Model\ActivateContract;
 use YounitedPaySDK\Model\CancelContract;
 use YounitedPaySDK\Model\ConfirmContract;
+use YounitedPaySDK\Model\WithdrawContract;
 use YounitedPaySDK\Request\ActivateContractRequest;
 use YounitedPaySDK\Request\CancelContractRequest;
 use YounitedPaySDK\Request\ConfirmContractRequest;
+use YounitedPaySDK\Request\WithdrawContractRequest;
 
 class OrderService
 {
@@ -91,6 +93,14 @@ class OrderService
         $younitedContract = $this->paymentrepository->getContractByCart($order->id_cart);
 
         if ($order !== null && $order->module !== $this->module->name) {
+            return false;
+        }
+
+        if (
+            \Validate::isLoadedObject($younitedContract) &&
+            $younitedContract->id_external_younitedpay_contract !== '' &&
+            $order->module !== $this->module->name
+        ) {
             $this->cancelContract($order->id, $younitedContract->id_external_younitedpay_contract);
 
             return false;
@@ -156,8 +166,6 @@ class OrderService
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
 
-        $this->paymentrepository->cancelContract($idOrder);
-
         $body = (new CancelContract())
             ->setContractReference($refContract);
 
@@ -166,6 +174,91 @@ class OrderService
         $this->sendRequest($body, $request, 'cancel contract');
 
         return true;
+    }
+
+    public function withdrawnContract($idOrder, $refContract, $amountWithdraw)
+    {
+        $clientBuildReturn = $this->buildClient();
+        if ($clientBuildReturn['success'] !== true) {
+            return true;
+        }
+
+        if ($refContract === '') {
+            /** @var YounitedPayContract $younitedContract */
+            $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
+            $refContract = $younitedContract->id_external_younitedpay_contract;
+        }
+
+        $this->paymentrepository->withdrawnContract($idOrder);
+
+        $body = (new WithdrawContract())
+            ->setAmount($amountWithdraw)
+            ->setContractReference($refContract);
+
+        $request = new WithdrawContractRequest();
+
+        $this->sendRequest($body, $request, 'withdraw contract');
+
+        return true;
+    }
+
+    /**
+     * @param mixed $params
+     *
+     * @return float
+     */
+    public function calculatePartialRefund($params)
+    {
+        $amount = 0;
+
+        if (empty($params['productList'])) {
+            return $amount;
+        }
+
+        foreach ($params['productList'] as $product) {
+            $amount += $product['amount'];
+        }
+
+        if (false == empty($params['partialRefundShippingCost'])) {
+            $amount += $params['partialRefundShippingCost'];
+        }
+
+        // For prestashop version > 1.7.7
+        if (false == empty($params['cancel_product'])) {
+            $refundData = $params['cancel_product'];
+            $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
+        }
+
+        $amount -= $this->calculatePartialDiscount($params);
+
+        return $amount;
+    }
+
+    /**
+     * @param mixed $params
+     *
+     * @return float
+     */
+    public function calculatePartialDiscount($params)
+    {
+        // $params differs according PS version
+        $amount = 0;
+
+        if (false == empty($params['refund_voucher_off'])) {
+            if (false == empty($params['order_discount_price'])) {
+                return floatval($params['order_discount_price']);
+            }
+        }
+
+        if (false == empty($params['cancel_product']['voucher_refund_type'])) {
+            if ($params['cancel_product']['voucher_refund_type'] == 1) {
+                if ($params['order'] instanceof \Order) {
+                    return (float) $params['order']->total_discounts_tax_incl;
+                }
+            }
+        }
+
+        return $amount;
     }
 
     /**
@@ -242,5 +335,23 @@ class OrderService
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderContentOrder.tpl';
 
         return \Context::getContext()->smarty->fetch($template);
+    }
+
+    /**
+     * Get YounitedPayContract by cart or Order
+     *
+     * @param int $id Id of the cart / order concerned
+     * @param string $type Type of object concerned: 'cart' | 'order'
+     */
+    public function getYounitedContract($id, $type = 'cart')
+    {
+        if ($type === 'cart') {
+            return $this->paymentrepository->getContractByCart($id);
+        }
+        if ($type === 'order') {
+            return $this->paymentrepository->getContractByOrder($id);
+        }
+
+        return new YounitedPayContract();
     }
 }

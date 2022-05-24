@@ -31,7 +31,8 @@ class HookAdminOrder extends AbstractHook
     public $module;
 
     const AVAILABLE_HOOKS = [
-        'displayAdminOrderTabOrder',
+        'displayAdminOrder',
+        'displayAdminOrderTop',
         'displayAdminOrderTabLink',
         'displayAdminOrderContentOrder',
         'displayAdminOrderTabContent',
@@ -81,10 +82,16 @@ class HookAdminOrder extends AbstractHook
             return $orderservice->activateOrder($order->id);
         }
 
-        $idOrderCanceled = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : Configuration::get('_PS_OS_PAYMENT_');
+        $idOrderCanceled = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : Configuration::get('PS_OS_CANCELED');
 
         if ((int) $idOrderCanceled === $orderStatus->id) {
             return $orderservice->cancelContract($order->id, '');
+        }
+
+        $idOrderWithdraw = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+
+        if ((int) $idOrderWithdraw === $orderStatus->id) {
+            return $orderservice->withdrawnContract($order->id, '', $order->getTotalPaid());
         }
 
         return true;
@@ -103,8 +110,20 @@ class HookAdminOrder extends AbstractHook
 
     private function renderTemplate($params)
     {
-        /** @var \Order $order */
-        $order = new \Order((int) $params['id_order']);
+        $order = null;
+        if (isset($params['order'])) {
+            /** @var \Order $order */
+            $order = $params['order'];
+        }
+        if (isset($params['id_order'])) {
+            /** @var \Order $order */
+            $order = new \Order((int) $params['id_order']);
+        }
+
+        if (\Validate::isLoadedObject($order) === false) {
+            return;
+        }
+
         if ($order->module != $this->module->name) {
             return;
         }
@@ -113,5 +132,68 @@ class HookAdminOrder extends AbstractHook
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
         return $orderservice->renderTemplate($order->id);
+    }
+
+    public function displayAdminOrderTop($params)
+    {
+        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
+            return false;
+        }
+
+        $return = $this->getAdminOrderPageMessages($params);
+        $return .= $this->getPartialRefund($params);
+
+        return $return;
+    }
+
+    public function displayAdminOrder($params)
+    {
+        // Since Ps 1.7.7 this hook is displayed at bottom of a page and we should use a hook DisplayAdminOrderTop
+        if (version_compare(_PS_VERSION_, '1.7.7', '>=')) {
+            return false;
+        }
+
+        $return = $this->getAdminOrderPageMessages($params);
+        $return .= $this->getPartialRefund($params);
+
+        return $return;
+    }
+
+    public function hookActionOrderSlipAdd($params)
+    {
+        if (\Tools::isSubmit('doPartialRefundYounitedPay')) {
+            /** @var OrderService $orderservice */
+            $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
+
+            $params = array_merge(\Tools::getAllValues(), $params);
+            $amountToRefund = $orderservice->calculatePartialRefund($params);
+
+            return $orderservice->withdrawnContract($params['order']->id, '', $amountToRefund);
+        }
+    }
+
+    protected function getPartialRefund($params)
+    {
+        /** @var OrderService $orderservice */
+        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
+        $idOrder = $params['id_order'];
+        $younitedContract = $orderservice->getYounitedContract($idOrder, 'order');
+
+        if (!\Validate::isLoadedObject($younitedContract) || (int) $younitedContract->id_order !== $idOrder) {
+            return '';
+        }
+
+        $context = \Context::getContext();
+        $context->smarty->assign('chb_younited_refund', $this->l('Refund on YounitedPay'));
+
+        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/partialRefund.tpl';
+
+        return $context->smarty->fetch($template);
+    }
+
+    protected function getAdminOrderPageMessages($params)
+    {
+        $id_order = $params['id_order'];
+        /* To come : Message of refund in progress / or not */
     }
 }

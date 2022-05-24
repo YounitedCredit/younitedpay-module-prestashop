@@ -55,7 +55,7 @@ class ProductService
     public function getBestPrice($product_price)
     {
         $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false) {
+        if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false) {
             return $this->noOffers();
         }
 
@@ -142,5 +142,10 @@ class ProductService
     public function getAllMaturities($productPrice)
     {
         return $this->configRepository->getAllMaturities($productPrice);
+    }
+
+    public function isWhiteListedIP()
+    {
+        return $this->configRepository->checkIPWhitelist();
     }
 }

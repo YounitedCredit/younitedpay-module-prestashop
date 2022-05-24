@@ -72,4 +72,30 @@ class ConfigRepository
             $maturityEntity->save();
         }
     }
+
+    /**
+     * Check if WhiteList enabled and IP In Whitelist
+     * The payment options / credit on pages do not display if not in the IP whitelist (if enabled)
+     *
+     * @return bool true if whitelist disabled, false if whitelist enabled and IP not in the list
+     */
+    public function checkIPWhitelist()
+    {
+        $ipClient = \Tools::getRemoteAddr();
+        $IpWhiteListOn = (bool) \Configuration::get(\Younitedpay::IP_WHITELIST_ENABLED);
+        if ($IpWhiteListOn !== true) {
+            return true;
+        }
+        try {
+            $ipWhitelisted = explode(',', \Configuration::get(\Younitedpay::IP_WHITELIST_CONTENT));
+        } catch (\Exception $ex) {
+            $ipWhitelisted = [];
+        }
+
+        if (is_array($ipWhitelisted) === false) {
+            return true;
+        }
+
+        return in_array($ipClient, $ipWhitelisted);
+    }
 }

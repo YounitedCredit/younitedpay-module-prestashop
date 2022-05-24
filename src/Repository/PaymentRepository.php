@@ -139,4 +139,26 @@ class PaymentRepository
             'id_order = ' . (int) pSQL($idOrder)
         );
     }
+
+    /**
+     * Modify the entity to withdraw contract on the YounitedContract table
+     *
+     * @param int $idOrder Id Of Order concerned for cancelation
+     *
+     * @return bool Operation done / fail
+     */
+    public function withdrawnContract($idOrder)
+    {
+        return Db::getInstance()->update(
+            YounitedPayContract::$definition['table'],
+            [
+                'is_withdrawn' => true,
+                'withdrawn_date' => date('Y-m-d H:i:s'),
+                'is_activated' => false,
+                'is_confirmed' => false,
+                'is_canceled' => false,
+            ],
+            'id_order = ' . (int) pSQL($idOrder)
+        );
+    }
 }

@@ -15,7 +15,7 @@ rm -f ./vendor/symfony/polyfill-php80/bootstrap.php
 echo -e '\033[1;33m''copy both librairies corrected for php56'
 cp -f ./202/compatibilityphp/symfony/deprecation-contracts/function.php ./vendor/symfony/deprecation-contracts/function.php
 cp -f ./202/compatibilityphp/symfony/polyfill-php80/bootstrap.php ./vendor/symfony/polyfill-php80/bootstrap.php
-if [-f ./vendor/symfony/polyfill-72/php72.php]
+if [ -f ./vendor/symfony/polyfill-72/php72.php ]
 then
     echo -e '\033[0;31m''delete vendor/symfony/polyfill-72/php72.php for php56'
     rm -f ./vendor/symfony/polyfill-72/php72.php
