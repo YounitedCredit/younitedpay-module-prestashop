@@ -189,8 +189,6 @@ class OrderService
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
 
-        $this->paymentrepository->withdrawnContract($idOrder);
-
         $body = (new WithdrawContract())
             ->setAmount($amountWithdraw)
             ->setContractReference($refContract);
@@ -200,6 +198,32 @@ class OrderService
         $this->sendRequest($body, $request, 'withdraw contract');
 
         return true;
+    }
+
+    /**
+     * Set the contract saved on table (Younited pay section on BO) to withdrawn
+     *
+     * @param int $idCart
+     */
+    public function setWithdrawnOnYounitedContract($idCart)
+    {
+        /** @var YounitedPayContract $younitedContract */
+        $younitedContract = $this->paymentrepository->getContractByCart($idCart);
+
+        return $this->paymentrepository->withdrawnContract($younitedContract->id_order);
+    }
+
+    /**
+     * Set the contract saved on table (Younited pay section on BO) to withdrawn
+     *
+     * @param int $idCart
+     */
+    public function setCancelOnYounitedContract($idCart)
+    {
+        /** @var YounitedPayContract $younitedContract */
+        $younitedContract = $this->paymentrepository->getContractByCart($idCart);
+
+        return $this->paymentrepository->cancelContract($younitedContract->id_order);
     }
 
     /**

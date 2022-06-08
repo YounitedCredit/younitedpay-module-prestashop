@@ -22,8 +22,8 @@
         {if $credit.taeg <= 0 && $credit.tdf <= 0}
             {l s='without any fees (i.e. fixed APR of 0%, fixed borrowing rate 0%).' mod='younitedpay'}
         {else}
-            <b>{l s='with fixed APR of' mod='younitedpay'} {$credit.tdf}%</b>
-            {l s='%, fixed borrowing rate' mod='younitedpay'} {$credit.taeg}%{l s=').' mod='younitedpay'}
+            <b>{l s='with fixed APR of' mod='younitedpay'} {$credit.tdf}%</b>, 
+            {l s='fixed borrowing rate' mod='younitedpay'} {$credit.taeg}%{l s=').' mod='younitedpay'}
         {/if}
     </p>
     <p>

@@ -147,8 +147,9 @@ class HookPayment extends AbstractHook
         $paymentOption->setAdditionalInformation($smarty->fetch($paymentInfoTemplate))
             ->setCallToActionText(
             sprintf(
-                $this->l('Pay in %s times without fees with '),
-                $maturity['maturity']
+                $this->l('Pay in %s times without fees (for %s€/month) with '),
+                $maturity['maturity'],
+                \Tools::ps_round($maturity['installment_amount'], 1)
             )
         );
     }

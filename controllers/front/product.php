@@ -16,7 +16,7 @@
  * @author    202 ecommerce <tech@202-ecommerce.com>
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
-*/
+ */
 
 use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -29,8 +29,7 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         $context = \Context::getContext();
-        xdebug_break();
-        
+
         $idProduct = Tools::getValue('id_product');
         $idAttribute = Tools::getValue('id_attribute');
 
@@ -64,8 +63,6 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
                     : 0,
             ]
         );
-
-        $context->smarty->assign('hookConfiguration', 'done');;
 
         $this->ajaxDie(json_encode([
             'content' => $context->smarty->fetch(

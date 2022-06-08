@@ -19,6 +19,7 @@
  */
 
 use YounitedpayAddon\Service\LoggerService;
+use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedPaySDK\Client as WebHookClient;
 use YounitedPaySDK\Response\AbstractResponse;
@@ -47,27 +48,56 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $response = $clientSDK->retrieveCallbackResponse();
         $bodyContent = $response->getModel();
 
-        $allValues = json_encode(Tools::getAllValues());
+        $idCart = Tools::getValue('id_cart');
 
+        /* @var LoggerService */
         $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
         $logContent = json_encode($bodyContent);
         $logContent .= "\n" . 'Adresse IP:' . Tools::getRemoteAddr();
         $this->loggerService->addLogAPI($logContent . "\n" . $allValues, 'Info', $this);
+        $this->loggerService->addLogAPI('Adresse IP:' . Tools::getRemoteAddr(), 'Info', $this);
 
         if ($bodyContent === '') {
-            $this->endResponse('Contenu du body vide');
+            $this->endResponse('Contenu du body vide', true);
         }
 
-        // 'contractReference'
-        // $this->paymentrepository->cancelContract($idOrder);
+        if ($idCart === false) {
+            $this->endResponse('Error, no Cart Id Provided', true);
+        }
 
-        $this->endResponse('Contenu :' . $logContent . "\nParams:\n" . $allValues);
+        if (Tools::getValue('cancel') !== false) {
+            $this->updateContractStatus($idCart, 'cancel');
+            $this->endResponse('Cancel contract confirmed');
+        }
+
+        if (Tools::getValue('withdrawn') !== false) {
+            $this->updateContractStatus($idCart, 'withdrawn');
+            $this->endResponse('Withdrawn contract confirmed');
+        }
+
+        $this->endResponse('No parameter catched on webhook', true);
     }
 
-    protected function endResponse($message)
+    protected function endResponse($message, $error = false)
     {
-        $this->loggerService->addLog($message, '[younitedpay webhook]', 'info', $this);
+        if ($error) {
+            $this->loggerService->addLog($message, '[younitedpay webhook]', 'info', $this);
+        }
         $this->ajaxDie($message);
+    }
+
+    protected function updateContractStatus($idCart, $typeUpdate)
+    {
+        /** @var OrderService $orderservice */
+        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
+
+        if ($typeUpdate === 'cancel') {
+            return $orderservice->setCancelOnYounitedContract($idCart);
+        }
+
+        if ($typeUpdate === 'withdrawn') {
+            return $orderservice->setWithdrawnOnYounitedContract($idCart);
+        }
     }
 }

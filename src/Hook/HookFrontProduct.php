@@ -126,12 +126,12 @@ class HookFrontProduct extends AbstractHook
 
         if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook || $hookConfiguration === 'done') {
             return '';
-        }        
+        }
 
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
-        $templateCredit = $productservice->getBestPrice($price);            
+        $templateCredit = $productservice->getBestPrice($price);
 
         $context->smarty->assign(
             [

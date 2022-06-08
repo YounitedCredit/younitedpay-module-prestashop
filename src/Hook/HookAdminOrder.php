@@ -42,6 +42,10 @@ class HookAdminOrder extends AbstractHook
 
     public function displayAdminOrderTabOrder($params)
     {
+        if ($this->isOrderYounitedPay($params) === false) {
+            return;
+        }
+
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderTabOrder.tpl';
 
         return \Context::getContext()->smarty->fetch($template);
@@ -140,6 +144,10 @@ class HookAdminOrder extends AbstractHook
             return false;
         }
 
+        if ($this->isOrderYounitedPay($params) === false) {
+            return;
+        }
+
         $return = $this->getAdminOrderPageMessages($params);
         $return .= $this->getPartialRefund($params);
 
@@ -153,10 +161,21 @@ class HookAdminOrder extends AbstractHook
             return false;
         }
 
+        if ($this->isOrderYounitedPay($params) === false) {
+            return;
+        }
+
         $return = $this->getAdminOrderPageMessages($params);
         $return .= $this->getPartialRefund($params);
 
         return $return;
+    }
+
+    protected function isOrderYounitedPay($params)
+    {
+        $order = new \Order((int) $params['id_order']);
+
+        return $order->module === $this->module->name;
     }
 
     public function hookActionOrderSlipAdd($params)
