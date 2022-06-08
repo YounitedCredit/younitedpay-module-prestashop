@@ -16,10 +16,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
 
-<script async type="text/javascript" src="{$younitedpay_script}"></script>
-<script type="text/javascript">
-   var younited_product_offers_total = {$product_offers_total};
-</script>
- <div id="younitedpay_product_info" data-hook="{$younited_hook}">    
+ <div class="younitedpay_product_info" data-hook="{$younited_hook}" {if isset($widget)}data-widget{/if}>   
     {$credit_template nofilter}
  </div>

@@ -32,12 +32,19 @@ class CommonHook extends AbstractHook
     {
         $controller = Context::getContext()->controller;
         $this->registerMedia($controller);
-        // switch (true) {
-        //     case $controller instanceof \ProductController:
-        //     case $controller instanceof \CartController:
-        //         $this->registerMedia($controller);
-        //         break;
-        // }
+        switch (true) {
+            case $controller instanceof \ProductController:
+                $frontModuleLink = Context::getContext()->link->getModuleLink(
+                    $this->module->name,
+                    'product'
+                );
+                \Media::addJsDef([
+                    'younitedpay' => [
+                        'url_product' => $frontModuleLink,
+                        'id_product' => \Tools::getValue('id_product'),
+                    ]
+                ]);
+        }
     }
 
     protected function registerMedia(\FrontController $controller)

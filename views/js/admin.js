@@ -181,7 +181,7 @@ function copyToClipboard(event) {
     } catch(error) {
         console.log('Error writeText' + error);
     }
-    try {YounitedhideZoneTest
+    try {
         navigator.clipboard.write(text);
         showConfZone(message);
         return true;

@@ -99,11 +99,13 @@ class HookFrontProduct extends AbstractHook
             return;
         }
 
+        $idProduct = 0;
         switch (true) {
             case $controller instanceof \ProductController:
                 $idProduct = \Tools::getValue('id_product');
+                $idAttribute = \Tools::getValue('id_product_attribute', null);
                 $product = new \Product($idProduct);
-                $price = $product->getPrice();
+                $price = $product->getPrice(true, $idAttribute);
                 break;
             case $controller instanceof \CartController:
                 $price = $context->cart->getOrderTotal();
@@ -124,33 +126,19 @@ class HookFrontProduct extends AbstractHook
 
         if ($hookConfiguration === 'disabled' || $hookConfiguration !== $currentHook || $hookConfiguration === 'done') {
             return '';
-        }
-
-        $frontScriptURI = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/front/front.js';
+        }        
 
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
-        $templateCredit = $productservice->getBestPrice($price);
-
-        $frontModuleLink = $context->link->getModuleLink(
-            $this->module->name,
-            'younitedpayproduct'
-        );
-
-        $totalOffers = $templateCredit['offers'];
+        $templateCredit = $productservice->getBestPrice($price);            
 
         $context->smarty->assign(
             [
-                'younitedpay_script' => $frontScriptURI,
                 'younited_hook' => $currentHook,
                 'widget_younited' => false,
                 'credit_template' => $templateCredit['template'],
-                'product_url' => $frontModuleLink,
                 'product_price' => $price,
-                'product_offers_total' => empty($totalOffers) === false && is_array($totalOffers)
-                    ? count($totalOffers) - 1
-                    : 0,
             ]
         );
 

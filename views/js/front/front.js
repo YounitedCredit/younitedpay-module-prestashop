@@ -85,6 +85,43 @@ function hidePopup(e)
     $('#younited_popupzone').attr('style','display:none!important;');
 }
 
+function updateCreditZone(event)
+{    
+      $.ajax({
+          url: younitedpay.url_product,
+          type: 'POST',
+          dataType: 'JSON',
+          data: {
+              ajax: true,
+              id_product: younitedpay.id_product,
+              id_attribute: event.id_product_attribute,
+          },
+          success(response) {
+              if ('content' in response) {            
+                $('.younitedpay_product_info').html(response.content);
+                bindEventsYounitedPay();
+              }
+              if ('number_offers' in response) {            
+                younitedpay.number_offers = response.number_offers;
+              }
+          },
+          error(errorMessage) {
+            console.log(errorMessage);
+          }
+      });
+}
+
+function bindEventsYounitedPay()
+{
+    $('.maturity_installment').on("mouseover", mouseOverMaturity);
+    $('.maturity_installment').on("mouseout", mouseOutMaturity);
+    $('.blocks_maturities_popup').on("click", mouseOverMaturity);
+    $('.younited_block').on("click", showPopup);
+    $('.younited_btnhide').on("click", function(e) {
+        hidePopup(e);
+    });
+}
+
 var younitedEvents = false;
 
 document.onreadystatechange = setTimeout(function() {
@@ -94,19 +131,16 @@ document.onreadystatechange = setTimeout(function() {
 
     younitedEvents = true;
     if ($(".younitedpay-widget-root").length) {
-        try {
-            totalOffers = window.younited_product_offers_total;
-        } catch(error) {
-            console.log(error);
+        bindEventsYounitedPay();
+        if (typeof prestashop !== 'undefined') {
+            prestashop.on(
+                'updatedProduct',
+                function (event) {
+                    console.log(event);
+                    updateCreditZone(event);
+                }
+            );
         }
-        $('.maturity_installment').on("mouseover", mouseOverMaturity);
-        $('.maturity_installment').on("mouseout", mouseOutMaturity);
-        $('.blocks_maturities_popup').on("click", mouseOverMaturity);
-        $('.younited_block').on("click", showPopup);
-        $('.younited_btnhide').on("click", function(e) {
-            hidePopup(e);
-        });
-        // setTimeout(toggleInstallmentOffer, 3500);
     }
 }, 75);
 

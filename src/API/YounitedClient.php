@@ -129,7 +129,7 @@ class YounitedClient
 
             return $errorResponse;
         } catch (Exception $e) {
-            return $this->setErrorMessage($e, $requestObject);
+            return $this->setErrorMessage($e, (new \ReflectionClass($requestObject))->getShortName());
         }
     }
 
