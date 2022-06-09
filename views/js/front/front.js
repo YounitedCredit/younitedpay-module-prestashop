@@ -36,16 +36,18 @@ function changeInstallment(key)
 {
     actualOffer = parseInt(key);
     console.log(actualOffer);
-    var infoInstallment = $('.maturity_installment' + actualOffer.toString()).attr('data-mouseover');
-    $('.younitedpay_infoinstallment').html(infoInstallment);
+    var infoInstallmentAmount = $('.maturity_installment' + actualOffer.toString()).attr('data-amount');
+    var infoInstallmentMaturity = $('.maturity_installment' + actualOffer.toString()).attr('data-maturity');
+    $('.yp-install-amount').html(infoInstallmentAmount);
+    $('.yp-install-maturity').html(infoInstallmentMaturity);
     
-    $('.blocks_maturity span').addClass('yp-bg-prple');
-    $('.blocks_maturity span').removeClass('yp-bg-blue');
-    $('.blocks_maturity').removeClass('yp-border-blue yp-border-b-2');
+    $('.blocks_maturity span').addClass('yp-bg-prple-grey');
+    $('.blocks_maturity span').removeClass('yp-bg-prple');
+    // $('.blocks_maturity').removeClass('yp-border-blue yp-border-b-2');
 
-    $('.block_maturity' + key + ' span').addClass('yp-bg-blue');
-    $('.block_maturity' + key + ' span').removeClass('yp-bg-prple');
-    $('.block_maturity' + key).addClass('yp-border-blue yp-border-b-2');     
+    $('.block_maturity' + key + ' span').addClass('yp-bg-prple');
+    $('.block_maturity' + key + ' span').removeClass('yp-bg-prple-grey');
+    // $('.block_maturity' + key).addClass('yp-border-blue yp-border-b-2');     
     
     $('.blocks_maturities_popup span').addClass('yp-bg-white yp-pol-black');
     $('.blocks_maturities_popup span').removeClass('yp-bg-black yp-pol-white');
@@ -54,7 +56,7 @@ function changeInstallment(key)
     $('.block_maturity_popup' + key + ' span').removeClass('yp-bg-white yp-pol-black');
 
     $('.block_contents').addClass('hidden');
-    $('.block_content' + key).removeClass('hidden');  
+    $('.block_content' + key).removeClass('hidden');
 }
 
 function toggleInstallmentOffer(disable)

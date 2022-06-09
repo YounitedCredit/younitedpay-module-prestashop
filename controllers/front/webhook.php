@@ -54,8 +54,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
         $logContent = json_encode($bodyContent);
-        $logContent .= "\n" . 'Adresse IP:' . Tools::getRemoteAddr();
-        $this->loggerService->addLogAPI($logContent . "\n" . $allValues, 'Info', $this);
+        $this->loggerService->addLogAPI($logContent, 'Info', $this);
         $this->loggerService->addLogAPI('Adresse IP:' . Tools::getRemoteAddr(), 'Info', $this);
 
         if ($bodyContent === '') {
