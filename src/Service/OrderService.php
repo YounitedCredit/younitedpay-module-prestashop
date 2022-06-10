@@ -188,6 +188,7 @@ class OrderService
             $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
+        $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);
 
         $body = (new WithdrawContract())
             ->setAmount($amountWithdraw)
@@ -210,7 +211,7 @@ class OrderService
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByCart($idCart);
 
-        return $this->paymentrepository->withdrawnContract($younitedContract->id_order);
+        return $this->paymentrepository->withdrawnContract($younitedContract->id_order, $younitedContract->withdrawn_amount);
     }
 
     /**
@@ -323,6 +324,8 @@ class OrderService
 
         $dateState = $younitedContract->date_upd;
         $state = $this->module->l('Awaiting');
+        $stateWithdrawn = false;
+        $withdrawnAmount = $younitedContract->withdrawn_amount;
         switch (true) {
             case (bool) $younitedContract->is_activated === true:
                 $dateState = $younitedContract->activation_date;
@@ -337,6 +340,7 @@ class OrderService
             case (bool) $younitedContract->is_withdrawn === true:
                 $dateState = $younitedContract->withdrawn_date;
                 $state = $this->module->l('Withdrawed');
+                $stateWithdrawn = true;
                 break;
 
             case (bool) $younitedContract->is_canceled === true:
@@ -346,11 +350,15 @@ class OrderService
         }
 
         \Context::getContext()->smarty->assign([
+            'iso_lang' => \Context::getContext()->language->iso_code,
             'payment' => [
                 'id' => $younitedContract->id_external_younitedpay_contract,
                 'url' => $younitedContract->id_external_younitedpay_contract,
-                'date' => $dateState,
+                'date' => $younitedContract->date_add,
+                'date_state' => $dateState,
                 'status' => $state,
+                'withdrawn_amount' => \Tools::ps_round($withdrawnAmount, 2),
+                'is_withdrawn_confirmed' => $stateWithdrawn,
             ],
             'shop_url' => __PS_BASE_URI__ !== '/' ? substr(__PS_BASE_URI__, 0, 1) : '',
             'logo_younitedpay_url' => '/modules/younitedpay/views/img/logo-younitedpay.png',

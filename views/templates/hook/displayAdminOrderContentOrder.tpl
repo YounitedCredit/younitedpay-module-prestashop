@@ -15,6 +15,10 @@
 * @copyright Younited
 * @license https://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
 *}
+{assign var=date_formating value="%d/%m/%Y %H:%M:%S"}
+{if $iso_lang != 'fr'}
+    {assign var=date_formating value="%Y/%m/%d %H:%M:%S"}
+{/if}
 <div class="tab-pane" id="younitedpay">
     <p>
         <b>{l s='Payment ID' mod='younitedpay'}</b><br />
@@ -24,8 +28,8 @@
     </p>
 
     <p>
-        <b>{l s='Payment Date' mod='younitedpay'}</b><br />
-        {$payment.date|escape:'html':'UTF-8'}
+        <b>{l s='Payment Date' mod='younitedpay'}</b><br />        
+        {$payment.date|date_format:$date_formating}
     </p>
 
     <p><b>
@@ -35,6 +39,16 @@
 
     <p>
         <b>{l s='Payment Status' mod='younitedpay'}</b><br />
-        {$payment.status|escape:'html':'UTF-8'}
+        {$payment.status|escape:'html':'UTF-8'} - {$payment.date_state|date_format:$date_formating}
     </p>
+    {if $payment.withdrawn_amount > 0}
+        <p>
+            <b>{l s='Withdrawn amount:'} {$payment.withdrawn_amount}€</b><br />
+            {if $payment.is_withdrawn_confirmed === false}
+                {l s='Waiting confirmation'}
+            {else}
+                {l s='Withdrawn confirmed'}
+            {/if}
+        </p>
+    {/if}
 </div>

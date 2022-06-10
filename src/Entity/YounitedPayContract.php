@@ -38,31 +38,34 @@ class YounitedPayContract extends ObjectModel
     /** @var bool */
     public $is_confirmed;
 
-    /** @var string Date */
+    /** @var string */
     public $confirmation_date;
 
     /** @var bool */
     public $is_activated;
 
-    /** @var string Date */
+    /** @var string */
     public $activation_date;
 
     /** @var bool */
     public $is_canceled;
 
-    /** @var string Date */
+    /** @var string */
     public $canceled_date;
 
     /** @var bool */
     public $is_withdrawn;
 
-    /** @var string Date */
+    /** @var string */
     public $withdrawn_date;
 
-    /** @var string Date */
+    /** @var float */
+    public $withdrawn_amount;
+
+    /** @var string */
     public $date_add;
 
-    /** @var string Date */
+    /** @var string */
     public $date_upd;
 
     /**
@@ -121,6 +124,10 @@ class YounitedPayContract extends ObjectModel
             'withdrawn_date' => [
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
+                'copy_post' => false,
+            ],
+            'withdrawn_amount' => [
+                'type' => self::TYPE_FLOAT,
                 'copy_post' => false,
             ],
             'date_add' => [

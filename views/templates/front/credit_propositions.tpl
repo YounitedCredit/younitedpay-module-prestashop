@@ -41,17 +41,28 @@
                   </span>
                </span> 
             {/foreach}
-         {if count($offers) > 5 && widget_younited === false}
+
+         {assign var=offer_max_line value=4}
+         {if $hook_younited == 'displayAfterProductThumbs'}
+            {assign var=offer_max_line value=3}
+         {/if}
+
+         {assign var=price_at_bottom value=false}
+         {if count($offers) >= $offer_max_line && $hook_younited != 'widget'}
+            {assign var=price_at_bottom value=true}
+         {/if}
+
+         {if $price_at_bottom == true}
          </div>
          <div class="yp-bg-white yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
             <hr class="yp-border-prple yp-opacity-50">
             <span style="width:84px;"></span>
          {/if}            
-            <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1">
-               <span class="yp-inline-block yp-h-7">
+            <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{/if}">
+               <span class="yp-inline-block yp-h-7"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
                   <span class="younitedpay_infoinstallment yp-install-amount yp-inline">
                      {$offers[0].installment_amount}€
-                  </span>               
+                  </span>
                   <span class="younitedpay_infoinstallment yp-font-normal yp-install-maturity yp-inline">x{$offers[0].maturity}</span>
                </span>
             </span>

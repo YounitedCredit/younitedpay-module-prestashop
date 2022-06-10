@@ -68,7 +68,6 @@ class LoggerService
      */
     public function addLogAPI($msg, $type = 'Error', $class = null)
     {
-        $class = null === $class ? $this : str_replace('ModuleFrontController', '', $class);
         /** @var ApiLogger $apiLogger */
         $apiLogger = ApiLogger::getInstance();
         $apiLogger->log($class, $msg, $type, false);

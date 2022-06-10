@@ -231,6 +231,7 @@ class PaymentService
         $contractYounited->confirmation_date = '';
         $contractYounited->activation_date = '';
         $contractYounited->withdrawn_date = '';
+        $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
         $contractYounited->save();
     }

@@ -219,7 +219,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
             return '';
         }
 
-        $templateCredit = $productservice->getBestPrice($price);
+        $templateCredit = $productservice->getBestPrice($price, 'widget');
 
         $context = $this->context;
 
@@ -228,17 +228,12 @@ class Younitedpay extends PaymentModule implements WidgetInterface
             'younitedpayproduct'
         );
 
-        $totalOffers = $templateCredit['offers'];
-
         $context->smarty->assign(
             [
                 'younited_hook' => 'widget',
                 'credit_template' => $templateCredit['template'],
                 'product_url' => $frontModuleLink,
                 'product_price' => $price,
-                'product_offers_total' => empty($totalOffers) === false && is_array($totalOffers)
-                    ? count($totalOffers) - 1
-                    : 0,
             ]
         );
 

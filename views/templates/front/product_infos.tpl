@@ -16,6 +16,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
 
- <div class="younitedpay_product_info" data-hook="{$younited_hook}" {if isset($widget)}data-widget{/if}>   
+ <div class="younitedpay_product_info" data-hook="{$younited_hook}" {if $younited_hook == 'widget'}data-widget{/if}>   
     {$credit_template nofilter}
  </div>

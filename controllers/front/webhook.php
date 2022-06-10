@@ -18,6 +18,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
 
+use Tools;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -56,6 +57,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $logContent = json_encode($bodyContent);
         $this->loggerService->addLogAPI($logContent, 'Info', $this);
         $this->loggerService->addLogAPI('Adresse IP:' . Tools::getRemoteAddr(), 'Info', $this);
+        $this->loggerService->addLogAPI('Paramètres GET:' . json_encode(Tools::getAllValues()), 'Info', $this);
 
         if ($bodyContent === '') {
             $this->endResponse('Contenu du body vide', true);
@@ -70,7 +72,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             $this->endResponse('Cancel contract confirmed');
         }
 
-        if (Tools::getValue('withdrawn') !== false) {
+        if (Tools::getValue('widhdrawn') !== false) {
             $this->updateContractStatus($idCart, 'withdrawn');
             $this->endResponse('Withdrawn contract confirmed');
         }

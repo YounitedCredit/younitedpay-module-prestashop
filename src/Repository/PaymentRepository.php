@@ -161,4 +161,23 @@ class PaymentRepository
             'id_order = ' . (int) pSQL($idOrder)
         );
     }
+
+    /**
+     * Update the withdrawn amount asked by the SHop
+     * Warning : not confirmed by WebHook at this time, the state don't move
+     *
+     * @param int $idOrder Id Of Order concerned for cancelation
+     *
+     * @return bool Operation done / fail
+     */
+    public function setWithdrawnAmount($idOrder, $withdrawnAmount)
+    {
+        return Db::getInstance()->update(
+            YounitedPayContract::$definition['table'],
+            [
+                'withdrawn_amount' => $withdrawnAmount,
+            ],
+            'id_order = ' . (int) pSQL($idOrder)
+        );
+    }
 }

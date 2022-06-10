@@ -31,13 +31,15 @@ class HookAdminOrder extends AbstractHook
     public $module;
 
     const AVAILABLE_HOOKS = [
-        'displayAdminOrder',
-        'displayAdminOrderTop',
+        'displayAdminOrderTabOrder',
         'displayAdminOrderTabLink',
         'displayAdminOrderContentOrder',
         'displayAdminOrderTabContent',
         'actionOrderStatusPostUpdate',
         'actionValidateOrder',
+        'actionOrderSlipAdd',
+        'displayAdminOrder',
+        'displayAdminOrderTop',
     ];
 
     public function displayAdminOrderTabOrder($params)
@@ -95,7 +97,11 @@ class HookAdminOrder extends AbstractHook
         $idOrderWithdraw = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
 
         if ((int) $idOrderWithdraw === $orderStatus->id) {
-            return $orderservice->withdrawnContract($order->id, '', $order->getTotalPaid());
+            /** @var YounitedPayContract $younitedContract */
+            $younitedContract = $orderservice->getYounitedContract($order->id, 'order');
+            $amountWithdrawn = $order->getTotalPaid() - $younitedContract->withdrawn_amount;
+
+            return $orderservice->withdrawnContract($order->id, '', $amountWithdrawn);
         }
 
         return true;
@@ -141,7 +147,7 @@ class HookAdminOrder extends AbstractHook
     public function displayAdminOrderTop($params)
     {
         if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
-            return false;
+            return;
         }
 
         if ($this->isOrderYounitedPay($params) === false) {
@@ -158,7 +164,7 @@ class HookAdminOrder extends AbstractHook
     {
         // Since Ps 1.7.7 this hook is displayed at bottom of a page and we should use a hook DisplayAdminOrderTop
         if (version_compare(_PS_VERSION_, '1.7.7', '>=')) {
-            return false;
+            return;
         }
 
         if ($this->isOrderYounitedPay($params) === false) {
@@ -173,12 +179,19 @@ class HookAdminOrder extends AbstractHook
 
     protected function isOrderYounitedPay($params)
     {
-        $order = new \Order((int) $params['id_order']);
+        if (isset($params['order']) && $params['order'] instanceof \Order) {
+            /** @var \Order $order */
+            $order = $params['order'];
+        } elseif (isset($params['id_order'])) {
+            $order = new \Order((int) $params['id_order']);
+        } else {
+            return false;
+        }
 
         return $order->module === $this->module->name;
     }
 
-    public function hookActionOrderSlipAdd($params)
+    public function actionOrderSlipAdd($params)
     {
         if (\Tools::isSubmit('doPartialRefundYounitedPay')) {
             /** @var OrderService $orderservice */
@@ -187,7 +200,7 @@ class HookAdminOrder extends AbstractHook
             $params = array_merge(\Tools::getAllValues(), $params);
             $amountToRefund = $orderservice->calculatePartialRefund($params);
 
-            return $orderservice->withdrawnContract($params['order']->id, '', $amountToRefund);
+            return $orderservice->withdrawnContract($params['order']->id, '', (float) $amountToRefund);
         }
     }
 

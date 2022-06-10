@@ -93,7 +93,7 @@ class ApiLogger
 
     private function getClass($object)
     {
-        return (new \ReflectionClass($object))->getShortName();
+        return str_replace('ModuleFrontController', '', (new \ReflectionClass($object))->getShortName());
     }
 
     public static function getInstance()

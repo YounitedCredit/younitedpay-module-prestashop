@@ -52,7 +52,7 @@ class ProductService
         $this->configRepository = $configRepository;
     }
 
-    public function getBestPrice($product_price)
+    public function getBestPrice($product_price, $selectedHook = 'widget')
     {
         $client = new YounitedClient($this->context->shop->id);
         if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false) {
@@ -99,6 +99,7 @@ class ProductService
         $this->context->smarty->assign([
             'shop_url' => __PS_BASE_URI__ !== '/' ? substr(__PS_BASE_URI__, 0, 1) : '',
             'logo_younitedpay_url' => '/modules/younitedpay/views/img/logo-younitedpay.png',
+            'hook_younited' => $selectedHook,
             'offers' => $offers,
         ]);
 

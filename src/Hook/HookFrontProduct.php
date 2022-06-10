@@ -131,7 +131,7 @@ class HookFrontProduct extends AbstractHook
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
-        $templateCredit = $productservice->getBestPrice($price);
+        $templateCredit = $productservice->getBestPrice($price, $currentHook);
 
         $context->smarty->assign(
             [

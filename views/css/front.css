@@ -55,6 +55,11 @@
     font-weight: bolder;
 }
 
+.yp-price-block {
+    width:100%;
+    justify-content: end;
+}
+
 .yp-text-responsabilities {
     background-color: #F4ECFF!important;
     color: #000 !important;

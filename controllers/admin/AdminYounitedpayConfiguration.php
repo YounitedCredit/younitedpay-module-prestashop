@@ -242,24 +242,28 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $idShop = $this->context->shop->id;
         $isSubmitted = false;
+        $isCacheFlushNeeded = true;
 
         if (Tools::isSubmit('account_submit')) {
             $this->postAccountSubmit($idShop);
             $isSubmitted = true;
+            $isCacheFlushNeeded = false;
         } elseif (Tools::isSubmit('flush_cache_submmit')) {
-            $this->deleteAllCache();
             $isSubmitted = true;
         } elseif (Tools::isSubmit('states_submit')) {
             $this->postStateSubmit($idShop);
             $isSubmitted = true;
         } elseif (Tools::isSubmit('appearance_submit')) {
             $this->postAppearance($idShop);
-            $this->deleteAllCache();
             $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
             $this->ajaxDie($this->postAddNewMaturity($idShop));
 
             return;
+        }
+
+        if ($isCacheFlushNeeded) {
+            $this->deleteAllCache();
         }
 
         if ($isSubmitted) {
