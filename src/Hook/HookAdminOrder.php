@@ -21,6 +21,7 @@ namespace YounitedpayAddon\Hook;
 
 use Configuration;
 use Younitedpay;
+use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
@@ -209,6 +210,8 @@ class HookAdminOrder extends AbstractHook
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
         $idOrder = $params['id_order'];
+
+        /** @var YounitedPayContract $younitedContract */
         $younitedContract = $orderservice->getYounitedContract($idOrder, 'order');
 
         if (!\Validate::isLoadedObject($younitedContract) || (int) $younitedContract->id_order !== $idOrder) {

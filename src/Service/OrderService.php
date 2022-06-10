@@ -211,7 +211,7 @@ class OrderService
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByCart($idCart);
 
-        return $this->paymentrepository->withdrawnContract($younitedContract->id_order, $younitedContract->withdrawn_amount);
+        return $this->paymentrepository->withdrawnContract($younitedContract->id_order);
     }
 
     /**

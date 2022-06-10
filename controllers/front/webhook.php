@@ -18,7 +18,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
 
-use Tools;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Utils\ServiceContainer;
