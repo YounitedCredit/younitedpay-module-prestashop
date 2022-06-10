@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{younitedpay}prestashop>credit_propositions_711051adc16c9e8e4596f7d22cf17092'] = 'Simple.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0e1300b812fe436b1cc92fa647b9331f'] = 'Instantané.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_205bd2d07285364360115e9f398a037a'] = 'Sécurisé.';
