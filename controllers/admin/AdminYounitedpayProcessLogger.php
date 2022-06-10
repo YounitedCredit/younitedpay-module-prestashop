@@ -19,6 +19,7 @@
  */
 
 use YounitedpayClasslib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
+require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 
 class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerController
 {
