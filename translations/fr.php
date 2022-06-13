@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{younitedpay}prestashop>younitedpay_bb8956c67b82c7444a80c6b2433dd8b4'] = 'Vous confirmez vouloir désinstaller ce module ?';
 $_MODULE['<{younitedpay}prestashop>younitedpay_4edca116def73110ec69474ff52d16b2'] = 'YounitedPay - Solution de paiement par crédit instantané';
 $_MODULE['<{younitedpay}prestashop>younitedpay_71ed18e89d45a93baadf99ee7f9248de'] = 'Améliorez l’expérience de vos clients avec le crédit instantané et augmentez votre taux de conversion';
@@ -167,11 +167,11 @@ $_MODULE['<{younitedpay}prestashop>content_9c25ff979017ac9106f85c96a467795b'] = 
 $_MODULE['<{younitedpay}prestashop>content_72a2413f00f4e19f48a743d53649df80'] = 'Comment fonctionne YounitedPay ';
 $_MODULE['<{younitedpay}prestashop>content_5441ee4b931d5da0a9108b95a8bf9ff4'] = 'Une fois que le client à terminé sa commande sur votre site marchand, et qu\'il a sélectionné le type de paiement en plusieurs fois qui lui convient, il sera redirigé sur notre parcours de souscription. Durant ce parcours, il lui sera demandé de vérifier son identité, de fournir ses données de carte bancaire pour le prélévement de ses mensualités ainsi que de remplir une fiche déclarative sur sa solvabilité. Ces étapes permettent à la solution YounitedPay d\'être régulée et responsable, en ligne avec la législation. ';
 $_MODULE['<{younitedpay}prestashop>content_6ec990e7528dc73fecf1c785a281024e'] = 'Quelles sont les informations à ajouter à mes Conditions Générales de Vente (CGV) ?';
-$_MODULE['<{younitedpay}prestashop>content_a7fa405610f0ba3ff6025c54ce78985e'] = 'Afin d\'être conforme à la législation, veuillez ajouter à vos conditions générales de vente (CGV) avec les liens hypertextes et remplacer [le Vendeur] par le nom de votre entreprise :';
+$_MODULE['<{younitedpay}prestashop>content_a7fa405610f0ba3ff6025c54ce78985e'] = 'Afin d\'être conforme à la législation, veuillez ajouter à vos conditions générales de vente (CGV) avec les liens hypertextes et remplacer [le Vendeur] par le nom de votre entreprise :';
 $_MODULE['<{younitedpay}prestashop>content_f42ae96c1aacec1ad90b014e90017e82'] = '\"[Le Vendeur] propose à ses Clients le service de crédit de Younited Pay pour le règlement de leurs achats et l\'exécution du paiement. Cela est conditionné par l\'acceptation par le Client du contrat de crédit proposé par Younited.\"';
 $_MODULE['<{younitedpay}prestashop>content_803e78e989c97d3369a64423cdbb4aee'] = '\"Tout refus d’octroi de crédit par Younited pour une commande pourra entraîner l’annulation de celle-ci.';
 $_MODULE['<{younitedpay}prestashop>content_5ce1494677fb4b3aacfab319ededc17c'] = 'Toute résiliation des CGV qui lient le Client et [le Vendeur] entraîne la résiliation du contrat de crédit entre Younited et le Client.\"';
-$_MODULE['<{younitedpay}prestashop>content_7cbcb90cc3123f0009733ceeb666274d'] = 'Par ailleurs, ajouter également à vos conditions générales de vente (CGV) (conformément à l\'Article L312-45, sous peine d’amende) :\"Le montant est payé par un crédit octroyé par Younited inscrit sur le REGAFI sous le numéro 13156.\"';
+$_MODULE['<{younitedpay}prestashop>content_7cbcb90cc3123f0009733ceeb666274d'] = 'Par ailleurs, ajouter également à vos conditions générales de vente (CGV) (conformément à l\'Article L312-45, sous peine d’amende) :\"Le montant est payé par un crédit octroyé par Younited inscrit sur le REGAFI sous le numéro 13156.\"';
 $_MODULE['<{younitedpay}prestashop>content_a9cdc66a2a9729216a30f61e7efd84c0'] = 'Comment afficher YounitedPay sur ma page produit ? ';
 $_MODULE['<{younitedpay}prestashop>content_163bff0712ff057a775808f6afd8262b'] = 'Pour optimiser votre taux de conversion et garantir une bonne visibilité de l\'offre YounitedPay pour vos clients, vous pouvez afficher les offres éligibles dès votre page produit. Pour ce faire, activez la fonction \"Afficher les mensualités\" dans la section \"Affichage\" du module. Si l\'affichage n\'est pas optimal, assurez vous d\'avoir téléchargé la dernière version du module.';
 $_MODULE['<{younitedpay}prestashop>content_7dbe03bd93a14e41672dd903a46dbcbf'] = 'Comment s\'effectuent les demandes de remboursement ? ';

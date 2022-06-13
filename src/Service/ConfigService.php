@@ -233,7 +233,7 @@ class ConfigService
             $aOrdersSel = [
                 _PS_OS_DELIVERED_ !== null
                 ? _PS_OS_DELIVERED_
-                : Configuration::get('_PS_OS_DELIVERED_', null, null, $idShop)
+                : Configuration::get('_PS_OS_DELIVERED_', null, null, $idShop),
             ];
         }
 
@@ -256,6 +256,7 @@ class ConfigService
     public function isSslActive()
     {
         $idShop = \Context::getContext()->shop->id;
+
         return Configuration::get('PS_SSL_ENABLED', null, null, $idShop)
             && Configuration::get('PS_SSL_ENABLED_EVERYWHERE', null, null, $idShop);
     }
