@@ -77,7 +77,7 @@ class HookFrontProduct extends AbstractHook
         $cacheExists = $cachestorage->exist('hookConfiguration' . (string) $idShop);
 
         if ($cacheExists === false || $cachestorage->isExpired('hookConfiguration') === true) {
-            $hookConfiguration = (string) \Configuration::get(Younitedpay::FRONT_HOOK, null, null, $idShop, false);
+            $hookConfiguration = (string) \Configuration::get(Younitedpay::FRONT_HOOK, null, null, $idShop, 'disabled');
             $isShownProducts = (bool) \Configuration::get(Younitedpay::SHOW_MONTHLY, null, null, $idShop, false);
 
             if ($isShownProducts === false) {
