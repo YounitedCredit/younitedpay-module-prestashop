@@ -21,4 +21,4 @@ then
     rm -f ./vendor/symfony/polyfill-72/php72.php
     cp -f ./202/compatibilityphp/symfony/polyfill-php72/Php72.php ./vendor/symfony/polyfill-php72/Php72.php
 fi
-sed -ri -e 's!public function enableSanbox!public function enableSandbox!g'
+sed -ri -e 's!public function enableSanbox!public function enableSandbox!g' ./vendor/202ecommerce/younitedpay-sdk/src/Request/AbstractRequest.php
