@@ -40,8 +40,11 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         $clientSDK = new WebHookClient();
-        $suffix = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE) === true ? '_PRODUCTION' : '';
-        $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix);
+        $idShop = $this->context->shop->id;
+        $suffix = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop) === true
+            ? '_PRODUCTION'
+            : '';
+        $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
         $clientSDK->setCredential('', $webHookSecret);
 
         /** @var AbstractResponse $response */
@@ -59,11 +62,11 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $this->loggerService->addLogAPI('Paramètres GET:' . json_encode(Tools::getAllValues()), 'Info', $this);
 
         if ($bodyContent === '') {
-            $this->endResponse('Contenu du body vide', true);
+            $this->endResponse('Contenu du body vide');
         }
 
         if ($idCart === false) {
-            $this->endResponse('Error, no Cart Id Provided', true);
+            $this->endResponse('Error, no Cart Id Provided');
         }
 
         if (Tools::getValue('cancel') !== false) {
@@ -76,10 +79,10 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             $this->endResponse('Withdrawn contract confirmed');
         }
 
-        $this->endResponse('No parameter catched on webhook', true);
+        $this->endResponse('No parameter catched on webhook');
     }
 
-    protected function endResponse($message, $error = false)
+    protected function endResponse($message, $error = true)
     {
         if ($error) {
             $this->loggerService->addLog($message, '[younitedpay webhook]', 'info', $this);

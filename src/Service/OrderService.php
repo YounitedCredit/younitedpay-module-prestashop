@@ -148,6 +148,8 @@ class OrderService
                 'error',
                 $this
             );
+        } else {
+            $this->loggerservice->addLog($type . ' - success', $type);
         }
 
         return $response['success'];

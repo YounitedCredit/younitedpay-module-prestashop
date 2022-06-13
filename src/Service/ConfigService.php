@@ -26,9 +26,8 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use YounitedPaySDK\Model\BestPrice;
-use YounitedPaySDK\Model\OfferItem;
-use YounitedPaySDK\Request\BestPriceRequest;
+use YounitedPaySDK\Request\AvailableMaturitiesRequest;
+use YounitedPaySDK\Response\AbstractResponse;
 
 class ConfigService
 {
@@ -104,6 +103,7 @@ class ConfigService
     public function isApiConnected()
     {
         $client = new YounitedClient($this->context->shop->id);
+
         if ($client->isCrendentialsSet() === false) {
             return [
                 'message' => $this->module->l('No credential saved'),
@@ -112,13 +112,18 @@ class ConfigService
             ];
         }
 
-        $body = new BestPrice();
-        $body->setBorrowedAmount(15000.00);
+        $request = new AvailableMaturitiesRequest();
 
-        $request = new BestPriceRequest();
+        /** @var AbstractResponse $response */
+        $response = $client->sendRequest(null, $request);
 
-        /** @var array $response */
-        $response = $client->sendRequest($body, $request);
+        // $body = new BestPrice();
+        // $body->setBorrowedAmount(15000.00);
+
+        // $request = new BestPriceRequest();
+
+        // /** @var array $response */
+        // $response = $client->sendRequest($body, $request);
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
@@ -127,25 +132,13 @@ class ConfigService
                 'status' => false,
             ];
         }
+        $maturityList = $response['response'];
 
         return [
             'message' => $this->module->l('Connexion Ok'),
-            'maturityList' => $this->getMaturitiesResponse($response['response']),
+            'maturityList' => count($maturityList) > 0 ? $maturityList : [3, 4, 5, 10],
             'status' => true,
         ];
-    }
-
-    /**
-     * @param OfferItem[] $response
-     * */
-    private function getMaturitiesResponse($response)
-    {
-        $maturityList = [];
-        foreach ($response as $oneItem) {
-            $maturityList[] = $oneItem->getMaturityInMonths();
-        }
-
-        return $maturityList;
     }
 
     public function callCURL($url)

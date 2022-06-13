@@ -80,14 +80,17 @@ class YounitedClient
      *
      * @return array ['response' => mixed, 'success' => bool]
      */
-    public function sendRequest(AbstractModel $body, $requestObject)
+    public function sendRequest($body, $requestObject)
     {
         $client = new Client();
         try {
             /** @var AbstractRequest $request */
-            $request = $requestObject->setModel($body);
+            $request = $requestObject;
+            if ($body instanceof AbstractModel) {
+                $request = $requestObject->setModel($body);
+            }
             if ($this->isProductionMode === false) {
-                $request = $requestObject->setModel($body)->enableSandbox();
+                $request = $request->enableSandbox();
             }
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();

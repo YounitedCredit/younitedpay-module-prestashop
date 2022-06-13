@@ -98,6 +98,7 @@ class ProductService
 
         $this->context->smarty->assign([
             'shop_url' => __PS_BASE_URI__,
+            'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
             'hook_younited' => $selectedHook,
             'offers' => $offers,

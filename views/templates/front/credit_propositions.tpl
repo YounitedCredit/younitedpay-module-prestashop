@@ -203,8 +203,8 @@
                      <p class="yp-text-lg yp-font-bold yp-pol-black">
                         {l s='A loan commits you and must' mod='younitedpay'}<br />
                         {l s='be repaid. Check your' mod='younitedpay'}
-                        {if $this->context->language.iso_code == 'fr'}
-                           <br />{l s='ability to repay' mod='younitedpay'}
+                        {if $iso_code == 'fr'}
+                           <br />{l s='ability to repay' mod='younitedpay'}<br />
                         {else}
                            {l s='ability to' mod='younitedpay'}<br />
                            {l s='repay ' mod='younitedpay'}
