@@ -97,6 +97,7 @@ function updateCreditZone(event)
               ajax: true,
               id_product: younitedpay.id_product,
               id_attribute: event.id_product_attribute,
+              qty: event.quantity_wanted,
           },
           success(response) {
               if ('content' in response) {            
@@ -139,6 +140,9 @@ document.onreadystatechange = setTimeout(function() {
                 'updatedProduct',
                 function (event) {
                     console.log(event);
+                    if (event.quantity_wanted == undefined) {
+                        event.quantity_wanted = $('#quantity_wanted').val();
+                    }
                     updateCreditZone(event);
                 }
             );

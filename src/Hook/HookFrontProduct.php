@@ -73,19 +73,20 @@ class HookFrontProduct extends AbstractHook
     {
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
-        $cacheExists = $cachestorage->exist('hookConfiguration');
+        $idShop = \Context::getContext()->shop->id;
+        $cacheExists = $cachestorage->exist('hookConfiguration' . (string) $idShop);
 
         if ($cacheExists === false || $cachestorage->isExpired('hookConfiguration') === true) {
-            $idShop = \Context::getContext()->shop->id;
+            $hookConfiguration = (string) \Configuration::get(Younitedpay::FRONT_HOOK, null, null, $idShop, false);
             $isShownProducts = (bool) \Configuration::get(Younitedpay::SHOW_MONTHLY, null, null, $idShop, false);
 
             if ($isShownProducts === false) {
                 $hookConfiguration = 'disabled';
             }
 
-            $cachestorage->set('hookConfiguration', $hookConfiguration);
+            $cachestorage->set('hookConfiguration' . (string) $idShop, $hookConfiguration);
         } else {
-            $cacheInformations = $cachestorage->get('hookConfiguration');
+            $cacheInformations = $cachestorage->get('hookConfiguration' . (string) $idShop);
             $hookConfiguration = $cacheInformations['content'];
         }
 
@@ -110,7 +111,8 @@ class HookFrontProduct extends AbstractHook
                 $idProduct = \Tools::getValue('id_product');
                 $idAttribute = \Tools::getValue('id_product_attribute', null);
                 $product = new \Product($idProduct);
-                $price = $product->getPrice(true, $idAttribute);
+                $qty = (int) \Tools::getValue('qty', 1);
+                $price = $product->getPrice(true, $idAttribute) * $qty;
                 break;
             case $controller instanceof \CartController:
                 $price = $context->cart->getOrderTotal();

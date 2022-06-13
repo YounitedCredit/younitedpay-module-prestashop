@@ -34,8 +34,8 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
         $idAttribute = Tools::getValue('id_attribute');
 
         $product = new \Product($idProduct);
-
-        $price = $product->getPrice(true, $idAttribute);
+        $qty = (int) \Tools::getValue('qty', 1);
+        $price = $product->getPrice(true, $idAttribute) * $qty;
 
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);

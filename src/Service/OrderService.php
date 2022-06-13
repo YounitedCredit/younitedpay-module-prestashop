@@ -360,7 +360,7 @@ class OrderService
                 'withdrawn_amount' => \Tools::ps_round($withdrawnAmount, 2),
                 'is_withdrawn_confirmed' => $stateWithdrawn,
             ],
-            'shop_url' => __PS_BASE_URI__ !== '/' ? substr(__PS_BASE_URI__, 0, 1) : '',
+            'shop_url' => __PS_BASE_URI__,
             'logo_younitedpay_url' => '/modules/younitedpay/views/img/logo-younitedpay.png',
         ]);
 
