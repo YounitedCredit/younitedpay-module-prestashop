@@ -361,7 +361,7 @@ class OrderService
                 'is_withdrawn_confirmed' => $stateWithdrawn,
             ],
             'shop_url' => __PS_BASE_URI__,
-            'logo_younitedpay_url' => '/modules/younitedpay/views/img/logo-younitedpay.png',
+            'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
         ]);
 
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderContentOrder.tpl';

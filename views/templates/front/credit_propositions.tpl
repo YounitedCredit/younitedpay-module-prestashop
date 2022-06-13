@@ -105,26 +105,26 @@
             <p class="yp-mt-7 yp-pl-6">
                <span class="yp-inline-block yp-h-10">
                   <img class="yp-h-8 lazyloaded"
-                     src="{$shop_url}/modules/younitedpay/views/img/cb.png"
+                     src="{$shop_url}modules/younitedpay/views/img/cb.png"
                      alt="Cartes Bancaires" data-ll-status="loaded">
                      <noscript><img class="yp-h-full"
-                        src="{$shop_url}/modules/younitedpay/views/img/cb.png"
+                        src="{$shop_url}modules/younitedpay/views/img/cb.png"
                         alt="Cartes Bancaires">
                      </noscript>
                </span>
                <span class="yp-inline-block yp-h-10">
-                  <img class="yp-h-8 lazyloaded" src="{$shop_url}/modules/younitedpay/views/img/visa.png"
+                  <img class="yp-h-8 lazyloaded" src="{$shop_url}modules/younitedpay/views/img/visa.png"
                      alt="Visa" data-ll-status="loaded" />
                   <noscript>
-                     <img class="yp-h-full" src="{$shop_url}/modules/younitedpay/views/img/visa.png" alt="Visa">
+                     <img class="yp-h-full" src="{$shop_url}modules/younitedpay/views/img/visa.png" alt="Visa">
                   </noscript>
                </span>
                <span class="yp-inline-block yp-h-10">
                   <img class="yp-h-8 lazyloaded"
-                     src="{$shop_url}/modules/younitedpay/views/img/mastercard.png"
+                     src="{$shop_url}modules/younitedpay/views/img/mastercard.png"
                      alt="Mastercard" data-ll-status="loaded">
                   <noscript>
-                     <img class="yp-h-full" src="{$shop_url}/modules/younitedpay/views/img/mastercard.png" 
+                     <img class="yp-h-full" src="{$shop_url}modules/younitedpay/views/img/mastercard.png" 
                         alt="Mastercard">
                   </noscript>
                </span>
@@ -203,7 +203,7 @@
                      <p class="yp-text-lg yp-font-bold yp-pol-black">
                         {l s='A loan commits you and must' mod='younitedpay'}<br />
                         {l s='be repaid. Check your' mod='younitedpay'}
-                        {if $language.iso_code == 'fr'}
+                        {if $this->context->language.iso_code == 'fr'}
                            <br />{l s='ability to repay' mod='younitedpay'}
                         {else}
                            {l s='ability to' mod='younitedpay'}<br />
