@@ -82,12 +82,13 @@ class ConfigRepository
     public function checkIPWhitelist()
     {
         $ipClient = \Tools::getRemoteAddr();
-        $IpWhiteListOn = (bool) \Configuration::get(\Younitedpay::IP_WHITELIST_ENABLED);
+        $idShop = \Context::getContext()->shop->id;
+        $IpWhiteListOn = (bool) \Configuration::get(\Younitedpay::IP_WHITELIST_ENABLED, null, null, $idShop);
         if ($IpWhiteListOn !== true) {
             return true;
         }
         try {
-            $ipWhitelisted = explode(',', \Configuration::get(\Younitedpay::IP_WHITELIST_CONTENT));
+            $ipWhitelisted = explode(',', \Configuration::get(\Younitedpay::IP_WHITELIST_CONTENT, null, null, $idShop));
         } catch (\Exception $ex) {
             $ipWhitelisted = [];
         }

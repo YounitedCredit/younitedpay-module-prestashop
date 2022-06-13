@@ -47,6 +47,16 @@ class AdminYounitedpayHelpController extends ModuleAdminController
 
     public function initContent()
     {
+        $langParameter = Tools::getValue('lang', null);
+        $prevLanguage = $this->context->language;
+        if ($langParameter !== null) {
+            try {
+                $choosedLanguage = new Language(Language::getIdByIso($langParameter));
+                $this->context->language = $choosedLanguage;
+            } catch (Exception $ex) {
+            }
+        }
+
         $tplFile = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/help/content.tpl';
 
         $tpl = Context::getContext()->smarty->createTemplate($tplFile);
@@ -54,5 +64,7 @@ class AdminYounitedpayHelpController extends ModuleAdminController
         $this->content .= $tpl->fetch();
 
         parent::initContent();
+
+        $this->context->language = $prevLanguage;
     }
 }

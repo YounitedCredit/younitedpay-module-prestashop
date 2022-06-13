@@ -17,6 +17,6 @@
 *}
 <li class="nav-item">
     <a href="#younitedpay" class="nav-link" data-toggle="tab" role="tab">
-        {l s='YounitedPay' mod='younitedpay'}
+        Younited Pay
     </a>
 </li>

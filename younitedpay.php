@@ -71,8 +71,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
     public $moduleAdminControllers = [
         [
             'name' => [
-                'en' => 'Younited',
-                'fr' => 'Younited',
+                'en' => 'Younited Pay',
+                'fr' => 'Younited Pay',
             ],
             'class_name' => 'AdminYounitedParentMain',
             'parent_class_name' => 'CONFIGURE',
@@ -80,8 +80,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         ],
         [
             'name' => [
-                'en' => 'Younited',
-                'fr' => 'Younited',
+                'en' => 'Younited Pay',
+                'fr' => 'Younited Pay',
             ],
             'class_name' => 'AdminYounitedParent',
             'parent_class_name' => 'AdminYounitedParentMain',
@@ -89,7 +89,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         ],
         [
             'name' => [
-                'en' => 'Configuration',
+                'en' => 'Settings',
                 'fr' => 'Configuration',
             ],
             'class_name' => 'AdminYounitedpayConfiguration',
@@ -167,8 +167,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
         $this->secure_key = Tools::encrypt($this->name);
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
-        $this->displayName = $this->l('Younited Pay - Instant credit');
-        $this->description = $this->l('Make an express request and get a definitive and immediate answer.');
+        $this->displayName = $this->l('Younited Pay - Instant Credit Payment solutions');
+        $this->description = $this->l('Enhance your customer experience with Instant Credit and boost your conversion.');
         $this->hookDispatcher = new HookDispatcher($this);
         $this->hooks = array_merge($this->hooks, $this->hookDispatcher->getAvailableHooks());
     }

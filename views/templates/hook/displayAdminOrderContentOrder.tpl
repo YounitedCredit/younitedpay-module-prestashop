@@ -21,10 +21,8 @@
 {/if}
 <div class="tab-pane" id="younitedpay">
     <p>
-        <b>{l s='Payment ID' mod='younitedpay'}</b><br />
-        <a href="{$payment.url|escape:'html':'UTF-8'}" target="_blank">
-            {$payment.id|escape:'html':'UTF-8'}
-        </a>
+        <b>{l s='Payment ID' mod='younitedpay'}</b><br />        
+        {$payment.id|escape:'html':'UTF-8'}        
     </p>
 
     <p>

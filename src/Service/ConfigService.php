@@ -189,6 +189,7 @@ class ConfigService
 
         return [
             'maturityList' => $isApiConnected['maturityList'],
+            'connected' => $isApiConnected['status'],
             'specs' => [
                 [
                     'name' => 'CURL',
@@ -225,10 +226,15 @@ class ConfigService
 
         $orderStates = ['selected' => [], 'unselected' => []];
 
-        $selectedOrders = Configuration::get(Younitedpay::ORDER_STATE_DELIVERED);
+        $idShop = \Context::getContext()->shop->id;
+        $selectedOrders = Configuration::get(Younitedpay::ORDER_STATE_DELIVERED, null, null, $idShop);
         $aOrdersSel = json_decode($selectedOrders, true);
         if ($aOrdersSel == null || is_array($aOrdersSel) === false) {
-            $aOrdersSel = [_PS_OS_DELIVERED_ !== null ? _PS_OS_DELIVERED_ : Configuration::get('_PS_OS_DELIVERED_')];
+            $aOrdersSel = [
+                _PS_OS_DELIVERED_ !== null
+                ? _PS_OS_DELIVERED_
+                : Configuration::get('_PS_OS_DELIVERED_', null, null, $idShop)
+            ];
         }
 
         foreach ($statesStatus as $aState) {
@@ -249,7 +255,9 @@ class ConfigService
 
     public function isSslActive()
     {
-        return Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+        $idShop = \Context::getContext()->shop->id;
+        return Configuration::get('PS_SSL_ENABLED', null, null, $idShop)
+            && Configuration::get('PS_SSL_ENABLED_EVERYWHERE', null, null, $idShop);
     }
 
     public function getAllMaturities()

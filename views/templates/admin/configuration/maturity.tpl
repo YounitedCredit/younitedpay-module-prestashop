@@ -45,7 +45,7 @@
     <div class="row">
         <div class="col-xl-6 form-group d-flex align-items-center">
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][minimum]">
-                {l s='Minimum amount' mod='younitedpay'}
+                {l s='Min. amount (tax included)' mod='younitedpay'}
             </label>
             <input type="text" data-id="{$key}" id="min_amount_input_{$key}" 
                 class="col-lg-5 form-control younitedpay_maturity_change"
@@ -54,7 +54,7 @@
         </div>
         <div class="col-xl-6 form-group d-flex align-items-center">
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][maximum]">
-                {l s='Maximum amount' mod='younitedpay'}
+                {l s='Max. amount (tax included)' mod='younitedpay'}
             </label>
             <input type="text" data-id="{$key}" class="col-lg-5 form-control younitedpay_maturity_change" 
             id="max_amount_input_{$key}"

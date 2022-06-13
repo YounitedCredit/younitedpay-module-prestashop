@@ -54,8 +54,7 @@
                                 placeholder="{l s='Fill in you Client ID' mod='younitedpay'}" id="client_id"
                                 name="client_id" value="{$configuration.client_id|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General
-                                settings\'' mod='younitedpay'}
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -68,8 +67,7 @@
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="client_secret"
                                 name="client_secret" value="{$configuration.client_secret|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General
-                                settings\'' mod='younitedpay'}
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -82,8 +80,7 @@
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret"
                                 name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General
-                                settings\'' mod='younitedpay'}
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -96,8 +93,7 @@
                                 placeholder="{l s='Fill in you Client ID' mod='younitedpay'}" id="client_id_production"
                                 name="client_id_production" value="{$configuration.client_id_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General
-                                settings\'' mod='younitedpay'}
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -110,8 +106,7 @@
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="client_secret_production_production"
                                 name="client_secret_production" value="{$configuration.client_secret_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General
-                                settings\'' mod='younitedpay'}
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -124,8 +119,7 @@
                                 placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret_production"
                                 name="webhook_secret_production" value="{$configuration.webhook_secret_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General
-                                settings\'' mod='younitedpay'}
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -138,10 +132,10 @@
                                 data-toggle="ipwebhook">
                                 <input type="radio" name="whitelist_on" id="whitelist_on_off" 
                                     value="0"{if $configuration.whitelist_on === false} checked{/if}/>
-                                <label for="whitelist_on_off">Disabled</label>
+                                <label for="whitelist_on_off">{l s='Disabled' mod='younitedpay'}</label>
                                 <input type="radio" name="whitelist_on" id="whitelist_on_on" 
                                     value="1"{if $configuration.whitelist_on === true} checked{/if}/>
-                                <label for="whitelist_on_on">Enabled</label>
+                                <label for="whitelist_on_on">{l s='Enabled' mod='younitedpay'}</label>
                                 <span class="slide-button"></span>
                             </span>
                         </div>
@@ -155,8 +149,7 @@
                                 class="form-control" data-ipwebhook id="whitelist_ip" name="whitelist_ip" 
                                 value="{$configuration.whitelist_ip|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
-                                {l s='When enabled, only the listed IPs will see the module’s components on the site' 
-                                    mod='younitedpay'}
+                                {l s='When enabled, only the listed IPs will see the module’s components on the site' mod='younitedpay'}
                             </small>
                         </div>
                     </div>
@@ -164,7 +157,7 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-lg btn-primary" type="submit">
-                            {l s='Save' mod='younitedpay'}
+                            {l s='Save' d='Admin.Actions'}
                         </button>
                     </div>
                 </div>

@@ -24,7 +24,7 @@
         <div class="col-xl-12 pr-5 pl-5">
             <div class="card">
                 <div class="card-header">
-                    <div class="col-sm-11">{l s='3. Appearance' mod='younitedpay'}</div>
+                    <div class="col-sm-11">{l s='3. Display' mod='younitedpay'}</div>
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12
                     {if $configuration.no_config === true}
@@ -114,10 +114,6 @@
                                             style="font-size:20px!important;color:#25B9D7!important;border:none;">content_paste</i>
                                     </span>
                                 </div>
-                                <small class="form-text">
-                                    {l s='When enabled, only the listed IPs will see the module’s components on the site' 
-                                        mod='younitedpay'}
-                                </small>
                             </div>
                         </div>
                     {/if}
@@ -125,8 +121,8 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-lg btn-primary" type="submit"
-                        {if $configuration.no_config === true} disabled title="{$no_keys_text}"{/if}>
-                            {l s='Save' mod='younitedpay'}
+                        {if $configuration.no_config === true} disabled title="{$no_keys_text}"{/if}>                            
+                            {l s='Save' d='Admin.Actions'}
                         </button>
                     </div>
                 </div>

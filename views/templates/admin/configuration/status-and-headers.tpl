@@ -23,18 +23,26 @@
             <div class="card col-sm-12 pl-2 pr-2 d-flex flex-wrap flex-row">
               <div class="card-block justify-content-start align-items-start pb-2 d-flex flex-wrap">  
                 <h3 class="row col-xl-12 justify-content-center mt-3">
-                  Account creation / informations
+                  {if $connected == false}
+                    {l s='Create your account' mod='younitedpay'}
+                  {else}
+                    {l s='Need Help ?' mod='younitedpay'}
+                  {/if}
                 </h3>
                 <p class="row col-xl-12">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus lacus accumsan nunc fames tempor molestie mi, mattis erat. Mauris sit curabitur lectus aliquet quis.
+                  {if $connected == false}
+                    {l s='Create your account in order to have access to your YounitedPay Back Office, connect with our sales team and start setting up the offer displayed to your customers.' mod='younitedpay'}<br />
+                  {/if}
+                  {l s='Have a question about YounitedPay?' mod='younitedpay'}
                 </p>
                 <p class="row col-xl-12">
-                  Risus dictumst nunc maecenas quisque tellus sit metus. Venenatis, aliquam ac id quisque quis ultricies nec pretium.
+                  {l s='You can reach a technical team or your account manager from your back office via our ticketing system. If your question concerns technical difficulties with the module, please refer to' mod='younitedpay'}
+                  <a href="mailto:equipe-support@202-ecommerce.com">{l s='Mail support team'}</a>
                 </p>
-                <div class="col-xl-12 d-flex flex-wrap justify-content-end align-items-end">
-                    <button class="btn btn-lg btn-primary" type="submit">
+                <div class="col-xl-12 d-flex flex-wrap justify-content-end align-items-end bootstrap">
+                    <a class="btn btn-lg btn-primary" target="_blank" href="{$configuration.link_help}">
                         {l s='More informations' mod='younitedpay'}
-                    </button>
+                    </a>
                 </div>
               </div>
             </div>
@@ -51,49 +59,30 @@
           <div class="card col-xl-12 pl-2 pr-2 d-flex flex-wrap flex-row" id="younitedpay_status_zone">
             <h3 class="mt-2 row col-xl-12">
               <div class="col-xl-11">
-                {l s='Requirements' mod='younitedpay'}
+                {l s='Module Requirements' mod='younitedpay'}
               </div>
               <div class="col-xl-1">
                   <i class="material-icons mt-1" id="hide_requirements">close</i>
               </div>
             </h3>
             <div class="row col-xl-12 ml-2 mb-1">
-              Pour garantir le bon fonctionnement de votre module, veuillez respecter les exigences techniques suivantes
+              {l s='To insure your module works accurately , please correct the following technical requirements ' mod='younitedpay'}
             </div>
             <div class="card-block justify-content-start align-items-start">
-              {* <h4 class="col-xl-12"> *}
-                {foreach from=$specifications item=spec}
-                  <div class="row col-xl-12 ml-2 mb-1">
-                    {if $spec.ok == true}
-                        <i class="material-icons mt-1" style="color:green;">check</i>
-                    {else}
-                        <i class="material-icons mt-1" style="color:red;">close</i>
-                    {/if}
-                    <span class="pt-1 inline"
-                    {if empty($spec.title) != true}
-                      title="{foreach from=$spec.title item=bank}{$bank|escape:'htmlall':'UTF-8'}{/foreach}" 
-                    {/if}
-                    >{$spec.name|escape:'htmlall':'UTF-8'}{if $spec.info != ''} - {/if}{$spec.info|escape:'htmlall':'UTF-8'}</span>
-                  </div>
-                {/foreach}
-                {* <div class="row col-xl-12 ml-2">                  
-                  <i class="material-icons" style="color:grey;">help</i>  
-                  <span class="pt-1 inline">
-                    {l s='URL for webhook' mod='younitedpay'} 
-                  </span>
-                </div> *}
-                {* <div class="row col-xl-12 ml-2 mb-1">
-                  <span class="inline" style="font-size:14px;color:#00aff0;">
-                    <a href="#" title="{$webhook_url|escape:'htmlall':'UTF-8'}" data-clipboard-copy="{$webhook_url|escape:'htmlall':'UTF-8'}" data-message="{l s='WebHook URL copied to clipboard' mod='younitedpay'}" class="copy-clipboard">
-                      <span class="truncate">{$webhook_url_text|escape:'htmlall':'UTF-8'}</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 24 24">
-                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                      </svg>
-                    </a>
-                  </span>
-                </div> *}
-              {* </h4> *}
+              {foreach from=$specifications item=spec}
+                <div class="row col-xl-12 ml-2 mb-1">
+                  {if $spec.ok == true}
+                      <i class="material-icons mt-1" style="color:green;">check</i>
+                  {else}
+                      <i class="material-icons mt-1" style="color:red;">close</i>
+                  {/if}
+                  <span class="pt-1 inline"
+                  {if empty($spec.title) != true}
+                    title="{foreach from=$spec.title item=bank}{$bank|escape:'htmlall':'UTF-8'}{/foreach}" 
+                  {/if}
+                  >{$spec.name|escape:'htmlall':'UTF-8'}{if $spec.info != ''} - {/if}{$spec.info|escape:'htmlall':'UTF-8'}</span>
+                </div>
+              {/foreach}
             </div> {* card-block *}
           </div> {* card *}
         </div> {* col-sm4 *}

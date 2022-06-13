@@ -17,8 +17,7 @@
 *}
 <div>
   <p>
-    {l s='You have chosen to pay your order by bank transfer using the YounitedPay solution.' mod='younitedpay'}<br />
-    {l s='Your transfer is pending.'  mod='younitedpay'}
+    {l s='You have chosen to pay your order by credit using the YounitedPay solution.' mod='younitedpay'}
   </p>
   <h4>
     {l s='The contract will begin when your order is delivered.'  mod='younitedpay'}

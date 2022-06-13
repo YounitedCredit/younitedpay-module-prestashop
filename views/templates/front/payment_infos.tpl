@@ -17,28 +17,18 @@
 *}
 <div>
     <p>
-        {l s='Take advantage of a payment in' mod='younitedpay'} {$credit.maturity} 
-        <b>{l s='instalments for' mod='younitedpay'} {$credit.installment_amount}{l s='€/month' mod='younitedpay'}</b> 
-        {if $credit.taeg <= 0 && $credit.tdf <= 0}
-            {l s='without any fees (i.e. fixed APR of 0%, fixed borrowing rate 0%).' mod='younitedpay'}
-        {else}
-            <b>{l s='with fixed APR of' mod='younitedpay'} {$credit.tdf}%</b>, 
-            {l s='fixed borrowing rate' mod='younitedpay'} {$credit.taeg}%{l s=').' mod='younitedpay'}
-        {/if}
+        <b>{l s='Total amount due of %s€.' mod='younitedpay' sprintf=[$credit.total_amount]}</b>
+        {l s='You pay back %s' mod='younitedpay' sprintf=[$credit.maturity]}&nbsp;
+        <b>{l s='installements of %s€' mod='younitedpay' sprintf=[$credit.installment_amount]}</b>&nbsp;
+        {l s='over a period of %s months.' mod='younitedpay' sprintf=[$credit.maturity]}
     </p>
     <p>
-        <b>
-            {l s='Financing cost:' mod='younitedpay'} {$credit.interest_total} {l s='euros' mod='younitedpay'}. 
-            {l s='Financing period:' mod='younitedpay'} {$credit.maturity} {l s='months' mod='younitedpay'}.<br />
-            {l s='Amount of financing:' mod='younitedpay'} {$credit.total_order} {l s='euros' mod='younitedpay'}.
-            {l s='Total amount due:' mod='younitedpay'} {$credit.total_amount} {l s='euros' mod='younitedpay'}.<br />
+        <b>{l s='Fixed Annual Percentage Rate (APR) of %s' mod='younitedpay' sprintf=[$credit.tdf]}%.</b>&nbsp;<br />
+        {l s='Fixed borrowing rate of %s' mod='younitedpay' sprintf=[$credit.tdf]}%.&nbsp;
+        {l s='Interest and fees due of %s€.' mod='younitedpay' sprintf=[$credit.interest_total]}
     </p>
     <p>
-            {l s='A loan commits you and must be repaid. Check your ability to repay before committing yourself' 
-                mod='younitedpay'}. 
-            {l s='Place your order with your bank card. You will not be debited until the contract is activated.'
-                mod='younitedpay'}
-        </b>
+        <b>{l s='Taking out a loan is a commitment with an obligation of repayment. Verify your ability to repay the loan before committing.' mod='younitedpay'}</b>
     </p>
     {if count($error) > 0}    
         <div class="alert alert-warning">

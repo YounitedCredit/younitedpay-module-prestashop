@@ -269,7 +269,7 @@ class PaymentService
             $cart->id,
             (int) $defaultDelivered,
             $total,
-            $this->module->l('Payment via YounitedPay', []),
+            $this->module->l('Payment via Younited Pay', []),
             null,
             $extra_vars,
             (int) $currency->id,

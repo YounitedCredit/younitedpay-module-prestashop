@@ -27,6 +27,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var \Younitedpay Instance of your module automatically set by ModuleAdminController */
     public $module;
 
+    /** @var \Context */
+    public $context;
+
     /** @var string Associated object class name */
     public $className = 'Configuration';
 
@@ -91,6 +94,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     public function initContent()
     {
+        $langParameter = Tools::getValue('lang', null);
+        $prevLanguage = $this->context->language;
+        if ($langParameter !== null) {
+            try {
+                $choosedLanguage = new Language(Language::getIdByIso($langParameter));
+                $this->context->language = $choosedLanguage;
+            } catch (Exception $ex) {
+            }
+        }
+
         $cookieSave = Context::getContext()->cookie->__get('younitedpaysave');
         if ($cookieSave == 'ok') {
             $this->confirmations[] = $this->module->l('Successful update.');
@@ -102,6 +115,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         $this->content .= $this->renderConfiguration();
         parent::initContent();
+        $this->context->language = $prevLanguage;
     }
 
     public function initVarContent()
@@ -180,6 +194,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $tplVars = [
                 'configuration' => $this->getConfigurationVariables(),
+                'connected' => $specsVariables['connected'],
                 'config_check' => $specsVariables['specs'],
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
@@ -419,6 +434,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),
+            'link_help' => $this->context->link->getAdminLink('AdminYounitedpayHelp'),
             'maturities' => $allMaturities,
             'maturitylist' => $this->maturitylist,
         ];
