@@ -41,13 +41,11 @@ function changeInstallment(key)
     $('.yp-install-amount').html(infoInstallmentAmount);
     $('.yp-install-maturity').html(infoInstallmentMaturity);
     
-    $('.blocks_maturity span').addClass('yp-bg-prple-grey');
-    $('.blocks_maturity span').removeClass('yp-bg-prple');
-    // $('.blocks_maturity').removeClass('yp-border-blue yp-border-b-2');
+    $('.blocks_maturity span').addClass('yp-border yp-border-opacity-50');
+    $('.blocks_maturity span').removeClass('yp-border-2 yp-border-opacity-0');
 
-    $('.block_maturity' + key + ' span').addClass('yp-bg-prple');
-    $('.block_maturity' + key + ' span').removeClass('yp-bg-prple-grey');
-    // $('.block_maturity' + key).addClass('yp-border-blue yp-border-b-2');     
+    $('.block_maturity' + key + ' span').addClass('yp-border-2 yp-border-opacity-0');
+    $('.block_maturity' + key + ' span').removeClass('yp-border yp-border-opacity-50');
     
     $('.blocks_maturities_popup span').addClass('yp-bg-white yp-pol-black');
     $('.blocks_maturities_popup span').removeClass('yp-bg-black yp-pol-white');

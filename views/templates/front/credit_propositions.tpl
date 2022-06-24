@@ -17,14 +17,14 @@
 *}
 <div class="younitedpay-widget-root">
    {if count($offers) > 0}
-      <div class="younited_block yp-bg-white yp-border yp-border-purple yp-border-opacity-50 yp-pb-0 yp-pt-2">
-         <div class="yp-bg-white yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-pt-4 yp-pb-4">
-            <img class="yp-mb-2 lazyloaded" src="{$shop_url}{$logo_younitedpay_url}" alt="logo Younited Pay" data-ll-status="loaded">         
+      <div class="younited_block yp-pb-0 yp-pt-2">
+         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-pt-4 yp-pb-4">
+            <img class="yp-mb-2 lazyloaded" src="{$shop_url}{$logo_younitedpay_url_btn}" alt="logo Younited Pay" data-ll-status="loaded">         
             {foreach from=$offers item=offer key=key}
                {if $key === 0}
-                  {assign var="background_block" value='yp-bg-prple'}
+                  {assign var="background_block" value='yp-border-2 yp-border-opacity-0'}
                {else}
-                  {assign var="background_block" value='yp-bg-prple-grey'}
+                  {assign var="background_block" value='yp-border yp-border-opacity-50'}
                {/if}
                <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1 maturity_installment maturity_installment{$key}"
                      data-key="{$key}" 
@@ -33,8 +33,8 @@
                   <span class="yp-inline-block yp-h-10">
                      <span class="yp-inline-block yp-transition-all yp-duration-500 yp-border-opacity-100 yp-h-10 
                         blocks_maturity block_maturity{$key} yp-flex flexmiddle ">
-                        <span class="yp-flex flexmiddle yp-p-4 yp-pol-black yp-rounded-sm yp-transition-colors 
-                           yp-duration-500 yp-select-none {$background_block}">
+                        <span class="yp-flex flexmiddle yp-p-2 yp-pol-black yp-rounded-sm yp-transition-colors 
+                           yp-duration-500 yp-select-none yp-border-prple {$background_block}">
                         {$offer.maturity}x
                         </span>
                      </span>

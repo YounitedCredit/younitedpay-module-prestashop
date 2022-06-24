@@ -1,9 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roc+Grotesk:wght@300;600&family=Roboto:wght@400;700&display=swap");
-
-@font-face {
-    font-family: "Kostic Roc Grotest";
-    src: url("/modules/younitedpay/views/fonts/Kostic-Roc-Grotesk-Bold.otf") format("opentype");
-}
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 .younitedpay_offer {
     color: #6a8af5 !important;
@@ -34,7 +29,6 @@
 }
 
 #younited_popupzone h3 {
-    font-family: "Kostic Roc Grotest"!important;
     font-size: 40px;
     font-weight: 700;
     line-height: 48px;
@@ -79,7 +73,7 @@
 }
 
 .maturity_installment :first-child {
-    width:68px;
+    width:52px;
 }
 
 .maturity_top {
@@ -574,6 +568,10 @@
 
 .yp-border {
     border-width: 1px !important
+}
+
+.yp-border-2 {
+    border-width: 2px !important
 }
 
 .yp-border-b-2 {
@@ -1236,7 +1234,7 @@
 }
 
 .yp-border-lprple {
-    background-color: #F9F5FF!important;
+    border-color: #F9F5FF!important;
 }
 
 .yp-border-white {

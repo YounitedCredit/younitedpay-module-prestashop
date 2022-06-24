@@ -100,6 +100,7 @@ class ProductService
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
+            'logo_younitedpay_url_btn' => 'modules/younitedpay/views/img/logo-younitedpay-btn.png',
             'hook_younited' => $selectedHook,
             'offers' => $offers,
         ]);
@@ -121,10 +122,12 @@ class ProductService
     protected function getValidOffers($offers, $maturities)
     {
         $validOffers = [];
+        $marutitiesIn = [];
         foreach ($offers as $offer) {
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
-            if (in_array($maturityIn, $maturities) === true) {
+            if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $marutitiesIn) === false) {
+                $marutitiesIn[] = $maturityIn;
                 $validOffers[] = [
                     'maturity' => $offer->getMaturityInMonths(),
                     'installment_amount' => $offer->getMonthlyInstallmentAmount(),
