@@ -193,7 +193,7 @@ class OrderService
         $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);
 
         $body = (new WithdrawContract())
-            ->setAmount($amountWithdraw)
+            ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
             ->setContractReference($refContract);
 
         $request = new WithdrawContractRequest();

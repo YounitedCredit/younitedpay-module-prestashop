@@ -23,7 +23,7 @@
         {l s='over a period of %s months.' mod='younitedpay' sprintf=[$credit.maturity]}
     </p>
     <p>
-        <b>{l s='Fixed Annual Percentage Rate (APR) of %s' mod='younitedpay' sprintf=[$credit.tdf]}%.</b>&nbsp;<br />
+        <b>{l s='Fixed Annual Percentage Rate (APR) of %s' mod='younitedpay' sprintf=[$credit.taeg]}%.</b>&nbsp;<br />
         {l s='Fixed borrowing rate of %s' mod='younitedpay' sprintf=[$credit.tdf]}%.&nbsp;
         {l s='Interest and fees due of %s€.' mod='younitedpay' sprintf=[$credit.interest_total]}
     </p>
