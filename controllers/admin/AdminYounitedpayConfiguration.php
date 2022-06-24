@@ -417,6 +417,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             ],
         ]);
 
+        $noConfig = empty($this->clientID) || empty($this->clientSecret);
+        if ($this->isProductionMode === true) {
+            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction);
+        }
+
         return [
             'url_form_config' => $urlFormConfig,
             'production_mode' => $this->isProductionMode,
@@ -430,7 +435,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'whitelist_ip' => $this->whitelistIP,
             'show_monthly' => $this->isShownMonthly,
             'widget_info' => '{widget name="younitedpay" amount="149.90"}',
-            'no_config' => empty($this->clientID) || empty($this->clientSecret),
+            'no_config' => $noConfig,
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),

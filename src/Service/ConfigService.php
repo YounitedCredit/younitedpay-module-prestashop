@@ -117,14 +117,6 @@ class ConfigService
         /** @var AbstractResponse $response */
         $response = $client->sendRequest(null, $request);
 
-        // $body = new BestPrice();
-        // $body->setBorrowedAmount(15000.00);
-
-        // $request = new BestPriceRequest();
-
-        // /** @var array $response */
-        // $response = $client->sendRequest($body, $request);
-
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
                 'message' => $this->module->l('Response error'),
