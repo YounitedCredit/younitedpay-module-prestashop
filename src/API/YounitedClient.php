@@ -23,8 +23,11 @@ use Configuration;
 use Exception;
 use Younitedpay;
 use YounitedpayAddon\Logger\ApiLogger;
+use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedPaySDK\Cache\Registry;
+use YounitedPaySDK\Cache\RegistryItem;
 use YounitedPaySDK\Client;
 use YounitedPaySDK\Model\AbstractModel;
 use YounitedPaySDK\Request\AbstractRequest;
@@ -83,6 +86,7 @@ class YounitedClient
     public function sendRequest($body, $requestObject)
     {
         $client = new Client();
+        $this->getTokenCache($client);
         try {
             /** @var AbstractRequest $request */
             $request = $requestObject;
@@ -100,6 +104,8 @@ class YounitedClient
             /** @var AbstractResponse $response */
             $response = $client->setCredential($this->clientId, $this->clientSecret)
                 ->sendRequest($request);
+
+            $this->setTokenCache();
 
             $this->apiLogger->log($this, $response, 'Response' . $classRequest, true);
 
@@ -134,6 +140,47 @@ class YounitedClient
         } catch (Exception $e) {
             return $this->setErrorMessage($e, (new \ReflectionClass($requestObject))->getShortName());
         }
+    }
+
+    /**
+     * Get Token in Cache of PrestaShop
+     * Set the token of the client if there's some token in cache
+     */
+    private function getTokenCache(Client $client)
+    {
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+
+        $cacheExists = $cachestorage->exist('token_api');
+
+        if ($cacheExists === true) {
+            $cacheInformations = $cachestorage->get('token_api');
+            $this->apiLogger->log($this, 'token exists in cache: ' . json_encode($cacheInformations), 'Info');
+            $token = $cacheInformations['content']['token'];
+            $expireAt = $cacheInformations['content']['expiresat'];
+            $client->setTokenCache($token, $expireAt);
+        } else {
+            $this->apiLogger->log($this, 'new token made', 'Info');
+        }
+    }
+
+    /**
+     * Set the token in cache of PrestaShop
+     * Called after a request, always refresh cache token and expiration
+     */
+    private function setTokenCache()
+    {
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+
+        $cache = Registry::getInstance();
+        /** @var RegistryItem $cacheTokenItem */
+        $cacheTokenItem = $cache->getItem('token');
+
+        $cachestorage->set('token_api', [
+            'token' => $cacheTokenItem->get(),
+            'expiresat' => $cacheTokenItem->getExpiredDate(),
+        ]);
     }
 
     private function setErrorMessage($e, $classRequest)

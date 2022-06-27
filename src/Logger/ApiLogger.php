@@ -59,9 +59,16 @@ class ApiLogger
 
     protected function build()
     {
-        $logFile = _PS_MODULE_DIR_ . $this->module->name . '/logs/' . $this->logname;
+        $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
+        if (is_dir($logDir)) {
+            dirname($logDir);
+        }
+        $logDir .= date('Ym') . '/';
+
+        $logFile = $logDir . $this->logname;
         if (!is_dir(dirname($logFile))) {
             mkdir(dirname($logFile));
+            copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . 'index.php');
         }
         if (file_exists($logFile)) {
             $fileSize = filesize($logFile);
@@ -75,7 +82,10 @@ class ApiLogger
 
     public function log($object, $data, $type = 'Error', $isObject = false)
     {
-        if (Younitedpay::IS_FILE_LOGGER_ACTIVE === false) {
+        if (
+            Younitedpay::IS_FILE_LOGGER_ACTIVE === false
+            && is_file(_PS_MODULE_DIR_ . $this->module->name . '/logs/loggeractivated.txt') === false
+        ) {
             return true;
         }
 

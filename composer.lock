@@ -11,13 +11,13 @@
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/202ecommerce/younitedpaysdk.git",
-                "reference": "f44aa45e61572af7540270812c492a3ace0c4ba7"
+                "url": "https://github.com/YounitedCredit/younitedpay-sdk-php.git",
+                "reference": "be1320d06e72fff71235babca341a91465f0c86e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/202ecommerce/younitedpaysdk/zipball/f44aa45e61572af7540270812c492a3ace0c4ba7",
-                "reference": "f44aa45e61572af7540270812c492a3ace0c4ba7",
+                "url": "https://api.github.com/repos/YounitedCredit/younitedpay-sdk-php/zipball/be1320d06e72fff71235babca341a91465f0c86e",
+                "reference": "be1320d06e72fff71235babca341a91465f0c86e",
                 "shasum": ""
             },
             "require": {
@@ -32,6 +32,7 @@
                 "phpstan/phpstan": "^0.12.81",
                 "phpunit/phpunit": "^9.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -51,9 +52,10 @@
             "description": "younited pay API SDK",
             "homepage": "https://api.younited-pay.com/",
             "support": {
-                "source": "https://github.com/202ecommerce/younitedpaysdk/tree/develop"
+                "issues": "https://github.com/YounitedCredit/younitedpay-sdk-php/issues",
+                "source": "https://github.com/YounitedCredit/younitedpay-sdk-php/tree/develop"
             },
-            "time": "2022-06-03T10:15:17+00:00"
+            "time": "2022-06-16T09:46:53+00:00"
         },
         {
             "name": "prestashop/module-lib-cache-directory-provider",
@@ -412,16 +414,16 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v4.4.42",
+            "version": "v4.4.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "7cdabf9a6a03e291676019184815a14ae310a014"
+                "reference": "3b3c6019f3df2fa73d15dfed133e432a9801d7eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/7cdabf9a6a03e291676019184815a14ae310a014",
-                "reference": "7cdabf9a6a03e291676019184815a14ae310a014",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/3b3c6019f3df2fa73d15dfed133e432a9801d7eb",
+                "reference": "3b3c6019f3df2fa73d15dfed133e432a9801d7eb",
                 "shasum": ""
             },
             "require": {
@@ -487,7 +489,7 @@
                 "psr6"
             ],
             "support": {
-                "source": "https://github.com/symfony/cache/tree/v4.4.42"
+                "source": "https://github.com/symfony/cache/tree/v4.4.43"
             },
             "funding": [
                 {
@@ -503,7 +505,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-21T09:26:52+00:00"
+            "time": "2022-06-19T11:27:12+00:00"
         },
         {
             "name": "symfony/cache-contracts",
@@ -1333,16 +1335,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v5.4.9",
+            "version": "v5.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "63249ebfca4e75a357679fa7ba2089cfb898aa67"
+                "reference": "8fc03ee75eeece3d9be1ef47d26d79bea1afb340"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/63249ebfca4e75a357679fa7ba2089cfb898aa67",
-                "reference": "63249ebfca4e75a357679fa7ba2089cfb898aa67",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/8fc03ee75eeece3d9be1ef47d26d79bea1afb340",
+                "reference": "8fc03ee75eeece3d9be1ef47d26d79bea1afb340",
                 "shasum": ""
             },
             "require": {
@@ -1386,7 +1388,7 @@
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v5.4.9"
+                "source": "https://github.com/symfony/var-exporter/tree/v5.4.10"
             },
             "funding": [
                 {
@@ -1402,7 +1404,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-21T10:24:18+00:00"
+            "time": "2022-05-27T12:56:18+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -3617,16 +3619,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563"
+                "reference": "1359e176e9307e906dc3d890bcc9603ff6d90619"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563",
-                "reference": "a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/1359e176e9307e906dc3d890bcc9603ff6d90619",
+                "reference": "1359e176e9307e906dc3d890bcc9603ff6d90619",
                 "shasum": ""
             },
             "require": {
@@ -3669,20 +3671,20 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2022-06-13T06:31:38+00:00"
+            "time": "2022-06-18T07:21:10+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.42",
+            "version": "v4.4.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "cce7a9f99e22937a71a16b23afa762558808d587"
+                "reference": "8a2628d2d5639f35113dc1b833ecd91e1ed1cf46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/cce7a9f99e22937a71a16b23afa762558808d587",
-                "reference": "cce7a9f99e22937a71a16b23afa762558808d587",
+                "url": "https://api.github.com/repos/symfony/console/zipball/8a2628d2d5639f35113dc1b833ecd91e1ed1cf46",
+                "reference": "8a2628d2d5639f35113dc1b833ecd91e1ed1cf46",
                 "shasum": ""
             },
             "require": {
@@ -3743,7 +3745,7 @@
             "description": "Eases the creation of beautiful and testable command line interfaces",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/console/tree/v4.4.42"
+                "source": "https://github.com/symfony/console/tree/v4.4.43"
             },
             "funding": [
                 {
@@ -3759,7 +3761,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-14T12:35:33+00:00"
+            "time": "2022-06-23T12:22:25+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
