@@ -157,8 +157,9 @@ class YounitedClient
             $cacheInformations = $cachestorage->get('token_api');
             $this->apiLogger->log($this, 'token exists in cache: ' . json_encode($cacheInformations), 'Info');
             $token = $cacheInformations['content']['token'];
+            /** @var \DateTimeInterface $expireAt */
             $expireAt = $cacheInformations['content']['expiresat'];
-            $client->setTokenCache($token, $expireAt);
+            $client->setTokenCache($token, $expireAt->getTimestamp());
         } else {
             $this->apiLogger->log($this, 'new token made', 'Info');
         }
