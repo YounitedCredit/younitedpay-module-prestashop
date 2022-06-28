@@ -26,7 +26,24 @@ class CommonHook extends AbstractHook
 {
     const AVAILABLE_HOOKS = [
         'actionFrontControllerSetMedia',
+        'actionAdminControllerSetMedia',
     ];
+
+    public function actionAdminControllerSetMedia($params)
+    {
+        /** @var \AdminController $controller */
+        $controller = Context::getContext()->controller;
+        if ($controller instanceof \AdminOrders || $controller->controller_name === 'AdminOrders') {
+            $controller->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/admin.js');
+            \Media::addJsDef([
+                'younitedpay' => [
+                    'translations' => [
+                        'slip_refund' => $this->l('Generate a Credit Slip must be selected to refund with Younited Pay'),
+                    ],
+                ],
+            ]);
+        }
+    }
 
     public function actionFrontControllerSetMedia($params)
     {

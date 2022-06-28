@@ -38,6 +38,8 @@ $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_729a51874fe901b0
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_f51c7af7c02cd3a846d87d97bfaf6b58'] = 'Tous les logs ont été effacés';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_9ca4bc48596557840045a7477c803657'] = 'Vous devez spécifier un nombre de jour pour l\'effacement automatique';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_5988c28d05527a0d0ce8ae3da1134352'] = 'Les paramètres de logs ont été mis à jour avec succès';
+$_MODULE['<{younitedpay}prestashop>commonhook_afb5a47d1504231a95cfca9e52a217f4'] = '"Générer un avoir" doit être sélectionné pour le remboursement avec Younited Pay';
+$_MODULE['<{younitedpay}prestashop>commonhook_6a5b88a90a47700c445ef4e1912d43a3'] = 'Remboursement Younited Pay';
 $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a9d'] = 'Rembourser sur Younited Pay';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'Non disponible pour cette monnaie (uniquement EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'Non disponible pour ce Pays (uniquement France comme adresse de livraison)';
@@ -61,12 +63,15 @@ $_MODULE['<{younitedpay}prestashop>orderservice_0e22fe7d45f8e5632a4abf369b24e29c
 $_MODULE['<{younitedpay}prestashop>paymentservice_30d6c29a7421ce981cfe2441d730257e'] = 'Please contact the shop owner payment is actually not possible';
 $_MODULE['<{younitedpay}prestashop>paymentservice_9f4d7ef4fca28fd48cb3722abd1d263f'] = 'Le numéro de téléphone n\'est pas saisi.';
 $_MODULE['<{younitedpay}prestashop>paymentservice_9823f84c0097beb65bdd026abb1b7560'] = 'Merci de mettre à jour votre numéro de téléphone sur votre adresse et d\'essayer à nouveau.';
-$_MODULE['<{younitedpay}prestashop>paymentservice_517f9a895123f195090de4aa59a21fd6'] = 'Le Numéro de téléphone n\'est pas au format international français (+33X XX XX XX XX).';
+$_MODULE['<{younitedpay}prestashop>paymentservice_517f9a895123f195090de4aa59a21fd6'] = 'Le numéro de téléphone n\'est pas au format international français (+33X XX XX XX XX).';
 $_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Paiment avec Younited Pay';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_1e63d1811556fc2dad106dcbd4217a69'] = 'N° de paiement';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_31738cd694667ccdfa2cbc65249de5cc'] = 'Date du paiement';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_707436a5aa13b82a4d777f64c717a625'] = 'Méthode de paiement';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_2ea78fadfafeae47ad786c288667eadf'] = 'Etat du paiement';
+$_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_f53c1ebef1d12dafe0e228236c393be7'] = 'Montant de la rétractation';
+$_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_344382f2e249eec100f07dd6a550c58f'] = 'En attente de confirmation';
+$_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_c9d9dad416e26a88908546b98dd4a772'] = 'Rétractation confirmée';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_711051adc16c9e8e4596f7d22cf17092'] = 'Simple.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0e1300b812fe436b1cc92fa647b9331f'] = 'Instantané.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_205bd2d07285364360115e9f398a037a'] = 'Sécurisé.';
@@ -132,7 +137,8 @@ $_MODULE['<{younitedpay}prestashop>status-and-headers_5bef23eb7efff2736c5583bda5
 $_MODULE['<{younitedpay}prestashop>status-and-headers_aaca5496a475b4139d79dab376970a34'] = 'Besoin d\'aide ?';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_2539b6dccbca22b746b1903387e3dcbd'] = 'Créez votre compte afin d\'avoir accès à votre Back Office YounitedPay, être mis en relation avec notre équipe commerciale et commencer à paramétrer l\'offre affichée à vos clients.';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_21cf08cbc007aa1d26b3fcb07cb73920'] = 'Une question sur YounitedPay ?';
-$_MODULE['<{younitedpay}prestashop>status-and-headers_50354c149c3cf64bced34f17ddee8b4f'] = 'Vous pouvez joindre une équipe technique ou votre account  manager depuis votre Back Office via notre système de ticketing. Si votre question concerne des difficultés techniques avec le module, veuillez vous référer à';
+$_MODULE['<{younitedpay}prestashop>status-and-headers_50354c149c3cf64bced34f17ddee8b4f'] = 'Vous pouvez joindre une équipe technique ou votre account  manager depuis votre Back Office via notre système de ticketing. Si votre question concerne des difficultés techniques avec le module, veuillez contacter ';
+$_MODULE['<{younitedpay}prestashop>status-and-headers_365f7b18dc0ecd315bfdcdda3a2653a9'] = 'l\'équipe support';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_7d5a27f1b53dc519eac7bb288f664892'] = 'Plus d\'informations';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_b94a2d033c4622182e9d15e22e9b2db2'] = 'Exigences techniques du module';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_8a7935c8f82f4e8d0d85653cdc4dbaa4'] = 'Pour garantir le bon fonctionnement de votre module, veuillez respecter les exigences techniques suivantes ';

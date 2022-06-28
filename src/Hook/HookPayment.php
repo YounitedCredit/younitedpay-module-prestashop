@@ -63,13 +63,13 @@ class HookPayment extends AbstractHook
         /** @var \Currency $currency */
         $currency = new \Currency(Context::getContext()->cart->id_currency);
         if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
-            $errorMessage[] = $this->module->l('Not available in this currency (only EUR)');
+            $errorMessage[] = $this->l('Not available in this currency (only EUR)');
         }
 
         $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
         $country = new \Country($customerAdressInvoice->id_country);
         if ($country->iso_code !== 'FR') {
-            // $errorMessage[] = $this->module->l('Not available for this country (Only France for invoice address).');
+            // $errorMessage[] = $this->l('Not available for this country (Only France for invoice address).');
         }
 
         if ($paymentservice->isInternationalPhone($customerAdressInvoice) === false) {

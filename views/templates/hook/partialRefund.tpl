@@ -33,10 +33,14 @@
 
             // Create checkbox and insert for Paypal refund
             if ($('#doPartialRefundYounitedPay').length == 0) {
-                let newCheckBox = `<p class="checkbox"><label for="doPartialRefundYounitedPay">
+                let newCheckBox = `<p class="checkbox"><label id="doPartialRefundYounitedZone" for="doPartialRefundYounitedPay">
                         <input type="checkbox" id="doPartialRefundYounitedPay" name="doPartialRefundYounitedPay" value="1">
                           ${chb_younited_refund}</label></p>`;
                 $('button[name=partialRefund]').parent('.partial_refund_fields').prepend(newCheckBox);
+                if (refundEvent === false) {
+                    refundEvent = true;
+                    $('#doPartialRefundYounitedZone').click(refundYounitedPayEvent);
+                }
             }
         });
 
@@ -47,7 +51,7 @@
                         <div class="cancel-product-element form-group" style="display: block;">
                                 <div class="checkbox">
                                     <div class="md-checkbox md-checkbox-inline">
-                                      <label>
+                                      <label id="doPartialRefundYounitedZone" for="doPartialRefundYounitedPay">
                                           <input type="checkbox" id="doPartialRefundYounitedPay" name="doPartialRefundYounitedPay" 
                                           material_design="material_design" value="1">
                                           <i class="md-checkbox-control"></i>
@@ -58,6 +62,10 @@
                          </div>`;
 
                 $('.refund-checkboxes-container').prepend(newCheckBox);
+                if (refundEvent === false) {
+                    refundEvent = true;
+                    $('.refund-checkboxes-container').click(refundYounitedPayEvent);
+                }
             }
         });
     });

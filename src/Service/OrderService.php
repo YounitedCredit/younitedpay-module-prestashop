@@ -25,6 +25,7 @@ use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
+use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Model\ActivateContract;
 use YounitedPaySDK\Model\CancelContract;
 use YounitedPaySDK\Model\ConfirmContract;
@@ -36,6 +37,8 @@ use YounitedPaySDK\Request\WithdrawContractRequest;
 
 class OrderService
 {
+    use TranslateTrait;
+
     public $module;
 
     public $context;
@@ -73,7 +76,7 @@ class OrderService
             return [
                 'success' => false,
                 'status' => 0,
-                'response' => $this->module->l('Please contact the shop owner payment is actually not possible'),
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
             ];
         }
 
@@ -146,7 +149,7 @@ class OrderService
                 $response['response'],
                 'error response ' . $type,
                 'error',
-                $this
+                'OrderService'
             );
         } else {
             $this->loggerservice->addLog($type . ' - success', $type);
@@ -162,14 +165,13 @@ class OrderService
             return true;
         }
 
+        /** @var YounitedPayContract $younitedContract */
+        $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
         if ($refContract === '') {
-            /** @var YounitedPayContract $younitedContract */
-            $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
-
         $body = (new CancelContract())
-            ->setContractReference($refContract);
+                ->setContractReference($refContract);
 
         $request = new CancelContractRequest();
 
@@ -190,11 +192,12 @@ class OrderService
             $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
+
         $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);
 
         $body = (new WithdrawContract())
-            ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
-            ->setContractReference($refContract);
+                ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
+                ->setContractReference($refContract);
 
         $request = new WithdrawContractRequest();
 
@@ -325,29 +328,29 @@ class OrderService
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
 
         $dateState = $younitedContract->date_upd;
-        $state = $this->module->l('Awaiting');
+        $state = $this->l('Awaiting');
         $stateWithdrawn = false;
         $withdrawnAmount = $younitedContract->withdrawn_amount;
         switch (true) {
             case (bool) $younitedContract->is_activated === true:
                 $dateState = $younitedContract->activation_date;
-                $state = $this->module->l('Activated');
+                $state = $this->l('Activated');
                 break;
 
             case (bool) $younitedContract->is_confirmed === true:
                 $dateState = $younitedContract->confirmation_date;
-                $state = $this->module->l('Confirmed');
+                $state = $this->l('Confirmed');
                 break;
 
             case (bool) $younitedContract->is_withdrawn === true:
                 $dateState = $younitedContract->withdrawn_date;
-                $state = $this->module->l('Withdrawed');
+                $state = $this->l('Withdrawed');
                 $stateWithdrawn = true;
                 break;
 
             case (bool) $younitedContract->is_canceled === true:
                 $dateState = $younitedContract->canceled_date;
-                $state = $this->module->l('Canceled');
+                $state = $this->l('Canceled');
                 break;
         }
 

@@ -25,6 +25,7 @@ use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
+use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Model\Address;
 use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
@@ -37,6 +38,8 @@ use YounitedPaySDK\Request\InitializeContractRequest;
 
 class PaymentService
 {
+    use TranslateTrait;
+
     public $module;
 
     /** @var \Context */
@@ -87,7 +90,7 @@ class PaymentService
             return [
                 'success' => false,
                 'status' => 0,
-                'response' => $this->module->l('Please contact the shop owner payment is actually not possible'),
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
             ];
         }
 
@@ -187,9 +190,9 @@ class PaymentService
         $regValidPhone = '/^\+33\d{9}/';
 
         if (empty($customerAdress->phone) === true) {
-            $this->errorMessage = $this->module->l('Phone number is not filled.');
+            $this->errorMessage = $this->l('Phone number is not filled.');
             $this->errorMessage .= ' ';
-            $this->errorMessage .= $this->module->l('Please update your phone number of your address and try again.');
+            $this->errorMessage .= $this->l('Please update your phone number of your address and try again.');
 
             return false;
         }
@@ -208,11 +211,11 @@ class PaymentService
                 return true;
             }
         }
-        $this->errorMessage = $this->module->l(
+        $this->errorMessage = $this->l(
             'Cell Phone number is not french and in international format (+33X XX XX XX XX).'
         );
         $this->errorMessage .= ' ';
-        $this->errorMessage .= $this->module->l('Please update your phone number of your address and try again.');
+        $this->errorMessage .= $this->l('Please update your phone number of your address and try again.');
 
         return false;
     }
@@ -269,7 +272,7 @@ class PaymentService
             $cart->id,
             (int) $defaultDelivered,
             $total,
-            $this->module->l('Payment via Younited Pay', []),
+            $this->l('Payment via Younited Pay', []),
             null,
             $extra_vars,
             (int) $currency->id,

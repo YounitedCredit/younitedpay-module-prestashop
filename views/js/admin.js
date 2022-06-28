@@ -17,6 +17,7 @@
  */
 
 var younitedEvents = false;
+var refundEvent = false;
 
 document.onreadystatechange = function() {
     if (younitedEvents === true) {
@@ -25,7 +26,7 @@ document.onreadystatechange = function() {
 
     $('.younitedpay-collapse').click(toggleAccordion);
     addEventsMaturity();
-    addDoubleListEvent();
+    addDoubleListEvent();    
     $('#younitedpay_maturitybtn').click(function(e) {
         addMaturity(e);
     });
@@ -53,15 +54,40 @@ function ShowRequirements()
     $('#younitedpay_status_min').hide();
 }
 
+function refundYounitedPayEvent() {    
+    var checked = $('#doPartialRefundYounitedPay').is(':checked');
+    var errorDisplay = false;
+    if (checked === true) {
+        var cancel_product_ps17 = $('#cancel_product_credit_slip');
+        if (cancel_product_ps17 && cancel_product_ps17.is(':checked') === false) {
+            cancel_product_ps17.val(1);
+            cancel_product_ps17.prop('checked', true);
+            cancel_product_ps17.attr('checked', 'checked');
+            errorDisplay = true;
+        }
+        var cancel_product_ps172 = $('#cancel_product_credit_slip');
+        if (cancel_product_ps172 && cancel_product_ps172.is(':checked') === false) {
+            cancel_product_ps172.val(1);
+            cancel_product_ps172.prop('checked', true);
+            cancel_product_ps172.attr('checked', 'checked');
+            errorDisplay = true;
+        }
+    }
+    if (errorDisplay === true) {
+        $.growl({
+            message: younitedpay.translations.slip_refund,
+            duration: 5000,
+            style: 'warning'
+        });
+    }
+}
+
 function toggleDisabledZone(event) 
 {
     var clickedZone = event.currentTarget;
     var zoneToToggle = $(clickedZone).attr('data-toggle');
     var inputId = $(clickedZone).attr('data-input');
     var inputValue = $('#' + inputId).not(':checked').length > 0;
-    console.log('zoneToToggle: data-'  + zoneToToggle);
-    console.log('inputId: '  + inputId);
-    console.log('inputValue: '  + inputValue);
     if (inputValue === false) {
         $('[data-' + zoneToToggle + ']').removeAttr('disabled');
         if (zoneToToggle === 'month') {
@@ -82,11 +108,8 @@ function toggleDisabledZone(event)
 function toggleAccordion()
 {
     var younitedButton = $(this)[0];
-    console.log(younitedButton);
     var younitedZone = younitedButton.getAttribute('data-target');
     var younitedButtonId = younitedButton.getAttribute('id');
-    console.log(younitedZone);
-    console.log(younitedButtonId);
     $(younitedZone.toString()).slideToggle();
     $('#' + younitedButtonId + ' a').toggleClass('collapsed');
 }
@@ -142,7 +165,6 @@ function UpdateMaturity()
 {
     try {
         var targetObject = $(this)[0];
-        console.log(targetObject);
         var key = parseInt(targetObject.getAttribute('data-id'));
         
         var maturity = parseInt($('#maturity' + key).val());
@@ -166,7 +188,6 @@ function UpdateMaturity()
 function copyToClipboard(event) {
     var text = $(event.currentTarget).attr('data-clipboard-copy');
     var message = $(event.currentTarget).attr('data-message');
-    console.log(event.currentTarget);
     try {
         jQueryCopy(text);
         showConfZone(message);

@@ -205,6 +205,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $alertHere = empty($this->confirmations) && empty($this->errors);
 
             $tplVars['configuration']['alert'] = $alertHere !== true;
+
+            $isoLangMarketting = $this->context->language->iso_code !== 'fr' ? 'en' : 'fr';
+            $tplVars['configuration']['iso_lang'] = $isoLangMarketting;
         }
 
         $tpl = Context::getContext()->smarty->createTemplate($tplFile);

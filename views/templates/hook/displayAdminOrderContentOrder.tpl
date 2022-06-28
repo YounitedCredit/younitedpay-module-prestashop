@@ -41,11 +41,11 @@
     </p>
     {if $payment.withdrawn_amount > 0}
         <p>
-            <b>{l s='Withdrawn amount:'} {$payment.withdrawn_amount}€</b><br />
+            <b>{l s='Withdrawn amount' mod='younitedpay'}: {$payment.withdrawn_amount}€</b><br />
             {if $payment.is_withdrawn_confirmed === false}
-                {l s='Waiting confirmation'}
+                {l s='Waiting confirmation' mod='younitedpay'}
             {else}
-                {l s='Withdrawn confirmed'}
+                {l s='Withdrawn confirmed' mod='younitedpay'}
             {/if}
         </p>
     {/if}

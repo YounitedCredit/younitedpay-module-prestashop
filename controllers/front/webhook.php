@@ -79,7 +79,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             $this->endResponse('Withdrawn contract confirmed');
         }
 
-        $this->endResponse('No parameter catched on webhook');
+        $this->endResponse('No parameter catched on webhook', false);
     }
 
     protected function endResponse($message, $error = true)
