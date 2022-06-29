@@ -23,6 +23,7 @@ use Context;
 use Media;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use Younitedpay;
+use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Service\ProductService;
@@ -45,7 +46,8 @@ class HookPayment extends AbstractHook
 
     public function paymentOptions($params)
     {
-        if (!$this->module->active) {
+        $client = new YounitedClient(Context::getContext()->shop->id);
+        if (!$this->module->active || $client->isCrendentialsSet() === false) {
             return;
         }
 
@@ -63,6 +65,7 @@ class HookPayment extends AbstractHook
         /** @var \Currency $currency */
         $currency = new \Currency(Context::getContext()->cart->id_currency);
         if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
+            return []; // @TODO: See with Younited if button to change currrency or let as this (only EUR)
             $errorMessage[] = $this->l('Not available in this currency (only EUR)');
         }
 

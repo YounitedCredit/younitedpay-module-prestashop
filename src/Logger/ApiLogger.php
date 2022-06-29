@@ -82,10 +82,7 @@ class ApiLogger
 
     public function log($object, $data, $type = 'Error', $isObject = false)
     {
-        if (
-            Younitedpay::IS_FILE_LOGGER_ACTIVE === false
-            && is_file(_PS_MODULE_DIR_ . $this->module->name . '/logs/loggeractivated.txt') === false
-        ) {
+        if (\Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false) {
             return true;
         }
 

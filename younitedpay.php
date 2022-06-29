@@ -142,7 +142,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const SHOW_MONTHLY = 'YOUNITEDPAY_SHOW_MONTHLY';
 
-    const IS_FILE_LOGGER_ACTIVE = true;
+    const IS_FILE_LOGGER_ACTIVE = 'YOUNITEDPAY_IS_FILE_LOGGER_ACTIVE';
 
     const PREFERRED_ISO_CODE = 'FR';
 
@@ -152,7 +152,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     public function __construct()
     {
-        $this->module_key = '';
+        $this->module_key = '377c7012595081f07e321dcfa1213539';
         $this->name = 'younitedpay';
         $this->version = '@version@';
         $this->author = '202 ecommerce';
@@ -192,6 +192,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
         Configuration::updateGlobalValue(self::ORDER_STATE_DELIVERED, json_encode([$orderDelivered]));
         Configuration::updateGlobalValue(self::FRONT_HOOK, 'disabled');
+        Configuration::updateGlobalValue(self::IS_FILE_LOGGER_ACTIVE, false);
 
         $moduleInitialiser = new ModuleInitialiser();
         $moduleInitialiser->addIndexes();

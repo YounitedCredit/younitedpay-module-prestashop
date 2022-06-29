@@ -136,7 +136,7 @@ $_MODULE['<{younitedpay}prestashop>settings-form_4d36585a5f3d1f870341370512c811b
 $_MODULE['<{younitedpay}prestashop>status-and-headers_5bef23eb7efff2736c5583bda59e5eb7'] = 'Créez votre compte';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_aaca5496a475b4139d79dab376970a34'] = 'Besoin d\'aide ?';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_2539b6dccbca22b746b1903387e3dcbd'] = 'Créez votre compte afin d\'avoir accès à votre Back Office YounitedPay, être mis en relation avec notre équipe commerciale et commencer à paramétrer l\'offre affichée à vos clients.';
-$_MODULE['<{younitedpay}prestashop>status-and-headers_21cf08cbc007aa1d26b3fcb07cb73920'] = 'Une question sur YounitedPay ?';
+$_MODULE['<{younitedpay}prestashop>status-and-headers_fe806ac42e2d5c09adc6fb2aff73b6b3'] = 'Une question sur';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_50354c149c3cf64bced34f17ddee8b4f'] = 'Vous pouvez joindre une équipe technique ou votre account  manager depuis votre Back Office via notre système de ticketing. Si votre question concerne des difficultés techniques avec le module, veuillez contacter ';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_365f7b18dc0ecd315bfdcdda3a2653a9'] = 'l\'équipe support';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_7d5a27f1b53dc519eac7bb288f664892'] = 'Plus d\'informations';

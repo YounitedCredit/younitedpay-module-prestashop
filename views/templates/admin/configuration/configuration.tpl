@@ -15,7 +15,7 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
-<h3 id="younitedpay_status_min" style="display:none;">
+<h3 id="younitedpay_status_min"{if $connected == false} style="display:none;"{/if}>
     {l s='Requirements' mod='younitedpay'}
     <i class="material-icons mt-1" style="color:green;position:relative;bottom:3px;">check</i>
 </h3>  

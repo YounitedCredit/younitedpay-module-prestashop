@@ -33,13 +33,14 @@
                   {if $connected == false}
                     {l s='Create your account in order to have access to your YounitedPay Back Office, connect with our sales team and start setting up the offer displayed to your customers.' mod='younitedpay'}<br />
                   {/if}
+                    {l s='Have a question about' mod='younitedpay'}&nbsp;
                   <a href="mailto:contact@younited-pay.fr" class="link">
-                    {l s='Have a question about YounitedPay?' mod='younitedpay'}
-                  </a>
+                    {l s='Younited Pay' mod='younitedpay'}
+                  </a>&nbsp;?
                 </p>
                 <div class="row col-xl-12">
                   {l s='You can reach a technical team or your account manager from your back office via our ticketing system. If your question concerns technical difficulties with the module, please refer to' mod='younitedpay'} :
-                  <a class="link" href="mailto:contact@younited-pay.fr">{l s='The support team' mod='younitedpay'}</a>
+                  <a class="link" href="https://addons.prestashop.com/contact-form.php?id_product=88719">{l s='The support team' mod='younitedpay'}</a>
                 </div>
                 <div class="col-xl-12 d-flex flex-wrap justify-content-end align-items-end bootstrap">
                     <a class="btn btn-lg btn-primary" target="_blank" href="{$configuration.link_help}">
@@ -52,7 +53,7 @@
         <div class="col-sm-4 d-flex">
           <img class="col-xl-12" src="{$shop_img_url}/image-marketing-{$configuration.iso_lang}.png" alt="marketting image" />
         </div>
-        <div class="col-sm-4 d-flex" id="younitedpay_status_block">
+        <div class="col-sm-4 d-flex" {if $connected == true}style="display:none!important" {/if}id="younitedpay_status_block">
           <div class="card col-xl-12 pl-2 pr-2 d-flex flex-wrap flex-row" id="younitedpay_status_zone">
             <h3 class="mt-2 row col-xl-12">
               <div class="col-xl-11">

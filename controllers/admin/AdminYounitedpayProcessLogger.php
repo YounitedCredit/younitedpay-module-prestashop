@@ -92,8 +92,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
                 'info',
                 (new \ReflectionClass($this))->getShortName()
             );
-
-            return unlink($file);
+            Configuration::updateGlobalValue(Younitedpay::IS_FILE_LOGGER_ACTIVE, false);
         }
 
         if (Tools::getValue('changelogger') === 'enable') {
@@ -105,7 +104,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
                 'info',
                 (new \ReflectionClass($this))->getShortName()
             );
-            file_put_contents($file, 'Activated on ' . $infoActivation);
+            Configuration::updateGlobalValue(Younitedpay::IS_FILE_LOGGER_ACTIVE, true);
         }
     }
 
