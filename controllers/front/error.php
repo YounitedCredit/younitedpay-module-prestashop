@@ -16,12 +16,8 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-
 class YounitedpayErrorModuleFrontController extends ModuleFrontController
 {
-    use TranslateTrait;
-
     public function initContent()
     {
         $orderUrl = Context::getContext()->link->getPageLink(

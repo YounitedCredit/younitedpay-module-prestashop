@@ -20,12 +20,9 @@
 
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
-use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 
 class YounitedpayPaymentModuleFrontController extends ModuleFrontController
 {
-    use TranslateTrait;
-
     /** @var \PaymentModule */
     public $module;
 

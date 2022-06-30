@@ -34,7 +34,7 @@ class CommonHook extends AbstractHook
     {
         /** @var \AdminController $controller */
         $controller = Context::getContext()->controller;
-        if ($controller instanceof \AdminOrders || $controller->controller_name === 'AdminOrders') {
+        if ($controller->controller_name === 'AdminOrders') {
             $controller->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/admin.js');
             \Media::addJsDef([
                 'younitedpay' => [
