@@ -157,7 +157,7 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-lg btn-primary" type="submit">
-                            {l s='Save' d='Admin.Actions'}
+                            {l s='Save' d='Admin.Actions' mod='younitedpay'}
                         </button>
                     </div>
                 </div>

@@ -34,7 +34,7 @@
         <div class="alert alert-warning">
             <ul style="margin-bottom:auto!important;list-style:disc!important;">
                 {foreach $error item=oneerror}
-                    <li>{$oneerror nofilter}</li>
+                    <li>{html_entity_decode($oneerror|escape:'htmlall':'UTF-8')}</li>
                 {/foreach}
             </ul> 
         </div>

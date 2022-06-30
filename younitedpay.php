@@ -238,9 +238,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
             ]
         );
 
-        return $context->smarty->fetch(
-            _PS_MODULE_DIR_ . $this->name . '/views/templates/front/product_infos.tpl'
-        );
+        return $templateCredit['template'];
     }
 
     public function getWidgetVariables($hookName, array $configuration)

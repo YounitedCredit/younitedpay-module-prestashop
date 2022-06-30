@@ -8,6 +8,8 @@ then
         rm ./controllers/admin/AdminYounitedpay-prestashopProcessLogger.php
     fi
 fi
+echo -e '\033[0;31m''delete symfony syntax error test (PS_VALIDATOR)'
+rm -f ./vendor/symfony/config/Tests/Fixtures/ParseError.php
 echo -e '\033[0;31m''delete vendor/symfony/deprecation-contracts/function.php for php56'
 rm -f ./vendor/symfony/deprecation-contracts/function.php
 echo -e '\033[0;31m''delete vendor/symfony/polyfill-php80/bootstrap.php for php56'

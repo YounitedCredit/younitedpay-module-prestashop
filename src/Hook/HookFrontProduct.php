@@ -143,7 +143,6 @@ class HookFrontProduct extends AbstractHook
         $context->smarty->assign(
             [
                 'younited_hook' => $currentHook,
-                'widget_younited' => false,
                 'credit_template' => $templateCredit['template'],
                 'product_price' => $price,
             ]
@@ -151,8 +150,6 @@ class HookFrontProduct extends AbstractHook
 
         $context->smarty->assign('hookConfiguration', 'done');
 
-        return $context->smarty->fetch(
-            _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/product_infos.tpl'
-        );
+        return $templateCredit['template'];
     }
 }

@@ -28,9 +28,9 @@
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12
                     {if $configuration.no_config === true}
-                        backimg" style="background: url('{$shop_img_url}/appearance-no-config.png');min-height:260px;">
+                        backimg" style="background: url('{$shop_img_url|escape:'htmlall':'UTF-8'}/appearance-no-config.png');min-height:260px;">
                         <div class="infotext" style="margin-top:100px;">
-                            <p>{$no_keys_text}</p>
+                            <p>{$no_keys_text|escape:'htmlall':'UTF-8'}</p>
                         </div>
                     {else}
                         ">
@@ -50,8 +50,7 @@
                                     <span class="slide-button"></span>
                                 </span>
                                 <small class="form-text">
-                                    {l s='If you wish to only have theses informations on the cart you can select "Off" to hide it on the product pages.' 
-                                    mod='younitedpay'}
+                                    {l s='If you wish to only have theses informations on the cart you can select "Off" to hide it on the product pages.' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
@@ -87,8 +86,7 @@
                                     </option>
                                 </select> 
                                 <small class="form-text">
-                                    {l s='Theses values are locations registered by your current theme, you can choose any of them to place the widget where it looks the best.' 
-                                    mod='younitedpay'}
+                                    {l s='Theses values are locations registered by your current theme, you can choose any of them to place the widget where it looks the best.' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
@@ -121,8 +119,8 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-lg btn-primary" type="submit"
-                        {if $configuration.no_config === true} disabled title="{$no_keys_text}"{/if}>                            
-                            {l s='Save' d='Admin.Actions'}
+                        {if $configuration.no_config === true} disabled title="{$no_keys_text|escape:'htmlall':'UTF-8'}"{/if}>                            
+                            {l s='Save' d='Admin.Actions' mod='younitedpay'}
                         </button>
                     </div>
                 </div>

@@ -23,11 +23,11 @@
         <ul id="yp-fileslist">
             {foreach from=$logs_files item=logs_files_amonth  key=a_month}    
                 <li>
-                    <span class="caretyp">{$a_month}</span>
+                    <span class="caretyp">{$a_month|escape:'htmlall':'UTF-8'}</span>
                     <ul class="nestedyp">
                         {foreach from=$logs_files_amonth item=log_file}
-                            <li><a target="_blank" href="{$logs_url}/{$a_month}/{$log_file}">
-                                <p>{$log_file}</p>
+                            <li><a target="_blank" href="{$logs_url|escape:'htmlall':'UTF-8'}/{$a_month|escape:'htmlall':'UTF-8'}/{$log_file|escape:'htmlall':'UTF-8'}">
+                                <p>{$log_file|escape:'htmlall':'UTF-8'}</p>
                             </a></li>
                         {/foreach}
                     </ul>

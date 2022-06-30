@@ -50,7 +50,7 @@
                   </a>
                 </p>
                 <div class="col-xl-12 d-flex flex-wrap justify-content-end align-items-end bootstrap">
-                    <a class="btn btn-lg btn-primary" target="_blank" href="{$configuration.link_help}">
+                    <a class="btn btn-lg btn-primary" target="_blank" href="{$configuration.link_help|escape:'htmlall':'UTF-8'}">
                         {l s='More informations' mod='younitedpay'}
                     </a>
                 </div>
@@ -58,7 +58,7 @@
             </div>
           </div>
         <div class="col-sm-4 d-flex">
-          <img class="col-xl-12" src="{$shop_img_url}/image-marketing-{$configuration.iso_lang}.png" alt="marketting image" />
+          <img class="col-xl-12" src="{$shop_img_url|escape:'htmlall':'UTF-8'}/image-marketing-{$configuration.iso_lang|escape:'htmlall':'UTF-8'}.png" alt="marketting image" />
         </div>
         <div class="col-sm-4 d-flex" {if $connected == true}style="display:none!important" {/if}id="younitedpay_status_block">
           <div class="card col-xl-12 pl-2 pr-2 d-flex flex-wrap flex-row" id="younitedpay_status_zone">

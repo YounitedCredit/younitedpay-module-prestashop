@@ -101,7 +101,12 @@ function updateCreditZone(event)
             if ('content' in response) {            
                 $('.younitedpay_product_info').html(response.content);
                 if (younitedpay.hook_product === 'displayAfterProductThumbs') {
-                    $('.younitedpay_product_info')[1].remove();
+                    var younitedProductZone = $('.younitedpay_product_info');
+                    if (younitedProductZone.length > 1) {
+                        for (var zone = 0; zone < younitedProductZone.length - 2; zone++) {
+                            younitedProductZone[zone].remove();
+                        }
+                    }
                 }
                 bindEventsYounitedPay();
             }

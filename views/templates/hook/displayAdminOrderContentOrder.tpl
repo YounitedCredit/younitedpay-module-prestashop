@@ -27,21 +27,21 @@
 
     <p>
         <b>{l s='Payment Date' mod='younitedpay'}</b><br />        
-        {$payment.date|date_format:$date_formating}
+        {$payment.date|date_format:$date_formating|escape:'htmlall':'UTF-8'}
     </p>
 
     <p><b>
         {l s='Payment Method' mod='younitedpay'}</b><br />
-        <img style="height:45px;" src="{$shop_url}{$logo_younitedpay_url}" alt="logo Younited Pay" />
+        <img style="height:45px;" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" />
     </p>
 
     <p>
         <b>{l s='Payment Status' mod='younitedpay'}</b><br />
-        {$payment.status|escape:'html':'UTF-8'} - {$payment.date_state|date_format:$date_formating}
+        {$payment.status|escape:'html':'UTF-8'} - {$payment.date_state|date_format:$date_formating|escape:'htmlall':'UTF-8'}
     </p>
     {if $payment.withdrawn_amount > 0}
         <p>
-            <b>{l s='Withdrawn amount' mod='younitedpay'}: {$payment.withdrawn_amount}€</b><br />
+            <b>{l s='Withdrawn amount' mod='younitedpay'}: {$payment.withdrawn_amount|escape:'htmlall':'UTF-8'}€</b><br />
             {if $payment.is_withdrawn_confirmed === false}
                 {l s='Waiting confirmation' mod='younitedpay'}
             {else}

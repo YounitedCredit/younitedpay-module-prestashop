@@ -65,9 +65,7 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
         );
 
         $this->ajaxDie(json_encode([
-            'content' => $context->smarty->fetch(
-                _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/product_infos.tpl'
-            ),
+            'content' => $templateCredit['template'],
             'number_offers' => $numberOffers,
         ]));
     }

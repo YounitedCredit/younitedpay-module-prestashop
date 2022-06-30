@@ -36,16 +36,21 @@ class ApiLogger
 
     public $module;
 
+    private $isUnitTest;
+
     /**
      * @var Logger
      */
     private $logger;
 
-    final protected function __construct()
+    final protected function __construct($isUnitTest = false)
     {
         $this->module = \Module::getInstanceByName('younitedpay');
+        $this->isUnitTest = $isUnitTest;
         $this->logname = $this->module->name . '-' . date('Ymd') . '.log';
-        $this->build();
+        if ($isUnitTest === false) {
+            $this->build();
+        }
     }
 
     protected function __clone()
@@ -82,7 +87,7 @@ class ApiLogger
 
     public function log($object, $data, $type = 'Error', $isObject = false)
     {
-        if (\Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false) {
+        if (\Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false || $this->isUnitTest === true) {
             return true;
         }
 
@@ -103,10 +108,10 @@ class ApiLogger
         return str_replace('ModuleFrontController', '', (new \ReflectionClass($object))->getShortName());
     }
 
-    public static function getInstance()
+    public static function getInstance($isUnitTest = false)
     {
         if (empty(self::$instance)) {
-            self::$instance = new static();
+            self::$instance = new static($isUnitTest);
         }
 
         return self::$instance;

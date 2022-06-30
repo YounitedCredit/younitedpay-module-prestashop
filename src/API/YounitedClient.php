@@ -56,11 +56,12 @@ class YounitedClient
     public function __construct($idShop, $testCredentials = [])
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
-        $this->apiLogger = ApiLogger::getInstance();
 
         if (empty($testCredentials) === false) {
+            $this->apiLogger = ApiLogger::getInstance(true);
             $this->testCredentials($testCredentials);
         } else {
+            $this->apiLogger = ApiLogger::getInstance();
             $this->setApiCredentials($idShop);
         }
     }
