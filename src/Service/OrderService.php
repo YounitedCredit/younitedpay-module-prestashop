@@ -144,15 +144,21 @@ class OrderService
             ];
         }
 
+        try {
+            $refContract = $body->getContractReference();
+        } catch (Exception $ex) {
+            $refContract = json_encode($body);
+        }
+
         if ($response['success'] === false) {
             $this->loggerservice->addLog(
                 $response['response'],
                 'error response ' . $type,
-                'error',
-                'OrderService'
+                'error - ' . $refContract,
+                $this
             );
         } else {
-            $this->loggerservice->addLog($type . ' - success', $type);
+            $this->loggerservice->addLog($type . ' - success', $refContract, 'success', $this);
         }
 
         return $response['success'];

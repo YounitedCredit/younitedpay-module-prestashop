@@ -20,9 +20,12 @@
 
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 
 class YounitedpayPaymentModuleFrontController extends ModuleFrontController
 {
+    use TranslateTrait;
+
     /** @var \PaymentModule */
     public $module;
 
@@ -48,8 +51,8 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
             $this->redirect();
         }
 
-        $this->errors[] = $this->l('Error during payment, please try again.');
-        $this->errors[] = $this->l($response['response']);
+        $this->errors[] = $this->l('Error during payment, please try again.', 'payment');
+        $this->errors[] = $this->l($response['response'], 'payment');
 
         $this->redirectPayment();
     }

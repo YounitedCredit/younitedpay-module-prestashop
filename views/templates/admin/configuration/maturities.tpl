@@ -2,7 +2,7 @@
     <label class="form-control-label col-lg-3 justify-content-end pt-1" for="maturity_zone">        
         {l s='Selected maturities' mod='younitedpay'}        
     </label>
-    <div class="col-lg-5 ml-3 align-item-center" id="younitedpay_maturities">
+    <div class="col-lg-7 ml-3 align-item-center" id="younitedpay_maturities">
         {foreach from=$configuration.maturities item=maturity key=key}
             {include file="./maturity.tpl" maturity=$maturity maturitylist=$configuration.maturitylist key=$key}
         {/foreach}

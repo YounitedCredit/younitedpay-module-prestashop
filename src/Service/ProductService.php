@@ -59,6 +59,12 @@ class ProductService
             return $this->noOffers();
         }
 
+        /** @var \Currency $currency */
+        $currency = new \Currency($this->context->cart->id_currency);
+        if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
+            return $this->noOffers();
+        }
+
         $productPrice = (float) \Tools::ps_round($product_price, 2);
 
         /** @var CacheYounited $cachestorage */

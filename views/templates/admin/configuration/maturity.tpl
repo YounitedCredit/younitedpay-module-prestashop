@@ -27,8 +27,8 @@
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][maturity]">
                 {l s='Installments' mod='younitedpay'}
             </label>
-            <select class="form-control col-lg-5" data-toggle="maturity" id="maturity{$key}"
-                data-minimumresultsforsearch="3" aria-hidden="true" name="maturity[{$key}][maturity]">
+            <select class="form-control col-lg-5 younitedpay_maturity_change" data-toggle="maturity" id="maturity{$key}"
+                data-minimumresultsforsearch="3" aria-hidden="true" data-id="{$key}" name="maturity[{$key}][maturity]">
                 {foreach $maturitylist item=maturityitem}
                     <option name="{$maturityitem}" value="{$maturityitem}"{if $maturity.maturity == $maturityitem} selected{/if}>{$maturityitem}x</option>                
                 {/foreach}
@@ -42,10 +42,10 @@
         </div>
     </div>
     <hr />                
-    <div class="row">
+    <div class="row mt-1">
         <div class="col-xl-6 form-group d-flex align-items-center">
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][minimum]">
-                {l s='Min. amount (tax included)' mod='younitedpay'}
+                {l s='Min. amount (tax incl.)' mod='younitedpay'}
             </label>
             <input type="text" data-id="{$key}" id="min_amount_input_{$key}" 
                 class="col-lg-5 form-control younitedpay_maturity_change"
@@ -54,7 +54,7 @@
         </div>
         <div class="col-xl-6 form-group d-flex align-items-center">
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key}][maximum]">
-                {l s='Max. amount (tax included)' mod='younitedpay'}
+                {l s='Max. amount (tax incl.)' mod='younitedpay'}
             </label>
             <input type="text" data-id="{$key}" class="col-lg-5 form-control younitedpay_maturity_change" 
             id="max_amount_input_{$key}"
@@ -67,17 +67,11 @@
     </div>
     <small class="form-text">
         {l s='Installments from ' mod='younitedpay'}
-        {assign var="mininstallment" value=$maturity.minimum / $maturity.maturity}
-        {assign var="maxinstallment" value=$maturity.minimum / $maturity.maturity}
-        <span id="min_amount_{$key}">
-        {if $mininstallment >= 1}
-            {$mininstallment}
-        {else}
-            1
-        {/if}
-        </span> €/{l s='month.' mod='younitedpay'}
-        <span id="max_amount_zone_{$key}"{if $maxinstallment <= 0} class="hidden"{/if}>
-            {l s='And up to ' mod=''}<span id="max_amount_{$key}">
+        {assign var="mininstallment" value=Tools::ps_round($maturity.minimum / $maturity.maturity, 2)}
+        {assign var="maxinstallment" value=Tools::ps_round($maturity.maximum / $maturity.maturity, 2)}
+        <span id="min_amount_{$key}">{$mininstallment}</span> €/{l s='month.' mod='younitedpay'}
+        <span id="max_amount_zone_{$key}"{if $maturity.maximum <= 0} class="hidden"{/if}>
+            {l s='And up to ' mod='younitedpay'}<span id="max_amount_{$key}">
             {$maxinstallment}</span> €/{l s='month.' mod='younitedpay'}
         </span>
     </small>

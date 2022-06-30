@@ -97,6 +97,8 @@ class PaymentService
         $response = $this->sendContractRequest($maturity, $totalAmount, $customerAdress, $client);
 
         if ($response['success'] === false) {
+            $this->logError('Bad response : ' . json_encode($response));
+
             return $response;
         }
 

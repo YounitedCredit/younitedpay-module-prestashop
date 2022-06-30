@@ -20,9 +20,12 @@
 
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 
 class YounitedpaySuccessModuleFrontController extends ModuleFrontController
 {
+    use TranslateTrait;
+
     /** @var \PaymentModule */
     public $module;
 
@@ -52,7 +55,7 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             Validate::isLoadedObject($cart) === false || $this->module->active == 0 || $cart->id_address_delivery == 0
             || $cart->id_address_invoice == 0 || $cart->id_customer == 0
         ) {
-            $this->errors[] = $this->module->l('Error with the cart. Please refresh your page.');
+            $this->errors[] = $this->l('Error with the cart. Please refresh your page.', 'success');
             $paymentService->logError(json_encode([
                 'isCartLoaded' => Validate::isLoadedObject($cart) === false,
                 'isModuleActive' => $this->module->active,
@@ -67,7 +70,7 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
 
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->module->l('Error with the customer. Please verify your order.');
+            $this->errors[] = $this->l('Error with the customer. Please verify your order.', 'success');
             $paymentService->logError(json_encode([
                     'isCustomerLoaded' => Validate::isLoadedObject($customer),
                 ]),
@@ -102,7 +105,7 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             return true;
         }
 
-        $this->errors[] = $this->module->l('Error while creating Order. Please try again.');
+        $this->errors[] = $this->l('Error while creating Order. Please try again.', 'success');
         $paymentService->logError(json_encode([
                 'message' => 'Error creating order',
                 'cart' => $cart->id,

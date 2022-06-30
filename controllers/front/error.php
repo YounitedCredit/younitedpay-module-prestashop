@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright Younited
  *
@@ -17,8 +16,12 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
+use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+
 class YounitedpayErrorModuleFrontController extends ModuleFrontController
 {
+    use TranslateTrait;
+
     public function initContent()
     {
         $orderUrl = Context::getContext()->link->getPageLink(
@@ -30,9 +33,9 @@ class YounitedpayErrorModuleFrontController extends ModuleFrontController
             ]
         );
         if (Tools::getValue('cancel') !== false) {
-            $this->errors[] = $this->l('You have cancelled the payment.');
+            $this->errors[] = $this->l('You have cancelled the payment.', 'error');
         } else {
-            $this->errors[] = $this->l('Payment refused, or error occurs during validation. Please try again.');
+            $this->errors[] = $this->l('Payment refused, or error occurs during validation. Please try again.', 'error');
         }
         $this->redirectWithNotifications($orderUrl);
 

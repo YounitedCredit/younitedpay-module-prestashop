@@ -190,7 +190,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             /** @var CacheYounited $cachestorage */
             $cachestorage = new CacheYounited();
-            $cachestorage->set('maturitylist', $this->maturitylist);
+            $cachestorage->set('maturitylist', json_encode($this->maturitylist));
 
             $tplVars = [
                 'configuration' => $this->getConfigurationVariables(),
@@ -308,11 +308,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist('maturitylist');
 
-        if ($cacheExists === false || $cachestorage->isExpired('maturitylist') === true) {
-            $this->maturitylist = [1, 3, 5, 10];
-        } else {
+        if ($cacheExists === true && $cachestorage->isExpired('maturitylist') === false) {
             $cacheInformations = $cachestorage->get('maturitylist');
-            $this->maturitylist = $cacheInformations['content'];
+            $this->maturitylist = json_decode($cacheInformations['content']);
+        } else {
+            $this->maturitylist = [1, 3, 5, 10];
         }
 
         $this->context->smarty->assign([

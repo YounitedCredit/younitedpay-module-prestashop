@@ -86,30 +86,33 @@ function hidePopup(e)
 }
 
 function updateCreditZone(event)
-{    
-      $.ajax({
-          url: younitedpay.url_product,
-          type: 'POST',
-          dataType: 'JSON',
-          data: {
-              ajax: true,
-              id_product: younitedpay.id_product,
-              id_attribute: event.id_product_attribute,
-              qty: event.quantity_wanted,
-          },
-          success(response) {
-              if ('content' in response) {            
+{
+    $.ajax({
+        url: younitedpay.url_product,
+        type: 'POST',
+        dataType: 'JSON',
+        data: {
+            ajax: true,
+            id_product: younitedpay.id_product,
+            id_attribute: event.id_product_attribute,
+            qty: event.quantity_wanted,
+        },
+        success(response) {
+            if ('content' in response) {            
                 $('.younitedpay_product_info').html(response.content);
+                if (younitedpay.hook_product === 'displayAfterProductThumbs') {
+                    $('.younitedpay_product_info')[1].remove();
+                }
                 bindEventsYounitedPay();
-              }
-              if ('number_offers' in response) {            
+            }
+            if ('number_offers' in response) {
                 younitedpay.number_offers = response.number_offers;
-              }
-          },
-          error(errorMessage) {
-            console.log(errorMessage);
-          }
-      });
+            }
+        },
+        error(errorMessage) {
+        console.log(errorMessage);
+        }
+    });
 }
 
 function bindEventsYounitedPay()

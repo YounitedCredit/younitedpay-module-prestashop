@@ -54,12 +54,11 @@
 
          {if $price_at_bottom == true}
          </div>
-         <div class="yp-bg-white yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
+         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
             <hr class="yp-border-prple yp-opacity-50">
-            <span style="width:84px;"></span>
          {/if}            
-            <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{/if}">
-               <span class="yp-inline-block yp-h-7"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
+            <span class="yp-flex yp-justify-start yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{/if}">
+               <span style="padding-left:70px!important;" class="yp-inline-block yp-h-7"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
                   <span class="younitedpay_infoinstallment yp-install-amount yp-inline">
                      {$offers[0].installment_amount}€
                   </span>

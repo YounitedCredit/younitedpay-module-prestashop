@@ -29,19 +29,26 @@
                     {l s='Need Help ?' mod='younitedpay'}
                   {/if}
                 </h3>
-                <p class="row col-xl-12">
-                  {if $connected == false}
+                {if $connected == false}
+                  <p class="row col-xl-12">
                     {l s='Create your account in order to have access to your YounitedPay Back Office, connect with our sales team and start setting up the offer displayed to your customers.' mod='younitedpay'}<br />
-                  {/if}
+                    </p>                    
+                {/if}
+                <p class="row col-xl-12">
                     {l s='Have a question about' mod='younitedpay'}&nbsp;
                   <a href="mailto:contact@younited-pay.fr" class="link">
                     {l s='Younited Pay' mod='younitedpay'}
                   </a>&nbsp;?
                 </p>
-                <div class="row col-xl-12">
-                  {l s='You can reach a technical team or your account manager from your back office via our ticketing system. If your question concerns technical difficulties with the module, please refer to' mod='younitedpay'} :
-                  <a class="link" href="https://addons.prestashop.com/contact-form.php?id_product=88719">{l s='The support team' mod='younitedpay'}</a>
-                </div>
+                <p class="row col-xl-12">
+                  {l s='You can reach a technical team or your account manager from your back office via our ticketing system.' mod='younitedpay'}&nbsp;
+                </p>
+                <p class="row col-xl-12" style="display:inline;">
+                  {l s='If your question concerns technical difficulties with the module, please refer to ' mod='younitedpay'}
+                  <a class="link" href="https://addons.prestashop.com/contact-form.php?id_product=88719" target="_blank">
+                    {l s='our support team' mod='younitedpay'}
+                  </a>
+                </p>
                 <div class="col-xl-12 d-flex flex-wrap justify-content-end align-items-end bootstrap">
                     <a class="btn btn-lg btn-primary" target="_blank" href="{$configuration.link_help}">
                         {l s='More informations' mod='younitedpay'}

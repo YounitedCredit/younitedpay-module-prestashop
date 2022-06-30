@@ -170,10 +170,10 @@ function UpdateMaturity()
         var maturity = parseInt($('#maturity' + key).val());
         
         var minAmountVal = $('#min_amount_input_' + key).val();
-        $('#min_amount_' + key).html(minAmountVal / maturity);
+        $('#min_amount_' + key).html((minAmountVal / maturity).toFixed(2));
 
         var maxAmountVal = $('#max_amount_input_' + key).val();
-        $('#max_amount_' + key).html(maxAmountVal / maturity);
+        $('#max_amount_' + key).html((maxAmountVal / maturity).toFixed(2));
 
         if (parseInt(maxAmountVal / maturity) > 0) {
             $('#max_amount_zone_' + key).removeClass('hidden');

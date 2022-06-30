@@ -614,6 +614,10 @@
     justify-content: flex-end !important
 }
 
+.yp-justify-start {
+    justify-content: flex-start !important
+}
+
 .yp-justify-center {
     justify-content: center !important
 }
