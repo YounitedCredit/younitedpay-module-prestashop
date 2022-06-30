@@ -40,6 +40,7 @@ class CommonHook extends AbstractHook
                 'younitedpay' => [
                     'translations' => [
                         'slip_refund' => $this->l('Generate a Credit Slip must be selected to refund with Younited Pay'),
+                        'title_slip_refund' => $this->l('Refund with Younited Pay'),
                     ],
                 ],
             ]);

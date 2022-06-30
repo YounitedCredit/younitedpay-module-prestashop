@@ -209,7 +209,12 @@ class Younitedpay extends PaymentModule implements WidgetInterface
     {
         $price = isset($configuration['amount']) ? (float) $configuration['amount'] : 0;
 
-        if ($price === 0) {
+        $context = $this->context;
+
+        $idShop = $context->shop->id;
+        $isShownProducts = (bool) \Configuration::get(Younitedpay::SHOW_MONTHLY, null, null, $idShop, false);
+
+        if ($price === 0 || $isShownProducts === false) {
             return '';
         }
 
@@ -221,8 +226,6 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         }
 
         $templateCredit = $productservice->getBestPrice($price, 'widget');
-
-        $context = $this->context;
 
         $frontModuleLink = $context->link->getModuleLink(
             $this->name,

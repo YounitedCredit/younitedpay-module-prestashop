@@ -54,7 +54,6 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
         $context->smarty->assign(
             [
                 'younited_hook' => 'ajax-refresh-product',
-                'widget_younited' => false,
                 'credit_template' => $templateCredit['template'],
                 'product_url' => $frontModuleLink,
                 'product_price' => $price,

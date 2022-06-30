@@ -39,7 +39,7 @@ $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_f51c7af7c02cd3a8
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_9ca4bc48596557840045a7477c803657'] = 'Vous devez spécifier un nombre de jour pour l\'effacement automatique';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_5988c28d05527a0d0ce8ae3da1134352'] = 'Les paramètres de logs ont été mis à jour avec succès';
 $_MODULE['<{younitedpay}prestashop>commonhook_afb5a47d1504231a95cfca9e52a217f4'] = '"Générer un avoir" doit être sélectionné pour le remboursement avec Younited Pay';
-$_MODULE['<{younitedpay}prestashop>commonhook_6a5b88a90a47700c445ef4e1912d43a3'] = 'Remboursement Younited Pay';
+$_MODULE['<{younitedpay}prestashop>commonhook_f473fb6d1cd3a547bad7d0bdecbf6656'] = 'Remboursement Younited Pay';
 $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a9d'] = 'Rembourser sur Younited Pay';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'Non disponible pour cette monnaie (uniquement EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'Non disponible pour ce Pays (uniquement France comme adresse de livraison)';
@@ -129,8 +129,8 @@ $_MODULE['<{younitedpay}prestashop>settings-form_734082edf44417dd19cc65943aa65c3
 $_MODULE['<{younitedpay}prestashop>settings-form_5530e5bd8bbadb568176e3894b03ad81'] = 'Saisissez votre Client Secret';
 $_MODULE['<{younitedpay}prestashop>settings-form_2d7c0260e733582d5a9d34458a8a4a2c'] = 'Webhook secret';
 $_MODULE['<{younitedpay}prestashop>settings-form_15f7b58818dcb990d4a6cb9dc7dbb6d6'] = 'Activer la whitelist d\'IP';
-$_MODULE['<{younitedpay}prestashop>settings-form_b9f5c797ebbf55adccdd8539a65a0241'] = 'Activé';
-$_MODULE['<{younitedpay}prestashop>settings-form_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Désactivé';
+$_MODULE['<{younitedpay}prestashop>settings-form_b9f5c797ebbf55adccdd8539a65a0241'] = 'Désactivé';
+$_MODULE['<{younitedpay}prestashop>settings-form_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_MODULE['<{younitedpay}prestashop>settings-form_0524317c1d882d879ecce066c0765424'] = 'Whitelist d\'IP';
 $_MODULE['<{younitedpay}prestashop>settings-form_4d36585a5f3d1f870341370512c811b3'] = 'Lorsque cette option est activée, seules les IP listées verront les composants du module sur le site.';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_5bef23eb7efff2736c5583bda59e5eb7'] = 'Créez votre compte';
@@ -168,7 +168,7 @@ $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_810b5202d7119118cc
 $_MODULE['<{younitedpay}prestashop>configuration_5a2ebfb8baa378cfcfcba58bbb1380c2'] = 'Exigences';
 $_MODULE['<{younitedpay}prestashop>multi-states-selection_291c97509301def1e5447034e51bf4b0'] = 'Statuts disponibles';
 $_MODULE['<{younitedpay}prestashop>multi-states-selection_ec211f7c20af43e742bf2570c3cb84f9'] = 'Ajouter';
-$_MODULE['<{younitedpay}prestashop>multi-states-selection_91b442d385b54e1418d81adc34871053'] = 'Sélectionné';
+$_MODULE['<{younitedpay}prestashop>multi-states-selection_91b442d385b54e1418d81adc34871053'] = 'Statut(s) sélectionné(s)';
 $_MODULE['<{younitedpay}prestashop>multi-states-selection_1063e38cb53d94d386f21227fcd84717'] = 'Supprimer';
 $_MODULE['<{younitedpay}prestashop>content_a6b7b4d3a4b2583c828f35b62cd6db08'] = 'Qu\'est ce que YounitedPay ?';
 $_MODULE['<{younitedpay}prestashop>content_9c25ff979017ac9106f85c96a467795b'] = 'Younited Pay est une offre de crédit affecté proposée par Younited. Grâce à Younited Pay, vos clients peuvent payer leurs achats en plusieurs fois, sur des maturités allant de 1x à 84x. Cette solution est disponible pour des paniers compris entre 100€ et 50 000€. Vous serez payé de la totalité de la commande et nous prenons en charge les impayés. Nous sommes rémunérés en prenant une commission sur les transactions qui sont réalisées via notre solution de paiement. Il n’y a donc aucun frais supplémentaire. Pour plus d\'informations: ';

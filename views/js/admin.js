@@ -59,22 +59,16 @@ function refundYounitedPayEvent() {
     var errorDisplay = false;
     if (checked === true) {
         var cancel_product_ps17 = $('#cancel_product_credit_slip');
-        if (cancel_product_ps17 && cancel_product_ps17.is(':checked') === false) {
+        if (cancel_product_ps17.length > 0 && cancel_product_ps17.is(':checked') === false) {
             cancel_product_ps17.val(1);
             cancel_product_ps17.prop('checked', true);
             cancel_product_ps17.attr('checked', 'checked');
             errorDisplay = true;
         }
-        var cancel_product_ps172 = $('#cancel_product_credit_slip');
-        if (cancel_product_ps172 && cancel_product_ps172.is(':checked') === false) {
-            cancel_product_ps172.val(1);
-            cancel_product_ps172.prop('checked', true);
-            cancel_product_ps172.attr('checked', 'checked');
-            errorDisplay = true;
-        }
     }
     if (errorDisplay === true) {
         $.growl({
+            title: younitedpay.translations.title_slip_refund,
             message: younitedpay.translations.slip_refund,
             duration: 5000,
             style: 'warning'

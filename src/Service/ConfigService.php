@@ -26,11 +26,14 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Request\AvailableMaturitiesRequest;
 use YounitedPaySDK\Response\AbstractResponse;
 
 class ConfigService
 {
+    use TranslateTrait;
+
     public $module;
 
     private $curl;
@@ -87,7 +90,7 @@ class ConfigService
             );
             $this->logger->closeLogger();
 
-            $return['error_message'] = $this->module->l('TLS call failed');
+            $return['error_message'] = $this->l('TLS call failed');
         } else {
             $return['status'] = true;
         }
@@ -106,7 +109,7 @@ class ConfigService
 
         if ($client->isCrendentialsSet() === false) {
             return [
-                'message' => $this->module->l('No credential saved'),
+                'message' => $this->l('No credential saved'),
                 'maturityList' => [3, 4, 5, 10],
                 'status' => false,
             ];
@@ -119,7 +122,7 @@ class ConfigService
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
-                'message' => $this->module->l('Response error'),
+                'message' => $this->l('Response error'),
                 'maturityList' => [3, 4, 5, 10],
                 'status' => false,
             ];
@@ -127,7 +130,7 @@ class ConfigService
         $maturityList = $response['response'];
 
         return [
-            'message' => $this->module->l('Connexion Ok'),
+            'message' => $this->l('Connexion Ok'),
             'maturityList' => count($maturityList) > 0 ? $maturityList : [3, 4, 5, 10],
             'status' => true,
         ];
@@ -166,8 +169,8 @@ class ConfigService
         $sslActivated = $this->isSslActive();
         $tlsCallCurl = $this->isTlsActive();
         $infoSSLTLS = $versionOpenSSL !== -1 && $sslActivated === true
-        ? $this->module->l('SSL enabled')
-        : $this->module->l('SSL not enabled on all the shop');
+        ? $this->l('SSL enabled')
+        : $this->l('SSL not enabled on all the shop');
         $infoSSLTLS .= $tlsCallCurl['error_message'] !== '' ? ' - ' . $tlsCallCurl['error_message'] : '';
 
         $isApiConnected = $this->isApiConnected();
@@ -178,7 +181,7 @@ class ConfigService
             'specs' => [
                 [
                     'name' => 'CURL',
-                    'info' => $versionSSLCURL !== '' ? 'version v.' . $versionSSLCURL : $this->module->l('not installed'),
+                    'info' => $versionSSLCURL !== '' ? 'version v.' . $versionSSLCURL : $this->l('not installed'),
                     'ok' => $curlInfos !== false,
                 ],
                 [
@@ -187,17 +190,17 @@ class ConfigService
                     'ok' => $versionOpenSSL !== -1 && $sslActivated === true && $tlsCallCurl['status'],
                 ],
                 [
-                    'name' => $this->module->l('Encrypt functions'),
+                    'name' => $this->l('Encrypt functions'),
                     'info' => '',
                     'ok' => (bool) function_exists('hash_hmac'),
                 ],
                 [
-                    'name' => $this->module->l('Connected to API'),
+                    'name' => $this->l('Connected to API'),
                     'info' => $isApiConnected['message'],
                     'ok' => (bool) $isApiConnected['status'],
                 ],
                 [
-                    'name' => $this->module->l('Production environment'),
+                    'name' => $this->l('Production environment'),
                     'info' => '',
                     'ok' => (bool) $isProductionMode,
                 ],
