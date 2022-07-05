@@ -41,7 +41,7 @@
                   </a>&nbsp;?
                 </p>
                 <p class="row col-xl-12">
-                  {l s='You can reach a technical team or your account manager from your back office via our ticketing system.' mod='younitedpay'}&nbsp;
+                  {l s='You can reach a technical team or your account manager from your YounitedPay back office via our ticketing system.' mod='younitedpay'}&nbsp;
                 </p>
                 <p class="row col-xl-12" style="display:inline;">
                   {l s='If your question concerns technical difficulties with the module, please refer to ' mod='younitedpay'}
