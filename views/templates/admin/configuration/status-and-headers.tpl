@@ -36,7 +36,7 @@
                 {/if}
                 <p class="row col-xl-12">
                     {l s='Have a question about' mod='younitedpay'}&nbsp;
-                  <a href="mailto:contact@younited-pay.fr" class="link">
+                  <a href="{$configuration.link_help|escape:'htmlall':'UTF-8'}" class="link">
                     {l s='Younited Pay' mod='younitedpay'}
                   </a>&nbsp;?
                 </p>
