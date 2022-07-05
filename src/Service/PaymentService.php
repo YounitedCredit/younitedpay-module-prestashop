@@ -317,20 +317,6 @@ class PaymentService
     {
         $params['id_cart'] = $this->context->cart->id;
 
-        /** @TODO : TEST TO REMOVE FOR WEBHOOKS */
-        $domain = Configuration::getGlobalValue('PS_SHOP_DOMAIN');
-        if (strpos($domain, 'kevin.tot') !== false && $controller === 'webhook') {
-            $link = 'https://test202.ddns.net/proxy/index.php?';
-            $link .= 'domain=' . $domain . '&fc=module&module=younitedpay';
-            $link .= '&controller=webhook&page=index.php';
-            foreach ($params as $param => $content) {
-                $link .= '&' . $param . '=' . $content;
-            }
-
-            return $link;
-        }
-        /* END TESTS WEBHOOKS */
-
         return $this->context->link->getModuleLink(
             $this->module->name,
             $controller,

@@ -21,8 +21,8 @@
 namespace YounitedpayAddon\API\Request;
 
 use YounitedpayAddon\YounitedTests;
-use YounitedPaySDK\Request\BestPriceRequest;
 use YounitedPaySDK\Model\BestPrice;
+use YounitedPaySDK\Request\BestPriceRequest;
 
 require_once __DIR__ . '../../../../bootstrap.php';
 
@@ -30,8 +30,6 @@ class GetBestPriceRequestTest extends YounitedTests
 {
     public function testGetBestPriceRequestTest()
     {
-        
-
         $body = new BestPrice();
         $body->setBorrowedAmount(1500.00);
 
