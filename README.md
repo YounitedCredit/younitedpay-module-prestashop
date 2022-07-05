@@ -63,7 +63,7 @@ Contributors wishing to edit a module's files should follow the following proces
 
 1. Create your GitHub account, if you do not have one already.
 2. Fork the 202ecommerce/younitedpay-prestashop project to your GitHub account.
-3. Clone your fork to your local machine in the ```/modules/younitedpay``` directory of your PrestaShop installation.
+3. Clone your fork to your local machine in the ```/modules/younitedpay-prestashop``` directory of your PrestaShop installation.
 4. Create a branch in your local clone of the module for your changes.
 5. Change the files in your branch. Be sure to follow [the coding standards][1]!
 6. Push your changed branch to your fork in your GitHub account.
@@ -79,7 +79,7 @@ Please launch these command line before submitting a Pull Request.
 #### phpcs fixer
 
 ```bash
-~modules/younitedpay$ vendor/bin/php-cs-fixer --fix
+~modules/younitedpay-prestashop$ vendor/bin/php-cs-fixer --fix
 ```
 #### phpstan
 
@@ -87,10 +87,10 @@ You need a docker container to launch phpstan
 
 ```
 # create the prestashop container
-~modules/younitedpay$ docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop
+~modules/younitedpay-prestashop$ docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop
 
 # launch phpstan
-~modules/younitedpay$ docker run --rm --volumes-from temp-ps -v $PWD:/var/www/html/modules/younitedpay -e _PS_ROOT_DIR_=/var/www/html --workdir=/var/www/html/modules/younitedpay phpstan/phpstan:0.12 analyse --configuration=/var/www/html/modules/younitedpay/202/phpstan/phpstan.neon
+~modules/younitedpay-prestashop$ docker run --rm --volumes-from temp-ps -v $PWD:/var/www/html/modules/younitedpay-prestashop -e _PS_ROOT_DIR_=/var/www/html --workdir=/var/www/html/modules/younitedpay-prestashop phpstan/phpstan:0.12 analyse --configuration=/var/www/html/modules/younitedpay-prestashop/202/phpstan/phpstan.neon
 ```
 
 ### phpunit
@@ -98,8 +98,8 @@ You need a docker container to launch phpstan
 You need a docker container to launch phpunit
 
 ```
-docker run -tid --rm -v $PWD:/var/www/html/modules/younitedpay --name temp-unittest-ps 202ecommerce/prestashop:1.7.8.3
-docker exec -t temp-unittest-ps sh /var/www/html/modules/younitedpay/202/docker/run_for_unittest.sh
+docker run -tid --rm -v $PWD:/var/www/html/modules/younitedpay-prestashop --name temp-unittest-ps 202ecommerce/prestashop:1.7.8.3
+docker exec -t temp-unittest-ps sh /var/www/html/modules/younitedpay-prestashop/202/docker/run_for_unittest.sh
 ```
 
 

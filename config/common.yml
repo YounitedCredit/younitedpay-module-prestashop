@@ -1,0 +1,48 @@
+services:
+  younitedpay:
+    class: 'Younitedpay'
+    factory: ['Module', 'getInstanceByName']
+    arguments:
+      - 'younitedpay'
+
+  YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler:
+    class: 'YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+
+  YounitedpayAddon\Repository\ConfigRepository:
+    class: 'YounitedpayAddon\Repository\ConfigRepository'
+
+  YounitedpayAddon\Repository\PaymentRepository:
+    class: 'YounitedpayAddon\Repository\PaymentRepository'
+
+  YounitedpayAddon\Service\LoggerService:
+    class: 'YounitedpayAddon\Service\LoggerService'
+    arguments:
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+
+  YounitedpayAddon\Service\ConfigService:
+    class: 'YounitedpayAddon\Service\ConfigService'
+    arguments:
+      - '@YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler'
+      - '@YounitedpayAddon\Repository\ConfigRepository'
+      - '@younitedpay'
+
+  YounitedpayAddon\Service\ProductService:
+    class: 'YounitedpayAddon\Service\ProductService'
+    arguments:
+      - '@YounitedpayAddon\Service\LoggerService'
+      - '@YounitedpayAddon\Repository\ConfigRepository'
+      - '@younitedpay'
+
+  YounitedpayAddon\Service\PaymentService:
+    class: 'YounitedpayAddon\Service\PaymentService'
+    arguments:
+      - '@YounitedpayAddon\Service\LoggerService'
+      - '@YounitedpayAddon\Repository\PaymentRepository'
+      - '@younitedpay'
+
+  YounitedpayAddon\Service\OrderService:
+    class: 'YounitedpayAddon\Service\OrderService'
+    arguments:
+      - '@YounitedpayAddon\Service\LoggerService'
+      - '@YounitedpayAddon\Repository\PaymentRepository'
+      - '@younitedpay'
