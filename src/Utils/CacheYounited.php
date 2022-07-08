@@ -37,4 +37,28 @@ class CacheYounited extends CacheStorage
      * @var int
      */
     protected $expiry = 3600; // 1h
+
+    /**
+     * Check cache is expired
+     * Override of ClassLib for 1.7.8.6 bug on product change
+     *
+     * @param string|array $key
+     *
+     * @return bool
+     */
+    public function isExpired($key)
+    {
+        $cacheData = $this->get($key);
+
+        if (isset($cacheData['expiry']) == false || is_null($cacheData['expiry'])) {
+            return false;
+        }
+
+        $currentDateTime = date('Y-m-d H:i:s');
+        if ($cacheData['expiry'] < $currentDateTime) {
+            return true;
+        }
+
+        return false;
+    }
 }

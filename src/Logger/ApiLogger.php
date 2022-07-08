@@ -64,17 +64,19 @@ class ApiLogger
 
     protected function build()
     {
-        $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
-        if (is_dir($logDir)) {
-            dirname($logDir);
+        $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs';
+        if (is_dir($logDir) === false) {
+            mkdir($logDir);
+            copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
         }
-        $logDir .= date('Ym') . '/';
 
-        $logFile = $logDir . $this->logname;
-        if (!is_dir(dirname($logFile))) {
-            mkdir(dirname($logFile));
-            copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . 'index.php');
+        $logDir .= '/' . date('Ym');        
+        if (is_dir($logDir) === false) {
+            mkdir($logDir);
+            copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
         }
+
+        $logFile = $logDir . '/' . $this->logname;
         if (file_exists($logFile)) {
             $fileSize = filesize($logFile);
             if ($fileSize > self::MAX_LOG_FILE_SIZE) {
