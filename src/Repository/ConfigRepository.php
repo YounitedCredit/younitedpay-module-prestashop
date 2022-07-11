@@ -34,6 +34,7 @@ class ConfigRepository
         $query = new \DbQuery();
         $query->select('*')
             ->from(YounitedPayAvailability::$definition['table'])
+            ->where('id_shop = ' . \Context::getContext()->shop->id)
             ->OrderBy('maturity ASC');
 
         if ($productPrice > 0) {

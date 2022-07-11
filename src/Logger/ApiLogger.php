@@ -70,7 +70,7 @@ class ApiLogger
             copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
         }
 
-        $logDir .= '/' . date('Ym');        
+        $logDir .= '/' . date('Ym');
         if (is_dir($logDir) === false) {
             mkdir($logDir);
             copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
