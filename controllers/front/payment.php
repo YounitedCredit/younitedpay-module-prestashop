@@ -41,6 +41,8 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
                 'response' => $ex->getMessage(),
                 'success' => false,
             ];
+            $paymentService->logError($ex->getMessage(), 'Payent error');
+            $paymentService->logError($ex->getTraceAsString(), 'Payent error');
         }
 
         if ($response['success'] === true) {

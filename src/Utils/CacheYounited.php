@@ -50,7 +50,11 @@ class CacheYounited extends CacheStorage
     {
         $cacheData = $this->get($key);
 
-        if (isset($cacheData['expiry']) == false || is_null($cacheData['expiry'])) {
+        if (isset($cacheData['expiry']) === false) {
+            return true;
+        }
+
+        if (is_null($cacheData['expiry'])) {
             return false;
         }
 

@@ -127,7 +127,12 @@ class OrderService
         $response = $this->sendRequest($body, $request, 'confirm contract');
 
         if ((bool) $response['success'] === false) {
-            return false;
+            $this->loggerservice->addLog(
+                'Error while confirming Younited Pay Order',
+                $order->reference,
+                'Error',
+                $this
+            );
         }
 
         return $this->paymentrepository->activateContract($order->id);
@@ -161,7 +166,7 @@ class OrderService
             $this->loggerservice->addLog($type . ' - success', $refContract, 'success', $this);
         }
 
-        return $response['success'];
+        return $response;
     }
 
     public function cancelContract($idOrder, $refContract)
