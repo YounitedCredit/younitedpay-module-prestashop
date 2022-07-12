@@ -74,6 +74,6 @@
             {l s='And up to ' mod='younitedpay'}<span id="max_amount_{$key|escape:'htmlall':'UTF-8'}">
             {$maxinstallment|escape:'htmlall':'UTF-8'}</span> €/{l s='month.' mod='younitedpay'}
         </span><br />
-        {l s='Reminder: the minimum monthly installment is 9.99 €/month' mod='younitedpay'}
+        {l s='Reminder : the minimum monthly installment is 9.99 €/month' mod='younitedpay'}
     </small>
 </div>
