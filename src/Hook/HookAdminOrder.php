@@ -77,7 +77,7 @@ class HookAdminOrder extends AbstractHook
         $order = new \Order((int) $params['id_order']);
 
         if ($order->module !== $this->module->name) {
-            return false;
+            return;
         }
 
         $statusActivating = json_decode(\Configuration::get(Younitedpay::ORDER_STATE_DELIVERED), true);
@@ -86,13 +86,17 @@ class HookAdminOrder extends AbstractHook
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
         if (in_array((string) $orderStatus->id, $statusActivating) === true) {
-            return $orderservice->activateOrder($order->id);
+            $orderservice->activateOrder($order->id);
+
+            return;
         }
 
         $idOrderCanceled = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : Configuration::get('PS_OS_CANCELED');
 
         if ((int) $idOrderCanceled === $orderStatus->id) {
-            return $orderservice->cancelContract($order->id, '');
+            $orderservice->cancelContract($order->id, '');
+
+            return;
         }
 
         $idOrderWithdraw = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
@@ -102,10 +106,10 @@ class HookAdminOrder extends AbstractHook
             $younitedContract = $orderservice->getYounitedContract($order->id, 'order');
             $amountWithdrawn = $order->getTotalPaid() - $younitedContract->withdrawn_amount;
 
-            return $orderservice->withdrawnContract($order->id, '', $amountWithdrawn);
+            $orderservice->withdrawnContract($order->id, '', $amountWithdrawn);
         }
 
-        return true;
+        return;
     }
 
     public function actionValidateOrder($params)

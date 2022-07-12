@@ -145,7 +145,6 @@ document.onreadystatechange = setTimeout(function() {
             prestashop.on(
                 'updatedProduct',
                 function (event) {
-                    console.log(event);
                     if (event.quantity_wanted == undefined) {
                         event.quantity_wanted = $('#quantity_wanted').val();
                     }

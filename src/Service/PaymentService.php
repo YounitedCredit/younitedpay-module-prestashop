@@ -116,6 +116,8 @@ class PaymentService
 
         $adresseStreet = $customerAdress->address1;
 
+        $gender = $customer->id_gender === 2 ? 'FEMALE' : 'MALE';
+
         $address = (new Address())
             ->setStreetNumber('')
             ->setStreetName($adresseStreet)
@@ -127,7 +129,7 @@ class PaymentService
         $personalInformation = (new PersonalInformation())
             ->setFirstName($customer->firstname)
             ->setLastName($customer->lastname)
-            ->setGenderCode((new \Gender())->name[$customer->id_gender])
+            ->setGenderCode($gender)
             ->setEmailAddress($customer->email)
             ->setCellPhoneNumber($this->cellPhone)
             ->setBirthDate($birthdate)
