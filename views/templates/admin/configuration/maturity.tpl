@@ -66,6 +66,7 @@
         </div>
     </div>
     <small class="form-text">
+        {l s='Reminder : the minimum monthly installment is 9.99 €/month' mod='younitedpay'}<br />
         {l s='Installments from ' mod='younitedpay'}
         {assign var="mininstallment" value=Tools::ps_round($maturity.minimum / $maturity.maturity, 2)}
         {assign var="maxinstallment" value=Tools::ps_round($maturity.maximum / $maturity.maturity, 2)}
@@ -73,7 +74,6 @@
         <span id="max_amount_zone_{$key|escape:'htmlall':'UTF-8'}"{if $maturity.maximum <= 0} class="hidden"{/if}>
             {l s='And up to ' mod='younitedpay'}<span id="max_amount_{$key|escape:'htmlall':'UTF-8'}">
             {$maxinstallment|escape:'htmlall':'UTF-8'}</span> €/{l s='month.' mod='younitedpay'}
-        </span><br />
-        {l s='Reminder : the minimum monthly installment is 9.99 €/month' mod='younitedpay'}
+        </span>
     </small>
 </div>
