@@ -236,6 +236,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maturity' => 3,
                 'minimum' => 30,
                 'maximum' => 1000,
+                'deleted' => 0,
                 'currency' => 'EUR',
             ],
             [
@@ -244,6 +245,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maturity' => 5,
                 'minimum' => 50,
                 'maximum' => 1000,
+                'deleted' => 0,
                 'currency' => 'EUR',
             ],
             [
@@ -252,6 +254,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maturity' => 10,
                 'minimum' => 100,
                 'maximum' => 0,
+                'deleted' => 0,
                 'currency' => 'EUR',
             ],
         ];
