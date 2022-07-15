@@ -52,7 +52,7 @@
         ]
     },
     "scripts": {
-        "pre-autoload-dump": "bash before_autoload.sh"
+        "pre-autoload-dump": "bash ./202/before_autoload.sh"
     },
     "type": "prestashop-module",
     "author": "PrestaShop"
