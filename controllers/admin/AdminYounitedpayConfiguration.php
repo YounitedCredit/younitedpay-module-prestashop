@@ -229,24 +229,35 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function getDefaultMaturities()
     {
-        return [
+        $defaultMaturities = [
             [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $this->context->shop->id,
                 'maturity' => 3,
-                'minimum' => 1,
-                'maximum' => 0,
+                'minimum' => 30,
+                'maximum' => 1000,
+                'currency' => 'EUR',
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 5,
+                'minimum' => 50,
+                'maximum' => 1000,
                 'currency' => 'EUR',
             ],
             [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $this->context->shop->id,
                 'maturity' => 10,
-                'minimum' => 1,
-                'maximum' => 9000,
+                'minimum' => 100,
+                'maximum' => 0,
                 'currency' => 'EUR',
             ],
         ];
+        $this->configService->saveAllMaturities($defaultMaturities, (int) $this->context->shop->id);
+
+        return $defaultMaturities;
     }
 
     protected function getAllMaturities()
@@ -368,7 +379,6 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $deliveredStatus = Tools::getValue('delivered_status');
         $maturities = Tools::getValue('maturity');
 
-        /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
         $this->configService->saveAllMaturities($maturities, $this->context->shop->id);

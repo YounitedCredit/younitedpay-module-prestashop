@@ -200,9 +200,16 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         return $result;
     }
 
+    /**
+     * Remove all Data from Module Except Contracts table
+     */
     public function uninstall()
     {
-        return \Module::uninstall();
+        $this->objectModels = [
+            YounitedPayAvailability::class,
+        ];
+
+        return $this->pmUninstall();
     }
 
     public function renderWidget($hookName, array $configuration)
