@@ -51,7 +51,7 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in you Client ID' mod='younitedpay'}" id="client_id"
+                                placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id"
                                 name="client_id" value="{$configuration.client_id|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
@@ -64,7 +64,7 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="client_secret"
+                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret"
                                 name="client_secret" value="{$configuration.client_secret|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
@@ -77,7 +77,7 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret"
+                                placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret"
                                 name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
@@ -90,7 +90,7 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in you Client ID' mod='younitedpay'}" id="client_id_production"
+                                placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id_production"
                                 name="client_id_production" value="{$configuration.client_id_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
@@ -103,7 +103,7 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="client_secret_production_production"
+                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production_production"
                                 name="client_secret_production" value="{$configuration.client_secret_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
@@ -116,7 +116,7 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in you Client secret' mod='younitedpay'}" id="webhook_secret_production"
+                                placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret_production"
                                 name="webhook_secret_production" value="{$configuration.webhook_secret_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
