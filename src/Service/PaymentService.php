@@ -21,6 +21,7 @@
 namespace YounitedpayAddon\Service;
 
 use Configuration;
+use Customer;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
@@ -150,6 +151,7 @@ class PaymentService
             ->setItems($basketItems);
 
         $merchantUrls = (new MerchantUrls())
+            ->setOnGrantedWebhookUrl($this->getLink('webhook', ['granted' => 1]))
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
             ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
@@ -251,7 +253,7 @@ class PaymentService
      *
      * @return bool Result of validation
      */
-    public function validateOrder($cart, $customer)
+    public function validateOrder($cart, $customer = null)
     {
         $context = \Context::getContext();
         $currency = $context->currency;
@@ -268,27 +270,43 @@ class PaymentService
             '{shop_domain}' => Configuration::get('PS_SHOP_DOMAIN'),
         ];
 
-        $defaultDelivered = null !== _PS_OS_PAYMENT_
-            ? _PS_OS_PAYMENT_
-            : Configuration::getGlobalValue('PS_OS_PAYMENT');
+        $defaultDelivered = null !== _PS_OS_PAYMENT_ ? _PS_OS_PAYMENT_ : Configuration::getGlobalValue('PS_OS_PAYMENT');
 
-        $orderCreated = $this->module->validateOrder(
-            $cart->id,
-            (int) $defaultDelivered,
-            $total,
-            $this->l('Payment via Younited Pay', []),
-            null,
-            $extra_vars,
-            (int) $currency->id,
-            false,
-            $customer->secure_key
-        );
+        if (\Validate::isLoadedObject($customer) === false) {
+            $customer = new Customer($cart->id_customer);
+        }
+
+        $orderCreated = $cart->orderExists();
+        if ($orderCreated === false) {
+            $orderCreated = $this->module->validateOrder(
+                $cart->id,
+                (int) $defaultDelivered,
+                $total,
+                $this->l('Payment via Younited Pay', []),
+                null,
+                $extra_vars,
+                (int) $currency->id,
+                false,
+                $customer->secure_key
+            );
+        }
 
         if ($orderCreated === true) {
             return $this->paymentrepository->confirmContract($this->context->cart->id, $this->module->currentOrder);
         }
 
         return $orderCreated;
+    }
+
+    /**
+     * Set contract link to order to activated
+     * Launched by Webhook
+     *
+     * @param int $idOrder - Id Of order concerned
+     */
+    public function setContractActivated($idOrder)
+    {
+        return $this->paymentrepository->activateContract($idOrder);
     }
 
     /**

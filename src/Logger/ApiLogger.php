@@ -121,6 +121,8 @@ class ApiLogger
 
     public function __destruct()
     {
-        fclose($this->stream);
+        if ($this->isUnitTest === false) {
+            fclose($this->stream);
+        }
     }
 }
