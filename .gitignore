@@ -9,6 +9,7 @@
 /node_modules
 .php_cs.cache
 *.log
+.php_cs.dist*
 
 # Vendors (keep 202 !)
 /vendor/*
