@@ -151,7 +151,6 @@ class PaymentService
             ->setItems($basketItems);
 
         $merchantUrls = (new MerchantUrls())
-            ->setOnGrantedWebhookUrl($this->getLink('webhook', ['granted' => 1]))
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
             ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
