@@ -44,6 +44,7 @@ $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'Non disponible pour cette monnaie (uniquement EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'Non disponible pour ce Pays (uniquement France comme adresse de livraison)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_e121e1d8cb571c2eba5d85264be53cd4'] = 'Payer en %s fois sans frais  (pour %s€/mois) avec';
+$_MODULE['<{younitedpay}prestashop>hookpayment_307bf41698fd365ccab831d50f1c9ebf'] = 'Payer en %s fois (pour %s€/mois) avec';
 $_MODULE['<{younitedpay}prestashop>configservice_ef4268001fa5b6b196363e2f9e1629ef'] = 'Appel TLS échoué';
 $_MODULE['<{younitedpay}prestashop>configservice_7ed48b0f1b989a32e7bbd1961e88cc10'] = 'Aucun identifiant enregistré';
 $_MODULE['<{younitedpay}prestashop>configservice_5681daf80a3bfec671975486f42ee7dd'] = 'Erreur dans la réponse';

@@ -147,14 +147,20 @@ class HookPayment extends AbstractHook
             'error' => $errorMessage,
         ]);
         $paymentInfoTemplate = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/payment_infos.tpl';
-        $paymentOption->setAdditionalInformation($smarty->fetch($paymentInfoTemplate))
-            ->setCallToActionText(
-            sprintf(
-                $this->l('Pay in %s times without fees (for %s€/month) with '),
+        $paymentText = sprintf(
+            $this->l('Pay in %s times without fees (for %s€/month) with '),
+            $maturity['maturity'],
+            \Tools::ps_round($maturity['installment_amount'], 1)
+        );
+        if ((float) $maturity['interest_total'] > 0) {
+            $paymentText = $paymentText = sprintf(
+                $this->l('Pay in %s times (for %s€/month) with '),
                 $maturity['maturity'],
                 \Tools::ps_round($maturity['installment_amount'], 1)
-            )
-        );
+            );
+        }
+        $paymentOption->setAdditionalInformation($smarty->fetch($paymentInfoTemplate))
+            ->setCallToActionText($paymentText);
     }
 
     protected function paymentReturnTemplate()

@@ -125,19 +125,12 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             }
         }
 
-        if ($typeUpdate === 'withdrawn') {
-            $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
-            if ($orderservice->setWithdrawnOnYounitedContract($idCart) !== true) {
-                $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
-            }
-        }
-
-        if ($typeUpdate === 'granted') {
-            if ($paymentService->validateOrder($idCart)) {
-                $this->endResponse('Error on contract activation (Cart ID ' . $idCart . ')');
-            }
-            $this->endResponse('Granted contract confirmed Cart ID' . $idCart);
-        }
+        // if ($typeUpdate === 'withdrawn') { @TODO : Waiting confirmation for amount
+        //     $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+        //     if ($orderservice->setWithdrawnOnYounitedContract($idCart) !== true) {
+        //         $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
+        //     }
+        // }
 
         $this->setCurrentState((int) $newIdState, $order);
     }
