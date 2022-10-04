@@ -18,13 +18,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
 
-use YounitedpayAddon\Service\OrderService;
+use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\LoggerService;
-use YounitedPaySDK\Client as WebHookClient;
+use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedPaySDK\Client as WebHookClient;
 use YounitedPaySDK\Response\AbstractResponse;
-use YounitedpayAddon\Entity\YounitedPayContract;
 
 class YounitedpayWebhookModuleFrontController extends ModuleFrontController
 {
@@ -107,14 +107,13 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             if ($orderservice->setCancelOnYounitedContract($idCart) !== true) {
                 $this->endResponse('Error on contract cancelation (Cart ID ' . $idCart . ')');
             }
-        }
 
-        $this->setCurrentState((int) $newIdState, $order);
+            $this->setCurrentState((int) $newIdState, $order);
+        }
     }
 
     /** Set current order status
      * @param int $id_order_state
-     * @param int $id_employee (/!\ not optional except for Webservice
      */
     public function setCurrentState($id_order_state, $order)
     {
