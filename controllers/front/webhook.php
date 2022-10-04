@@ -60,7 +60,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             $this->endResponse('Accès refusé : ' . $response->getReasonPhrase());
         }
 
-        $idCart = Tools::getValue('id_cart');
+        $idCart = (int) Tools::getValue('id_cart');
 
         if ($idCart === false) {
             $this->endResponse('Error, no Cart Id Provided');
