@@ -71,6 +71,7 @@ class ProductService
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
+        $offers = [];
         if ($cacheExists === true && $cachestorage->isExpired((string) $productPrice) === false) {
             $cacheInformations = $cachestorage->get((string) $productPrice);
             $offers = $cacheInformations['content']['offers'];
