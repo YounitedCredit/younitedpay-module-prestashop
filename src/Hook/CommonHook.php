@@ -61,7 +61,7 @@ class CommonHook extends AbstractHook
                     'younitedpay' => [
                         'url_product' => $frontModuleLink,
                         'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
-                        'id_product' => \Tools::getValue('id_product'),
+                        'id_product' => (int) \Tools::getValue('id_product'),
                     ],
                 ]);
         }
