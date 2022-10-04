@@ -57,21 +57,10 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $this->loggerService->addLogAPI(json_encode($response), 'Info', $this);
 
         if ($response->getStatusCode() === 401) {
-            // $this->endResponse('Accès refusé : ' . $response->getReasonPhrase());
+            $this->endResponse('Accès refusé : ' . $response->getReasonPhrase());
         }
-
-        $bodyContent = $response->getModel();
 
         $idCart = Tools::getValue('id_cart');
-
-        $logContent = json_encode($bodyContent);
-        $this->loggerService->addLogAPI($logContent, 'Info', $this);
-        $this->loggerService->addLogAPI('Adresse IP:' . Tools::getRemoteAddr(), 'Info', $this);
-        $this->loggerService->addLogAPI('Paramètres GET:' . json_encode(Tools::getAllValues()), 'Info', $this);
-
-        if ($bodyContent === '') {
-            $this->endResponse('Contenu du body vide');
-        }
 
         if ($idCart === false) {
             $this->endResponse('Error, no Cart Id Provided');
@@ -80,15 +69,6 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         if (Tools::getValue('cancel') !== false) {
             $this->updateContractStatus($idCart, 'cancel');
             $this->endResponse('Cancel contract confirmed Cart ID' . $idCart);
-        }
-
-        if (Tools::getValue('widhdrawn') !== false) {
-            $this->updateContractStatus($idCart, 'withdrawn');
-            $this->endResponse('Withdrawn contract confirmed Cart ID' . $idCart);
-        }
-
-        if (Tools::getValue('granted') !== false) {
-            $this->updateContractStatus($idCart, 'granted');
         }
 
         $this->endResponse('No parameter catched on webhook', false);
@@ -119,18 +99,15 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $order = new Order($younitedContract->id_order);
 
         if ($typeUpdate === 'cancel') {
-            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : Configuration::get('PS_OS_CANCELED');
+            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
+            if ($newIdState === $order->current_state) {
+                $this->endResponse('Already canceled (Order ' . $order->id . ' - ' . $order->reference . ')');
+            }
+
             if ($orderservice->setCancelOnYounitedContract($idCart) !== true) {
                 $this->endResponse('Error on contract cancelation (Cart ID ' . $idCart . ')');
             }
         }
-
-        // if ($typeUpdate === 'withdrawn') { @TODO : Waiting confirmation for amount
-        //     $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
-        //     if ($orderservice->setWithdrawnOnYounitedContract($idCart) !== true) {
-        //         $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
-        //     }
-        // }
 
         $this->setCurrentState((int) $newIdState, $order);
     }
