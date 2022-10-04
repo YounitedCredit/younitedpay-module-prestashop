@@ -1,6 +1,6 @@
 # YounitedPay PrestaShop Addons
 
-[![Coding Standart](https://github.com/202ecommerce/younitedpay-prestashop/actions/workflows/php.yml/badge.svg)](https://github.com/202ecommerce/younitedpay-prestashop/actions/workflows/php.yml) [![Unit test](https://github.com/202ecommerce/younitedpay-prestashop/actions/workflows/phpunit.yml/badge.svg)](https://github.com/202ecommerce/younitedpay-prestashop/actions/workflows/phpunit.yml)
+[![Coding Standart](https://github.com/YounitedCredit/younitedpay-module-prestashop/actions/workflows/php.yml/badge.svg)](https://github.com/YounitedCredit/younitedpay-module-prestashop/actions/workflows/php.yml) [![Unit test](https://github.com/YounitedCredit/younitedpay-module-prestashop/actions/workflows/phpunit.yml/badge.svg)](https://github.com/YounitedCredit/younitedpay-module-prestashop/actions/workflows/phpunit.yml)
 
 ## About
 
@@ -22,7 +22,7 @@ PHP version (check Module version guide)
 ## Installation for merchands
 
 To install module on PrestaShop, download zip package supply by YounitedPay customer service or the zip file
-named [v1.x.x-prod-younitedpay.zip](https://github.com/202ecommerce/younitedpay-prestashop) attached on each detail release page.
+named [v1.x.x-prod-younitedpay.zip](https://github.com/YounitedCredit/younitedpay-module-prestashop) attached on each detail release page.
 
 ## Installation for developpers
 
