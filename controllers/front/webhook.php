@@ -71,6 +71,11 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             $this->endResponse('Cancel contract confirmed Cart ID' . $idCart);
         }
 
+        if (Tools::getValue('widhdrawn') !== false) {
+            $this->updateContractStatus($idCart, 'withdrawn');
+            $this->endResponse('Withdrawn contract confirmed Cart ID' . $idCart);
+        }
+
         $this->endResponse('No parameter catched on webhook', false);
     }
 
@@ -109,6 +114,13 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
             }
 
             $this->setCurrentState((int) $newIdState, $order);
+        }
+
+        if ($typeUpdate === 'withdrawn') {
+            $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+            if ($orderservice->setWithdrawnOnYounitedContract($idCart) !== true) {
+                $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
+            }
         }
     }
 
