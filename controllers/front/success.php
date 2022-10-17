@@ -83,6 +83,26 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         }
 
         parent::init();
+
+        $amoutCreditRequested = $paymentService->getCreditRequestedAmount($cart);
+        if ($amoutCreditRequested === false) {
+            $this->errors[] = $this->l(
+                'Error: impossible to retrieve amount of payment done on Younited Pay',
+                'success'
+            );
+            $this->redirectWithNotifications($orderUrl);
+        }
+
+        $amountCart = $cart->getOrderTotal(true, \Cart::BOTH);
+        if (abs($amoutCreditRequested - $amountCart) > 0.5) {
+            $this->errors[] = $this->l(
+                'Error: the amount of the contract is different than the total of the cart',
+                'success'
+            );
+            $errorCart = sprintf($this->l('Cart: %s€ - Contract: %s€', 'success'), $amountCart, $amoutCreditRequested);
+            $this->errors[] = $errorCart;
+            $this->redirectWithNotifications($orderUrl);
+        }
         parent::initContent();
 
         try {

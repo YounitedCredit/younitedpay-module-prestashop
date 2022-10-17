@@ -32,10 +32,12 @@ use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
 use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
+use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
+use YounitedPaySDK\Request\LoadContractRequest;
 
 class PaymentService
 {
@@ -242,6 +244,51 @@ class PaymentService
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
         $contractYounited->save();
+    }
+
+    /**
+     * Confirm that amount of cart and amount paid is the same
+     *
+     * @param \Cart $cart
+     *
+     * @return bool|float False if nothing requested on the cart or error | Amount of requested Credit for the cart
+     */
+    public function getCreditRequestedAmount($cart)
+    {
+        $client = new YounitedClient($this->context->shop->id);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
+            return false;
+        }
+
+        $bodyContractRequest = (new LoadContract())
+            ->setContractReference($younitedContract->id_external_younitedpay_contract);
+
+        $requestContract = new LoadContractRequest();
+
+        $response = $client->sendRequest($bodyContractRequest, $requestContract);
+
+        $contentResponse = $response['response'];
+
+        if ($response['success'] === true && $contentResponse['offer'] && $contentResponse['status']) {
+            $statusOrderDone = ['INITIALIZED', 'GRANTED', 'CONFIRMED'];
+            if (in_array($contentResponse['status'], $statusOrderDone) === false) {
+                return false;
+            }
+
+            $offer = $contentResponse['offer'];
+            if (isset($offer['requestedAmount']) === false) {
+                return false;
+            }
+
+            return (float) $offer['requestedAmount'];
+        }
+
+        return false;
     }
 
     /**
