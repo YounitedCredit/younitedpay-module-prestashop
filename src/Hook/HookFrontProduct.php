@@ -108,8 +108,9 @@ class HookFrontProduct extends AbstractHook
         $idProduct = 0;
         switch (true) {
             case $controller instanceof \ProductController:
-                $idProduct = \Tools::getValue('id_product');
-                $idAttribute = \Tools::getValue('id_product_attribute', null);
+                $idProduct = (int) \Tools::getValue('id_product');
+                $idAttribute = (int) \Tools::getValue('id_product_attribute', null);
+                $idAttribute = $idAttribute > 0 ? $idAttribute : null;
                 $product = new \Product($idProduct);
                 $qty = (int) \Tools::getValue('qty', 1);
                 $price = $product->getPrice(true, $idAttribute) * $qty;

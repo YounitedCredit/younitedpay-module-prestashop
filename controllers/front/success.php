@@ -53,7 +53,8 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             || $cart->id_address_invoice == 0 || $cart->id_customer == 0
         ) {
             $this->errors[] = $this->l('Error with the cart. Please refresh your page.', 'success');
-            $paymentService->logError(json_encode([
+            $paymentService->logError(
+                json_encode([
                 'isCartLoaded' => Validate::isLoadedObject($cart) === false,
                 'isModuleActive' => $this->module->active,
                 'idAddressDelivery' => $cart->id_address_delivery,
@@ -68,7 +69,8 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             $this->errors[] = $this->l('Error with the customer. Please verify your order.', 'success');
-            $paymentService->logError(json_encode([
+            $paymentService->logError(
+                json_encode([
                     'isCustomerLoaded' => Validate::isLoadedObject($customer),
                 ]),
                 'Error loading Customer'
@@ -81,12 +83,33 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         }
 
         parent::init();
+
+        $amoutCreditRequested = $paymentService->getCreditRequestedAmount($cart);
+        if ($amoutCreditRequested === false) {
+            $this->errors[] = $this->l(
+                'Error: impossible to retrieve amount of payment done on Younited Pay',
+                'success'
+            );
+            $this->redirectWithNotifications($orderUrl);
+        }
+
+        $amountCart = $cart->getOrderTotal(true, \Cart::BOTH);
+        if (abs($amoutCreditRequested - $amountCart) > 0.5) {
+            $this->errors[] = $this->l(
+                'Error: the amount of the contract is different than the total of the cart',
+                'success'
+            );
+            $errorCart = sprintf($this->l('Cart: %s€ - Contract: %s€', 'success'), $amountCart, $amoutCreditRequested);
+            $this->errors[] = $errorCart;
+            $this->redirectWithNotifications($orderUrl);
+        }
         parent::initContent();
 
         try {
             $orderCreated = $paymentService->validateOrder($cart, $customer);
         } catch (Exception $ex) {
-            $paymentService->logError(json_encode([
+            $paymentService->logError(
+                json_encode([
                 'message' => $ex->getMessage(),
                 'file' => $ex->getFile(),
                 'line' => $ex->getLine(),
@@ -103,7 +126,8 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         }
 
         $this->errors[] = $this->l('Error while creating Order. Please try again.', 'success');
-        $paymentService->logError(json_encode([
+        $paymentService->logError(
+            json_encode([
                 'message' => 'Error creating order',
                 'cart' => $cart->id,
                 'customer' => $customer->id,

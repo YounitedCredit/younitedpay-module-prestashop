@@ -201,15 +201,19 @@
                <div class="yp-flex yp-p-4 yp-mt-8 flexmiddle yp-text-responsabilities">
                   <div class="yp-flex">
                      <p class="yp-text-lg yp-font-bold yp-pol-black">
-                        {l s='A loan commits you and must' mod='younitedpay'}<br />
-                        {l s='be repaid. Check your' mod='younitedpay'}
+                        {l s='Taking out a loan is a commitment with an' mod='younitedpay'}<br />
+                        {l s='obligation of repayment.' mod='younitedpay'}
                         {if $iso_code == 'fr'}
-                           <br />{l s='ability to repay' mod='younitedpay'}<br />
+                           <br />
+                           {l s='Verify your ability' mod='younitedpay'} 
+                           {l s='to repay the loan' mod='younitedpay'}
+                           <br />
                         {else}
-                           {l s='ability to' mod='younitedpay'}<br />
-                           {l s='repay ' mod='younitedpay'}
+                           <br />
+                           {l s='Verify your ability' mod='younitedpay'}
+                           {l s='to repay the loan' mod='younitedpay'} 
                         {/if}
-                        {l s='before commit yourself.' mod='younitedpay'}
+                        {l s='before committing.' mod='younitedpay'}
                      </p>
                   </div>
                </div>

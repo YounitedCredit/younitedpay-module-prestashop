@@ -30,8 +30,9 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
     {
         $context = \Context::getContext();
 
-        $idProduct = Tools::getValue('id_product');
-        $idAttribute = Tools::getValue('id_attribute');
+        $idProduct = (int) Tools::getValue('id_product');
+        $idAttribute = (int) Tools::getValue('id_product_attribute', null);
+        $idAttribute = $idAttribute > 0 ? $idAttribute : null;
 
         $product = new \Product($idProduct);
         $qty = (int) \Tools::getValue('qty', 1);

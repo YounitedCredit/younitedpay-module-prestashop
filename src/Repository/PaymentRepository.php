@@ -37,7 +37,7 @@ class PaymentRepository
         $query = new DbQuery();
         $query->select('id_younitedpay_contract')
             ->from(YounitedPayContract::$definition['table'])
-            ->where('id_cart = ' . (int) pSQL($idCart));
+            ->where('id_cart = ' . (int) $idCart);
 
         $result = Db::getInstance()->getRow($query);
 
@@ -85,14 +85,14 @@ class PaymentRepository
         return Db::getInstance()->update(
             YounitedPayContract::$definition['table'],
             [
-                'id_order' => (int) pSQL($idOrder),
+                'id_order' => (int) $idOrder,
                 'is_confirmed' => true,
                 'confirmation_date' => date('Y-m-d H:i:s'),
                 'is_canceled' => false,
                 'is_activated' => false,
                 'is_withdrawn' => false,
             ],
-            'id_cart = ' . (int) pSQL($idCart)
+            'id_cart = ' . (int) $idCart
         );
     }
 
@@ -114,7 +114,7 @@ class PaymentRepository
                 'is_withdrawn' => false,
                 'is_confirmed' => false,
             ],
-            'id_order = ' . (int) pSQL($idOrder)
+            'id_order = ' . (int) $idOrder
         );
     }
 
@@ -136,7 +136,7 @@ class PaymentRepository
                 'is_confirmed' => false,
                 'is_withdrawn' => false,
             ],
-            'id_order = ' . (int) pSQL($idOrder)
+            'id_order = ' . (int) $idOrder
         );
     }
 
@@ -158,7 +158,7 @@ class PaymentRepository
                 'is_confirmed' => false,
                 'is_canceled' => false,
             ],
-            'id_order = ' . (int) pSQL($idOrder)
+            'id_order = ' . (int) $idOrder
         );
     }
 
@@ -177,7 +177,7 @@ class PaymentRepository
             [
                 'withdrawn_amount' => $withdrawnAmount,
             ],
-            'id_order = ' . (int) pSQL($idOrder)
+            'id_order = ' . (int) $idOrder
         );
     }
 }
