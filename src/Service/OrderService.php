@@ -181,6 +181,11 @@ class OrderService
         if ($refContract === '') {
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
+
+        if ($younitedContract->is_canceled === true) {
+            return true;
+        }
+
         $body = (new CancelContract())
                 ->setContractReference($refContract);
 
@@ -198,10 +203,14 @@ class OrderService
             return true;
         }
 
+        /** @var YounitedPayContract $younitedContract */
+        $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
         if ($refContract === '') {
-            /** @var YounitedPayContract $younitedContract */
-            $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
             $refContract = $younitedContract->id_external_younitedpay_contract;
+        }
+
+        if ($younitedContract->is_withdrawn === true) {
+            return true;
         }
 
         $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);

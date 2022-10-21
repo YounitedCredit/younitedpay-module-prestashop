@@ -21,6 +21,7 @@
 namespace YounitedpayAddon\Service;
 
 use Configuration;
+use Customer;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
@@ -31,10 +32,12 @@ use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
 use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
+use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
+use YounitedPaySDK\Request\LoadContractRequest;
 
 class PaymentService
 {
@@ -244,6 +247,51 @@ class PaymentService
     }
 
     /**
+     * Confirm that amount of cart and amount paid is the same
+     *
+     * @param \Cart $cart
+     *
+     * @return bool|float False if nothing requested on the cart or error | Amount of requested Credit for the cart
+     */
+    public function getCreditRequestedAmount($cart)
+    {
+        $client = new YounitedClient($this->context->shop->id);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
+            return false;
+        }
+
+        $bodyContractRequest = (new LoadContract())
+            ->setContractReference($younitedContract->id_external_younitedpay_contract);
+
+        $requestContract = new LoadContractRequest();
+
+        $response = $client->sendRequest($bodyContractRequest, $requestContract);
+
+        $contentResponse = $response['response'];
+
+        if ($response['success'] === true && $contentResponse['offer'] && $contentResponse['status']) {
+            $statusOrderDone = ['INITIALIZED', 'GRANTED', 'CONFIRMED'];
+            if (in_array($contentResponse['status'], $statusOrderDone) === false) {
+                return false;
+            }
+
+            $offer = $contentResponse['offer'];
+            if (isset($offer['requestedAmount']) === false) {
+                return false;
+            }
+
+            return (float) $offer['requestedAmount'];
+        }
+
+        return false;
+    }
+
+    /**
      * Validate and create Order when we have confirmation by API return
      *
      * @param \Cart $cart
@@ -251,7 +299,7 @@ class PaymentService
      *
      * @return bool Result of validation
      */
-    public function validateOrder($cart, $customer)
+    public function validateOrder($cart, $customer = null)
     {
         $context = \Context::getContext();
         $currency = $context->currency;
@@ -268,27 +316,43 @@ class PaymentService
             '{shop_domain}' => Configuration::get('PS_SHOP_DOMAIN'),
         ];
 
-        $defaultDelivered = null !== _PS_OS_PAYMENT_
-            ? _PS_OS_PAYMENT_
-            : Configuration::getGlobalValue('PS_OS_PAYMENT');
+        $defaultDelivered = null !== _PS_OS_PAYMENT_ ? _PS_OS_PAYMENT_ : Configuration::getGlobalValue('PS_OS_PAYMENT');
 
-        $orderCreated = $this->module->validateOrder(
-            $cart->id,
-            (int) $defaultDelivered,
-            $total,
-            $this->l('Payment via Younited Pay', []),
-            null,
-            $extra_vars,
-            (int) $currency->id,
-            false,
-            $customer->secure_key
-        );
+        if (\Validate::isLoadedObject($customer) === false) {
+            $customer = new Customer($cart->id_customer);
+        }
+
+        $orderCreated = $cart->orderExists();
+        if ($orderCreated === false) {
+            $orderCreated = $this->module->validateOrder(
+                $cart->id,
+                (int) $defaultDelivered,
+                $total,
+                $this->l('Payment via Younited Pay', []),
+                null,
+                $extra_vars,
+                (int) $currency->id,
+                false,
+                $customer->secure_key
+            );
+        }
 
         if ($orderCreated === true) {
             return $this->paymentrepository->confirmContract($this->context->cart->id, $this->module->currentOrder);
         }
 
         return $orderCreated;
+    }
+
+    /**
+     * Set contract link to order to activated
+     * Launched by Webhook
+     *
+     * @param int $idOrder - Id Of order concerned
+     */
+    public function setContractActivated($idOrder)
+    {
+        return $this->paymentrepository->activateContract($idOrder);
     }
 
     /**

@@ -71,6 +71,15 @@ class ProductService
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
+        $offers = [];
+        if ($cacheExists === true && $cachestorage->isExpired((string) $productPrice) === false) {
+            $cacheInformations = $cachestorage->get((string) $productPrice);
+            $offers = $cacheInformations['content']['offers'];
+            if (empty($offers) === true) {
+                $cacheExists = false;
+            }
+        }
+
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice);
 
@@ -95,9 +104,6 @@ class ProductService
             $cachestorage->set((string) $productPrice, [
                 'offers' => $offers,
             ]);
-        } else {
-            $cacheInformations = $cachestorage->get((string) $productPrice);
-            $offers = $cacheInformations['content']['offers'];
         }
 
         $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/credit_propositions.tpl';

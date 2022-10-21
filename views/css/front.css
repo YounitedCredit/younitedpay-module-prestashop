@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
+.quickview .younitedpay_product_info {
+    display:none;
+}
+
 .younitedpay_offer {
     color: #6a8af5 !important;
     border: solid 2px #6a8af5;
