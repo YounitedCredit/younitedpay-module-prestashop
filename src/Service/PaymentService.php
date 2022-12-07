@@ -117,14 +117,20 @@ class PaymentService
             ? new \DateTime($customer->birthday . 'T00:00:00')
             : null;
 
-        $adresseStreet = $customerAdress->address1;
+        $adresseStreet = $customerAdress->address1;        
+        $additionalAdress = '';
+        if (mb_strlen($adresseStreet) > 38) {
+            $additionalAdress = substr($adresseStreet, 38) . ' ';
+            $adresseStreet = substr($adresseStreet, 0, 38);
+        }
+        $additionalAdress .= $customerAdress->address2 . ' ' . $customerAdress->other;
 
         $gender = $customer->id_gender === 2 ? 'FEMALE' : 'MALE';
 
         $address = (new Address())
             ->setStreetNumber('')
             ->setStreetName($adresseStreet)
-            ->setAdditionalAddress($customerAdress->address2 . ' ' . $customerAdress->other)
+            ->setAdditionalAddress($additionalAdress)
             ->setCity($customerAdress->city)
             ->setPostalCode($customerAdress->postcode)
             ->setCountryCode($country->iso_code);
