@@ -117,7 +117,7 @@ class PaymentService
             ? new \DateTime($customer->birthday . 'T00:00:00')
             : null;
 
-        $adresseStreet = $customerAdress->address1;        
+        $adresseStreet = $customerAdress->address1;
         $additionalAdress = '';
         if (mb_strlen($adresseStreet) > 38) {
             $additionalAdress = substr($adresseStreet, 38) . ' ';

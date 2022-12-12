@@ -19,21 +19,21 @@
 
 namespace YounitedpayAddon\API;
 
+use Configuration;
 use Exception;
 use Younitedpay;
-use Configuration;
-use YounitedPaySDK\Client;
-use YounitedPaySDK\Cache\Registry;
 use YounitedpayAddon\Logger\ApiLogger;
-use YounitedPaySDK\Cache\RegistryItem;
-use YounitedPaySDK\Model\LoadContract;
-use YounitedPaySDK\Model\AbstractModel;
 use YounitedpayAddon\Utils\CacheYounited;
-use YounitedPaySDK\Model\ConfirmContract;
-use YounitedPaySDK\Request\AbstractRequest;
 use YounitedpayAddon\Utils\ServiceContainer;
-use YounitedPaySDK\Response\AbstractResponse;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use YounitedPaySDK\Cache\Registry;
+use YounitedPaySDK\Cache\RegistryItem;
+use YounitedPaySDK\Client;
+use YounitedPaySDK\Model\AbstractModel;
+use YounitedPaySDK\Model\ConfirmContract;
+use YounitedPaySDK\Model\LoadContract;
+use YounitedPaySDK\Request\AbstractRequest;
+use YounitedPaySDK\Response\AbstractResponse;
 
 class YounitedClient
 {
