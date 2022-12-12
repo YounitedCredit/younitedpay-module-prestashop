@@ -47,7 +47,9 @@ class ApiLogger
     {
         $this->module = \Module::getInstanceByName('younitedpay');
         $this->isUnitTest = $isUnitTest;
-        $this->logname = $this->module->name . '-' . date('Ymd') . '.log';
+        $date = date('Ymd');
+        $hashOfDay = md5(_COOKIE_KEY_ . $date);
+        $this->logname = $this->module->name . '-' . $date . '-' . $hashOfDay . '.log';
         if ($isUnitTest === false) {
             $this->build();
         }
