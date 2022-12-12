@@ -19,19 +19,21 @@
 
 namespace YounitedpayAddon\API;
 
-use Configuration;
 use Exception;
 use Younitedpay;
-use YounitedpayAddon\Logger\ApiLogger;
-use YounitedpayAddon\Utils\CacheYounited;
-use YounitedpayAddon\Utils\ServiceContainer;
-use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use YounitedPaySDK\Cache\Registry;
-use YounitedPaySDK\Cache\RegistryItem;
+use Configuration;
 use YounitedPaySDK\Client;
+use YounitedPaySDK\Cache\Registry;
+use YounitedpayAddon\Logger\ApiLogger;
+use YounitedPaySDK\Cache\RegistryItem;
+use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\AbstractModel;
+use YounitedpayAddon\Utils\CacheYounited;
+use YounitedPaySDK\Model\ConfirmContract;
 use YounitedPaySDK\Request\AbstractRequest;
+use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedPaySDK\Response\AbstractResponse;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 class YounitedClient
 {
@@ -96,6 +98,9 @@ class YounitedClient
             }
             if ($this->isProductionMode === false) {
                 $request = $request->enableSandbox();
+            }
+            if ($body instanceof LoadContract || $body instanceof ConfirmContract) {
+                $request->__construct();
             }
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
