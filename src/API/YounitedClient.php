@@ -99,8 +99,12 @@ class YounitedClient
             if ($this->isProductionMode === false) {
                 $request = $request->enableSandbox();
             }
-            if ($body instanceof LoadContract || $body instanceof ConfirmContract) {
-                $request->__construct();
+            $requestTarget = $request->getRequestTarget();
+            if (strpos($requestTarget, '/Contract/') !== false) {
+                /** @var AbstractUri $currentURI */
+                $currentURI = $request->getUri();
+                $currentURI->withPath('/api/1.0' . $requestTarget);
+                $request->withUri($currentURI);
             }
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
