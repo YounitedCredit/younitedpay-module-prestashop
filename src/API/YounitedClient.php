@@ -30,10 +30,9 @@ use YounitedPaySDK\Cache\Registry;
 use YounitedPaySDK\Cache\RegistryItem;
 use YounitedPaySDK\Client;
 use YounitedPaySDK\Model\AbstractModel;
-use YounitedPaySDK\Model\ConfirmContract;
-use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Request\AbstractRequest;
 use YounitedPaySDK\Response\AbstractResponse;
+use YounitedPaySDK\Uri\AbstractUri;
 
 class YounitedClient
 {
