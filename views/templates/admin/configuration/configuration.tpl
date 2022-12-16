@@ -15,7 +15,12 @@
  * @copyright Younited
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
-<h3 id="younitedpay_status_min"{if $connected == false} style="display:none;"{/if}>
+{assign var="isPS8" value=version_compare(_PS_VERSION_, '8.0', '>=')}
+<h3 id="younitedpay_status_min"
+    {if $connected == false} style="display:none;{if $isPS8 == true} right:-65px;top:350px;{/if}"
+    {else}
+      {if $isPS8 == true}style="right:-65px;top:350px;"{/if}
+    {/if}>
     {l s='Requirements' mod='younitedpay'}
     <i class="material-icons mt-1" style="color:green;position:relative;bottom:3px;">check</i>
 </h3>  
