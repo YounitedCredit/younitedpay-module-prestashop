@@ -26,7 +26,7 @@
 }
 
 #younited_popupzone {    
-    font-family: Roboto!important;
+    font-family: Roboto;
     font-size: 12px;
     font-weight: 400;
     letter-spacing: 0em;    
@@ -56,12 +56,6 @@
 .yp-price-block {
     width:100%;
     justify-content: end;
-}
-
-.yp-text-responsabilities {
-    background-color: #F4ECFF!important;
-    color: #000 !important;
-    height:145px;
 }
 
 .yp-text-responsabilities div {
@@ -402,7 +396,7 @@
     margin: 0 !important;
     padding: 0 !important;
     letter-spacing: normal;
-    font-family: Roboto!important;
+    font-family: Roboto, sans-serif;
 }
 
 .younitedpay-widget-root button:focus,
@@ -546,6 +540,10 @@
   color: black!important;
 }
 
+.yp-pol-grey {
+    color: #7a7a7a!important;
+}
+
 .yp-border-blue {
   border-color: #6a8af5!important;
 }
@@ -648,6 +646,11 @@
     font-size: 18px!important;
 }
 
+.yp-font-family-rg {
+    font-family: Roc Grotesk, sans-serif !important;
+    font-style: normal !important;
+}
+
 .yp-h-4 {
     height: 16px !important
 }
@@ -699,6 +702,10 @@
 
 .yp-text-lg {
     font-size: 18px !important
+}
+
+.yp-text-xl {
+    font-size: 24px !important
 }
 
 .yp-text-3xl {
@@ -760,6 +767,10 @@
 
 .yp-mb-5 {
     margin-bottom: 20px !important
+}
+
+.yp-mt-4 {
+    margin-top: 18px !important
 }
 
 .yp-mt-6 {
@@ -830,7 +841,6 @@
 }
 
 .yp-popup-logo {
-    position:relative;
     right:15px;
     bottom:15px;
 }
@@ -845,6 +855,10 @@
 
 .yp-p-4 {
     padding: 16px !important
+}
+
+.yp-p-6 {
+    padding: 24px !important
 }
 
 .yp-p-8 {
@@ -897,6 +911,27 @@
 
 .yp-pr-4 {
     padding-right: 16px !important
+}
+
+.yp-pt-4 {
+    padding-top: 16px !important
+}
+
+.yp-pt-6 {
+    padding-top: 24px !important
+}
+
+.yp-pb-6 {
+    padding-bottom: 24px !important
+}
+
+.yp-px-6 {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+}
+
+.yp-pr-6 {
+    padding-right: 24px !important
 }
 
 .yp-pl-8 {
@@ -1158,7 +1193,7 @@
 }
 
 .younitedpay-left-title-text {
-    font-weight: 700;
+    font-weight: 500 !important;
     font-size: 40px!important;
 }
 
@@ -1214,12 +1249,24 @@
         width: 50% !important;
     }
 
+    .md\:yp-w-2\/5 {
+        width: 40% !important;
+    }
+
+    .md\:yp-w-3\/5 {
+        width: 60% !important;
+    }
+
     .md\:yp-h-800 {
         height: 800px !important
     }
 
     .md\:yp-h-640 {
         height: 640px !important
+    }
+
+    .md\:yp-h-580 {
+        height: 580px !important
     }
 }
 
@@ -1253,12 +1300,20 @@
     border-color: #c5a1fe !important;
 }
 
+.yp-border-purple-bright {
+    border-color: #6200fe!important;
+}
+
 .yp-bg-prple {
     background-color: #c5a1fe !important;
 }
 
 .yp-bg-prple-grey {
     background-color: #f4ecff !important;
+}
+
+.yp-bg-purple-light {
+    background: #f9f5ff;
 }
 
 .hidden {
