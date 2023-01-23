@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
+@font-face {
+    font-family: "Kostic Roc Grotest";
+    src: url("/modules/younitedpay/views/fonts/Kostic-Roc-Grotesk-Bold.otf") format("opentype");
+}
+
 .quickview .younitedpay_product_info {
     display:none;
 }
@@ -58,12 +63,15 @@
     justify-content: end;
 }
 
-.yp-text-responsabilities div {
+.yp-text-responsabilities {
     justify-content: space-between!important;
 }
 
-.yp-text-responsabilities div p {
-    text-align: justify;
+.yp-text-responsabilities p {    
+    text-align: left;
+    font-style: italic;
+    font-size:20px;
+    font-weight: 400;
 }
 
 .maturity_installment {
@@ -647,7 +655,7 @@
 }
 
 .yp-font-family-rg {
-    font-family: Roc Grotesk, sans-serif !important;
+    font-family: Kostic Roc Grotest, sans-serif !important;
     font-style: normal !important;
 }
 
@@ -791,6 +799,10 @@
 
 .yp-mt-16 {
     margin-top: 64px !important
+}
+
+.yp-mt-20 {
+    margin-top: 80px!important
 }
 
 .yp-mt-26 {
@@ -974,11 +986,11 @@
 }
 
 .yp-top-3 {
-    top: 12px !important
+    top: 40px !important
 }
 
 .yp-right-4 {
-    right: 16px !important
+    right: 32px !important
 }
 
 .yp-shadow-lg {
@@ -1222,7 +1234,7 @@
     }
 
     .md\:yp-max-w-4xl {
-        max-width: 896px !important
+        max-width: 950px !important
     }
 
     .md\:yp-p-0 {
@@ -1266,7 +1278,7 @@
     }
 
     .md\:yp-h-580 {
-        height: 580px !important
+        height: auto !important
     }
 }
 
@@ -1308,12 +1320,29 @@
     background-color: #c5a1fe !important;
 }
 
+.yp-bg-prple-mensuality {
+    background-color: #EFE6FF !important;
+}
+
 .yp-bg-prple-grey {
     background-color: #f4ecff !important;
 }
 
 .yp-bg-purple-light {
     background: #f9f5ff;
+}
+
+.yp-rel-2 {
+    position:relative;
+    top:2px;
+}
+
+.yp-close-black:hover {
+    fill: #6200fe;
+}
+
+.blocks_maturities_popup:hover span {
+    background-color: #EFE6FF!important;
 }
 
 .hidden {

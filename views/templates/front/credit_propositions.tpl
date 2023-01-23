@@ -73,10 +73,10 @@
       class="yp-inset-0 yp-flex yp-fixed yp-justify-center yp-items-center yp-z-100 yp-bg-black yp-bg-opacity-50" style="display:none!important;">
       <div
          class="yp-overflow-auto yp-relative yp-flex yp-flex-row yp-flex-wrap yp-rounded-sm yp-shadow-lg yp-w-screen yp-h-screen md:yp-h-580 lg:yp-w-11/12 md:yp-max-w-4xl yp-max-h-screen yp-bg-white">
-         <button class="younited_btnhide yp-text-4xl yp-opacity-50 hover:yp-opacity-100 
-            focus:yp-opacity-100 yp-absolute yp-top-3 yp-right-4 yp-outline-none yp-transform 
-            hover:yp-scale-125 focus:yp-scale-125 yp-transition-transform yp-duration-100 close-popup-you">
-            x
+         <button class="younited_btnhide yp-opacity-100 yp-absolute yp-top-3 yp-right-4 yp-outline-none close-popup-you">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="#1C1C1C" class="yp-close-black" xmlns="http://www.w3.org/2000/svg">
+               <path d="M8.4 7L13.7 1.7C14.1 1.3 14.1 0.7 13.7 0.3C13.3 -0.1 12.7 -0.1 12.3 0.3L7 5.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L5.6 7L0.3 12.3C-0.1 12.7 -0.1 13.3 0.3 13.7C0.5 13.9 0.7 14 1 14C1.3 14 1.5 13.9 1.7 13.7L7 8.4L12.3 13.7C12.5 13.9 12.8 14 13 14C13.2 14 13.5 13.9 13.7 13.7C14.1 13.3 14.1 12.7 13.7 12.3L8.4 7Z" />
+            </svg>
          </button>
          <div class="yp-h-full yp-w-full md:yp-w-2/5 yp-p-6 yp-border-lprple yp-bg-purple-light">
             <span class="yp-flex yp-popup-logo yp-pl-2">
@@ -91,11 +91,11 @@
                <h3 class="yp-pl-6">{l s='Instant.' mod='younitedpay'}</h3>
                <h3 class="yp-pl-6">{l s='Secured.' mod='younitedpay'}</h3>
             </div>
-            <div class="yp-font-normal yp-pol-grey yp-text-2xl yp-mt-6 yp-pl-6">
+            <div class="yp-font-normal yp-pol-purpledark yp-text-2xl yp-mt-6 yp-pl-6">
                {l s='Younited, it\'s never been easier' mod='younitedpay'}
                {l s='to pay in several times.' mod='younitedpay'}
             </div>
-            <p class="yp-mt-16 yp-pl-6 yp-pt-6">
+            <p class="yp-mt-20 yp-pl-6 yp-pt-6">
                <span class="yp-inline-block yp-h-10">
                   <img class="yp-h-8 lazyloaded"
                      src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/cb.png"
@@ -123,12 +123,19 @@
                </span>
             </p>
             <div class="yp-mt-5 yp-px-6">
-               <p class="yp-bg-prple-grey yp-border yp-border-prple yp-p-4">
-                  {l s='Have a question? Visit our' mod='younitedpay'}&nbsp;
-                  <a href="https://www.younited-credit.com/questions-reponses" target="_blank"
-                     class="yp-text-xs yp-underline">
-                     {l s='dedicated page' mod='younitedpay'}
-                  </a>
+               <p class="yp-bg-prple-grey yp-pol-purpledark yp-border yp-border-prple yp-p-4">
+                  <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;padding-right:6px!important;">
+                     <path d="M10 0.833344C4.91671 0.833344 0.833374 4.91668 0.833374 10C0.833374 15.0833 4.91671 19.1667 10 19.1667C15.0834 19.1667 19.1667 15.0833 19.1667 10C19.1667 4.91668 15.0834 0.833344 10 0.833344ZM10 17.5C5.83337 17.5 2.50004 14.1667 2.50004 10C2.50004 5.83334 5.83337 2.50001 10 2.50001C14.1667 2.50001 17.5 5.83334 17.5 10C17.5 14.1667 14.1667 17.5 10 17.5Z" fill="#564C5D"></path>
+                     <path d="M11.0001 5.16667C9.25008 4.58334 7.33341 5.5 6.75008 7.16667C6.66674 7.66667 6.83341 8.16667 7.33341 8.25C7.75008 8.41667 8.25008 8.16667 8.41674 7.75C8.75008 6.91667 9.66674 6.41667 10.5834 6.75C11.2501 7 11.6667 7.58334 11.6667 8.33334C11.6667 9.16667 10.2501 9.83334 9.75008 10.0833C9.33341 10.25 9.08341 10.6667 9.25008 11.1667C9.33341 11.5 9.66674 11.75 10.0001 11.75C10.0834 11.75 10.1667 11.75 10.2501 11.6667C10.5834 11.5833 13.3334 10.5833 13.3334 8.41667C13.2501 6.91667 12.3334 5.66667 11.0001 5.16667Z" fill="#564C5D"></path>
+                     <path d="M10.0001 13.3333C9.50008 13.3333 9.16675 13.6667 9.16675 14.1667C9.16675 14.6667 9.58341 15 10.0001 15C10.4167 15 10.8334 14.6667 10.8334 14.1667C10.8334 13.6667 10.5001 13.3333 10.0001 13.3333Z" fill="#564C5D"></path>
+                  </svg>
+                  <span class="yp-rel-2">
+                     {l s='Have a question? Visit our' mod='younitedpay'}&nbsp;
+                     <a href="https://www.younited-credit.com/questions-reponses" target="_blank" 
+                        class="yp-underline">
+                        {l s='dedicated page' mod='younitedpay'}
+                     </a>
+                  </span>
                </p>
             </div>
          </div>
@@ -142,7 +149,7 @@
                   {/if}
                   <h4 class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-font-family-rg yp-text-xl block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
                      {l s='Your purchase for ' mod='younitedpay'}
-                     <span class="yp-text-4xl">{l s='%s€/month' mod='younitedpay' sprintf=[$offer.installment_amount]}</span><br>
+                     <span class="yp-text-4xl yp-font-family-rg">{l s='%s€/month' mod='younitedpay' sprintf=[$offer.installment_amount]}</span><br>
                      {l s=' with' mod='younitedpay' sprintf=[$offer.installment_amount]}
                      <span class="yp-pol-purple yp-font-bold yp-text-xl yp-font-family-rg">{l s='Younited Pay' mod='younitedpay'}</span>
                   </h4>
@@ -151,10 +158,10 @@
                   <span class="">{l s='Buy today and start paying' mod='younitedpay'}</span>
                   <span class="yp-pol-purpledark yp-font-bold yp-text-sm">{l s='in just 30 days !' mod='younitedpay'}</span>
                </p>
-               <ul class="yp-flex yp-justify-left">
+               <ul class="yp-flex yp-justify-left yp-pol-purpledark">
                   {foreach from=$offers item=offer key=key}
                      {if $key === 0}
-                        {assign var="background_block" value='yp-bg-prple-grey'}
+                        {assign var="background_block" value='yp-bg-prple-mensuality'}
                      {else}
                         {assign var="background_block" value='yp-bg-white'}
                      {/if}
@@ -204,7 +211,7 @@
                {/foreach}
                </div>
                <div class="yp-mt-4 yp-text-responsabilities">
-                  <p class="yp-text-lg">
+                  <p>
                      {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
                      {l s='obligation of repayment.' mod='younitedpay'}
                      {if $iso_code == 'fr'}
