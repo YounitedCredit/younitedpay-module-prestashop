@@ -80,7 +80,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_711051adc16c9e8e4596f7d22
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0e1300b812fe436b1cc92fa647b9331f'] = 'Instantané.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_205bd2d07285364360115e9f398a037a'] = 'Sécurisé.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_75f9f7fe0082de58d63da696b490f8c6'] = 'Cela n’a jamais été aussi simple';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_0db3b04159c5033084a3bf47ccb7e82b'] = 'de payer en  plusieurs fois !';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_ef8c4d6aa4e8bf337b056b1e73c1a1a9'] = 'de payer en plusieurs fois !';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_c91aaa1cb7b3090e27c5e509b8e7e29b'] = 'Une question ? C\'est par';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_bfec9d09ac1b4767c9a87ef5b814e866'] = 'ici';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_9d11b84fbe0d9eeb9136dd867fedf8fd'] = 'Votre achat pour ';
@@ -91,7 +91,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_88b973e1bb800b4cbd0552c14
 $_MODULE['<{younitedpay}prestashop>credit_propositions_aeb4d31a4109999cd216dfcfd6b423b3'] = 'Achetez aujourd’hui et commencez à payer ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_e1ae93efa9d42298da41e682ae789ed7'] = 'dans 30 jours seulement !';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_31b82bce4a28b837f4c952806f2079a7'] = 'Montant du crédit';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_bcae425e88d24f75546f48f101717505'] = 'Intérêt du crédit';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_01d6337a3b4adae7a27000ab46dbfa4f'] = 'Intérêt du crédit';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_65b281df0cf034684cfa1248bdc7db37'] = 'Montant total dû';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_64408fc092e84b9eb352626a0bcbbdf7'] = 'TAEG fixe';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_e18cbdb672d8294a47bb7dcaf5cd2d96'] = 'Taux débiteur fixe';

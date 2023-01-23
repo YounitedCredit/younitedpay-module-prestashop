@@ -1,10 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
-@font-face {
-    font-family: "Kostic Roc Grotest";
-    src: url("/modules/younitedpay/views/fonts/Kostic-Roc-Grotesk-Bold.otf") format("opentype");
-}
-
 .quickview .younitedpay_product_info {
     display:none;
 }
@@ -655,7 +650,6 @@
 }
 
 .yp-font-family-rg {
-    font-family: Kostic Roc Grotest, sans-serif !important;
     font-style: normal !important;
 }
 

@@ -93,7 +93,7 @@
             </div>
             <div class="yp-font-normal yp-pol-purpledark yp-text-2xl yp-mt-6 yp-pl-6">
                {l s='Younited, it\'s never been easier' mod='younitedpay'}
-               {l s='to pay in several times.' mod='younitedpay'}
+               {l s='to pay in installments.' mod='younitedpay'}
             </div>
             <p class="yp-mt-20 yp-pl-6 yp-pt-6">
                <span class="yp-inline-block yp-h-10">
@@ -130,7 +130,7 @@
                      <path d="M10.0001 13.3333C9.50008 13.3333 9.16675 13.6667 9.16675 14.1667C9.16675 14.6667 9.58341 15 10.0001 15C10.4167 15 10.8334 14.6667 10.8334 14.1667C10.8334 13.6667 10.5001 13.3333 10.0001 13.3333Z" fill="#564C5D"></path>
                   </svg>
                   <span class="yp-rel-2">
-                     {l s='Have a question? Visit our' mod='younitedpay'}&nbsp;
+                     {l s='Have a question? Visit our' mod='younitedpay'}
                      <a href="https://www.younited-credit.com/questions-reponses" target="_blank" 
                         class="yp-underline">
                         {l s='dedicated page' mod='younitedpay'}
@@ -189,7 +189,7 @@
                         <p class="yp-font-bold yp-pol-purpledark">{$offer.initial_amount|escape:'htmlall':'UTF-8'} €</p>
                      </div>
                      <div class="yp-flex yp-flex-row yp-justify-between yp-pb-6">
-                        <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Payment cost' mod='younitedpay'}</p>
+                        <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Financing cost' mod='younitedpay'}</p>
                         <p class="yp-font-bold yp-pol-purpledark">{$offer.interest_total|escape:'htmlall':'UTF-8'} €</p>
                      </div>
                      <hr class="yp-border-prple yp-opacity-50 yp-pb-6">
