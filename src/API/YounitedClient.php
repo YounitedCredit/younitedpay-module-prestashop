@@ -32,7 +32,6 @@ use YounitedPaySDK\Client;
 use YounitedPaySDK\Model\AbstractModel;
 use YounitedPaySDK\Request\AbstractRequest;
 use YounitedPaySDK\Response\AbstractResponse;
-use YounitedPaySDK\Uri\AbstractUri;
 
 class YounitedClient
 {
