@@ -32,7 +32,6 @@ use YounitedPaySDK\Client;
 use YounitedPaySDK\Model\AbstractModel;
 use YounitedPaySDK\Request\AbstractRequest;
 use YounitedPaySDK\Response\AbstractResponse;
-use YounitedPaySDK\Uri\AbstractUri;
 
 class YounitedClient
 {
@@ -97,13 +96,6 @@ class YounitedClient
             }
             if ($this->isProductionMode === false) {
                 $request = $request->enableSandbox();
-            }
-            $requestTarget = $request->getRequestTarget();
-            if (strpos($requestTarget, '/Contract/') !== false) {
-                /** @var AbstractUri $currentURI */
-                $currentURI = $request->getUri();
-                $currentURI->withPath('/api/1.0' . $requestTarget);
-                $request->withUri($currentURI);
             }
 
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
