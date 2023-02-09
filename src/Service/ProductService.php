@@ -93,7 +93,13 @@ class ProductService
             $request = new BestPriceRequest();
 
             /** @var array $response */
-            $response = $client->sendRequest($body, $request);
+            try {
+                $response = $client->sendRequest($body, $request);
+            } catch (\Error $err) {
+                $response = ['success' => false];
+            } catch (\Exception $ex) {
+                $response = ['success' => false];
+            }
 
             if ($response['success'] === false) {
                 return $this->noOffers();
