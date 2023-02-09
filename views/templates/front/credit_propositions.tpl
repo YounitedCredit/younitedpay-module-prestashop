@@ -87,9 +87,9 @@
                </noscript>
             </span>
             <div class="younitedpay-left-title-text yp-font-family-rg yp-text-4xl yp-mt-16">
-               <h3 class="yp-pl-6">{l s='Simple.' mod='younitedpay'}</h3>
-               <h3 class="yp-pl-6">{l s='Instant.' mod='younitedpay'}</h3>
-               <h3 class="yp-pl-6">{l s='Secured.' mod='younitedpay'}</h3>
+               <span class="yp-h3 yp-pl-6">{l s='Simple.' mod='younitedpay'}</span>
+               <span class="yp-h3 yp-pl-6">{l s='Instant.' mod='younitedpay'}</span>
+               <span class="yp-h3 yp-pl-6">{l s='Secured.' mod='younitedpay'}</span>
             </div>
             <div class="yp-font-normal yp-pol-purpledark yp-text-2xl yp-mt-6 yp-pl-6">
                {l s='Younited, it\'s never been easier' mod='younitedpay'}
@@ -147,12 +147,12 @@
                   {else}
                      {assign var="hiddenclass" value='hidden '}
                   {/if}
-                  <h4 class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-font-family-rg yp-text-xl block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
+                  <span class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-font-family-rg yp-h4 p-text-xl block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
                      {l s='Your purchase for ' mod='younitedpay'}
                      <span class="yp-text-4xl yp-font-family-rg">{l s='%s€/month' mod='younitedpay' sprintf=[$offer.installment_amount]}</span><br>
                      {l s=' with' mod='younitedpay' sprintf=[$offer.installment_amount]}
                      <span class="yp-pol-purple yp-font-bold yp-text-xl yp-font-family-rg">{l s='Younited Pay' mod='younitedpay'}</span>
-                  </h4>
+                  </span>
                {/foreach}
                <p class="yp-mt-4 yp-mb-5">
                   <span class="">{l s='Buy today and start paying' mod='younitedpay'}</span>

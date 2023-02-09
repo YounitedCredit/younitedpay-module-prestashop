@@ -32,7 +32,7 @@
     letter-spacing: 0em;    
 }
 
-#younited_popupzone h3 {
+.yp-h3 {
     font-size: 40px;
     font-weight: 700;
     line-height: 48px;
@@ -264,7 +264,7 @@
 .younitedpay-widget-root h1,
 .younitedpay-widget-root h2,
 .younitedpay-widget-root h3,
-.younitedpay-widget-root h4,
+.yp-h4,
 .younitedpay-widget-root h5,
 .younitedpay-widget-root h6,
 .younitedpay-widget-root hr,
@@ -341,10 +341,14 @@
     border-collapse: collapse
 }
 
+.yp-h4 {
+    font-size: 1.125rem;
+    font-weight:700;
+}
+
 .younitedpay-widget-root h1,
 .younitedpay-widget-root h2,
 .younitedpay-widget-root h3,
-.younitedpay-widget-root h4,
 .younitedpay-widget-root h5,
 .younitedpay-widget-root h6 {
     font-size: inherit;
