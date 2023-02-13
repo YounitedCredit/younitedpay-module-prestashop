@@ -16,20 +16,6 @@
 * @license https://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
 *}
 
-
-{if isset($logfile_content)}
-<div class="panel">
-    <div class="panel-heading">
-        <i class="icon-cogs"></i>Content of file {$logfile_name|escape:'htmlall':'UTF-8'}
-    </div>
-    <div class="panel-body">
-      <textarea style="resize: vertical;height:200px;">
-        {$logfile_content|escape:'htmlall':'UTF-8'}
-      </textarea>
-    </div>
-</div>
-{/if}
-
 <div class="panel">
     <div class="panel-heading">
         <i class="icon-cogs"></i>Logs files
@@ -51,6 +37,19 @@
         </ul>
     </div>
 </div>
+
+{if isset($logfile_content)}
+<div class="panel">
+    <div class="panel-heading">
+        <i class="icon-cogs"></i>Content of file {$logfile_name|escape:'htmlall':'UTF-8'}
+    </div>
+    <div class="panel-body">
+      <textarea style="resize: vertical;height:200px;">
+        {$logfile_content|escape:'htmlall':'UTF-8'}
+      </textarea>
+    </div>
+</div>
+{/if}
 
 <script type="text/javascript">
     var toggler = $(".caretyp").click(function() {

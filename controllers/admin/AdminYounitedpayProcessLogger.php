@@ -130,7 +130,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         );
 
         $this->context->smarty->assign([
-            'content' => $contentLogs . $content,
+            'content' => $content . $contentLogs,
         ]);
     }
 
