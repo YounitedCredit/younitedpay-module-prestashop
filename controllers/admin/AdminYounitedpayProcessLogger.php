@@ -32,17 +32,66 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
     {
         parent::__construct();
 
+        $this->fields_options['processLogger']['fields'][Younitedpay::IS_FILE_LOGGER_ACTIVE] = [            
+            'title' => $this->module->l(
+                'Activate Log files',
+                'AdminProcessLoggerController'
+            ),
+            'hint' => $this->module->l(
+                'Add all requests to log files',
+                'AdminProcessLoggerController'
+            ),
+            'validation' => 'isBool',
+            'cast' => 'intval',
+            'type' => 'bool',            
+        ];
+
         $this->logPath = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
     }
 
     public function initContent()
     {
-        $this->checkFileLogger();
-
         parent::initContent();
 
-        if (Tools::getValue('show_log_files') !== false) {
+        $idShop = \Context::getContext()->shop->id;
+        $isLoggerFileActive = Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE, null, null, $idShop);
+
+        if ($isLoggerFileActive !== false) {
             $this->showLogFiles();
+        }
+    }
+    public function saveConfiguration()
+    {
+        $shops = \Shop::getShops(false, null, true);
+        $shops[] = 0;
+        $idShop = \Context::getContext()->shop->id;
+        $loggerFileState = Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE, null, null, $idShop, '');
+        $isLoggerActive = Tools::getValue(Younitedpay::IS_FILE_LOGGER_ACTIVE);
+
+        if ($loggerFileState !== $isLoggerActive) {
+            Configuration::updateValue(
+                Younitedpay::IS_FILE_LOGGER_ACTIVE,
+                (bool) $isLoggerActive,
+                false,
+                null,
+                $idShop
+            );
+
+            $infoActivation = 'Logger file '; 
+            $infoActivation .= (bool) $isLoggerActive === true ? 'enabled ' : 'disabled ';
+            $infoActivation .= date('Y-m-d H:i:s') . ' by ';
+            $infoActivation .= $this->context->employee->firstname . ' ' . $this->context->employee->lastname;
+            $infoActivation .= ' (id ' . $this->context->employee->id . ' on shop ' . $idShop . ')';
+
+            /** @var LoggerService $loggerService */
+            $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+            $loggerService->addLog(
+                $infoActivation,
+                'file logger',
+                'info',
+                (new \ReflectionClass($this))->getShortName()
+            );
+            $this->confirmations[] = $infoActivation;
         }
     }
 
@@ -58,54 +107,31 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         $logsFiles = $logsFilesFull !== false ? $this->onlyFileNames($logsFilesFull) : [];
         $this->context->smarty->assign([
             'logs_files' => $logsFiles,
-            'logs_url' => _PS_BASE_URL_ . __PS_BASE_URI__ . 'modules/younitedpay/logs/',
+            'logs_url' => $this->context->link->getAdminLink(
+                'AdminYounitedpayProcessLogger',
+                true
+            ),
         ]);
 
         $content = $this->context->smarty->getTemplateVars('content');
 
-        $content .= $this->context->smarty->fetch(
+        if (Tools::getValue('display_file') !== false) {
+            $fileToDisplay = $this->logPath . Tools::getValue('display_file');
+            if (file_exists($fileToDisplay)) {
+                $this->context->smarty->assign([
+                    'logfile_content' => file_get_contents($fileToDisplay),
+                    'logfile_name' => Tools::getValue('display_file')
+                ]);
+            }
+        }
+
+        $contentLogs = $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/logs.tpl'
         );
 
         $this->context->smarty->assign([
-            'content' => $content,
+            'content' => $content . $contentLogs,
         ]);
-    }
-
-    private function checkFileLogger()
-    {
-        if (Tools::getValue('changelogger') === false) {
-            return;
-        }
-
-        $infoActivation = date('Y-m-d H:i:s') . ' by ';
-        $infoActivation .= $this->context->employee->firstname . ' ' . $this->context->employee->lastname;
-        $infoActivation .= ' (id ' . $this->context->employee->id . ')';
-
-        $file = _PS_MODULE_DIR_ . $this->module->name . '/logs/loggeractivated.txt';
-        if (Tools::getValue('changelogger') === 'disable') {
-            /** @var LoggerService $loggerService */
-            $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
-            $loggerService->addLog(
-                'Logger file disabled ' . $infoActivation,
-                'file logger',
-                'info',
-                (new \ReflectionClass($this))->getShortName()
-            );
-            Configuration::updateGlobalValue(Younitedpay::IS_FILE_LOGGER_ACTIVE, false);
-        }
-
-        if (Tools::getValue('changelogger') === 'enable') {
-            /** @var LoggerService $loggerService */
-            $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
-            $loggerService->addLog(
-                'Logger file enabled ' . $infoActivation,
-                'file logger',
-                'info',
-                (new \ReflectionClass($this))->getShortName()
-            );
-            Configuration::updateGlobalValue(Younitedpay::IS_FILE_LOGGER_ACTIVE, true);
-        }
     }
 
     private function onlyFileNames($logsFilesFull)

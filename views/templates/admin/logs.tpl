@@ -15,6 +15,7 @@
 * @copyright Younited
 * @license https://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
 *}
+
 <div class="panel">
     <div class="panel-heading">
         <i class="icon-cogs"></i>Logs files
@@ -26,7 +27,7 @@
                     <span class="caretyp">{$a_month|escape:'htmlall':'UTF-8'}</span>
                     <ul class="nestedyp">
                         {foreach from=$logs_files_amonth item=log_file}
-                            <li><a target="_blank" href="{$logs_url|escape:'htmlall':'UTF-8'}/{$a_month|escape:'htmlall':'UTF-8'}/{$log_file|escape:'htmlall':'UTF-8'}">
+                            <li><a target="_blank" href="{$logs_url|escape:'htmlall':'UTF-8'}&show_log_files&display_file={$a_month|escape:'htmlall':'UTF-8'}/{$log_file|escape:'htmlall':'UTF-8'}">
                                 <p>{$log_file|escape:'htmlall':'UTF-8'}</p>
                             </a></li>
                         {/foreach}
@@ -36,6 +37,19 @@
         </ul>
     </div>
 </div>
+
+{if isset($logfile_content)}
+<div class="panel">
+    <div class="panel-heading">
+        <i class="icon-cogs"></i>Content of file {$logfile_name|escape:'htmlall':'UTF-8'}
+    </div>
+    <div class="panel-body">
+      <textarea style="resize: vertical;height:200px;">
+        {$logfile_content|escape:'htmlall':'UTF-8'}
+      </textarea>
+    </div>
+</div>
+{/if}
 
 <script type="text/javascript">
     var toggler = $(".caretyp").click(function() {
