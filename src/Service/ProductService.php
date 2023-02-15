@@ -88,7 +88,6 @@ class ProductService
 
             $request = new BestPriceRequest();
 
-            /** @var array $response */
             try {
                 $response = $client->sendRequest($body, $request);
             } catch (\Error $err) {

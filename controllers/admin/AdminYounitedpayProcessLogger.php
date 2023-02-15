@@ -32,7 +32,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
     {
         parent::__construct();
 
-        $this->fields_options['processLogger']['fields'][Younitedpay::IS_FILE_LOGGER_ACTIVE] = [            
+        $this->fields_options['processLogger']['fields'][Younitedpay::IS_FILE_LOGGER_ACTIVE] = [
             'title' => $this->module->l(
                 'Activate Log files',
                 'AdminProcessLoggerController'
@@ -43,7 +43,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
             ),
             'validation' => 'isBool',
             'cast' => 'intval',
-            'type' => 'bool',            
+            'type' => 'bool',
         ];
 
         $this->logPath = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
@@ -60,6 +60,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
             $this->showLogFiles();
         }
     }
+
     public function saveConfiguration()
     {
         $shops = \Shop::getShops(false, null, true);
@@ -77,7 +78,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
                 $idShop
             );
 
-            $infoActivation = 'Logger file '; 
+            $infoActivation = 'Logger file ';
             $infoActivation .= (bool) $isLoggerActive === true ? 'enabled ' : 'disabled ';
             $infoActivation .= date('Y-m-d H:i:s') . ' by ';
             $infoActivation .= $this->context->employee->firstname . ' ' . $this->context->employee->lastname;
@@ -120,7 +121,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
             if (file_exists($fileToDisplay)) {
                 $this->context->smarty->assign([
                     'logfile_content' => Tools::file_get_contents($fileToDisplay),
-                    'logfile_name' => Tools::getValue('display_file')
+                    'logfile_name' => Tools::getValue('display_file'),
                 ]);
             }
         }
