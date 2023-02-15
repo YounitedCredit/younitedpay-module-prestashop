@@ -83,10 +83,6 @@ class ProductService
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice);
 
-            if (count($maturities) <= 0) {
-                return $this->noOffers();
-            }
-
             $body = new BestPrice();
             $body->setBorrowedAmount($productPrice);
 
