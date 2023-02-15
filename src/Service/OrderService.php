@@ -276,7 +276,7 @@ class OrderService
         // For prestashop version > 1.7.7
         if (false == empty($params['cancel_product'])) {
             $refundData = $params['cancel_product'];
-            $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
+            $amount += (float) str_replace(',', '.', $refundData['shipping_amount']);
         }
 
         $amount -= $this->calculatePartialDiscount($params);
@@ -296,7 +296,7 @@ class OrderService
 
         if (false == empty($params['refund_voucher_off'])) {
             if (false == empty($params['order_discount_price'])) {
-                return floatval($params['order_discount_price']);
+                return (float) $params['order_discount_price'];
             }
         }
 

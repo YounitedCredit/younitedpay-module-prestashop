@@ -27,7 +27,7 @@
                     <span class="caretyp">{$a_month|escape:'htmlall':'UTF-8'}</span>
                     <ul class="nestedyp">
                         {foreach from=$logs_files_amonth item=log_file}
-                            <li><a target="_blank" href="{$logs_url|escape:'htmlall':'UTF-8'}&show_log_files&display_file={$a_month|escape:'htmlall':'UTF-8'}/{$log_file|escape:'htmlall':'UTF-8'}">
+                            <li><a href="{$logs_url|escape:'htmlall':'UTF-8'}&show_log_files&display_file={$a_month|escape:'htmlall':'UTF-8'}/{$log_file|escape:'htmlall':'UTF-8'}">
                                 <p>{$log_file|escape:'htmlall':'UTF-8'}</p>
                             </a></li>
                         {/foreach}

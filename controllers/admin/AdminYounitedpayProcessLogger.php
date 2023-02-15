@@ -119,7 +119,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
             $fileToDisplay = $this->logPath . Tools::getValue('display_file');
             if (file_exists($fileToDisplay)) {
                 $this->context->smarty->assign([
-                    'logfile_content' => file_get_contents($fileToDisplay),
+                    'logfile_content' => Tools::file_get_contents($fileToDisplay),
                     'logfile_name' => Tools::getValue('display_file')
                 ]);
             }
