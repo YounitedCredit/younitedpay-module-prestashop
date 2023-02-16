@@ -141,17 +141,17 @@ document.onreadystatechange = setTimeout(function() {
     younitedEvents = true;
     if ($(".younitedpay-widget-root").length) {
         bindEventsYounitedPay();
-        if (typeof prestashop !== 'undefined') {
-            prestashop.on(
-                'updatedProduct',
-                function (event) {
-                    if (event.quantity_wanted == undefined) {
-                        event.quantity_wanted = $('#quantity_wanted').val();
-                    }
-                    updateCreditZone(event);
+    }
+    if (typeof prestashop !== 'undefined') {
+        prestashop.on(
+            'updatedProduct',
+            function (event) {
+                if (event.quantity_wanted == undefined) {
+                    event.quantity_wanted = $('#quantity_wanted').val();
                 }
-            );
-        }
+                updateCreditZone(event);
+            }
+        );
     }
 }, 75);
 

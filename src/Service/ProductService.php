@@ -83,17 +83,18 @@ class ProductService
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice);
 
-            if (count($maturities) <= 0) {
-                return $this->noOffers();
-            }
-
             $body = new BestPrice();
             $body->setBorrowedAmount($productPrice);
 
             $request = new BestPriceRequest();
 
-            /** @var array $response */
-            $response = $client->sendRequest($body, $request);
+            try {
+                $response = $client->sendRequest($body, $request);
+            } catch (\Error $err) {
+                $response = ['success' => false];
+            } catch (\Exception $ex) {
+                $response = ['success' => false];
+            }
 
             if ($response['success'] === false) {
                 return $this->noOffers();

@@ -41,6 +41,8 @@ $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_729a51874fe901b0
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_f51c7af7c02cd3a846d87d97bfaf6b58'] = 'Tous les logs ont été effacés';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_9ca4bc48596557840045a7477c803657'] = 'Vous devez spécifier un nombre de jour pour l\'effacement automatique';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_5988c28d05527a0d0ce8ae3da1134352'] = 'Les paramètres de logs ont été mis à jour avec succès';
+$_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_457957e588c4840756c638211e20b875'] = 'Activer les logs fichiers';
+$_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_d02cf6db7c047e2dd9415598c88ad8e4'] = 'Ajouter des logs fichiers pour toutes les requêtes';
 $_MODULE['<{younitedpay}prestashop>commonhook_afb5a47d1504231a95cfca9e52a217f4'] = '"Générer un avoir" doit être sélectionné pour le remboursement avec Younited Pay';
 $_MODULE['<{younitedpay}prestashop>commonhook_f473fb6d1cd3a547bad7d0bdecbf6656'] = 'Remboursement Younited Pay';
 $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a9d'] = 'Rembourser sur Younited Pay';
