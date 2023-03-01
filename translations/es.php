@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{younitedpay}prestashop>younitedpay_bb8956c67b82c7444a80c6b2433dd8b4'] = '¿Confirma que desea desinstalar este módulo?';
 $_MODULE['<{younitedpay}prestashop>younitedpay_4edca116def73110ec69474ff52d16b2'] = 'Younited Pay - Soluciones de pago con Crédito Instantáneo';
 $_MODULE['<{younitedpay}prestashop>younitedpay_71ed18e89d45a93baadf99ee7f9248de'] = 'Mejora la experiencia de tus clientes con crédito instantáneo e impulsa tu conversión';
