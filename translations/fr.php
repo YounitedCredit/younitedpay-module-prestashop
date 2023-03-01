@@ -70,6 +70,7 @@ $_MODULE['<{younitedpay}prestashop>paymentservice_30d6c29a7421ce981cfe2441d73025
 $_MODULE['<{younitedpay}prestashop>paymentservice_9f4d7ef4fca28fd48cb3722abd1d263f'] = 'Le numéro de téléphone n\'est pas saisi.';
 $_MODULE['<{younitedpay}prestashop>paymentservice_9823f84c0097beb65bdd026abb1b7560'] = 'Merci de mettre à jour votre numéro de téléphone sur votre adresse et d\'essayer à nouveau.';
 $_MODULE['<{younitedpay}prestashop>paymentservice_517f9a895123f195090de4aa59a21fd6'] = 'Le numéro de téléphone n\'est pas au format international français (+33X XX XX XX XX).';
+$_MODULE['<{younitedpay}prestashop>paymentservice_6cf3cbe2dee8f9af09b73c020487322e'] = 'Le numéro de téléphone n\'est pas au format international espagnol (+34X XX XX XX XX).';
 $_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Paiment avec Younited Pay';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_1e63d1811556fc2dad106dcbd4217a69'] = 'N° de paiement';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_31738cd694667ccdfa2cbc65249de5cc'] = 'Date du paiement';

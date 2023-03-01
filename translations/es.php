@@ -187,6 +187,7 @@ $_MODULE['<{younitedpay}prestashop>paymentservice_30d6c29a7421ce981cfe2441d73025
 $_MODULE['<{younitedpay}prestashop>paymentservice_9f4d7ef4fca28fd48cb3722abd1d263f'] = 'El número de teléfono no está completo.';
 $_MODULE['<{younitedpay}prestashop>paymentservice_9823f84c0097beb65bdd026abb1b7560'] = 'Actualice el número de teléfono de su dirección e inténtelo de nuevo.';
 $_MODULE['<{younitedpay}prestashop>paymentservice_517f9a895123f195090de4aa59a21fd6'] = 'El número de teléfono móvil no es francés y está en formato internacional (+33X XX XX XX XX).';
+$_MODULE['<{younitedpay}prestashop>paymentservice_6cf3cbe2dee8f9af09b73c020487322e'] = 'El número de teléfono móvil no es español y está en formato internacional (+34X XX XX XX XX).';
 $_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Pago a través de Younited Pay';
 $_MODULE['<{younitedpay}prestashop>configservice_ef4268001fa5b6b196363e2f9e1629ef'] = 'Llamada TLS fallida';
 $_MODULE['<{younitedpay}prestashop>configservice_7ed48b0f1b989a32e7bbd1961e88cc10'] = 'Ninguna credencial guardada';

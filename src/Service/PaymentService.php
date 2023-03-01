@@ -201,6 +201,10 @@ class PaymentService
     public function isInternationalPhone(\Address $customerAdress)
     {
         $regValidPhone = '/^\+33\d{9}/';
+        $countryDefault = new \Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        if ($countryDefault->iso_code == 'ES') {
+            $regValidPhone = '/^\+34\d{9}/';
+        }
 
         if (empty($customerAdress->phone) === true) {
             $this->errorMessage = $this->l('Phone number is not filled.');
@@ -227,6 +231,11 @@ class PaymentService
         $this->errorMessage = $this->l(
             'Cell Phone number is not french and in international format (+33X XX XX XX XX).'
         );
+        if ($countryDefault->iso_code == 'ES') {
+            $this->errorMessage = $this->l(
+                'Cell Phone number is not spanish and in international format (+34X XX XX XX XX).'
+            );
+        }
         $this->errorMessage .= ' ';
         $this->errorMessage .= $this->l('Please update your phone number of your address and try again.');
 
