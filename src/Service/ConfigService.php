@@ -47,6 +47,8 @@ class ConfigService
     /** @var ConfigRepository */
     protected $configRepository;
 
+    const DEF_MATURITIES = [10, 12, 24];
+
     public function __construct(
         ProcessLoggerHandler $logger,
         ConfigRepository $configRepository,
@@ -110,7 +112,7 @@ class ConfigService
         if ($client->isCrendentialsSet() === false) {
             return [
                 'message' => $this->l('No credential saved'),
-                'maturityList' => [3, 4, 5, 10],
+                'maturityList' => self::DEF_MATURITIES,
                 'status' => false,
             ];
         }
@@ -123,7 +125,7 @@ class ConfigService
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
                 'message' => $this->l('Response error'),
-                'maturityList' => [3, 4, 5, 10],
+                'maturityList' => self::DEF_MATURITIES,
                 'status' => false,
             ];
         }
@@ -131,7 +133,7 @@ class ConfigService
 
         return [
             'message' => $this->l('Connexion Ok'),
-            'maturityList' => count($maturityList) > 0 ? $maturityList : [3, 4, 5, 10],
+            'maturityList' => count($maturityList) > 0 ? $maturityList : self::DEF_MATURITIES,
             'status' => true,
         ];
     }
