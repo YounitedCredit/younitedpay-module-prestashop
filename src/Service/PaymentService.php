@@ -229,11 +229,11 @@ class PaymentService
             }
         }
         $this->errorMessage = $this->l(
-            'Cell Phone number is not french and in international format (+33X XX XX XX XX).'
+            'Cell Phone number is not french and in international format (+33XXXXXXXXX).'
         );
         if ($countryDefault->iso_code == 'ES') {
             $this->errorMessage = $this->l(
-                'Cell Phone number is not spanish and in international format (+34X XX XX XX XX).'
+                'Cell Phone number is not spanish and in international format (+34XXXXXXXXX).'
             );
         }
         $this->errorMessage .= ' ';
