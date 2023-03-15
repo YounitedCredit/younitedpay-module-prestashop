@@ -260,7 +260,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         ];
         $this->configService->saveAllMaturities($defaultMaturities, (int) $this->context->shop->id);
 
-        return $defaultMaturities;
+        return $this->configService->getAllMaturities();
     }
 
     protected function getAllMaturities()
