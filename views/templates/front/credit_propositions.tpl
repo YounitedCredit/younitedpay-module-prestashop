@@ -87,8 +87,8 @@
                </noscript>
             </span>
             <div class="younitedpay-left-title-text yp-font-family-rg yp-text-4xl yp-mt-16">
-               <span class="yp-h3 yp-pl-6">{l s='Simple.' mod='younitedpay'}</span>
-               <span class="yp-h3 yp-pl-6">{l s='Instant.' mod='younitedpay'}</span>
+               <span class="yp-h3 yp-pl-6">{l s='Simple.' mod='younitedpay'}</span><br />
+               <span class="yp-h3 yp-pl-6">{l s='Instant.' mod='younitedpay'}</span><br />
                <span class="yp-h3 yp-pl-6">{l s='Secured.' mod='younitedpay'}</span>
             </div>
             <div class="yp-font-normal yp-pol-purpledark yp-text-2xl yp-mt-6 yp-pl-6">
@@ -96,31 +96,9 @@
                {l s='to pay in installments.' mod='younitedpay'}
             </div>
             <p class="yp-mt-20 yp-pl-6 yp-pt-6">
-               <span class="yp-inline-block yp-h-10">
-                  <img class="yp-h-8 lazyloaded"
-                     src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/cb.png"
-                     alt="Cartes Bancaires" data-ll-status="loaded">
-                     <noscript><img class="yp-h-full"
-                        src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/cb.png"
-                        alt="Cartes Bancaires">
-                     </noscript>
-               </span>
-               <span class="yp-inline-block yp-h-10">
-                  <img class="yp-h-8 lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/visa.png"
-                     alt="Visa" data-ll-status="loaded" />
-                  <noscript>
-                     <img class="yp-h-full" src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/visa.png" alt="Visa">
-                  </noscript>
-               </span>
-               <span class="yp-inline-block yp-h-10">
-                  <img class="yp-h-8 lazyloaded"
-                     src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/mastercard.png"
-                     alt="Mastercard" data-ll-status="loaded">
-                  <noscript>
-                     <img class="yp-h-full" src="{$shop_url|escape:'htmlall':'UTF-8'}modules/younitedpay/views/img/mastercard.png" 
-                        alt="Mastercard">
-                  </noscript>
-               </span>
+               <span class="yp-inline-block yp-h-10"></span>
+               <span class="yp-inline-block yp-h-10"></span>
+               <span class="yp-inline-block yp-h-10"></span>
             </p>
             <div class="yp-mt-5 yp-px-6">
                <p class="yp-bg-prple-grey yp-pol-purpledark yp-border yp-border-prple yp-p-4">
