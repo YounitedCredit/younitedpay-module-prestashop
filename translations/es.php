@@ -6,7 +6,7 @@ $_MODULE['<{younitedpay}prestashop>younitedpay_bb8956c67b82c7444a80c6b2433dd8b4'
 $_MODULE['<{younitedpay}prestashop>younitedpay_4edca116def73110ec69474ff52d16b2'] = 'Younited Pay - Soluciones de pago con Crédito Instantáneo';
 $_MODULE['<{younitedpay}prestashop>younitedpay_71ed18e89d45a93baadf99ee7f9248de'] = 'Mejora la experiencia de tus clientes con crédito instantáneo e impulsa tu conversión';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_b4a34d3f58b039e7685c2e39b5413757'] = 'Actualización exitosa.';
-$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Please enter your API credentials before changing the module’s settings';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Por favor, introduzca sus credenciales API antes de cambiar la configuración del módulo';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'URL de WebHook enviada al portapapeles';
 $_MODULE['<{younitedpay}prestashop>payment_bd977e4e0df5b77d0692529a85e7a00f'] = 'Error durante el pago, inténtalo de nuevo.';
 $_MODULE['<{younitedpay}prestashop>success_3770b6bfff2dbe20053b13ba9d199d80'] = 'Error con el carrito. Actualice su página.';

@@ -199,7 +199,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
                 'shop_img_url' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/img/',
-                'no_keys_text' => $this->l('Please enter your API credentials before changing the module’s settings'),
+                'no_keys_text' => $this->module->l(
+                    'Please enter your API credentials before changing the module’s settings',
+                    'AdminYounitedpayConfiguration'
+                ),
             ];
 
             $alertHere = empty($this->confirmations) && empty($this->errors);
