@@ -199,7 +199,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
                 'shop_img_url' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/img/',
-                'no_keys_text' => $this->l('Please enter your API credentials before changing the module’s settings'),
+                'no_keys_text' => $this->module->l(
+                    'Please enter your API credentials before changing the module’s settings',
+                    'AdminYounitedpayConfiguration'
+                ),
             ];
 
             $alertHere = empty($this->confirmations) && empty($this->errors);
@@ -233,26 +236,26 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $this->context->shop->id,
-                'maturity' => 3,
-                'minimum' => 30,
-                'maximum' => 1000,
-                'deleted' => 0,
-                'currency' => 'EUR',
-            ],
-            [
-                'id_younitedpay_configuration' => 0,
-                'id_shop' => $this->context->shop->id,
-                'maturity' => 5,
-                'minimum' => 50,
-                'maximum' => 1000,
-                'deleted' => 0,
-                'currency' => 'EUR',
-            ],
-            [
-                'id_younitedpay_configuration' => 0,
-                'id_shop' => $this->context->shop->id,
                 'maturity' => 10,
                 'minimum' => 100,
+                'maximum' => 10000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 12,
+                'minimum' => 120,
+                'maximum' => 12000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 24,
+                'minimum' => 240,
                 'maximum' => 0,
                 'deleted' => 0,
                 'currency' => 'EUR',
@@ -260,7 +263,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         ];
         $this->configService->saveAllMaturities($defaultMaturities, (int) $this->context->shop->id);
 
-        return $defaultMaturities;
+        return $this->configService->getAllMaturities();
     }
 
     protected function getAllMaturities()
