@@ -47,11 +47,10 @@ function changeInstallment(key)
     $('.block_maturity' + key + ' span').addClass('yp-border-2 yp-border-opacity-0');
     $('.block_maturity' + key + ' span').removeClass('yp-border yp-border-opacity-50');
     
-    $('.blocks_maturities_popup span').addClass('yp-bg-white');
-    $('.blocks_maturities_popup span').removeClass('yp-bg-prple-mensuality');
+    $('.blocks_maturities_popup span').addClass('yp-mensuality-selected');
+    $('.blocks_maturities_popup span').removeClass('yp-mensuality-selected');
 
-    $('.block_maturity_popup' + key + ' span').addClass('yp-bg-prple-mensuality');
-    $('.block_maturity_popup' + key + ' span').removeClass('yp-bg-white');
+    $('.block_maturity_popup' + key + ' span').addClass('yp-mensuality-selected');
 
     $('.block_contents').addClass('hidden');
     $('.block_content' + key).removeClass('hidden');

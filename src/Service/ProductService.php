@@ -107,7 +107,7 @@ class ProductService
             ]);
         }
 
-        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/credit_propositions.tpl';
+        $template = 'module:younitedpay/views/templates/front/credit_propositions.tpl';
 
         $this->context->smarty->assign([
             'shop_url' => __PS_BASE_URI__,
@@ -119,7 +119,7 @@ class ProductService
         ]);
 
         return [
-            'template' => $this->context->smarty->fetch($template),
+            'template' => $this->module->fetch($template),
             'offers' => $offers,
         ];
     }

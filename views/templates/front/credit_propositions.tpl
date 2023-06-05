@@ -78,83 +78,80 @@
                <path d="M8.4 7L13.7 1.7C14.1 1.3 14.1 0.7 13.7 0.3C13.3 -0.1 12.7 -0.1 12.3 0.3L7 5.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L5.6 7L0.3 12.3C-0.1 12.7 -0.1 13.3 0.3 13.7C0.5 13.9 0.7 14 1 14C1.3 14 1.5 13.9 1.7 13.7L7 8.4L12.3 13.7C12.5 13.9 12.8 14 13 14C13.2 14 13.5 13.9 13.7 13.7C14.1 13.3 14.1 12.7 13.7 12.3L8.4 7Z" />
             </svg>
          </button>
-         <div class="yp-h-full yp-w-full md:yp-w-2/5 yp-p-6 yp-border-lprple yp-bg-purple-light">
-            <span class="yp-flex yp-popup-logo yp-pl-2">
-               <img class="yp-h-16 lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="youpay"
-                  data-ll-status="loaded" />
-               <noscript>
-                  <img class="yp-h-8" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="youpay">
-               </noscript>
-            </span>
-            <div class="younitedpay-left-title-text yp-font-family-rg yp-text-4xl yp-mt-16">
-               <span class="yp-h3 yp-pl-6">{l s='Simple.' mod='younitedpay'}</span><br />
-               <span class="yp-h3 yp-pl-6">{l s='Instant.' mod='younitedpay'}</span><br />
-               <span class="yp-h3 yp-pl-6">{l s='Secured.' mod='younitedpay'}</span>
+         <div class="yp-h-full yp-w-full md:yp-w-2/5 yp-border-lprple yp-bg-purple-light">
+            <div class="yp-left-title-text yp-font-family-rg yp-mt-16">
+               <span class="yp-h3">{l s='Buy now and pay as you go' mod='younitedpay'}</span>
             </div>
-            <div class="yp-font-normal yp-pol-purpledark yp-text-2xl yp-mt-6 yp-pl-6">
-               {l s='Younited, it\'s never been easier' mod='younitedpay'}
-               {l s='to pay in installments.' mod='younitedpay'}
+            <div class="yp-mt-16 yp-font-normal">
+                <span class="yp-step">
+                    <span class="yp-linumber">1</span>
+                    <span>{l s='At checkout step, select ' mod='younitedpay'}<b>{l s='Younited Pay' mod='younitedpay'}</b></span>
+                </span>
+                <span class="yp-step">
+                    <span class="yp-linumber">2</span>
+                    <span>{l s='Choose the repayment ' mod='younitedpay'}<b>{l s='duration' mod='younitedpay'}</b></span>
+                </span>
+                <span class="yp-step">
+                    <span class="yp-linumber">3</span>
+                    <span><b>{l s='Simply ' mod='younitedpay'}</b>{l s='and' mod='younitedpay'} 
+                    <b>{l s='securely' mod='younitedpay'}</b> {l s='connect your bank account' mod='younitedpay'}</span>
+                </span>
+                <span class="yp-step">
+                    <span class="yp-linumber">4</span>
+                    <span>{l s='Receive a response ' mod='younitedpay'}<b>{l s='within seconds' mod='younitedpay'}</b></span>
+                </span>
             </div>
-            <p class="yp-mt-20 yp-pl-6 yp-pt-6">
-               <span class="yp-inline-block yp-h-10"></span>
-               <span class="yp-inline-block yp-h-10"></span>
+            <p class="yp-mt-6">
                <span class="yp-inline-block yp-h-10"></span>
             </p>
-            <div class="yp-mt-5 yp-px-6">
-               <p class="yp-bg-prple-grey yp-pol-purpledark yp-border yp-border-prple yp-p-4">
-                  <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;padding-right:6px!important;">
-                     <path d="M10 0.833344C4.91671 0.833344 0.833374 4.91668 0.833374 10C0.833374 15.0833 4.91671 19.1667 10 19.1667C15.0834 19.1667 19.1667 15.0833 19.1667 10C19.1667 4.91668 15.0834 0.833344 10 0.833344ZM10 17.5C5.83337 17.5 2.50004 14.1667 2.50004 10C2.50004 5.83334 5.83337 2.50001 10 2.50001C14.1667 2.50001 17.5 5.83334 17.5 10C17.5 14.1667 14.1667 17.5 10 17.5Z" fill="#564C5D"></path>
-                     <path d="M11.0001 5.16667C9.25008 4.58334 7.33341 5.5 6.75008 7.16667C6.66674 7.66667 6.83341 8.16667 7.33341 8.25C7.75008 8.41667 8.25008 8.16667 8.41674 7.75C8.75008 6.91667 9.66674 6.41667 10.5834 6.75C11.2501 7 11.6667 7.58334 11.6667 8.33334C11.6667 9.16667 10.2501 9.83334 9.75008 10.0833C9.33341 10.25 9.08341 10.6667 9.25008 11.1667C9.33341 11.5 9.66674 11.75 10.0001 11.75C10.0834 11.75 10.1667 11.75 10.2501 11.6667C10.5834 11.5833 13.3334 10.5833 13.3334 8.41667C13.2501 6.91667 12.3334 5.66667 11.0001 5.16667Z" fill="#564C5D"></path>
-                     <path d="M10.0001 13.3333C9.50008 13.3333 9.16675 13.6667 9.16675 14.1667C9.16675 14.6667 9.58341 15 10.0001 15C10.4167 15 10.8334 14.6667 10.8334 14.1667C10.8334 13.6667 10.5001 13.3333 10.0001 13.3333Z" fill="#564C5D"></path>
-                  </svg>
-                  <span class="yp-rel-2">
-                     {l s='Have a question? Visit our' mod='younitedpay'}
-                     <a href="https://www.younited-credit.com/questions-reponses" target="_blank" 
-                        class="yp-underline">
-                        {l s='dedicated page' mod='younitedpay'}
-                     </a>
-                  </span>
-               </p>
-            </div>
+            <span class="yp-flex yp-popup-logo yp-pl-2">
+               <img class="lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="youpay"
+                  data-ll-status="loaded" />
+               <noscript>
+                  <img src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="youpay">
+               </noscript>
+            </span>
          </div>
-         <div class="younitedpay-howItWorks__planPanel yp-h-full yp-w-full md:yp-w-3/5 yp-p-8 yp-pb-24 md:yp-pb-8 md:yp-pt-8 yp-flex yp-flex-col yp-align-center yp-bg-beige">
+         <div class="yp-right yp-h-full yp-w-full md:yp-w-3/5 yp-pb-24 md:yp-pb-8 md:yp-pt-8 yp-flex yp-flex-col yp-align-center yp-bg-beige">
             <div class="yp-flex-grow">
+               <div class="yp-text-xl yp-mt-4 yp-mb-5 yp-h4 yp-font-bold">
+                  <span>{l s='Start paying' mod='younitedpay'}&nbsp;</span>
+                  <span>{l s='in just 30 days !' mod='younitedpay'}</span>
+               </div>
                {foreach from=$offers item=offer key=key}
                   {if $key === 0}
                      {assign var="hiddenclass" value=''}
                   {else}
                      {assign var="hiddenclass" value='hidden '}
                   {/if}
-                  <span class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-font-family-rg yp-h4 p-text-xl block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
+                  <span class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-font-family-rg yp-text-20 block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
                      {l s='Your purchase for ' mod='younitedpay'}
-                     <span class="yp-text-4xl yp-font-family-rg">{l s='%s€/month' mod='younitedpay' sprintf=[$offer.installment_amount]}</span><br>
-                     {l s=' with' mod='younitedpay' sprintf=[$offer.installment_amount]}
-                     <span class="yp-pol-purple yp-font-bold yp-text-xl yp-font-family-rg">{l s='Younited Pay' mod='younitedpay'}</span>
+                     <span class="yp-pol-purple yp-font-bold yp-font-family-rg">{l s='%s€/month' mod='younitedpay' sprintf=[$offer.installment_amount]}</span>
+                     
                   </span>
                {/foreach}
-               <p class="yp-mt-4 yp-mb-5">
-                  <span class="">{l s='Buy today and start paying' mod='younitedpay'}</span>
-                  <span class="yp-pol-purpledark yp-font-bold yp-text-sm">{l s='in just 30 days !' mod='younitedpay'}</span>
-               </p>
                <ul class="yp-flex yp-justify-left yp-pol-purpledark">
                   {foreach from=$offers item=offer key=key}
                      {if $key === 0}
-                        {assign var="background_block" value='yp-bg-prple-mensuality'}
+                        {assign var="background_block" value='yp-mensuality-selected'}
                      {else}
-                        {assign var="background_block" value='yp-bg-white'}
+                        {assign var="background_block" value=''}
                      {/if}
                      <li class="blocks_maturities_popup block_maturity_popup{$key|escape:'htmlall':'UTF-8'} yp-group yp-inline-block yp-transition-all duration-200 
                            yp-text-sm yp-mr-3 yp-cursor-pointer yp-text-sm"
                            data-key="{$key|escape:'htmlall':'UTF-8'}"
                            data-mouseover="{$offer.installment_amount|escape:'htmlall':'UTF-8'}€ x{$offer.maturity|escape:'htmlall':'UTF-8'}">
                         <span
-                           class="yp-flex yp-p-2 yp-pt-2 yp-pb-2 yp-my-4 yp-border-purple-bright yp-border yp-transition-colors yp-duration-200 yp-select-none {$background_block|escape:'htmlall':'UTF-8'}">
+                           class="yp-flex yp-p-2 yp-pt-2 yp-pb-2 yp-my-4 yp-border-b-2 yp-border-purple-dark yp-transition-colors yp-duration-200 yp-select-none {$background_block|escape:'htmlall':'UTF-8'}">
                            {$offer.maturity|escape:'htmlall':'UTF-8'} {l s='months' mod='younitedpay'}
                         </span>
                      </li>
                   {/foreach}
                </ul>
-               <div class="yp-bg-prple-grey yp-border yp-border-prple yp-p-6">
+
+               <div class="yp-hr"></div>
+
+               <div class="yp-bg-purple-light yp-p-6">
                {foreach from=$offers item=offer key=key}
                   {if $key === 0}
                      {assign var="hiddenclass" value=''}
@@ -163,31 +160,36 @@
                   {/if}
                   <div class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-mb-8 yp-text-lg block_contents block_content{$key|escape:'htmlall':'UTF-8'} yp-pol-purpledark yp-mb-8">
                      <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
-                        <p class="yp-pol-purpledark yp-font-normal">{l s='Amount of financing' mod='younitedpay'}</p>
-                        <p class="yp-font-bold yp-pol-purpledark">{$offer.initial_amount|escape:'htmlall':'UTF-8'} €</p>
+                        <p class="yp-pol-purpledark yp-font-normal">{l s='Credit amount' mod='younitedpay'}</p>
+                        <p class="yp-weight600 yp-pol-purpledark">{$offer.initial_amount|escape:'htmlall':'UTF-8'} €</p>
                      </div>
                      <div class="yp-flex yp-flex-row yp-justify-between yp-pb-6">
-                        <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Financing cost' mod='younitedpay'}</p>
-                        <p class="yp-font-bold yp-pol-purpledark">{$offer.interest_total|escape:'htmlall':'UTF-8'} €</p>
+                        <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Interest on credit' mod='younitedpay'}</p>
+                        <p class="yp-weight600 yp-pol-purpledark">{$offer.interest_total|escape:'htmlall':'UTF-8'} €</p>
                      </div>
                      <hr class="yp-border-prple yp-opacity-50 yp-pb-6">
-                     <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
-                        <p class="yp-font-bold yp-pol-purpledark"><b>= {l s='Total amount owed' mod='younitedpay'}</b></p>
-                        <p class="yp-font-bold yp-pol-purpledark">{$offer.total_amount|escape:'htmlall':'UTF-8'} €</p>
+                     <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2 yp-text-20 yp-weight600">
+                        <span class="yp-pol-purpledark"><b>= {l s='Total amount due' mod='younitedpay'}</b></span>
+                        <span class="yp-pol-purpledark">{$offer.total_amount|escape:'htmlall':'UTF-8'} €</span>
                      </div>
                   </div>
-                  <div class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-mt-6 yp-text-lg block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
+                  <div class="{$hiddenclass|escape:'htmlall':'UTF-8'}yp-mt-6 yp-text-20 block_contents block_content{$key|escape:'htmlall':'UTF-8'}">
                      <div class="yp-justify-between yp-flex yp-flex-row yp-mb-2">
-                        <p class="yp-font-bold yp-pol-purpledark">{l s='Fixed APR' mod='younitedpay'}</p>
-                        <p class="yp-font-bold yp-pol-purpledark">{$offer.taeg|escape:'htmlall':'UTF-8'} %</p>
+                        <span class="yp-weight600 yp-pol-purpledark">{l s='Fixed APR' mod='younitedpay'}
+                        {if $iso_code != 'es'}
+                           <br /><span class="yp-font-normal">{l s='(excluding optional insurance)' mod='younitedpay'}</span>
+                        {/if}
+                        </span>
+                        <span class="yp-weight600 yp-pol-purpledark">{$offer.taeg|escape:'htmlall':'UTF-8'} %</span>
                      </div>
                      <div class="yp-justify-between yp-flex yp-flex-row yp-mb-2">
-                        <p class="yp-font-bold yp-pol-purpledark">{l s='Fixed borrowing rate' mod='younitedpay'}</p>
-                        <p class="yp-font-bold yp-pol-purpledark">{$offer.tdf|escape:'htmlall':'UTF-8'} %</p>
+                        <span class="yp-weight600 yp-pol-purpledark">{l s='Fixed borrowing rate' mod='younitedpay'}</span>
+                        <span class="yp-weight600 yp-pol-purpledark">{$offer.tdf|escape:'htmlall':'UTF-8'} %</span>
                      </div>
                   </div>
                {/foreach}
                </div>
+
                <div class="yp-mt-4 yp-text-responsabilities">
                   <p>
                      {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
