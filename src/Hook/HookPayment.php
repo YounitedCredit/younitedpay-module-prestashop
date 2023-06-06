@@ -89,6 +89,7 @@ class HookPayment extends AbstractHook
         $totalOffers = $templateCredit['offers'];
 
         $paymentOptions = [];
+        Context::getContext()->smarty->assign('iso_code', Context::getContext()->language->iso_code);
         try {
             $paymentOptions = $this->getYounitedPaymentOption($totalOffers, $errorMessage);
         } catch (\Exception $ex) {

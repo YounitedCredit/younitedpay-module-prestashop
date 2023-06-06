@@ -27,9 +27,11 @@
         {l s='Fixed borrowing rate of %s' mod='younitedpay' sprintf=[$credit.tdf]}%.&nbsp;
         {l s='Interest and fees due of %s€.' mod='younitedpay' sprintf=[$credit.interest_total]}
     </p>
-    <p>
-        <b>{l s='Taking out a loan is a commitment with an obligation of repayment. Verify your ability to repay the loan before committing.' mod='younitedpay'}</b>
-    </p>
+    {if $iso_code != 'es'}
+        <p>
+            <b>{l s='Taking out a loan is a commitment with an obligation of repayment. Verify your ability to repay the loan before committing.' mod='younitedpay'}</b>
+        </p>
+    {/if}
     {if count($error) > 0}    
         <div class="alert alert-warning">
             <ul style="margin-bottom:auto!important;list-style:disc!important;">
