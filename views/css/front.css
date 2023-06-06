@@ -33,10 +33,10 @@
 }
 
 .yp-h3 {
-    font-size: 40px;
+    font-size: 38px!important;
     font-weight: 500;
     line-height: 45px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em!important;
 }
 
 .younitedpay_logo {
@@ -781,6 +781,10 @@
     margin-right: 12px !important
 }
 
+.yp-left-title-text {
+    margin-top:54px !important;
+}
+
 .yp-mb-5 {
     margin-bottom: 20px !important
 }
@@ -1228,7 +1232,7 @@
    
 .yp-linumber {
     background-color: #c5a1fe;
-    color: #7a7a7a;
+    color: #564c5d;
     padding: 8px 14px!important;
     margin-right: 12px!important;
 }
@@ -1314,7 +1318,7 @@
 
 .yp-hr {
     background-color: #DDDBDF;
-    height:1.5px;
+    height:2.5px;
     width:100%;
     margin: 15px 0 25px!important;
 }
