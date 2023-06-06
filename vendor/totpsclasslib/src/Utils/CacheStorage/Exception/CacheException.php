@@ -26,8 +26,8 @@
 
 namespace YounitedpayClasslib\Utils\CacheStorage\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShopException;
 
-class CacheException extends DomainException
+class CacheException extends PrestaShopException
 {
 }
