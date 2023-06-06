@@ -215,7 +215,7 @@
                </div>
 
                <div class="yp-mt-4 yp-text-responsabilities">
-                  {if $iso_code != 'en'}
+                  {if $iso_code == 'fr'}
                      <p>
                         {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
                         {l s='obligation of repayment.' mod='younitedpay'}
