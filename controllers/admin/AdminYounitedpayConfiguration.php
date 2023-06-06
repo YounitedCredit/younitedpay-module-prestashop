@@ -209,7 +209,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $tplVars['configuration']['alert'] = $alertHere !== true;
 
-            $isoLangMarketting = $this->context->language->iso_code !== 'fr' ? 'en' : 'fr';
+            $isoLangMarketting = $this->context->language->iso_code;
+            if ($isoLangMarketting != 'es' && $isoLangMarketting != 'fr') {
+                $isoLangMarketting = 'en';
+            }
             $tplVars['configuration']['iso_lang'] = $isoLangMarketting;
         }
 
