@@ -52,25 +52,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading2" data-target="#collapse2">
-                            <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
-                                    href="#collapse2" aria-expanded="true">
-                                    {l s='What information should I add to my General Terms and Conditins (GTC) ?' mod='younitedpay'}
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse2" class="collapse" role="tabpanel" aria-labelledby="heading2">
-                            <div class="panel-body px-3 mb-4">
-                                {l s='In order to comply with the legislation, please add to your General Terms and Conditions (GTC) with the hyperlinks and replace [the Seller] with your company name:'  mod='younitedpay'}
-                                <br />{l s='"[The Seller] offers its Customers the credit service of Younited Pay for the settlement of their purchases and the execution of the payment. This is conditional on the Customer\'s acceptance of the credit agreement offered by Younited."'  mod='younitedpay'}
-                                <br />{l s='"Any refusal by Younited to grant credit for an order may result in the cancellation of the order.'  mod='younitedpay'}
-                                <br />{l s='Any termination of the T&Cs binding the Customer and [the Seller] shall result in the termination of the credit agreement between Younited and the Customer."' mod='younitedpay'}
-                                <br />{l s='In addition, also add to your General Terms and Conditions (GTC) (in accordance with Article L312-45, under penalty of fine): "The amount is paid by a credit granted by Younited registered on the REGAFI under number 13156."' mod='younitedpay'}
-                            </div>
-                        </div>
-                    </div>
                     <div class="panel panel-default mb-3">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading3" data-target="#collapse3">
                             <h4 class="panel-title">
@@ -115,6 +96,25 @@
                         <div id="collapse5" class="collapse" role="tabpanel" aria-labelledby="heading5">
                             <div class="panel-body px-3 mb-4">
                                 {l s='You have the possibility to whitelist IP addresses, allowing a test of the module on your production environment without display to all clients.' mod='younitedpay'}                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading2" data-target="#collapse2">
+                            <h4 class="panel-title">
+                                <a role="button" title="" data-parent="#accordion"
+                                    href="#collapse2" aria-expanded="true">
+                                    {l s='What information should I add to my General Terms and Conditins (GTC) ?' mod='younitedpay'}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="collapse" role="tabpanel" aria-labelledby="heading2">
+                            <div class="panel-body px-3 mb-4">
+                                {l s='In order to comply with the legislation, please add to your General Terms and Conditions (GTC) with the hyperlinks and replace [the Seller] with your company name:'  mod='younitedpay'}
+                                <br />{l s='"[The Seller] offers its Customers the credit service of Younited Pay for the settlement of their purchases and the execution of the payment. This is conditional on the Customer\'s acceptance of the credit agreement offered by Younited."'  mod='younitedpay'}
+                                <br />{l s='"Any refusal by Younited to grant credit for an order may result in the cancellation of the order.'  mod='younitedpay'}
+                                <br />{l s='Any termination of the T&Cs binding the Customer and [the Seller] shall result in the termination of the credit agreement between Younited and the Customer."' mod='younitedpay'}
+                                <br />{l s='In addition, also add to your General Terms and Conditions (GTC) (in accordance with Article L312-45, under penalty of fine): "The amount is paid by a credit granted by Younited registered on the REGAFI under number 13156."' mod='younitedpay'}
                             </div>
                         </div>
                     </div>

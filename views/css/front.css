@@ -33,10 +33,10 @@
 }
 
 .yp-h3 {
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 48px;
-    letter-spacing: -0.02em;
+    font-size: 38px!important;
+    font-weight: 500;
+    line-height: 45px;
+    letter-spacing: -0.03em!important;
 }
 
 .younitedpay_logo {
@@ -527,6 +527,11 @@
     border-color: rgba(253, 175, 111, var(--border-opacity)) !important
 }
 
+.yp-border-light {
+    --border-opacity: 1 !important;
+    border-color: #DDDBDF !important;
+}
+
 .yp-border-black {
   border-color: black!important;
 }
@@ -686,7 +691,8 @@
 }
 
 .yp-h-full {
-    height: 100% !important
+    height: 100% !important;
+    padding:40px!important;
 }
 
 .yp-h-screen {
@@ -708,6 +714,10 @@
 
 .yp-text-lg {
     font-size: 18px !important
+}
+
+.yp-text-20 {
+    font-size: 20px !important
 }
 
 .yp-text-xl {
@@ -769,6 +779,10 @@
 
 .yp-mr-3 {
     margin-right: 12px !important
+}
+
+.yp-left-title-text {
+    margin-top:54px !important;
 }
 
 .yp-mb-5 {
@@ -851,8 +865,11 @@
 }
 
 .yp-popup-logo {
-    right:15px;
-    bottom:15px;
+    justify-content: center;
+}
+
+.yp-popup-logo img {
+    width: 95px;
 }
 
 .yp-p-1 {
@@ -1204,14 +1221,20 @@
 
 .younitedpay-left-title-text {
     font-weight: 500 !important;
-    font-size: 40px!important;
+    font-size: 38px!important;
 }
 
-.younitedpay-text-highlight-md {
-    border-bottom-width: 5px;
-    --border-opacity: 1;
-    border-color: #ff414d;
-    border-color: rgba(255, 65, 77, var(--border-opacity))
+.yp-step {
+    display:flex!important;
+    align-items: center!important;
+    margin-bottom:20px!important;
+}
+   
+.yp-linumber {
+    background-color: #c5a1fe;
+    color: #564c5d;
+    padding: 8px 14px!important;
+    margin-right: 12px!important;
 }
 
 .plan-pill-multiplier {
@@ -1232,7 +1255,7 @@
     }
 
     .md\:yp-max-w-4xl {
-        max-width: 950px !important
+        max-width: 1015px !important
     }
 
     .md\:yp-p-0 {
@@ -1260,11 +1283,11 @@
     }
 
     .md\:yp-w-2\/5 {
-        width: 40% !important;
+        width: 32% !important;
     }
 
     .md\:yp-w-3\/5 {
-        width: 60% !important;
+        width: 68% !important;
     }
 
     .md\:yp-h-800 {
@@ -1286,16 +1309,22 @@
     }
 }
 
-.younitedpay-howItWorks__steps li {
-    background: transparent url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2217%22%20height%3D%2217%22%20viewBox%3D%220%200%2017%2017%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%227%22%20width%3D%223%22%20height%3D%2217%22%20fill%3D%22%23FDAF6F%22%2F%3E%0A%3Crect%20y%3D%227%22%20width%3D%2217%22%20height%3D%223%22%20fill%3D%22%23FDAF6F%22%2F%3E%0A%3C%2Fsvg%3E') no-repeat 0
-}
-
-.younitedpay-howItWorks__planPanel {
+.yp-right {
     --bg-opacity: 1;
     background-color: white!important;
-    background-color: rgba(255, 247, 240, var(--bg-opacity));    
     background-repeat: no-repeat;
     background-position: 100%
+}
+
+.yp-hr {
+    background-color: #DDDBDF;
+    height:2.5px;
+    width:100%;
+    margin: 15px 0 25px!important;
+}
+
+.yp-weight600 {
+    font-weight: 600!important;
 }
 
 .yp-border-lprple {
@@ -1339,8 +1368,9 @@
     fill: #6200fe;
 }
 
-.blocks_maturities_popup:hover span {
-    background-color: #EFE6FF!important;
+.yp-mensuality-selected, .blocks_maturities_popup:hover span {
+    color: #6200fe!important;
+    border-color: #6200fe!important;
 }
 
 .hidden {
