@@ -206,7 +206,7 @@ class PaymentService
             $regValidPhone = '/^\+34\d{9}/';
         }
 
-        if (empty($customerAdress->phone) === true) {
+        if (empty($customerAdress->phone) === true && empty($customerAdress->phone_mobile) === true) {
             $this->errorMessage = $this->l('Phone number is not filled.');
             $this->errorMessage .= ' ';
             $this->errorMessage .= $this->l('Please update your phone number of your address and try again.');
