@@ -161,6 +161,7 @@ class PaymentService
         $merchantUrls = (new MerchantUrls())
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
+            ->setOnGrantedWebhookUrl($this->getLink('success', ['granted' => 1]))
             ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
             ->setOnWithdrawnWebhookUrl($this->getLink('webhook', ['widhdrawn' => 1]));
 
@@ -275,7 +276,7 @@ class PaymentService
             return false;
         }
 
-        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
@@ -321,7 +322,7 @@ class PaymentService
 
         $total = (float) $cart->getOrderTotal(true, \Cart::BOTH);
 
-        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
