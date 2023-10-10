@@ -63,7 +63,10 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
                 ]),
                 'Error comparing cart while payment'
             );
-            $this->redirectWithNotifications($orderUrl);
+            $this->redirectWithNotificationsAction(
+                $orderUrl,
+                'Error with the cart. Please refresh your page.'
+            );
         }
 
         $customer = new Customer($cart->id_customer);
@@ -75,7 +78,10 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
                 ]),
                 'Error loading Customer'
             );
-            $this->redirectWithNotifications($orderUrl);
+            $this->redirectWithNotificationsAction(
+                $orderUrl,
+                'Error with the customer. Please verify your order.'
+            );
         }
 
         if ($cart->orderExists() === true) {
@@ -90,7 +96,14 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
                 'Error: impossible to retrieve amount of payment done on Younited Pay',
                 'success'
             );
-            $this->redirectWithNotifications($orderUrl);
+            $paymentService->logError(
+                'Impossible to retrieve amount of payment done on Younited Pay',
+                'Error Payment amount'
+            );
+            $this->redirectWithNotificationsAction(
+                $orderUrl,
+                'Error: impossible to retrieve amount of payment done on Younited Pay'
+            );
         }
 
         $amountCart = $cart->getOrderTotal(true, \Cart::BOTH);
@@ -101,7 +114,14 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             );
             $errorCart = sprintf($this->l('Cart: %s€ - Contract: %s€', 'success'), $amountCart, $amoutCreditRequested);
             $this->errors[] = $errorCart;
-            $this->redirectWithNotifications($orderUrl);
+            $paymentService->logError(
+                'The amount of the contract is different than the total of the cart',
+                'Error Cart amount'
+            );
+            $this->redirectWithNotificationsAction(
+                $orderUrl,
+                'Error: the amount of the contract is different than the total of the cart'
+            );
         }
         parent::initContent();
 
@@ -134,11 +154,12 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             ]),
             'Error while creating order'
         );
-        $this->redirectWithNotifications($orderUrl);
+        $this->redirectWithNotificationsAction($orderUrl, 'Error creating order');
     }
 
     protected function redirectToOrder($cart, $customer)
     {
+        $this->stopIfGrantedAction('Redirect to order');
         $linkOrder = $this->context->link->getPageLink(
             'order-confirmation',
             null,
@@ -151,6 +172,30 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
             ]
         );
 
-        $this->redirectWithNotifications($linkOrder);
+        $this->redirectWithNotificationsAction($linkOrder, 'Redirect to order');
+    }
+
+    public function redirectWithNotificationsAction($url, $message)
+    {
+        $this->stopIfGrantedAction($message);
+        parent::redirectWithNotifications($url);
+    }
+
+    protected function stopIfGrantedAction($message)
+    {
+        if (Tools::getValue('granted') !== false) {
+            /** @var PaymentService $paymentService */
+            $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
+            $paymentService->logError(
+                'Granted catched: [success] ' . $message,
+                'Error while creating order'
+            );
+            if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+                $this->ajaxRender('[success]' . $message);
+                exit;
+            } else {
+                $this->ajaxDie('[success] ' . $message);
+            }
+        }
     }
 }

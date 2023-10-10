@@ -161,6 +161,7 @@ class PaymentService
         $merchantUrls = (new MerchantUrls())
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
+            ->setOnGrantedWebhookUrl($this->getLink('success', ['granted' => 1]))
             ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
             ->setOnWithdrawnWebhookUrl($this->getLink('webhook', ['widhdrawn' => 1]));
 
@@ -206,7 +207,7 @@ class PaymentService
             $regValidPhone = '/^\+34\d{9}/';
         }
 
-        if (empty($customerAdress->phone) === true) {
+        if (empty($customerAdress->phone) === true && empty($customerAdress->phone_mobile) === true) {
             $this->errorMessage = $this->l('Phone number is not filled.');
             $this->errorMessage .= ' ';
             $this->errorMessage .= $this->l('Please update your phone number of your address and try again.');
@@ -275,7 +276,7 @@ class PaymentService
             return false;
         }
 
-        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
@@ -321,7 +322,7 @@ class PaymentService
 
         $total = (float) $cart->getOrderTotal(true, \Cart::BOTH);
 
-        $younitedContract = $this->getContractByCart($this->context->cart->id);
+        $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
