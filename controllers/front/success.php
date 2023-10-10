@@ -190,11 +190,11 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
                 'Granted catched: [success] ' . $message,
                 'Error while creating order'
             );
-            if (version_compare(_PS_VERSION_, '1.7.5', '<')) {
-                $this->ajaxDie('[success] ' . $message);
-            } else {
+            if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
                 $this->ajaxRender('[success]' . $message);
                 exit;
+            } else {
+                $this->ajaxDie('[success] ' . $message);
             }
         }
     }
