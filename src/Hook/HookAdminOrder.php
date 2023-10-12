@@ -112,8 +112,6 @@ class HookAdminOrder extends AbstractHook
 
             $orderservice->withdrawnContract($order->id, '', $amountWithdrawn);
         }
-
-        return;
     }
 
     public function actionValidateOrder($params)
