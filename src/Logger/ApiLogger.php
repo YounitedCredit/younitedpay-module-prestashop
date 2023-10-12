@@ -17,11 +17,12 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
+
+namespace YounitedpayAddon\Logger;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
-namespace YounitedpayAddon\Logger;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

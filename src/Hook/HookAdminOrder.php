@@ -16,11 +16,12 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
+
+namespace YounitedpayAddon\Hook;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
-namespace YounitedpayAddon\Hook;
 
 use Configuration;
 use Younitedpay;

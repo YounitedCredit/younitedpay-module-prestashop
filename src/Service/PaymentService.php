@@ -17,11 +17,12 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
+
+namespace YounitedpayAddon\Service;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
-namespace YounitedpayAddon\Service;
 
 use Configuration;
 use Customer;
@@ -401,21 +402,6 @@ class PaymentService
     protected function getLink($controller, $params = [])
     {
         $params['id_cart'] = $this->context->cart->id;
-
-        /** @TODO : TEST TO REMOVE FOR WEBHOOKS */
-        $domain = Configuration::getGlobalValue('PS_SHOP_DOMAIN');
-        if (strpos($domain, 'kevin.tot') !== false && ( $controller === 'webhook' || isset($params['granted']) )) {
-            $link = 'https://test202.ddns.net/proxy/index.php?';
-            $link .= 'domain=' . $domain . '&fc=module&module=younitedpay';
-            $link .= '&controller=' . $controller . '&page=index.php';
-            foreach ($params as $param => $content) {
-                $link .= '&' . $param . '=' . $content;
-            }
-
-            return $link;
-        }
-        /* END TESTS WEBHOOKS */
-
 
         return $this->context->link->getModuleLink(
             $this->module->name,
