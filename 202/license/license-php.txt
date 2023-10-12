@@ -1,4 +1,4 @@
-{**
+/**
  * Copyright since 2022 Younited Credit
  *
  * NOTICE OF LICENSE
@@ -14,8 +14,7 @@
  * @author	 202 ecommerce <tech@202-ecommerce.com>
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
- *}
-
- {include file='./status-and-headers.tpl' connected=$connected specifications=$config_check alert=$configuration.alert}
-
- {include file='./configuration.tpl' configuration=$configuration}
+ */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}

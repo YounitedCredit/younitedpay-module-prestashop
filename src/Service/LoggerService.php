@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright Younited
+ * Copyright since 2022 Younited Credit
  *
  * NOTICE OF LICENSE
  *
@@ -13,10 +13,13 @@
  * obtain it through the world-wide-web, please send an email
  * to tech@202-ecommerce.com so we can send you a copy immediately.
  *
- * @author    202 ecommerce <tech@202-ecommerce.com>
- * @copyright Younited
+ * @author	 202 ecommerce <tech@202-ecommerce.com>
+ * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 namespace YounitedpayAddon\Service;
 
