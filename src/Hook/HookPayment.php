@@ -70,6 +70,7 @@ class HookPayment extends AbstractHook
         $currency = new \Currency(Context::getContext()->cart->id_currency);
         if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
             $errorMessage[] = $this->l('Not available in this currency (only EUR)');
+
             return []; // @TODO: See with Younited if button to change currrency or let as this (only EUR)
         }
 
