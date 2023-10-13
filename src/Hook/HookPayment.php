@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Bridge
+ * Copyright since 2022 Younited Credit
  *
  * NOTICE OF LICENSE
  *
@@ -12,12 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to tech@202-ecommerce.com so we can send you a copy immediately.
  *
- * @author    202 ecommerce <tech@202-ecommerce.com>
- * @copyright Bridge
+ * @author	 202 ecommerce <tech@202-ecommerce.com>
+ * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
 
 namespace YounitedpayAddon\Hook;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use Context;
 use Media;
@@ -65,8 +69,8 @@ class HookPayment extends AbstractHook
         /** @var \Currency $currency */
         $currency = new \Currency(Context::getContext()->cart->id_currency);
         if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
-            return []; // @TODO: See with Younited if button to change currrency or let as this (only EUR)
             $errorMessage[] = $this->l('Not available in this currency (only EUR)');
+            return []; // @TODO: See with Younited if button to change currrency or let as this (only EUR)
         }
 
         $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
