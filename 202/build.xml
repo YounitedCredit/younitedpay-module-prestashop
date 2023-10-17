@@ -5,7 +5,7 @@
     <property name="src-dir" value="${basedir}"/>
     <property name="TARGETNAME" value="younitedpay"/>
     <property name="TARGETBRANCH" value="${env.GIT_BRANCH}"/>
-    <property name="TARGETVERSION" value="1.1.1"/>
+    <property name="TARGETVERSION" value="1.1.2"/>
 
     <target name="build" depends="build-common,package-zip,psvalidator"/>
 
@@ -63,6 +63,7 @@
     <target name="clean-composer" depends="composer.check" if="composer.lock.exist.in.gitignore"
             description="Cleanup composer artifacts">
         <delete file="${basedir}/composer.lock"/>
+        <delete file="${basedir}/.php-cs-fixer.dist.php"/>
     </target>
     <target name="composer.check">
         <condition property="composer.lock.exist.in.gitignore">
