@@ -128,7 +128,7 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         try {
-            $orderCreated = $paymentService->validateOrder($cart, $customer);
+            $orderCreated = $paymentService->validateOrder($cart, $customer, $amoutCreditRequested);
         } catch (Exception $ex) {
             $paymentService->logError(
                 json_encode([

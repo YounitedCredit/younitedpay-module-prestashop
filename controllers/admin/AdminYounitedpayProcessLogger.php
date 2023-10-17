@@ -118,12 +118,13 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
 
         $content = $this->context->smarty->getTemplateVars('content');
 
-        if (Tools::getValue('display_file') !== false) {
-            $fileToDisplay = $this->logPath . Tools::getValue('display_file');
-            if (file_exists($fileToDisplay)) {
+        $fileName = Tools::getValue('display_file');
+        if ($$fileName !== false) {
+            $fileToDisplay = $this->logPath . $fileName;
+            if ($this->checkSecurityFile($fileName) === true) {
                 $this->context->smarty->assign([
                     'logfile_content' => Tools::file_get_contents($fileToDisplay),
-                    'logfile_name' => Tools::getValue('display_file'),
+                    'logfile_name' => $fileName,
                 ]);
             }
         }
@@ -148,5 +149,30 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         }
 
         return $logsFiles;
+    }
+
+    private function checkSecurityFile($fileName)
+    {
+        if (strpos($fileName, '.log') === false) {
+            $this->context->controller->errors[] = $this->module->l(
+                'File extension other that log is forbidden.'
+            );
+
+            return false;
+        }
+
+        if (dirname($this->logPath . $fileName) !== $this->logPath) {
+            $this->context->controller->errors[] = $this->module->l('Directory in log file is forbidden.');
+
+            return false;
+        }
+
+        if (file_exists($this->logPath . $fileName) === false) {
+            $this->context->controller->errors[] = $this->module->l('Log file do not exists.');
+
+            return false;
+        }
+
+        return true;
     }
 }

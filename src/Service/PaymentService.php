@@ -315,15 +315,14 @@ class PaymentService
      *
      * @param \Cart $cart
      * @param \Customer $customer
+     * @param float $total - amount paid given by Younited API
      *
      * @return bool Result of validation
      */
-    public function validateOrder($cart, $customer = null)
+    public function validateOrder($cart, $customer = null, $total)
     {
         $context = \Context::getContext();
         $currency = $context->currency;
-
-        $total = (float) $cart->getOrderTotal(true, \Cart::BOTH);
 
         $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
@@ -346,7 +345,7 @@ class PaymentService
             $orderCreated = $this->module->validateOrder(
                 $cart->id,
                 (int) $defaultDelivered,
-                $total,
+                (float) $total,
                 $this->l('Payment via Younited Pay', []),
                 null,
                 $extra_vars,
