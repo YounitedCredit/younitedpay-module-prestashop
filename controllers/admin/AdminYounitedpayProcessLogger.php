@@ -119,7 +119,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         $content = $this->context->smarty->getTemplateVars('content');
 
         $fileName = Tools::getValue('display_file');
-        if ($$fileName !== false) {
+        if ($fileName !== false) {
             $fileToDisplay = $this->logPath . $fileName;
             if ($this->checkSecurityFile($fileName) === true) {
                 $this->context->smarty->assign([
@@ -161,7 +161,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
             return false;
         }
 
-        if (dirname($this->logPath . $fileName) !== $this->logPath) {
+        if (strpos($fileName, '../') !== false) {
             $this->context->controller->errors[] = $this->module->l('Directory in log file is forbidden.');
 
             return false;
