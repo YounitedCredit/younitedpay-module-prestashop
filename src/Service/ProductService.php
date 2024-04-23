@@ -74,11 +74,16 @@ class ProductService
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
+        $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
+
         $offers = [];
+        $rangeOffers = [];
         if ($cacheExists === true && $cachestorage->isExpired((string) $productPrice) === false) {
             $cacheInformations = $cachestorage->get((string) $productPrice);
             $offers = $cacheInformations['content']['offers'];
-            if (empty($offers) === true) {
+            $rangeOffers = $cacheInformations['content']['ranges'];
+            $emptyRangeOffers = $isRangeEnabled === true && empty($rangeOffers) === true;
+            if (empty($offers) === true || $emptyRangeOffers === true) {
                 $cacheExists = false;
             }
         }
@@ -104,9 +109,16 @@ class ProductService
             }
 
             $offers = $this->getValidOffers($response['response'], array_column($maturities, 'maturity'));
+            $rangeOffers = $isRangeEnabled === false ? [] : $this->getRangeOffers(
+                $response['response'],
+                $productPrice,
+                $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS),
+                $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS)
+            );
 
             $cachestorage->set((string) $productPrice, [
                 'offers' => $offers,
+                'ranges' => $rangeOffers,
             ]);
         }
 
@@ -119,6 +131,8 @@ class ProductService
             'logo_younitedpay_url_btn' => 'modules/younitedpay/views/img/logo-younitedpay-btn.png',
             'hook_younited' => $selectedHook,
             'offers' => $offers,
+            'range_offers' => $rangeOffers,
+            'show_ranges' => $isRangeEnabled,
         ]);
 
         return [
@@ -144,19 +158,45 @@ class ProductService
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $marutitiesIn) === false) {
                 $marutitiesIn[] = $maturityIn;
-                $validOffers[] = [
-                    'maturity' => $offer->getMaturityInMonths(),
-                    'installment_amount' => $offer->getMonthlyInstallmentAmount(),
-                    'initial_amount' => $offer->getRequestedAmount(),
-                    'total_amount' => $offer->getCreditTotalAmount(),
-                    'interest_total' => $offer->getInterestsTotalAmount(),
-                    'taeg' => $offer->getAnnualPercentageRate() * 100,
-                    'tdf' => $offer->getAnnualDebitRate() * 100,
-                ];
+                $validOffers[] = $this->returnOffer($offer);
             }
         }
 
         return $validOffers;
+    }
+
+    protected function getRangeOffers($offers, $productPrice, $minAmount, $maxAmount)
+    {
+        if ((int) $productPrice < (int) $minAmount) {
+            return [];
+        }
+
+        if ((int) $productPrice > (int) $maxAmount && (int) $maxAmount > 0) {
+            return [];
+        }
+
+        $validOffers = [];
+        foreach ($offers as $offer) {
+            $validOffers[] = $this->returnOffer($offer);
+        }
+
+        return $validOffers;
+    }
+
+    /**
+     * Return offer for templates
+     */
+    protected function returnOffer(OfferItem $offer)
+    {
+        return [
+            'maturity' => $offer->getMaturityInMonths(),
+            'installment_amount' => $offer->getMonthlyInstallmentAmount(),
+            'initial_amount' => $offer->getRequestedAmount(),
+            'total_amount' => $offer->getCreditTotalAmount(),
+            'interest_total' => $offer->getInterestsTotalAmount(),
+            'taeg' => $offer->getAnnualPercentageRate() * 100,
+            'tdf' => $offer->getAnnualDebitRate() * 100,
+        ];
     }
 
     public function getAllMaturities($productPrice)

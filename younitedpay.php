@@ -145,6 +145,12 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const IS_FILE_LOGGER_ACTIVE = 'YOUNITEDPAY_IS_FILE_LOGGER_ACTIVE';
 
+    const SHOW_RANGE_OFFERS = 'YOUNITEDPAY_SHOW_RANGE_OFFERS';
+
+    const MIN_RANGE_OFFERS = 'YOUNITEDPAY_MIN_RANGE_OFFERS';
+
+    const MAX_RANGE_OFFERS = 'YOUNITEDPAY_MAX_RANGE_OFFERS';
+
     const PREFERRED_ISO_CODE = 'FR';
 
     const AVAILABLE_CURRENCIES = [

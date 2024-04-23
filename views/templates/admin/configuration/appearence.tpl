@@ -114,6 +114,45 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="divhr">
+                            <hr />
+                        </div>
+                        <div class="form-group mt-2 row">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1">
+                                {l s='Show range slider for maturities' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">                           
+                                <span class="ps-switch ps-switch-lg" id="show_ranges_switch">
+                                    <input type="radio" name="show_ranges" id="show_ranges_off" 
+                                        value="0"{if $configuration.show_ranges === false} checked{/if}/>
+                                    <label for="show_ranges_off">Off</label>
+                                    <input type="radio" name="show_ranges" id="show_ranges_on" 
+                                        value="1"{if $configuration.show_ranges === true} checked{/if}/>
+                                    <label for="show_ranges_on">On</label>
+                                    <span class="slide-button"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row ranges_min_max{if $configuration.show_ranges === false} hidden{/if}">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="min_ranges">
+                                {l s='Min. amount (tax incl.)' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 form-group d-flex">
+                                <input type="text" class="col-lg-4 form-control" name="min_ranges" id="min_ranges" 
+                                    value="{$configuration.min_ranges|escape:'htmlall':'UTF-8'}"/>
+                                <span class="currency d-flex align-items-center">€</span>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row ranges_min_max{if $configuration.show_ranges === false} hidden{/if}">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="max_ranges">
+                                {l s='Max. amount (tax incl.)' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 form-group d-flex">
+                                <input type="text" class="col-lg-4 form-control" name="max_ranges" id="max_ranges" 
+                                    value="{$configuration.max_ranges|escape:'htmlall':'UTF-8'}" placeholder="{l s='Infinite' mod='younitedpay'}"/>
+                                <span class="currency d-flex align-items-center">€</span>
+                            </div>
+                        </div>
                     {/if}
                 </div>
                 <div class="card-footer">

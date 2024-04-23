@@ -212,6 +212,40 @@
                      </div>
                   </div>
                {/foreach}
+               {if (bool) $show_ranges === true}
+                  <div class="hidden yp-mb-8 yp-text-lg block_contents block_content_range yp-pol-purpledark yp-mb-8">
+                     <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
+                        <p class="yp-pol-purpledark yp-font-normal">{l s='Credit amount' mod='younitedpay'}</p>
+                        <p class="yp-weight600 yp-pol-purpledark">{$offer.initial_amount|escape:'htmlall':'UTF-8'} €</p>
+                     </div>
+                     <div class="yp-flex yp-flex-row yp-justify-between yp-pb-6">
+                        <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Interest on credit' mod='younitedpay'}</p>
+                        <p class="yp-weight600 yp-pol-purpledark">{$offer.interest_total|escape:'htmlall':'UTF-8'} €</p>
+                     </div>
+                     <hr class="yp-pb-6">
+                     <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2 yp-text-20 yp-weight600">
+                        <span class="yp-pol-purpledark"><b>= {l s='Total amount due' mod='younitedpay'}</b></span>
+                        <span class="yp-pol-purpledark">{$offer.total_amount|escape:'htmlall':'UTF-8'} €</span>
+                     </div>
+                  </div>
+                  <div class="hidden yp-mt-6 block_contents block_content_range">
+                     <div class="yp-justify-between yp-flex yp-flex-row yp-mb-2 yp-text-20">
+                        <span class="yp-weight600 yp-pol-purpledark">{l s='Fixed APR' mod='younitedpay'}
+                        {if $iso_code != 'es'}
+                           <br /><span>{l s='(excluding optional insurance)' mod='younitedpay'}</span>
+                        {/if}
+                        </span>
+                        <span class="yp-weight600 yp-pol-purpledark">{$offer.taeg|escape:'htmlall':'UTF-8'} %</span>
+                     </div>
+                     <div class="yp-justify-between yp-flex yp-flex-row yp-mb-2 yp-pol-purpledark yp-font-normal">
+                        <span>{l s='Fixed lending rate' mod='younitedpay'}</span>
+                        <span class="yp-weight600">{$offer.tdf|escape:'htmlall':'UTF-8'} %</span>
+                     </div>
+                  </div>
+                  <script type="text/javascript">
+                     younitedpay.rangeOffers = {$range_offers|json_encode nofilter}
+                  </script>
+               {/if}
                </div>
 
                <div class="yp-mt-4 yp-text-responsabilities">

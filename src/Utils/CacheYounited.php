@@ -27,7 +27,7 @@ use YounitedpayClasslib\Utils\CacheStorage\CacheStorage;
 
 class CacheYounited extends CacheStorage
 {
-    //region Fields
+    // region Fields
 
     /**
      * Expired in seconds

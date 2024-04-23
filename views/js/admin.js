@@ -39,6 +39,14 @@ document.onreadystatechange = function() {
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);
     $('#younitedpay_prod_switch').click(YounitedhideZoneTest);
+    $('#show_ranges_switch').click(function() {
+        var rangesEnabled = $('#show_ranges_off').not(':checked').length > 0;
+        if (rangesEnabled === true) {
+            $('.ranges_min_max').removeClass('hidden');
+        } else {
+            $('.ranges_min_max').addClass('hidden');
+        }
+    });
     younitedEvents = true;
 };
 
