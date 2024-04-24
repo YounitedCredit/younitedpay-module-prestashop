@@ -95,9 +95,9 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_da36cfaf48b9e19896e23e120
 $_MODULE['<{younitedpay}prestashop>credit_propositions_88b973e1bb800b4cbd0552c14cf7bdf8'] = 'avec';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_17cb410b0b2aa4384b0c458d706d42bb'] = 'Commencez à payer';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_e1ae93efa9d42298da41e682ae789ed7'] = 'dans 30 jours seulement !';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_826457046db1c29f654a4555f9eec1df'] = 'Montant du crédit';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_3072ba59f76b3f2e9fa4d7c71ca265d5'] = 'Intérêt du crédit';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_c0a28e86640fc07c7176d05888d82d6c'] = 'Montant total dû';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_826457046db1c29f654a4555f9eec1df'] = 'Montant total du crédit';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_3072ba59f76b3f2e9fa4d7c71ca265d5'] = 'Intérêts et frais (hors assurance facultative)';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_c0a28e86640fc07c7176d05888d82d6c'] = 'Montant total dû par l\'emprunteur';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_64408fc092e84b9eb352626a0bcbbdf7'] = 'TAEG fixe';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_7e799761feb5715796087949af518c85'] = 'Taux débiteur fixe';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_489d5355c8ebf85ad59500645d7a5b6e'] = 'Un crédit vous engage et doit';
