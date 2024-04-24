@@ -24,7 +24,7 @@ function mouseOverMaturity()
     offerOver = true;
     var maturityObject = $(this)[0];
     var key = $(maturityObject).attr('data-key');
-    changeInstallment(key);
+    YpchangeInstallment(key);
 }
 
 function mouseOutMaturity()
@@ -32,43 +32,47 @@ function mouseOutMaturity()
     offerOver = false;
 }
 
-function changeInstallment(key)
+function YpchangeInstallment(key, maturity = 0)
 {
+    if (maturity > 0) {
+        younitedpay.rangeOffers.forEach(offer => {
+            if (parseInt(offer.maturity) === parseInt(maturity)) {
+                var zoneCustom = $('.maturity_installment9999');
+                zoneCustom.attr('data-amount', offer.installment_amount);
+                zoneCustom.attr('data-maturity', offer.maturity);
+                zoneCustom.attr('data-initamount', offer.initial_amount);
+                zoneCustom.attr('data-taeg', offer.taeg);
+                zoneCustom.attr('data-tdf', offer.tdf);
+                zoneCustom.attr('data-totalamount', offer.total_amount);
+                zoneCustom.attr('data-interesttotal', offer.interest_total);
+                key = "9999";
+            }
+        });
+    }
     actualOffer = parseInt(key);
-    console.log(actualOffer);
-    var infoInstallmentAmount = $('.maturity_installment' + actualOffer.toString()).attr('data-amount');
-    var infoInstallmentMaturity = $('.maturity_installment' + actualOffer.toString()).attr('data-maturity');
-    $('.yp-install-amount').html(infoInstallmentAmount);
+    var maturityZone = $('.maturity_installment' + actualOffer.toString());
+    var infoInstallmentAmount = maturityZone.attr('data-amount');
+    var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
+    var infoInstallmentMaturity = currentMaturity + 'x';
+    var initialAmount = maturityZone.attr('data-initamount');
+    var taeg = maturityZone.attr('data-taeg');
+    var tdf = maturityZone.attr('data-tdf');
+    var totalAmount = maturityZone.attr('data-totalamount');
+    var interestTotal = maturityZone.attr('data-interesttotal');
+    
+    $('.maturity_installment').removeClass('yp-bg-black-btn');
+    $('.maturity_installment' + key).addClass('yp-bg-black-btn');
+
+    $('.yp-install-amount').html(infoInstallmentAmount + " €");
     $('.yp-install-maturity').html(infoInstallmentMaturity);
-    
-    $('.blocks_maturity span').addClass('yp-border yp-border-opacity-50');
-    $('.blocks_maturity span').removeClass('yp-border-2 yp-border-opacity-0');
+    $('.yp-tdf').html(tdf);
+    $('.yp-taeg').html(taeg);
+    $('.yp-total').html(totalAmount);
+    $('.yp-interest').html(interestTotal);
+    $('.yp-amount').html(initialAmount);
 
-    $('.block_maturity' + key + ' span').addClass('yp-border-2 yp-border-opacity-0');
-    $('.block_maturity' + key + ' span').removeClass('yp-border yp-border-opacity-50');
-    
-    $('.blocks_maturities_popup span').addClass('yp-mensuality-selected');
-    $('.blocks_maturities_popup span').removeClass('yp-mensuality-selected');
-
-    $('.block_maturity_popup' + key + ' span').addClass('yp-mensuality-selected');
-
-    $('.block_contents').addClass('hidden');
-    $('.block_content' + key).removeClass('hidden');
-}
-
-function toggleInstallmentOffer(disable)
-{
-    var stylePopup = $('#younited_popupzone').attr('style');
-    if (totalOffers > 0 && offerOver === false && stylePopup === 'display:none!important;') {
-        actualOffer += 1;
-        if (actualOffer > totalOffers) {
-            actualOffer = 0;
-        }
-        changeInstallment(actualOffer);
-    }
-    if (disable === null || disable === false || disable === undefined) {
-        setTimeout(toggleInstallmentOffer, 2250);
-    }
+    $('.yp-custom-range').val(currentMaturity);
+    $('.yp-install-maturity-lite').html(currentMaturity);
 }
 
 function showPopup()
@@ -128,6 +132,47 @@ function bindEventsYounitedPay()
     $('.younited_btnhide').on("click", function(e) {
         hidePopup(e);
     });
+    
+    $('body').off('click', '.yp-custom-range');
+    $('body').on('click', '.yp-custom-range', function (e) {
+        e.preventDefault();
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('mousedown', '.yp-custom-range', function (e) {
+        younitedpay.is_range_down = true;
+        younitedpay.selected_maturity = $(this).val();
+    });
+    $('body').on('mouseup', '.yp-custom-range', function (e) {
+        younitedpay.is_range_down = false;
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('mousemove', '.yp-custom-range', function (e) {
+        if (younitedpay.is_range_down) {
+            YpchangeRangeMaturity($(this).val());
+        }
+    });
+
+    $('body').on('touchmove', '.yp-custom-range', function (e) {
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('touchend', '.yp-custom-range', function (e) {
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('change', '.yp-custom-range', function (e) {
+        YpchangeRangeMaturity($(this).val());
+    });
+}
+
+function YpchangeRangeMaturity(value)
+{
+    if (value != younitedpay.selected_maturity) {
+        younitedpay.selected_maturity = value;
+        YpchangeInstallment(0, younitedpay.selected_maturity);
+    }
 }
 
 var younitedEvents = false;
@@ -153,5 +198,3 @@ document.onreadystatechange = setTimeout(function() {
         );
     }
 }, 75);
-
-window.__toggleInstallmentOffer = toggleInstallmentOffer;

@@ -75,6 +75,8 @@ class ProductService
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
         $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
+        $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
+        $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
 
         $offers = [];
         $rangeOffers = [];
@@ -112,8 +114,8 @@ class ProductService
             $rangeOffers = $isRangeEnabled === false ? [] : $this->getRangeOffers(
                 $response['response'],
                 $productPrice,
-                $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS),
-                $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS)
+                $minRange,
+                $maxRange
             );
 
             $cachestorage->set((string) $productPrice, [
@@ -122,17 +124,28 @@ class ProductService
             ]);
         }
 
+        $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
+        $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
+        if (empty($offers) === false) {
+            if ((int) $offers[0]['maturity'] < $minInstall) {
+                $minInstall = (int) $offers[0]['maturity'];
+            }
+        }
+
         $template = 'module:younitedpay/views/templates/front/credit_propositions.tpl';
 
         $this->context->smarty->assign([
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
-            'logo_younitedpay_url_btn' => 'modules/younitedpay/views/img/logo-younitedpay-btn.png',
             'hook_younited' => $selectedHook,
             'offers' => $offers,
             'range_offers' => $rangeOffers,
             'show_ranges' => $isRangeEnabled,
+            'min_range' => (int) $minRange,
+            'max_range' => (int) $maxRange,
+            'min_install' => $minInstall,
+            'max_install' => $maxInstall,
         ]);
 
         return [

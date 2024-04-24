@@ -106,6 +106,8 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_96aa37b350321319ba1c1ece4
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6cef5f56a4'] = 'capacités de';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_3d8bdadc574b071acc6d05c3fdd02f82'] = 'remboursement';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_cf1a13db4892dc497407a6568ff284e6'] = 'avant de vous engager.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_07fce9628c3f8ef8de71a2bf4eee4b6c'] = 'Personnaliser';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_d3d2e617335f08df83599665eef8a418'] = 'Fermer';
 $_MODULE['<{younitedpay}prestashop>payment_infos_d114aa83545b406fa108e137f8b46a2b'] = 'Montant total dû de %s€.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_593dd52a5af57d12839b6a6ca69b5cab'] = 'Vous remboursez %s';
 $_MODULE['<{younitedpay}prestashop>payment_infos_efa966fd6ee131ed0c2ae702e9ac40b7'] = 'mensualités de %s€';
@@ -176,6 +178,9 @@ $_MODULE['<{younitedpay}prestashop>appearence_2d8072c577424a2c079f4f194da38266']
 $_MODULE['<{younitedpay}prestashop>appearence_ff607dc50ef1a10323c7ce715d9f3795'] = 'Widget mensualités';
 $_MODULE['<{younitedpay}prestashop>appearence_b7634b6f99cd212164f5c9ead6aebb9a'] = 'Contenu copié dans le presse-papier';
 $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd'] = 'Copier';
+$_MODULE['<{younitedpay}prestashop>appearence_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Afficher la réglette des maturités';
+$_MODULE['<{younitedpay}prestashop>appearence_baabebfcf84c5ae2acaa090069338d5b'] = 'Montant min (ttc)';
+$_MODULE['<{younitedpay}prestashop>appearence_4aa18d44fa952449a50dbaaa9b82441b'] = 'Montant max (ttc)';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_c67b54a2992181659d25de92e68800fe'] = 'Indisponible';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_810b5202d7119118cc0a7e4f8b2876c6'] = 'Pour configurer ce module vous devez sélectionner une boutique';
 $_MODULE['<{younitedpay}prestashop>configuration_5a2ebfb8baa378cfcfcba58bbb1380c2'] = 'Exigences';

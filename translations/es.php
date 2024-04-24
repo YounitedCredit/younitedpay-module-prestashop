@@ -69,6 +69,9 @@ $_MODULE['<{younitedpay}prestashop>appearence_ff607dc50ef1a10323c7ce715d9f3795']
 $_MODULE['<{younitedpay}prestashop>appearence_b7634b6f99cd212164f5c9ead6aebb9a'] = 'Contenido copiado al portapapeles';
 $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd'] = 'Copiar';
 $_MODULE['<{younitedpay}prestashop>appearence_c9cc8cce247e49bae79f15173ce97354'] = 'Ahorrar';
+$_MODULE['<{younitedpay}prestashop>appearence_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Visualizar la barra de cuotas mensuales';
+$_MODULE['<{younitedpay}prestashop>appearence_baabebfcf84c5ae2acaa090069338d5b'] = 'Importe mínimo (con impuestos)';
+$_MODULE['<{younitedpay}prestashop>appearence_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturity_ba5376b5ba3216a7a51eabb18265d921'] = 'Plazos';
 $_MODULE['<{younitedpay}prestashop>maturity_baabebfcf84c5ae2acaa090069338d5b'] = 'Importe mínimo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturity_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';
@@ -176,6 +179,8 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_25ff5aab384673e670be53f2b
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6cef5f56a4'] = ' ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_3d8bdadc574b071acc6d05c3fdd02f82'] = ' ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_cf1a13db4892dc497407a6568ff284e6'] = ' ';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_07fce9628c3f8ef8de71a2bf4eee4b6c'] = 'Personalizar';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_d3d2e617335f08df83599665eef8a418'] = 'Cerrar';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'No disponible en esta moneda (solo EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'No disponible para este país (solo Francia para la dirección de facturación).';
 $_MODULE['<{younitedpay}prestashop>hookpayment_e121e1d8cb571c2eba5d85264be53cd4'] = 'Paga en %s veces sin comisiones (por %s€/mes) con';

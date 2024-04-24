@@ -80,6 +80,12 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var mixed */
     public $maxRangeOffers;
 
+    /** @var int */
+    public $minRangeInstall;
+
+    /** @var mixed */
+    public $maxRangeInstall;
+
     /** @var ConfigService */
     public $configService;
 
@@ -159,6 +165,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->showRangeOffers = (bool) $this->getValue(Younitedpay::SHOW_RANGE_OFFERS, $idShop, 'show_ranges', false);
         $this->minRangeOffers = $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', '');
         $this->maxRangeOffers = $this->getValue(Younitedpay::MAX_RANGE_OFFERS, $idShop, 'max_ranges', '');
+        $defMinRange = count($this->maturitylist) > 0 ? $this->maturitylist[0] : 10;
+        $defMaxRange = count($this->maturitylist) > 0 ? $this->maturitylist[count($this->maturitylist)] : 72;
+        $this->minRangeInstall = $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_ranges', $defMinRange);
+        $this->maxRangeInstall = $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_ranges', $defMaxRange);
     }
 
     /**
@@ -372,11 +382,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $frontHook = Tools::getValue('front_hook');
         $isShownMonthly = Tools::getValue('show_monthly');
         $showRanges = Tools::getValue('show_ranges');
+        $minInstall = Tools::getValue('min_installment');
+        $maxInstall = Tools::getValue('max_installment');
         Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_RANGE_OFFERS, $showRanges, false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_OFFERS, Tools::getValue('min_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MAX_RANGE_OFFERS, Tools::getValue('max_ranges'), false, null, $idShop);
+        Configuration::updateValue(Younitedpay::MIN_RANGE_INSTALMENT, $minInstall, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::MAX_RANGE_INSTALMENT, $maxInstall, false, null, $idShop);
     }
 
     protected function postAccountSubmit($idShop)
@@ -485,6 +499,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'show_ranges' => $this->showRangeOffers,
             'min_ranges' => $this->minRangeOffers,
             'max_ranges' => $this->maxRangeOffers,
+            'min_installment' => $this->minRangeInstall,
+            'max_installment' => $this->maxRangeInstall,
         ];
     }
 }

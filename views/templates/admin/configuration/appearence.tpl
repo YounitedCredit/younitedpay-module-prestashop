@@ -134,21 +134,41 @@
                             </div>
                         </div>
                         <div class="form-group mt-2 row ranges_min_max{if $configuration.show_ranges === false} hidden{/if}">
-                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="min_ranges">
-                                {l s='Min. amount (tax incl.)' mod='younitedpay'}
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1">
+                                {l s='Installments from' mod='younitedpay'}
                             </label>
-                            <div class="col-lg-4 form-group d-flex">
-                                <input type="text" class="col-lg-4 form-control" name="min_ranges" id="min_ranges" 
-                                    value="{$configuration.min_ranges|escape:'htmlall':'UTF-8'}"/>
-                                <span class="currency d-flex align-items-center">€</span>
+                            <div class="col-lg-6 form-group d-flex align-items-center" id="range-installment-selects">
+                                <select class="form-control col-lg-1" id="min_installment" name="min_installment">
+                                    {foreach $configuration.maturitylist item=maturityitem}
+                                        <option name="{$maturityitem|escape:'htmlall':'UTF-8'}" value="{$maturityitem|escape:'htmlall':'UTF-8'}"
+                                            {if (int) $configuration.min_installment == (int) $maturityitem} selected{/if}>
+                                                {$maturityitem|escape:'htmlall':'UTF-8'}x
+                                        </option>
+                                    {/foreach}
+                                </select>  
+                                <span>{l s=' to '}</span>
+                                <select class="form-control col-lg-1" id="max_installment" name="max_installment">
+                                    {foreach $configuration.maturitylist item=maturityitem}
+                                        <option name="{$maturityitem|escape:'htmlall':'UTF-8'}" value="{$maturityitem|escape:'htmlall':'UTF-8'}" 
+                                            {if (int) $configuration.max_installment == (int) $maturityitem} selected{/if}>
+                                                {$maturityitem|escape:'htmlall':'UTF-8'}x
+                                        </option>
+                                    {/foreach}
+                                </select>  
                             </div>
                         </div>
                         <div class="form-group mt-2 row ranges_min_max{if $configuration.show_ranges === false} hidden{/if}">
-                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="max_ranges">
-                                {l s='Max. amount (tax incl.)' mod='younitedpay'}
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="min_ranges">
+                                {l s='Min. amount (tax incl.)' mod='younitedpay'}
                             </label>
-                            <div class="col-lg-4 form-group d-flex">
-                                <input type="text" class="col-lg-4 form-control" name="max_ranges" id="max_ranges" 
+                            <div class="col-lg-9 form-group d-flex align-items-center">
+                                <input type="text" class="col-lg-1 form-control" name="min_ranges" id="min_ranges" 
+                                    value="{$configuration.min_ranges|escape:'htmlall':'UTF-8'}"/>
+                                <span class="currency d-flex align-items-center">€</span>
+                                <label class="form-control-label col-lg-2 ml-4" for="max_ranges">
+                                    {l s='Max. amount (tax incl.)' mod='younitedpay'}
+                                </label>
+                                <input type="text" class="col-lg-1 form-control" name="max_ranges" id="max_ranges" 
                                     value="{$configuration.max_ranges|escape:'htmlall':'UTF-8'}" placeholder="{l s='Infinite' mod='younitedpay'}"/>
                                 <span class="currency d-flex align-items-center">€</span>
                             </div>
