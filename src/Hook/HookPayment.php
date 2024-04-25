@@ -71,7 +71,7 @@ class HookPayment extends AbstractHook
         if (array_search($currency->iso_code, Younitedpay::AVAILABLE_CURRENCIES) === false) {
             $errorMessage[] = $this->l('Not available in this currency (only EUR)');
 
-            return []; // @TODO: See with Younited if button to change currrency or let as this (only EUR)
+            return [];
         }
 
         $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
@@ -93,10 +93,16 @@ class HookPayment extends AbstractHook
 
         $totalOffers = $templateCredit['offers'];
 
+        if (empty($totalOffers) === true) {
+            $loggerservice->addLogAPI('No offers in checkout for ' . $this->cartPrice);
+
+            return [];
+        }
+
         $paymentOptions = [];
         Context::getContext()->smarty->assign('iso_code', Context::getContext()->language->iso_code);
         try {
-            $paymentOptions = $this->getYounitedPaymentOption($totalOffers, $errorMessage);
+            $paymentOptions = $this->getYounitedPaymentOption($errorMessage, $totalOffers);
         } catch (\Exception $ex) {
             $msg = [
                 'code' => $ex->getCode(),
@@ -108,65 +114,51 @@ class HookPayment extends AbstractHook
         return $paymentOptions;
     }
 
-    protected function getYounitedPaymentOption($totalOffers, $errorMessage)
+    protected function getYounitedPaymentOption($errorMessage, $totalOffers)
     {
-        $younitedPaymentOptions = [];
         $logoPayment = Media::getMediaPath(
             _PS_MODULE_DIR_ . $this->module->name . '/views/img/logo-younitedpay-payment.png'
         );
-        foreach ($totalOffers as $maturity) {
-            $paymentOption = new PaymentOption();
 
-            $this->setPaymentNameAndAdditional($paymentOption, $maturity, $errorMessage);
+        $paymentOption = new PaymentOption();
 
-            $context = Context::getContext();
-            $creditLink = $context->link->getModuleLink(
+        $context = Context::getContext();
+        $creditLink = $context->link->getModuleLink(
+            $this->module->name,
+            'payment',
+            [
+                'amount' => $this->cartPrice,
+                'maturity' => $totalOffers[0]['maturity'],
+            ],
+            true
+        );
+
+        $smarty = Context::getContext()->smarty;
+        $smarty->assign([
+            'yperror' => $errorMessage,
+            'credit_link' => $context->link->getModuleLink(
                 $this->module->name,
                 'payment',
                 [
                     'amount' => $this->cartPrice,
-                    'maturity' => $maturity['maturity'],
                 ],
                 true
-            );
-
-            $paymentOption->setModuleName($this->module->name)
+            ),
+        ]);
+        $paymentInfoTemplate = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/credit_informations.tpl';
+        $paymentText = $this->l('Pay in several times with ');
+        $paymentOption
+            ->setAdditionalInformation($smarty->fetch($paymentInfoTemplate))
+            ->setCallToActionText($paymentText)
+            ->setModuleName($this->module->name)
             ->setAction($creditLink)
             ->setLogo($logoPayment);
 
-            if (empty($errorMessage) === false) {
-                $paymentOption->setBinary(true);
-            }
-
-            $younitedPaymentOptions[] = $paymentOption;
+        if (empty($errorMessage) === false) {
+            $paymentOption->setBinary(true);
         }
 
-        return $younitedPaymentOptions;
-    }
-
-    protected function setPaymentNameAndAdditional(PaymentOption $paymentOption, $maturity, $errorMessage)
-    {
-        $smarty = Context::getContext()->smarty;
-        $maturity['total_order'] = $this->cartPrice;
-        $smarty->assign([
-            'credit' => $maturity,
-            'error' => $errorMessage,
-        ]);
-        $paymentInfoTemplate = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/front/payment_infos.tpl';
-        $paymentText = sprintf(
-            $this->l('Pay in %s times without fees (for %s€/month) with '),
-            $maturity['maturity'],
-            \Tools::ps_round($maturity['installment_amount'], 1)
-        );
-        if ((float) $maturity['interest_total'] > 0) {
-            $paymentText = $paymentText = sprintf(
-                $this->l('Pay in %s times (for %s€/month) with '),
-                $maturity['maturity'],
-                \Tools::ps_round($maturity['installment_amount'], 1)
-            );
-        }
-        $paymentOption->setAdditionalInformation($smarty->fetch($paymentInfoTemplate))
-            ->setCallToActionText($paymentText);
+        return [$paymentOption];
     }
 
     protected function paymentReturnTemplate()

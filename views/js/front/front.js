@@ -15,9 +15,15 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-var actualOffer = 0;
 var offerOver = false;
 var totalOffers = 0;
+
+function YpClickOnMaturity()
+{
+    var maturityObject = $(this)[0];
+    var key = $(maturityObject).attr('data-key');
+    YpchangeInstallment(key);
+}
 
 function mouseOverMaturity()
 {
@@ -49,7 +55,7 @@ function YpchangeInstallment(key, maturity = 0)
             }
         });
     }
-    actualOffer = parseInt(key);
+    var actualOffer = parseInt(key);
     var maturityZone = $('.maturity_installment' + actualOffer.toString());
     var infoInstallmentAmount = maturityZone.attr('data-amount');
     var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
@@ -73,6 +79,33 @@ function YpchangeInstallment(key, maturity = 0)
 
     $('.yp-custom-range').val(currentMaturity);
     $('.yp-install-maturity-lite').html(currentMaturity);
+
+    ypUpdatePaymentURL(currentMaturity);
+}
+
+function ypUpdatePaymentURL(maturity)
+{
+    if (typeof younitedpay.url_payment !== 'undefined') {
+        var link = younitedpay.url_payment + '&maturity=' + maturity;
+        var paymentForm = $('[data-yp-form]');
+        if (!paymentForm.length) {
+            $('.js-payment-option-form #payment-form').each((index, form) => {
+                console.log(form);
+                var action = $(form).attr('action');
+                console.log(action)
+                if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
+                    $(form).attr('data-yp-form', 1);
+                    $(form).attr('action', link);
+                    console.log('form younited found : adding attributes and updating');
+                } else {
+                    console.log('form younited not found : updating');
+                }
+            });
+        } else {
+            console.log('form younited found with attribute [data-yp-form] : updating');
+            $('[data-yp-form]').attr('action', link);
+        }
+    }
 }
 
 function showPopup()
@@ -125,13 +158,16 @@ function updateCreditZone(event)
 
 function bindEventsYounitedPay()
 {
-    $('.maturity_installment').on("mouseover", mouseOverMaturity);
-    $('.maturity_installment').on("mouseout", mouseOutMaturity);
-    $('.blocks_maturities_popup').on("click", mouseOverMaturity);
-    $('.younited_block').on("click", showPopup);
-    $('.younited_btnhide').on("click", function(e) {
-        hidePopup(e);
-    });
+    if (typeof younitedpay.url_payment === 'undefined') {
+        $('.maturity_installment').on("mouseover", mouseOverMaturity);
+        $('.maturity_installment').on("mouseout", mouseOutMaturity);
+        $('.blocks_maturities_popup').on("click", YpClickOnMaturity);
+        $('.younited_block').on("click", showPopup);
+        $('.younited_btnhide').on("click", function(e) {
+            hidePopup(e);
+        });
+    }
+    $('.maturity_installment').on("click", YpClickOnMaturity);
     
     $('body').off('click', '.yp-custom-range');
     $('body').on('click', '.yp-custom-range', function (e) {
@@ -183,7 +219,7 @@ document.onreadystatechange = setTimeout(function() {
     }
 
     younitedEvents = true;
-    if ($(".younitedpay-widget-root").length) {
+    if ($(".maturity_installment").length) {
         bindEventsYounitedPay();
     }
     if (typeof prestashop !== 'undefined') {

@@ -107,7 +107,7 @@
     width:52px;
 }
 
-#younited_popupzone .maturity_installment9999 :first-child {
+#younited_popupzone .maturity_installment9999 :first-child, .payment-options .maturity_installment9999 :first-child {
     width:auto;
 }
 
@@ -633,6 +633,10 @@
 
 .yp-border-2 {
     border-width: 2px !important
+}
+
+.payment-options .yp-border-2 {
+    border: solid 1px;
 }
 
 .yp-border-b-2 {
