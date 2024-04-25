@@ -14,78 +14,13 @@
  * @author	 202 ecommerce <tech@202-ecommerce.com>
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
- */
+*/
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 .quickview .younitedpay_product_info {
     display:none;
 }
 
-.younitedpay_offer {
-    color: #6a8af5 !important;
-    border: solid 2px #6a8af5;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    padding: 8px;
-    display: block;
-    display: flex;
-    flex-direction: row;
-    margin-top: 0 !important;
-    margin-bottom: 6px !important;
-    cursor: pointer;
-}
-
-#younited_infoclick {
-    padding: 0;
-    margin-bottom: 0;
-    text-align: right;
-    color: #6a8af5 !important;
-}
-
-#younited_popupzone {    
-    font-family: Roboto;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0em;    
-}
-
-.yp-h3 {
-    font-size: 38px!important;
-    font-weight: 500;
-    line-height: 45px;
-    letter-spacing: -0.03em!important;
-}
-
-.younitedpay_logo {
-    display: flex;
-    max-height: 30px;
-}
-
-.younitedpay_maturity {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    color: white !important;
-    font-size: 24px;
-    font-weight: bolder;
-}
-
-.yp-price-block {
-    width:100%;
-    justify-content: end;
-}
-
-.yp-text-responsabilities {
-    justify-content: space-between!important;
-}
-
-.yp-text-responsabilities p {    
-    text-align: left;
-    font-style: italic;
-    font-size: 16px;
-    font-weight: 400;
-}
- 
 .maturity_installment {
    color: #1C1C1C;
    text-align: center;
@@ -101,7 +36,7 @@
 .yp-bg-black-btn {
     background-color: #1C1C1C;
     color: #FFF;
- }
+}
 
 .maturity_installment :first-child {
     width:52px;
@@ -111,22 +46,6 @@
     width:auto;
 }
 
-.maturity_top {
-    background-color: #bfa3f8;
-    width: 40px;
-    height: 95%;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    text-align: center;
-    display: flex;
-}
-
-.maturity_bottom {
-    width: 80px;
-    margin-top: 3px;
-    height: 2px;
-    background-color: #bfa3f8;
-}
 
 .younitedpay_infoinstallment {
     width: 100%;
@@ -143,69 +62,6 @@
     align-items: center;
 }
 
-.younitedpay-widget-root html {
-    line-height: 1.15;
-    -webkit-text-size-adjust: 100%
-}
-
-.younitedpay-widget-root body {
-    margin: 0
-}
-
-.younitedpay-widget-root main {
-    display: block
-}
-
-.younitedpay-widget-root h1 {
-    font-size: 2em;
-    margin: .67em 0
-}
-
-.younitedpay-widget-root hr {
-    box-sizing: content-box;
-    height: 0;
-    overflow: visible
-}
-
-.younitedpay-widget-root pre {    
-    font-size: 1em
-}
-
-.younitedpay-widget-root a {
-    background-color: transparent
-}
-
-.younitedpay-widget-root abbr[title] {
-    border-bottom: none;
-    text-decoration: underline;
-    -webkit-text-decoration: underline dotted;
-    text-decoration: underline dotted
-}
-
-.younitedpay-widget-root b,
-.younitedpay-widget-root strong {
-    font-weight: bolder
-}
-
-.younitedpay-widget-root small {
-    font-size: 80%
-}
-
-.younitedpay-widget-root sub,
-.younitedpay-widget-root sup {
-    font-size: 75%;
-    line-height: 0;
-    position: relative;
-    vertical-align: baseline
-}
-
-.younitedpay-widget-root sub {
-    bottom: -.25em
-}
-
-.younitedpay-widget-root sup {
-    top: -.5em
-}
 
 .younitedpay-widget-root img {
     border-style: none
@@ -796,6 +652,11 @@
     margin-bottom: 4px !important
 }
 
+.yp-my-2 {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important
+}
+
 .yp-mx-1 {
     margin-left: 4px !important;
     margin-right: 4px !important
@@ -1291,17 +1152,13 @@
     color: #000000!important;
 }
 
-.younitedpay-left-title-text {
-    font-weight: 500 !important;
-    font-size: 38px!important;
-}
 
 .yp-step {
     display:flex!important;
     align-items: center!important;
     margin-bottom:20px!important;
 }
-   
+
 .yp-linumber {
     background-color: #c5a1fe;
     color: #564c5d;
@@ -1315,11 +1172,18 @@
     padding-top: 0 !important
 }
 
-.plan-selector-multiplier {
-    width: 14px;
-    margin-left: -2px !important;
-    padding-top: 2px !important
+.younitedpay_logo {
+    display: flex;
+    max-height: 30px;
 }
+
+.yp-h3 {
+    font-size: 38px!important;
+    font-weight: 500;
+    line-height: 45px;
+    letter-spacing: -0.03em!important;
+}
+
 
 @media (min-width:768px) {
     .md\:yp-bg-transparent {
@@ -1372,6 +1236,10 @@
 
     .md\:yp-h-580 {
         height: auto !important
+    }
+    
+    .yp-mobile {
+        display:none!important;
     }
 }
 
@@ -1449,12 +1317,6 @@
     display:none!important;
 }
 
-.yp-custom-range {
-    width:100%;
-    color: #C5A1FE;
-    background: #DEE2E6;
-}
-
 .yp-logo {
     max-height:50px;
 }
@@ -1463,22 +1325,25 @@
     min-width: 85px;
 }
 
-@media (max-width:768px) {
-    .yp-info-buy, .yp-info-buy p {
-        display:block!important;
-    }
-    .yp-font-normal {
-        font-size: 14px;
-    }
-    .yp-right .younited_btnhide {    
-        width:100%;
-    }
+.widget_border {
+    border-radius: 8px;
+    border: 1px solid #1C1C1C;
+}
+
+.yp-plus, .yp-minus {    
+    border-radius: 16px;
+    background: #C5A1FE !important;
+    color: white !important;
+    font-size: 26px !important;
+    width: 32px;
+    height: 32px;
+    display: inline;
 }
 
 input[type=range].yp-custom-range {
-    -webkit-appearance: none;
-    appearance: none; 
-    padding: 0;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    padding: 0 !important;
     font: inherit;
     outline: none;
     height: 8px;
@@ -1487,7 +1352,9 @@ input[type=range].yp-custom-range {
     cursor: pointer;
     box-sizing: border-box;
     border-radius: 8px;
+    flex-grow: 1;
 }
+
 input[type=range].yp-custom-range::-moz-range-thumb {
     padding: 0.25em;
     width: 24px;
@@ -1516,4 +1383,32 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
     background-color: #C5A1FE;
     transition: .2s ease-in-out;
     border-radius: 50%;
+}
+
+@media (max-width:768px) {
+    .yp-info-buy, .yp-info-buy p {
+        display:block!important;
+    }
+    .yp-font-normal {
+        font-size: 14px;
+    }
+    .yp-right .younited_btnhide {    
+        width:100%;
+    }
+    .yp-popup-logo img {
+        width: auto;
+    }
+    input[type=range].yp-custom-range::-moz-range-thumb {
+        width: 32px;
+        height: 32px;
+    }
+    input[type=range].yp-custom-range::-ms-thumb {
+        width: 32px;
+        height: 32px;
+    }
+    
+    input[type=range].yp-custom-range::-webkit-slider-thumb {
+        width: 32px;
+        height: 32px;
+    }
 }

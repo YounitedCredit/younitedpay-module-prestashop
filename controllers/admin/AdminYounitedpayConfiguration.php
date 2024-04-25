@@ -74,6 +74,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var bool */
     public $showRangeOffers;
 
+    /** @var bool */
+    public $widgetBorders;
+
     /** @var int */
     public $minRangeOffers;
 
@@ -169,6 +172,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $defMaxRange = count($this->maturitylist) > 0 ? $this->maturitylist[count($this->maturitylist)] : 72;
         $this->minRangeInstall = $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_ranges', $defMinRange);
         $this->maxRangeInstall = $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_ranges', $defMaxRange);
+        $this->widgetBorders = (bool) $this->getValue(Younitedpay::SHOW_WIDGET_BORDERS, $idShop, 'widget_borders', false);
     }
 
     /**
@@ -384,11 +388,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $showRanges = Tools::getValue('show_ranges');
         $minInstall = Tools::getValue('min_installment');
         $maxInstall = Tools::getValue('max_installment');
+        $widgetBorders = Tools::getValue('widget_borders');
         Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_RANGE_OFFERS, $showRanges, false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_OFFERS, Tools::getValue('min_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MAX_RANGE_OFFERS, Tools::getValue('max_ranges'), false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOW_WIDGET_BORDERS, $widgetBorders, false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_INSTALMENT, $minInstall, false, null, $idShop);
         Configuration::updateValue(Younitedpay::MAX_RANGE_INSTALMENT, $maxInstall, false, null, $idShop);
     }
@@ -501,6 +507,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'max_ranges' => $this->maxRangeOffers,
             'min_installment' => $this->minRangeInstall,
             'max_installment' => $this->maxRangeInstall,
+            'widget_borders' => $this->widgetBorders,
         ];
     }
 }

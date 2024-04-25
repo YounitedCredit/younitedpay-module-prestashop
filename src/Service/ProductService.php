@@ -77,6 +77,7 @@ class ProductService
         $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
         $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
         $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
+        $widgetBorder = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_WIDGET_BORDERS, false);
 
         $offers = [];
         $rangeOffers = [];
@@ -141,11 +142,12 @@ class ProductService
             'hook_younited' => $selectedHook,
             'offers' => $offers,
             'range_offers' => $rangeOffers,
-            'show_ranges' => $isRangeEnabled,
+            'show_ranges' => (int) $isRangeEnabled,
             'min_range' => (int) $minRange,
             'max_range' => (int) $maxRange,
             'min_install' => $minInstall,
             'max_install' => $maxInstall,
+            'widget_borders' => $widgetBorder,
         ]);
 
         return [

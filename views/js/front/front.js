@@ -56,7 +56,7 @@ function YpchangeInstallment(key, maturity = 0)
         });
     }
     var actualOffer = parseInt(key);
-    var maturityZone = $('.maturity_installment' + actualOffer.toString());
+    var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
     var infoInstallmentAmount = maturityZone.attr('data-amount');
     var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
     var infoInstallmentMaturity = currentMaturity + 'x';
@@ -87,24 +87,12 @@ function ypUpdatePaymentURL(maturity)
 {
     if (typeof younitedpay.url_payment !== 'undefined') {
         var link = younitedpay.url_payment + '&maturity=' + maturity;
-        var paymentForm = $('[data-yp-form]');
-        if (!paymentForm.length) {
-            $('.js-payment-option-form #payment-form').each((index, form) => {
-                console.log(form);
-                var action = $(form).attr('action');
-                console.log(action)
-                if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
-                    $(form).attr('data-yp-form', 1);
-                    $(form).attr('action', link);
-                    console.log('form younited found : adding attributes and updating');
-                } else {
-                    console.log('form younited not found : updating');
-                }
-            });
-        } else {
-            console.log('form younited found with attribute [data-yp-form] : updating');
-            $('[data-yp-form]').attr('action', link);
-        }
+        $('.js-payment-option-form #payment-form').each((index, form) => {
+            var action = $(form).attr('action');
+            if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
+                $(form).attr('action', link);
+            }
+        });
     }
 }
 
@@ -156,6 +144,20 @@ function updateCreditZone(event)
     });
 }
 
+function YpsetRangeValue()
+{
+    var minValue = parseInt($('.yp-custom-range').attr('min'));
+    var maxValue = parseInt($('.yp-custom-range').attr('max'));
+    if (younitedpay.selected_maturity > maxValue) {
+        younitedpay.selected_maturity = maxValue;
+    }
+    if (younitedpay.selected_maturity < minValue) {
+        younitedpay.selected_maturity = minValue;
+    }
+    $('.yp-custom-range').val(younitedpay.selected_maturity);
+    YpchangeInstallment(0, younitedpay.selected_maturity);
+}
+
 function bindEventsYounitedPay()
 {
     if (typeof younitedpay.url_payment === 'undefined') {
@@ -200,6 +202,16 @@ function bindEventsYounitedPay()
 
     $('body').on('change', '.yp-custom-range', function (e) {
         YpchangeRangeMaturity($(this).val());
+    });
+
+    $('.yp-plus').on('click', function() {
+        younitedpay.selected_maturity = parseInt($('.yp-custom-range').val()) + 1;
+        YpsetRangeValue();
+    });
+
+    $('.yp-minus').on('click', function() {
+        younitedpay.selected_maturity = parseInt($('.yp-custom-range').val()) - 1;
+        YpsetRangeValue();
     });
 }
 

@@ -91,6 +91,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_ee982d11cab241f90070d6255
 $_MODULE['<{younitedpay}prestashop>credit_propositions_1110cfc91055987fddca32974b071112'] = 'Younited Pay';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_da36cfaf48b9e19896e23e1207040d1e'] = 'mois';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_88b973e1bb800b4cbd0552c14cf7bdf8'] = 'avec';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_07fce9628c3f8ef8de71a2bf4eee4b6c'] = 'Personnaliser';
 $_MODULE['<{younitedpay}prestashop>credit_informations_502fa658c2e45cbaf315681444ff0c3e'] = '(hors assurance facultative)';
 $_MODULE['<{younitedpay}prestashop>credit_informations_9d11b84fbe0d9eeb9136dd867fedf8fd'] = 'Votre achat pour ';
 $_MODULE['<{younitedpay}prestashop>credit_informations_cea63c706fafe462d0ca61d47d3b415c'] = '%s€/mois';
@@ -184,6 +185,10 @@ $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd']
 $_MODULE['<{younitedpay}prestashop>appearence_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Afficher la réglette des maturités';
 $_MODULE['<{younitedpay}prestashop>appearence_baabebfcf84c5ae2acaa090069338d5b'] = 'Montant min (ttc)';
 $_MODULE['<{younitedpay}prestashop>appearence_4aa18d44fa952449a50dbaaa9b82441b'] = 'Montant max (ttc)';
+$_MODULE['<{younitedpay}prestashop>appearence_722493c68ebd3b431bd3e1a39fd582d6'] = 'Afficher avec bordures';
+$_MODULE['<{younitedpay}prestashop>appearence_c2c0eda8007343fb1cda03418677025d'] = 'Ajoute des bordures noires sur le widget page produit.';
+$_MODULE['<{younitedpay}prestashop>appearence_f687884e668b470bc99c21e4c1d70223'] = 'Mensualités à partir de';
+$_MODULE['<{younitedpay}prestashop>appearence_3501c7e67e0150900b3671b71c9e567e'] = ' à ';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_c67b54a2992181659d25de92e68800fe'] = 'Indisponible';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_810b5202d7119118cc0a7e4f8b2876c6'] = 'Pour configurer ce module vous devez sélectionner une boutique';
 $_MODULE['<{younitedpay}prestashop>configuration_5a2ebfb8baa378cfcfcba58bbb1380c2'] = 'Exigences';

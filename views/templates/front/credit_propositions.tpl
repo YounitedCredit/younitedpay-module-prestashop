@@ -18,8 +18,8 @@
 <div class="younitedpay_product_info" data-hook="{$hook_younited|escape:'htmlall':'UTF-8'}" {if $hook_younited == 'widget'}data-widget{/if}>   
 <div class="younitedpay-widget-root">
    {if count($offers) > 0}
-      <div class="younited_block yp-pb-0 yp-pt-2">
-         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-pt-4 yp-pb-4">
+   <div class="younited_block yp-pb-0 yp-pt-2 yp-my-2{if isset($widget_borders) && (bool) $widget_borders === true} widget_border{/if}">
+         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap">
             <img class="yp-mb-2 yp-logo lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" data-ll-status="loaded">
             {foreach from=$offers item=offer key=key}
                {assign var="background_block" value=''}
@@ -53,7 +53,8 @@
                      data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
                      data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
                      data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
-                     data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
+                     data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+                     title="{l s='Customise' mod='younitedpay'}">
                   <span class="yp-inline-block yp-h-10">
                      <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
                         blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">

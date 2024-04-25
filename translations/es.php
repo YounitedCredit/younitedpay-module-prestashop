@@ -72,6 +72,10 @@ $_MODULE['<{younitedpay}prestashop>appearence_c9cc8cce247e49bae79f15173ce97354']
 $_MODULE['<{younitedpay}prestashop>appearence_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Visualizar la barra de cuotas mensuales';
 $_MODULE['<{younitedpay}prestashop>appearence_baabebfcf84c5ae2acaa090069338d5b'] = 'Importe mínimo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>appearence_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';
+$_MODULE['<{younitedpay}prestashop>appearence_722493c68ebd3b431bd3e1a39fd582d6'] = 'Pantalla con bordes';
+$_MODULE['<{younitedpay}prestashop>appearence_c2c0eda8007343fb1cda03418677025d'] = 'Añade bordes negros al widget de la página de productos.';
+$_MODULE['<{younitedpay}prestashop>appearence_f687884e668b470bc99c21e4c1d70223'] = 'Pazos de';
+$_MODULE['<{younitedpay}prestashop>appearence_3501c7e67e0150900b3671b71c9e567e'] = ' a ';
 $_MODULE['<{younitedpay}prestashop>maturity_ba5376b5ba3216a7a51eabb18265d921'] = 'Plazos';
 $_MODULE['<{younitedpay}prestashop>maturity_baabebfcf84c5ae2acaa090069338d5b'] = 'Importe mínimo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturity_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';
@@ -161,6 +165,8 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_389712f8988344dbc947629a7
 $_MODULE['<{younitedpay}prestashop>credit_propositions_565629aab091cf074ee823997c991f87'] = ' ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_43303bb45cf16dc537d2c174bc1a111d'] = 'Recibe tu respuesta en ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_ee982d11cab241f90070d6255ffe0d7e'] = 'segundos';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_07fce9628c3f8ef8de71a2bf4eee4b6c'] = 'Personalizar';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_da36cfaf48b9e19896e23e1207040d1e'] = 'meses';
 $_MODULE['<{younitedpay}prestashop>credit_informations_9d11b84fbe0d9eeb9136dd867fedf8fd'] = 'Tu compra por ';
 $_MODULE['<{younitedpay}prestashop>credit_informations_cea63c706fafe462d0ca61d47d3b415c'] = '%s€/mes';
 $_MODULE['<{younitedpay}prestashop>credit_informations_1110cfc91055987fddca32974b071112'] = 'Younited Pay';

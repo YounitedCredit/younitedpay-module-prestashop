@@ -55,7 +55,8 @@
          data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
          data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
          data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
-         data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
+         data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+         title="{l s='Customise' mod='younitedpay'}">
       <span class="yp-inline-block yp-h-10" style="width:auto;">
          <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
             blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
@@ -73,9 +74,13 @@
    <span>&nbsp;{l s='months' mod='younitedpay'}</span>
 </div>
 {if (bool) $show_ranges === true && empty($range_offers) === false}
-   <input type="range" class="yp-custom-range" 
-         min="{$min_install|escape:'htmlall':'UTF-8'}" max="{$max_install|escape:'htmlall':'UTF-8'}" 
-         step="1" value="{$offers[0].maturity|escape:'htmlall':'UTF-8'}">
+   <div class="yp-flex yp-items-center">
+      <button class="yp-mobile yp-minus yp-mr-3">-</button>
+      <input type="range" class="yp-custom-range yp-flex-grow yp-mr-3" 
+            min="{$min_install|escape:'htmlall':'UTF-8'}" max="{$max_install|escape:'htmlall':'UTF-8'}" 
+            step="1" value="{$offers[0].maturity|escape:'htmlall':'UTF-8'}">
+      <button class="yp-mobile yp-plus">+</button>
+   </div>
 {/if}
 </div>
 

@@ -91,6 +91,25 @@
                             </div>
                         </div>
                         <div class="form-group mt-2 row">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1">
+                                {l s='Display with borders' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">                           
+                                <span class="ps-switch ps-switch-lg disable_on_change" data-input="widget_borders_on">
+                                    <input type="radio" name="widget_borders" id="widget_borders_off" 
+                                        value="0"{if $configuration.widget_borders === false} checked{/if}/>
+                                    <label for="widget_borders_off">Off</label>
+                                    <input type="radio" name="widget_borders" id="widget_borders_on" 
+                                        value="1"{if $configuration.widget_borders === true} checked{/if}/>
+                                    <label for="widget_borders_on">On</label>
+                                    <span class="slide-button"></span>
+                                </span>
+                                <small class="form-text">
+                                    {l s='Add black borders on the widget in product page.' mod='younitedpay'}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row">
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="widget_info">
                                 {l s='Monthly installments widget' mod='younitedpay'}
                             </label>
@@ -146,7 +165,7 @@
                                         </option>
                                     {/foreach}
                                 </select>  
-                                <span>{l s=' to '}</span>
+                                <span>{l s=' to ' mod='younitedpay'}</span>
                                 <select class="form-control col-lg-1" id="max_installment" name="max_installment">
                                     {foreach $configuration.maturitylist item=maturityitem}
                                         <option name="{$maturityitem|escape:'htmlall':'UTF-8'}" value="{$maturityitem|escape:'htmlall':'UTF-8'}" 
