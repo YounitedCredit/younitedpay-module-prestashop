@@ -119,6 +119,11 @@ class ProductService
                 $maxRange
             );
 
+            if (count($offers) <= 0 && count($rangeOffers) > 0) {
+                $offers[] = $rangeOffers[0];
+                $offers[] = $rangeOffers[count($rangeOffers) - 1];
+            }
+
             $cachestorage->set((string) $productPrice, [
                 'offers' => $offers,
                 'ranges' => $rangeOffers,
@@ -130,6 +135,11 @@ class ProductService
         if (empty($offers) === false) {
             if ((int) $offers[0]['maturity'] < $minInstall) {
                 $minInstall = (int) $offers[0]['maturity'];
+            }
+        }
+        if (empty($rangeOffers) === false) {
+            if ((int) $rangeOffers[count($rangeOffers) - 1]['maturity'] < $maxInstall) {
+                $maxInstall = (int) $rangeOffers[count($rangeOffers) - 1]['maturity'];
             }
         }
 
@@ -204,13 +214,13 @@ class ProductService
     protected function returnOffer(OfferItem $offer)
     {
         return [
-            'maturity' => $offer->getMaturityInMonths(),
-            'installment_amount' => $offer->getMonthlyInstallmentAmount(),
-            'initial_amount' => $offer->getRequestedAmount(),
-            'total_amount' => $offer->getCreditTotalAmount(),
-            'interest_total' => $offer->getInterestsTotalAmount(),
-            'taeg' => $offer->getAnnualPercentageRate() * 100,
-            'tdf' => $offer->getAnnualDebitRate() * 100,
+            'maturity' => (int) $offer->getMaturityInMonths(),
+            'installment_amount' => \Tools::ps_round($offer->getMonthlyInstallmentAmount(), 2),
+            'initial_amount' => \Tools::ps_round($offer->getRequestedAmount(), 2),
+            'total_amount' => \Tools::ps_round($offer->getCreditTotalAmount(), 2),
+            'interest_total' => \Tools::ps_round($offer->getInterestsTotalAmount(), 2),
+            'taeg' => \Tools::ps_round($offer->getAnnualPercentageRate() * 100, 2),
+            'tdf' => \Tools::ps_round($offer->getAnnualDebitRate() * 100, 2),
         ];
     }
 
