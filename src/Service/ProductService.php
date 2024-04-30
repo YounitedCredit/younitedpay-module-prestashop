@@ -119,6 +119,10 @@ class ProductService
                 $maxRange
             );
 
+            if (count($rangeOffers) === 0 && count($offers) > 0) {
+                $offers = [];
+            }
+
             if (count($offers) <= 0 && count($rangeOffers) > 0) {
                 $offers[] = $rangeOffers[0];
                 $offers[] = $rangeOffers[count($rangeOffers) - 1];
