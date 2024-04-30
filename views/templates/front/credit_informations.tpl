@@ -53,6 +53,7 @@
          data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}" 
          data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
          data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
+         data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
          data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
          data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
          data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"

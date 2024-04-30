@@ -119,7 +119,7 @@ class ProductService
                 $maxRange
             );
 
-            if (count($rangeOffers) === 0 && count($offers) > 0) {
+            if (count($rangeOffers) === 0 && count($offers) > 0 && $isRangeEnabled) {
                 $offers = [];
             }
 
