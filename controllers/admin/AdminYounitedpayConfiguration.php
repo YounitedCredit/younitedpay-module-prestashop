@@ -385,18 +385,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $frontHook = Tools::getValue('front_hook');
         $isShownMonthly = Tools::getValue('show_monthly');
-        $showRanges = Tools::getValue('show_ranges');
-        $minInstall = Tools::getValue('min_installment');
-        $maxInstall = Tools::getValue('max_installment');
         $widgetBorders = Tools::getValue('widget_borders');
         Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::SHOW_RANGE_OFFERS, $showRanges, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::MIN_RANGE_OFFERS, Tools::getValue('min_ranges'), false, null, $idShop);
-        Configuration::updateValue(Younitedpay::MAX_RANGE_OFFERS, Tools::getValue('max_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_WIDGET_BORDERS, $widgetBorders, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::MIN_RANGE_INSTALMENT, $minInstall, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::MAX_RANGE_INSTALMENT, $maxInstall, false, null, $idShop);
     }
 
     protected function postAccountSubmit($idShop)
@@ -436,6 +428,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             null,
             $idShop
         );
+
+        $showRanges = Tools::getValue('show_ranges');
+        $minInstall = Tools::getValue('min_installment');
+        $maxInstall = Tools::getValue('max_installment');
+        Configuration::updateValue(Younitedpay::SHOW_RANGE_OFFERS, $showRanges, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::MIN_RANGE_OFFERS, Tools::getValue('min_ranges'), false, null, $idShop);
+        Configuration::updateValue(Younitedpay::MAX_RANGE_OFFERS, Tools::getValue('max_ranges'), false, null, $idShop);
+        Configuration::updateValue(Younitedpay::MIN_RANGE_INSTALMENT, $minInstall, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::MAX_RANGE_INSTALMENT, $maxInstall, false, null, $idShop);
     }
 
     protected function getConfigurationVariables()

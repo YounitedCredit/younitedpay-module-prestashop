@@ -92,7 +92,7 @@ class ProductService
         }
 
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
-            $maturities = $this->getAllMaturities($productPrice);
+            $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
 
             $body = new BestPrice();
             $body->setBorrowedAmount($productPrice);
@@ -224,8 +224,13 @@ class ProductService
         ];
     }
 
-    public function getAllMaturities($productPrice)
+    public function getAllMaturities($productPrice, $isRangeEnabled)
     {
+        if ($isRangeEnabled === true) {
+            // If range is enabled, return all maturities instead of filtering by price
+            return $this->configRepository->getAllMaturities();
+        }
+
         return $this->configRepository->getAllMaturities($productPrice);
     }
 

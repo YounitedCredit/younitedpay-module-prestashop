@@ -41,6 +41,7 @@
             </div>
         </div>
     </div>
+    <div class="ranges_not_min_max{if $configuration.show_ranges === true} hidden{/if}">
     <hr />                
     <div class="row mt-1">
         <div class="col-xl-6 form-group d-flex align-items-center">
@@ -76,4 +77,5 @@
             {$maxinstallment|escape:'htmlall':'UTF-8'}</span> €/{l s='month.' mod='younitedpay'}
         </span>
     </small>
+    </div>
 </div>
