@@ -39,16 +39,20 @@ document.onreadystatechange = function() {
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);
     $('#younitedpay_prod_switch').click(YounitedhideZoneTest);
-    $('#show_ranges_switch').click(function() {
-        var rangesEnabled = $('#show_ranges_off').not(':checked').length > 0;
-        if (rangesEnabled === true) {
-            $('.ranges_min_max').removeClass('hidden');
-        } else {
-            $('.ranges_min_max').addClass('hidden');
-        }
-    });
+    $('#show_ranges_switch').click(updateShowHideRanges);
     younitedEvents = true;
 };
+
+function updateShowHideRanges() {
+    var rangesEnabled = $('#show_ranges_off').not(':checked').length > 0;
+    if (rangesEnabled === true) {
+        $('.ranges_min_max').removeClass('hidden');
+        $('.ranges_not_min_max').addClass('hidden');
+    } else {
+        $('.ranges_min_max').addClass('hidden');
+        $('.ranges_not_min_max').removeClass('hidden');
+    }
+}
 
 function HideRequirements()
 {
@@ -158,6 +162,7 @@ function addMaturity(event)
     success: function(response){
         $("#younitedpay_maturities").append( response );
         addEventsMaturity();
+        updateShowHideRanges();
         younitedpay.maturities += 1;  
     }
   });      

@@ -133,7 +133,6 @@ $_MODULE['<{younitedpay}prestashop>states-form_a38a0c6bfda70b981213804c8d9a7efe'
 $_MODULE['<{younitedpay}prestashop>states-form_d1daa0c1b06fe16439c9cc5f81cbb346'] = 'Si vous avez un problème ou si les informations contenues dans le module ne sont pas à jour, vous pouvez vider le cache, les nouvelles données seront récupérées automatiquement.';
 $_MODULE['<{younitedpay}prestashop>maturities_9fb417db7db6e29f83d6941793bb2468'] = 'Maturités sélectionnées ';
 $_MODULE['<{younitedpay}prestashop>maturities_d1875797aa9d4608395828edfc1d4ce1'] = 'Maturités mises en avant ';
-$_MODULE['<{younitedpay}prestashop>maturities_d1875797aa9d4608395828edfc1d4ce1'] = 'Vencimientos destacados ';
 $_MODULE['<{younitedpay}prestashop>maturities_b2a4f24474488720f32ed4f37e895e37'] = 'Ajouter une maturité';
 $_MODULE['<{younitedpay}prestashop>maturities_8416035e654de5fbd5fd0dacb42d51de'] = 'Pour garantir une expérience client optimale et une bonne lecture de votre site, nous vous conseillons de sélectionner un maximum de 3 maturités.';
 $_MODULE['<{younitedpay}prestashop>maturities_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Afficher la réglette des maturités';
