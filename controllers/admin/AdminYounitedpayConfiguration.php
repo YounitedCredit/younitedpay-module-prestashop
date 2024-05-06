@@ -166,12 +166,12 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
         $this->isShownMonthly = (bool) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
         $this->showRangeOffers = (bool) $this->getValue(Younitedpay::SHOW_RANGE_OFFERS, $idShop, 'show_ranges', false);
-        $this->minRangeOffers = $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', '');
+        $this->minRangeOffers = (int) $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', 0);
         $this->maxRangeOffers = $this->getValue(Younitedpay::MAX_RANGE_OFFERS, $idShop, 'max_ranges', '');
         $defMinRange = count($this->maturitylist) > 0 ? $this->maturitylist[0] : 10;
         $defMaxRange = count($this->maturitylist) > 0 ? $this->maturitylist[count($this->maturitylist)] : 72;
-        $this->minRangeInstall = $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_ranges', $defMinRange);
-        $this->maxRangeInstall = $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_ranges', $defMaxRange);
+        $this->minRangeInstall = (int) $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_installment', $defMinRange);
+        $this->maxRangeInstall = $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_installment', $defMaxRange);
         $this->widgetBorders = (bool) $this->getValue(Younitedpay::SHOW_WIDGET_BORDERS, $idShop, 'widget_borders', false);
     }
 

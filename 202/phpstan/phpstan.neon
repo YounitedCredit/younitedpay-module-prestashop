@@ -10,5 +10,9 @@ parameters:
       - ../../controllers
       - ../../src
 
+  ignoreErrors:
+      - '#Class TheCheckoutModuleFrontController not found+#'
+      - '#Class OnePageCheckoutPSPaymentModuleFrontController not found+#'
+
   reportUnmatchedIgnoredErrors: false
   level: 3
