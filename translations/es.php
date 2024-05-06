@@ -175,9 +175,9 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_da36cfaf48b9e19896e23e120
 $_MODULE['<{younitedpay}prestashop>credit_informations_88b973e1bb800b4cbd0552c14cf7bdf8'] = 'con';
 $_MODULE['<{younitedpay}prestashop>credit_informations_17cb410b0b2aa4384b0c458d706d42bb'] = 'Financia tu compra';
 $_MODULE['<{younitedpay}prestashop>credit_informations_e1ae93efa9d42298da41e682ae789ed7'] = 'al instante';
-$_MODULE['<{younitedpay}prestashop>credit_informations_826457046db1c29f654a4555f9eec1df'] = 'Importe de tu compra';
-$_MODULE['<{younitedpay}prestashop>credit_informations_3072ba59f76b3f2e9fa4d7c71ca265d5'] = 'Intereses';
-$_MODULE['<{younitedpay}prestashop>credit_informations_c0a28e86640fc07c7176d05888d82d6c'] = 'Importe total adeudado';
+$_MODULE['<{younitedpay}prestashop>credit_informations_ff9387cc0584e035780f28919879aad8'] = 'Importe total del crédito';
+$_MODULE['<{younitedpay}prestashop>credit_informations_0c2f5b1382cc9e9d9e640fed4ecd73f6'] = 'intereses y gastos (excluido el seguro opcional)';
+$_MODULE['<{younitedpay}prestashop>credit_informations_c0a28e86640fc07c7176d05888d82d6c'] = 'Importe total adeudado por el prestatario';
 $_MODULE['<{younitedpay}prestashop>credit_informations_01d6337a3b4adae7a27000ab46dbfa4f'] = 'Coste total de crédito';
 $_MODULE['<{younitedpay}prestashop>credit_informations_64408fc092e84b9eb352626a0bcbbdf7'] = 'TAE';
 $_MODULE['<{younitedpay}prestashop>credit_informations_7e799761feb5715796087949af518c85'] = 'TIN';

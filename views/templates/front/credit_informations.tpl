@@ -102,13 +102,13 @@
 <div class="yp-border-prple yp-border-2 yp-p-3 yp-rounded-bg yp-mt-6">
 <div class="yp-mb-8 yp-text-lg yp-pol-purpledark">
    <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
-      <p class="yp-pol-purpledark yp-font-normal">{l s='Credit amount' mod='younitedpay'}</p>
+      <p class="yp-pol-purpledark yp-font-normal">{l s='Total credit amount' mod='younitedpay'}</p>
       <p class="yp-weight600 yp-pol-purpledark yp-mw85 yp-text-right">
          <span class="yp-amount">{$offer.initial_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€
       </p>
    </div>
    <div class="yp-flex yp-flex-row yp-justify-between yp-pb-6">
-      <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Interest on credit' mod='younitedpay'}</p>
+      <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Interest and charges (excl. optional insurance)' mod='younitedpay'}</p>
       <p class="yp-weight600 yp-pol-purpledark yp-mw85 yp-text-right">
          <span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
       </p>
