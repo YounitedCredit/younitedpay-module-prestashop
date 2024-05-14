@@ -139,7 +139,7 @@
    </div>
 </div>
 <script type="text/javascript">
-   younitedpay.rangeOffers = {$range_offers|json_encode nofilter};
+   younitedpay.rangeOffers = {$range_offers|json_encode nofilter}; {* JSON CONTENT *}
    younitedpay.rangeEnabled = {$show_ranges|escape:'htmlall':'UTF-8'};
    younitedpay.minRange = {$min_range|escape:'htmlall':'UTF-8'};
    younitedpay.maxRange = {$max_range|escape:'htmlall':'UTF-8'};
