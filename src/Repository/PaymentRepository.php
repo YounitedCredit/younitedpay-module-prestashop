@@ -179,7 +179,7 @@ class PaymentRepository
         return Db::getInstance()->update(
             YounitedPayContract::$definition['table'],
             [
-                'withdrawn_amount' => $withdrawnAmount,
+                'withdrawn_amount' => (float) $withdrawnAmount,
             ],
             'id_order = ' . (int) $idOrder
         );

@@ -57,6 +57,9 @@ class CommonHook extends AbstractHook
         $this->registerMedia($controller);
         switch (true) {
             case $controller instanceof \ProductController:
+            case $controller instanceof \OrderController:
+            case $controller instanceof \TheCheckoutModuleFrontController:
+            case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $frontModuleLink = Context::getContext()->link->getModuleLink(
                     $this->module->name,
                     'product'

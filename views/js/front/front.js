@@ -15,16 +15,22 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-var actualOffer = 0;
 var offerOver = false;
 var totalOffers = 0;
+
+function YpClickOnMaturity()
+{
+    var maturityObject = $(this)[0];
+    var key = $(maturityObject).attr('data-key');
+    YpchangeInstallment(key);
+}
 
 function mouseOverMaturity()
 {
     offerOver = true;
     var maturityObject = $(this)[0];
     var key = $(maturityObject).attr('data-key');
-    changeInstallment(key);
+    YpchangeInstallment(key);
 }
 
 function mouseOutMaturity()
@@ -32,42 +38,61 @@ function mouseOutMaturity()
     offerOver = false;
 }
 
-function changeInstallment(key)
+function YpchangeInstallment(key, maturity = 0)
 {
-    actualOffer = parseInt(key);
-    console.log(actualOffer);
-    var infoInstallmentAmount = $('.maturity_installment' + actualOffer.toString()).attr('data-amount');
-    var infoInstallmentMaturity = $('.maturity_installment' + actualOffer.toString()).attr('data-maturity');
-    $('.yp-install-amount').html(infoInstallmentAmount);
+    if (maturity > 0) {
+        younitedpay.rangeOffers.forEach(offer => {
+            if (parseInt(offer.maturity) === parseInt(maturity)) {
+                var zoneCustom = $('.maturity_installment9999');
+                zoneCustom.attr('data-amount', offer.installment_amount);
+                zoneCustom.attr('data-maturity', offer.maturity);
+                zoneCustom.attr('data-initamount', offer.initial_amount);
+                zoneCustom.attr('data-taeg', offer.taeg);
+                zoneCustom.attr('data-tdf', offer.tdf);
+                zoneCustom.attr('data-totalamount', offer.total_amount);
+                zoneCustom.attr('data-interesttotal', offer.interest_total);
+                key = "9999";
+            }
+        });
+    }
+    var actualOffer = parseInt(key);
+    var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
+    var infoInstallmentAmount = parseFloat(maturityZone.attr('data-amount'));
+    var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
+    var infoInstallmentMaturity = currentMaturity + 'x';
+    var initialAmount = parseFloat(maturityZone.attr('data-initamount'));
+    var taeg = parseFloat(maturityZone.attr('data-taeg'));
+    var tdf = parseFloat(maturityZone.attr('data-tdf'));
+    var totalAmount = parseFloat(maturityZone.attr('data-totalamount'));
+    var interestTotal = parseFloat(maturityZone.attr('data-interesttotal'));
+    
+    $('.maturity_installment').removeClass('yp-bg-black-btn');
+    $('.maturity_installment' + key).addClass('yp-bg-black-btn');
+
+    $('.yp-install-amount').html(infoInstallmentAmount + " €");
     $('.yp-install-maturity').html(infoInstallmentMaturity);
-    
-    $('.blocks_maturity span').addClass('yp-border yp-border-opacity-50');
-    $('.blocks_maturity span').removeClass('yp-border-2 yp-border-opacity-0');
+    $('.yp-tdf').html(tdf);
+    $('.yp-taeg').html(taeg);
+    $('.yp-total').html(totalAmount);
+    $('.yp-interest').html(interestTotal);
+    $('.yp-amount').html(initialAmount);
 
-    $('.block_maturity' + key + ' span').addClass('yp-border-2 yp-border-opacity-0');
-    $('.block_maturity' + key + ' span').removeClass('yp-border yp-border-opacity-50');
-    
-    $('.blocks_maturities_popup span').addClass('yp-mensuality-selected');
-    $('.blocks_maturities_popup span').removeClass('yp-mensuality-selected');
+    $('.yp-custom-range').val(currentMaturity);
+    $('.yp-install-maturity-lite').html(currentMaturity);
 
-    $('.block_maturity_popup' + key + ' span').addClass('yp-mensuality-selected');
-
-    $('.block_contents').addClass('hidden');
-    $('.block_content' + key).removeClass('hidden');
+    ypUpdatePaymentURL(currentMaturity);
 }
 
-function toggleInstallmentOffer(disable)
+function ypUpdatePaymentURL(maturity)
 {
-    var stylePopup = $('#younited_popupzone').attr('style');
-    if (totalOffers > 0 && offerOver === false && stylePopup === 'display:none!important;') {
-        actualOffer += 1;
-        if (actualOffer > totalOffers) {
-            actualOffer = 0;
-        }
-        changeInstallment(actualOffer);
-    }
-    if (disable === null || disable === false || disable === undefined) {
-        setTimeout(toggleInstallmentOffer, 2250);
+    if (typeof younitedpay.url_payment !== 'undefined') {
+        var link = younitedpay.url_payment + '&maturity=' + maturity;
+        $('.js-payment-option-form #payment-form').each((index, form) => {
+            var action = $(form).attr('action');
+            if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
+                $(form).attr('action', link);
+            }
+        });
     }
 }
 
@@ -119,15 +144,83 @@ function updateCreditZone(event)
     });
 }
 
+function YpsetRangeValue()
+{
+    var minValue = parseInt($('.yp-custom-range').attr('min'));
+    var maxValue = parseInt($('.yp-custom-range').attr('max'));
+    if (younitedpay.selected_maturity > maxValue) {
+        younitedpay.selected_maturity = maxValue;
+    }
+    if (younitedpay.selected_maturity < minValue) {
+        younitedpay.selected_maturity = minValue;
+    }
+    $('.yp-custom-range').val(younitedpay.selected_maturity);
+    YpchangeInstallment(0, younitedpay.selected_maturity);
+}
+
 function bindEventsYounitedPay()
 {
-    $('.maturity_installment').on("mouseover", mouseOverMaturity);
-    $('.maturity_installment').on("mouseout", mouseOutMaturity);
-    $('.blocks_maturities_popup').on("click", mouseOverMaturity);
-    $('.younited_block').on("click", showPopup);
-    $('.younited_btnhide').on("click", function(e) {
-        hidePopup(e);
+    if (typeof younitedpay.url_payment === 'undefined') {
+        $('.maturity_installment').on("mouseover", mouseOverMaturity);
+        $('.maturity_installment').on("mouseout", mouseOutMaturity);
+        $('.blocks_maturities_popup').on("click", YpClickOnMaturity);
+        $('.younited_block').on("click", showPopup);
+        $('.younited_btnhide').on("click", function(e) {
+            hidePopup(e);
+        });
+    }
+    $('.maturity_installment').on("click", YpClickOnMaturity);
+    
+    $('body').off('click', '.yp-custom-range');
+    $('body').on('click', '.yp-custom-range', function (e) {
+        e.preventDefault();
+        YpchangeRangeMaturity($(this).val());
     });
+
+    $('body').on('mousedown', '.yp-custom-range', function (e) {
+        younitedpay.is_range_down = true;
+        younitedpay.selected_maturity = $(this).val();
+    });
+    $('body').on('mouseup', '.yp-custom-range', function (e) {
+        younitedpay.is_range_down = false;
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('mousemove', '.yp-custom-range', function (e) {
+        if (younitedpay.is_range_down) {
+            YpchangeRangeMaturity($(this).val());
+        }
+    });
+
+    $('body').on('touchmove', '.yp-custom-range', function (e) {
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('touchend', '.yp-custom-range', function (e) {
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('body').on('change', '.yp-custom-range', function (e) {
+        YpchangeRangeMaturity($(this).val());
+    });
+
+    $('.yp-plus').on('click', function() {
+        younitedpay.selected_maturity = parseInt($('.yp-custom-range').val()) + 1;
+        YpsetRangeValue();
+    });
+
+    $('.yp-minus').on('click', function() {
+        younitedpay.selected_maturity = parseInt($('.yp-custom-range').val()) - 1;
+        YpsetRangeValue();
+    });
+}
+
+function YpchangeRangeMaturity(value)
+{
+    if (value != younitedpay.selected_maturity) {
+        younitedpay.selected_maturity = value;
+        YpchangeInstallment(0, younitedpay.selected_maturity);
+    }
 }
 
 var younitedEvents = false;
@@ -138,7 +231,7 @@ document.onreadystatechange = setTimeout(function() {
     }
 
     younitedEvents = true;
-    if ($(".younitedpay-widget-root").length) {
+    if ($(".maturity_installment").length) {
         bindEventsYounitedPay();
     }
     if (typeof prestashop !== 'undefined') {
@@ -153,5 +246,3 @@ document.onreadystatechange = setTimeout(function() {
         );
     }
 }, 75);
-
-window.__toggleInstallmentOffer = toggleInstallmentOffer;

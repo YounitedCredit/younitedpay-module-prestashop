@@ -36,7 +36,7 @@ use YounitedpayClasslib\Install\ModuleInstaller;
 
 trait PaymentModuleTrait
 {
-    //region Fields
+    // region Fields
 
     /**
      * List of hooks used in this Module
@@ -60,7 +60,7 @@ trait PaymentModuleTrait
      */
     public $cronTasks = [];
 
-    //endregion
+    // endregion
 
     /**
      * Module constructor.
@@ -150,7 +150,7 @@ trait PaymentModuleTrait
             }
         }
 
-        //execute extension's hooks
+        // execute extension's hooks
         if (!isset($this->extensions) || empty($this->extensions)) {
             if (!$result) {
                 return false;
@@ -163,7 +163,7 @@ trait PaymentModuleTrait
             $hookResult = null;
             if (is_callable([$extension, $hookName])) {
                 $hookResult = $extension->{$hookName}($params);
-            //TODO
+            // TODO
             } elseif (is_callable([$extension, 'getHookDispatcher']) && $extension->getHookDispatcher() != null) {
                 $hookResult = $extension->getHookDispatcher()->dispatch($hookName, $params);
             }
@@ -258,7 +258,7 @@ trait PaymentModuleTrait
             }
         }
 
-        //if we want to use an old approach
+        // if we want to use an old approach
         return $this->handleWidget($configuration['action'], __FUNCTION__, $hookName, $configuration);
     }
 

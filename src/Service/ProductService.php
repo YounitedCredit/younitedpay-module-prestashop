@@ -74,17 +74,25 @@ class ProductService
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
+        $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
+        $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
+        $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
+        $widgetBorder = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_WIDGET_BORDERS, false);
+
         $offers = [];
+        $rangeOffers = [];
         if ($cacheExists === true && $cachestorage->isExpired((string) $productPrice) === false) {
             $cacheInformations = $cachestorage->get((string) $productPrice);
             $offers = $cacheInformations['content']['offers'];
-            if (empty($offers) === true) {
+            $rangeOffers = $cacheInformations['content']['ranges'];
+            $emptyRangeOffers = $isRangeEnabled === true && empty($rangeOffers) === true;
+            if (empty($offers) === true || $emptyRangeOffers === true) {
                 $cacheExists = false;
             }
         }
 
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
-            $maturities = $this->getAllMaturities($productPrice);
+            $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
 
             $body = new BestPrice();
             $body->setBorrowedAmount($productPrice);
@@ -104,10 +112,39 @@ class ProductService
             }
 
             $offers = $this->getValidOffers($response['response'], array_column($maturities, 'maturity'));
+            $rangeOffers = $isRangeEnabled === false ? [] : $this->getRangeOffers(
+                $response['response'],
+                $productPrice,
+                $minRange,
+                $maxRange
+            );
+
+            if (count($rangeOffers) === 0 && count($offers) > 0 && $isRangeEnabled) {
+                $offers = [];
+            }
+
+            if (count($offers) <= 0 && count($rangeOffers) > 0) {
+                $offers[] = $rangeOffers[0];
+                $offers[] = $rangeOffers[count($rangeOffers) - 1];
+            }
 
             $cachestorage->set((string) $productPrice, [
                 'offers' => $offers,
+                'ranges' => $rangeOffers,
             ]);
+        }
+
+        $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
+        $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
+        if (empty($offers) === false) {
+            if ((int) $offers[0]['maturity'] < $minInstall) {
+                $minInstall = (int) $offers[0]['maturity'];
+            }
+        }
+        if (empty($rangeOffers) === false) {
+            if ((int) $rangeOffers[count($rangeOffers) - 1]['maturity'] < $maxInstall) {
+                $maxInstall = (int) $rangeOffers[count($rangeOffers) - 1]['maturity'];
+            }
         }
 
         $template = 'module:younitedpay/views/templates/front/credit_propositions.tpl';
@@ -116,9 +153,15 @@ class ProductService
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
-            'logo_younitedpay_url_btn' => 'modules/younitedpay/views/img/logo-younitedpay-btn.png',
             'hook_younited' => $selectedHook,
             'offers' => $offers,
+            'range_offers' => $rangeOffers,
+            'show_ranges' => (int) $isRangeEnabled,
+            'min_range' => (int) $minRange,
+            'max_range' => (int) $maxRange,
+            'min_install' => $minInstall,
+            'max_install' => $maxInstall,
+            'widget_borders' => $widgetBorder,
         ]);
 
         return [
@@ -144,23 +187,54 @@ class ProductService
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $marutitiesIn) === false) {
                 $marutitiesIn[] = $maturityIn;
-                $validOffers[] = [
-                    'maturity' => $offer->getMaturityInMonths(),
-                    'installment_amount' => $offer->getMonthlyInstallmentAmount(),
-                    'initial_amount' => $offer->getRequestedAmount(),
-                    'total_amount' => $offer->getCreditTotalAmount(),
-                    'interest_total' => $offer->getInterestsTotalAmount(),
-                    'taeg' => $offer->getAnnualPercentageRate() * 100,
-                    'tdf' => $offer->getAnnualDebitRate() * 100,
-                ];
+                $validOffers[] = $this->returnOffer($offer);
             }
         }
 
         return $validOffers;
     }
 
-    public function getAllMaturities($productPrice)
+    protected function getRangeOffers($offers, $productPrice, $minAmount, $maxAmount)
     {
+        if ((int) $productPrice < (int) $minAmount) {
+            return [];
+        }
+
+        if ((int) $productPrice > (int) $maxAmount && (int) $maxAmount > 0) {
+            return [];
+        }
+
+        $validOffers = [];
+        foreach ($offers as $offer) {
+            $validOffers[] = $this->returnOffer($offer);
+        }
+
+        return $validOffers;
+    }
+
+    /**
+     * Return offer for templates
+     */
+    protected function returnOffer(OfferItem $offer)
+    {
+        return [
+            'maturity' => (int) $offer->getMaturityInMonths(),
+            'installment_amount' => \Tools::ps_round($offer->getMonthlyInstallmentAmount(), 2),
+            'initial_amount' => \Tools::ps_round($offer->getRequestedAmount(), 2),
+            'total_amount' => \Tools::ps_round($offer->getCreditTotalAmount(), 2),
+            'interest_total' => \Tools::ps_round($offer->getInterestsTotalAmount(), 2),
+            'taeg' => \Tools::ps_round($offer->getAnnualPercentageRate() * 100, 2),
+            'tdf' => \Tools::ps_round($offer->getAnnualDebitRate() * 100, 2),
+        ];
+    }
+
+    public function getAllMaturities($productPrice, $isRangeEnabled)
+    {
+        if ($isRangeEnabled === true) {
+            // If range is enabled, return all maturities instead of filtering by price
+            return $this->configRepository->getAllMaturities();
+        }
+
         return $this->configRepository->getAllMaturities($productPrice);
     }
 

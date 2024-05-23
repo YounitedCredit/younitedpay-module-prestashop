@@ -104,4 +104,14 @@ class ConfigRepository
 
         return in_array($ipClient, $ipWhitelisted);
     }
+
+    /**
+     * Get configuration key for current shop
+     */
+    public function getConfig($key, $default = false)
+    {
+        $idShop = \Context::getContext()->shop->id;
+
+        return \Configuration::get($key, null, null, $idShop, $default);
+    }
 }
