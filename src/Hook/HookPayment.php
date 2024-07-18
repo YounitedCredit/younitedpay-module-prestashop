@@ -94,7 +94,7 @@ class HookPayment extends AbstractHook
         $totalOffers = $templateCredit['offers'];
 
         if (empty($totalOffers) === true) {
-            $loggerservice->addLogAPI('No offers in checkout for ' . $this->cartPrice);
+            $loggerservice->addLogAPI('No offers in checkout for ' . $this->cartPrice, 'Info', $this);
 
             return [];
         }
