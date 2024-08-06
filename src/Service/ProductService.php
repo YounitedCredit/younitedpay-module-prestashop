@@ -141,7 +141,7 @@ class ProductService
             if ((int) $offers[0]['maturity'] < $minInstall) {
                 $minInstall = (int) $offers[0]['maturity'];
             }
-            foreach($offers as $key => $oneOffer) {
+            foreach ($offers as $key => $oneOffer) {
                 if ((int) $oneOffer['maturity'] === 36) {
                     $selectedOffer = $key;
                 }
