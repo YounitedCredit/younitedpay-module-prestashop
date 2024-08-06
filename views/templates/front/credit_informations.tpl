@@ -24,7 +24,7 @@
 <div class="yp-flex yp-justify-center yp-mt-6">
 {foreach from=$offers item=offer key=key}
    {assign var="background_block" value=''}
-   {if $key === 0}
+   {if (int) $key === (int) $selected_offer}
       {assign var="background_block" value='yp-bg-black-btn'}
    {/if}
    <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1 maturity_installment maturity_installment{$key|escape:'htmlall':'UTF-8'} {$background_block|escape:'htmlall':'UTF-8'}"
@@ -79,7 +79,7 @@
       <button class="yp-mobile yp-minus yp-mr-3">-</button>
       <input type="range" class="yp-custom-range yp-flex-grow yp-mr-3" 
             min="{$min_install|escape:'htmlall':'UTF-8'}" max="{$max_install|escape:'htmlall':'UTF-8'}" 
-            step="1" value="{$offers[0].maturity|escape:'htmlall':'UTF-8'}">
+            step="1" value="{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}">
       <button class="yp-mobile yp-plus">+</button>
    </div>
 {/if}
@@ -89,7 +89,7 @@
 <p class="yp-flex yp-items-center">   
    <span>{l s='Your purchase for ' mod='younitedpay'}</span>&nbsp;
    <span class="yp-pol-purple yp-font-bold yp-font-family-rg yp-install-amount">
-      {$offers[0].installment_amount|escape:'htmlall':'UTF-8'} €
+      {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €
    </span>&nbsp;
    <span>/ {l s='months' mod='younitedpay'}</span>
 </p>

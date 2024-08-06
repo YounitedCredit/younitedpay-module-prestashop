@@ -23,7 +23,7 @@
             <img class="yp-mb-2 yp-logo lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" data-ll-status="loaded">
             {foreach from=$offers item=offer key=key}
                {assign var="background_block" value=''}
-               {if $key === 0}
+               {if (int) $key === (int) $selected_offer}
                   {assign var="background_block" value='yp-bg-black-btn'}
                {/if}
                <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-1 yp-mb-1 maturity_installment maturity_installment{$key|escape:'htmlall':'UTF-8'} {$background_block|escape:'htmlall':'UTF-8'}"
@@ -85,7 +85,7 @@
             <span class="yp-justify-start yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{else} yp-pl-3{/if}">
                <span class="yp-h-7 yp-flex yp-items-center"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
                   <span class="younitedpay_infoinstallment yp-install-amount">
-                     {$offers[0].installment_amount|escape:'htmlall':'UTF-8'} €
+                     {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €
                   </span>&nbsp;
                   <span>/</span>&nbsp;
                   <span>{l s='months' mod='younitedpay'}</span>
