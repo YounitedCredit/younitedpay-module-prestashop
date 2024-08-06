@@ -171,6 +171,7 @@ class ProductService
             'show_ranges' => (int) $isRangeEnabled,
             'min_range' => (int) $minRange,
             'max_range' => (int) $maxRange,
+            'selected_offer' => (int) $selectedOffer,
             'min_install' => $minInstall,
             'max_install' => $maxInstall,
             'widget_borders' => $widgetBorder,
