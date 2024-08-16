@@ -77,6 +77,13 @@ $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd']
 $_MODULE['<{younitedpay}prestashop>appearence_c9cc8cce247e49bae79f15173ce97354'] = 'Ahorrar';
 $_MODULE['<{younitedpay}prestashop>appearence_722493c68ebd3b431bd3e1a39fd582d6'] = 'Pantalla con bordes';
 $_MODULE['<{younitedpay}prestashop>appearence_c2c0eda8007343fb1cda03418677025d'] = 'Añade bordes negros al widget de la página de productos.';
+$_MODULE['<{younitedpay}prestashop>appearence_fead58b908784f4b4bd2a1c7ac9469c5'] = 'Al final del total de la cesta';
+$_MODULE['<{younitedpay}prestashop>appearence_2f4d1732fbcfd5b2d9cbedc8056658bd'] = 'Después de las líneas de productos';
+$_MODULE['<{younitedpay}prestashop>appearence_bb54cce5a0fb4e80d1b2dce5a28d6efb'] = 'Página de la cesta';
+$_MODULE['<{younitedpay}prestashop>appearence_eb763a2e313718f33f55e1f0d84df6ee'] = 'Página del producto';
+$_MODULE['<{younitedpay}prestashop>appearence_c52b97f29541f4896054910486f1d8a9'] = 'Página del producto y de la cesta';
+$_MODULE['<{younitedpay}prestashop>appearence_9771fa28ddf673318336253e89f39af5'] = 'Sólo página de la cesta';
+$_MODULE['<{younitedpay}prestashop>appearence_9ee62667bae48d7df974901c465db9c0'] = 'Sólo página de producto';
 $_MODULE['<{younitedpay}prestashop>maturity_ba5376b5ba3216a7a51eabb18265d921'] = 'Plazos';
 $_MODULE['<{younitedpay}prestashop>maturity_baabebfcf84c5ae2acaa090069338d5b'] = 'Importe mínimo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturity_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';

@@ -40,6 +40,8 @@ class HookFrontProduct extends AbstractHook
         'displayProductAdditionalInfo',
         'displayReassurance',
         'displayCartExtraProductActions',
+        'displayExpressCheckout',
+        'displayShoppingCartFooter',
     ];
 
     public function displayProductPriceBlock($params)
@@ -64,33 +66,57 @@ class HookFrontProduct extends AbstractHook
         return $this->displaySelectedHook($params, 'displayReassurance');
     }
 
-    public function displayCartExtraProductActions($params)
+    public function displayShoppingCartFooter($params)
     {
-        return $this->displayCart($params);
+        return $this->displaySelectedHook($params, 'displayShoppingCartFooter');
+    }
+
+    public function displayExpressCheckout($params)
+    {
+        return $this->displaySelectedHook($params, 'displayExpressCheckout');
     }
 
     private function displayCart($params)
     {
     }
 
-    private function getHookConfiguration()
+    private function getHookConfiguration($cartPage = false)
     {
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
+        $cacheKey = 'hookConfiguration' . ($cartPage === true ? 'Cart' : '') . (string) $idShop;
         $idShop = \Context::getContext()->shop->id;
-        $cacheExists = $cachestorage->exist('hookConfiguration' . (string) $idShop);
+        $cacheExists = $cachestorage->exist($cacheKey);
 
-        if ($cacheExists === false || $cachestorage->isExpired('hookConfiguration') === true) {
-            $hookConfiguration = (string) \Configuration::get(Younitedpay::FRONT_HOOK, null, null, $idShop, 'disabled');
-            $isShownProducts = (bool) \Configuration::get(Younitedpay::SHOW_MONTHLY, null, null, $idShop, false);
+        if ($cacheExists === false || $cachestorage->isExpired($cacheKey) === true) {
+            if ($cartPage === true) {
+                $hookConfiguration = (string) \Configuration::get(
+                    Younitedpay::FRONT_HOOK_CART,
+                    null,
+                    null,
+                    $idShop,
+                    'disabled'
+                );
+            } else {
+                $hookConfiguration = (string) \Configuration::get(
+                    Younitedpay::FRONT_HOOK,
+                    null,
+                    null,
+                    $idShop,
+                    'disabled'
+                );
+            }
+            $isShownProducts = (int) \Configuration::get(Younitedpay::SHOW_MONTHLY, null, null, $idShop, false);
 
-            if ($isShownProducts === false) {
+            $cartPageNotAllowed = $cartPage === true && $isShownProducts < 2;
+            $productPageNotAllowed = $cartPage === false && $isShownProducts === 2;
+            if ($isShownProducts === 0 || ( $cartPageNotAllowed && $productPageNotAllowed )) {
                 $hookConfiguration = 'disabled';
             }
 
-            $cachestorage->set('hookConfiguration' . (string) $idShop, $hookConfiguration);
+            $cachestorage->set($cacheKey, $hookConfiguration);
         } else {
-            $cacheInformations = $cachestorage->get('hookConfiguration' . (string) $idShop);
+            $cacheInformations = $cachestorage->get($cacheKey);
             $hookConfiguration = $cacheInformations['content'];
         }
 
@@ -132,7 +158,11 @@ class HookFrontProduct extends AbstractHook
         } catch (\Exception $ex) {
         }
         if (empty($hookConfiguration) === true) {
-            $hookConfiguration = $this->getHookConfiguration();
+            $cartPage = false;
+            if ($currentHook === 'displayExpressCheckout' || $currentHook === 'displayShoppingCartFooter') {
+                $cartPage = true;
+            }
+            $hookConfiguration = $this->getHookConfiguration($cartPage);
             $context->smarty->assign('hookConfiguration', $hookConfiguration);
         }
 

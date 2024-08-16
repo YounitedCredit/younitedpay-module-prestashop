@@ -190,6 +190,13 @@ $_MODULE['<{younitedpay}prestashop>appearence_b7634b6f99cd212164f5c9ead6aebb9a']
 $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd'] = 'Copier';
 $_MODULE['<{younitedpay}prestashop>appearence_722493c68ebd3b431bd3e1a39fd582d6'] = 'Afficher avec bordures';
 $_MODULE['<{younitedpay}prestashop>appearence_c2c0eda8007343fb1cda03418677025d'] = 'Ajoute des bordures noires sur le widget page produit.';
+$_MODULE['<{younitedpay}prestashop>appearence_fead58b908784f4b4bd2a1c7ac9469c5'] = 'En bas du total du panier';
+$_MODULE['<{younitedpay}prestashop>appearence_2f4d1732fbcfd5b2d9cbedc8056658bd'] = 'Après les lignes des produits';
+$_MODULE['<{younitedpay}prestashop>appearence_bb54cce5a0fb4e80d1b2dce5a28d6efb'] = 'Page panier';
+$_MODULE['<{younitedpay}prestashop>appearence_eb763a2e313718f33f55e1f0d84df6ee'] = 'Page produit';
+$_MODULE['<{younitedpay}prestashop>appearence_c52b97f29541f4896054910486f1d8a9'] = 'Page produit et panier';
+$_MODULE['<{younitedpay}prestashop>appearence_9771fa28ddf673318336253e89f39af5'] = 'Page panier uniquement';
+$_MODULE['<{younitedpay}prestashop>appearence_9ee62667bae48d7df974901c465db9c0'] = 'Page produit uniquement';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_c67b54a2992181659d25de92e68800fe'] = 'Indisponible';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_810b5202d7119118cc0a7e4f8b2876c6'] = 'Pour configurer ce module vous devez sélectionner une boutique';
 $_MODULE['<{younitedpay}prestashop>configuration_5a2ebfb8baa378cfcfcba58bbb1380c2'] = 'Exigences';
