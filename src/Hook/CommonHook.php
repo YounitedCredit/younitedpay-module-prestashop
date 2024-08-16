@@ -58,6 +58,7 @@ class CommonHook extends AbstractHook
         switch (true) {
             case $controller instanceof \ProductController:
             case $controller instanceof \OrderController:
+            case $controller instanceof \CartController:
             case $controller instanceof \TheCheckoutModuleFrontController:
             case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $frontModuleLink = Context::getContext()->link->getModuleLink(
@@ -68,6 +69,7 @@ class CommonHook extends AbstractHook
                     'younitedpay' => [
                         'url_product' => $frontModuleLink,
                         'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
+                        'type' => $controller instanceof \CartController ? 'cart' : 'product',
                         'id_product' => (int) \Tools::getValue('id_product'),
                     ],
                 ]);

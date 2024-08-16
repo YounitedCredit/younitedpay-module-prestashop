@@ -111,16 +111,18 @@ function hidePopup(e)
 
 function updateCreditZone(event)
 {
+    var ajaxData = {
+        ajax: true,
+        id_product: younitedpay.id_product,
+        id_attribute: typeof event.id_product_attribute !== 'undefined' ? event.id_product_attribute : 0,
+        type: younitedpay.type,
+        qty: event.quantity_wanted,
+    };
     $.ajax({
         url: younitedpay.url_product,
         type: 'POST',
         dataType: 'JSON',
-        data: {
-            ajax: true,
-            id_product: younitedpay.id_product,
-            id_attribute: event.id_product_attribute,
-            qty: event.quantity_wanted,
-        },
+        data: ajaxData,
         success(response) {
             if ('content' in response) {            
                 $('.younitedpay_product_info').html(response.content);
@@ -237,6 +239,15 @@ document.onreadystatechange = setTimeout(function() {
     if (typeof prestashop !== 'undefined') {
         prestashop.on(
             'updatedProduct',
+            function (event) {
+                if (event.quantity_wanted == undefined) {
+                    event.quantity_wanted = $('#quantity_wanted').val();
+                }
+                updateCreditZone(event);
+            }
+        );
+        prestashop.on(
+            'updatedCart',
             function (event) {
                 if (event.quantity_wanted == undefined) {
                     event.quantity_wanted = $('#quantity_wanted').val();
