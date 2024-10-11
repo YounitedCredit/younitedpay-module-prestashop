@@ -110,7 +110,7 @@ class HookFrontProduct extends AbstractHook
 
             $cartPageNotAllowed = $cartPage === true && $isShownProducts < 2;
             $productPageNotAllowed = $cartPage === false && $isShownProducts === 2;
-            if ($isShownProducts === 0 || ( $cartPageNotAllowed && $productPageNotAllowed )) {
+            if ($isShownProducts === 0 || ($cartPageNotAllowed && $productPageNotAllowed)) {
                 $hookConfiguration = 'disabled';
             }
 
