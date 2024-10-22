@@ -68,7 +68,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var bool */
     public $isWhiteListOn;
 
-    /** @var bool */
+    /** @var int */
     public $isShownMonthly;
 
     /** @var bool */
@@ -168,8 +168,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->showRangeOffers = (bool) $this->getValue(Younitedpay::SHOW_RANGE_OFFERS, $idShop, 'show_ranges', false);
         $this->minRangeOffers = (int) $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', 0);
         $this->maxRangeOffers = (int) $this->getValue(Younitedpay::MAX_RANGE_OFFERS, $idShop, 'max_ranges', 0);
-        $defMinRange = count($this->maturitylist) > 0 ? $this->maturitylist[0] : 10;
-        $defMaxRange = count($this->maturitylist) > 0 ? $this->maturitylist[count($this->maturitylist)] : 72;
+        $defMinRange = false === empty($this->maturitylist) ? $this->maturitylist[0] : 10;
+        $defMaxRange = false === empty($this->maturitylist) ? $this->maturitylist[count($this->maturitylist)] : 72;
         $this->minRangeInstall = (int) $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_installment', $defMinRange);
         $this->maxRangeInstall = (int) $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_installment', $defMaxRange);
         $this->widgetBorders = (bool) $this->getValue(Younitedpay::SHOW_WIDGET_BORDERS, $idShop, 'widget_borders', false);

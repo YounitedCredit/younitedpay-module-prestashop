@@ -84,8 +84,8 @@ class HookFrontProduct extends AbstractHook
     {
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
-        $cacheKey = 'hookConfiguration' . ($cartPage === true ? 'Cart' : '') . (string) $idShop;
         $idShop = \Context::getContext()->shop->id;
+        $cacheKey = 'hookConfiguration' . ($cartPage === true ? 'Cart' : '') . (string) $idShop;
         $cacheExists = $cachestorage->exist($cacheKey);
 
         if ($cacheExists === false || $cachestorage->isExpired($cacheKey) === true) {
@@ -110,7 +110,7 @@ class HookFrontProduct extends AbstractHook
 
             $cartPageNotAllowed = $cartPage === true && $isShownProducts < 2;
             $productPageNotAllowed = $cartPage === false && $isShownProducts === 2;
-            if ($isShownProducts === 0 || ( $cartPageNotAllowed && $productPageNotAllowed )) {
+            if ($isShownProducts === 0 || ($cartPageNotAllowed && $productPageNotAllowed)) {
                 $hookConfiguration = 'disabled';
             }
 
@@ -153,9 +153,8 @@ class HookFrontProduct extends AbstractHook
                 return '';
         }
 
-        try {
+        if (isset($context->smarty->tpl_vars['hookConfiguration'])) {
             $hookConfiguration = $context->smarty->tpl_vars['hookConfiguration']->value;
-        } catch (\Exception $ex) {
         }
         if (empty($hookConfiguration) === true) {
             $cartPage = false;
