@@ -18,7 +18,7 @@
 {if isset($yperror)}
 <div class="younitedpay-widget-root">
 {/if}
-<div class="yp-text-20 yp-mt-4 yp-mb-5 yp-h4 yp-font-bold{if isset($yperror)} yp-text-center{/if}">
+<div class="yp-text-base yp-mt-4 yp-mb-5 yp-h4 yp-text-center">
     <span>{l s='Start paying' mod='younitedpay'} {l s='in just 30 days !' mod='younitedpay'}</span>
 </div>
 <div class="yp-flex yp-justify-center yp-mt-6">
