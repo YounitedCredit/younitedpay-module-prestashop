@@ -71,7 +71,7 @@
 
 <div>
 <div class="yp-pol-purpledark yp-flex yp-justify-center yp-align-center yp-pol-purple yp-font-bold yp-text-md yp-font-family-rg yp-mt-6 yp-mb-3">
-   <span class="yp-install-maturity-lite">{$offers[0].maturity|escape:'htmlall':'UTF-8'}</span> 
+   <span class="yp-install-maturity-lite">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span> 
    <span>&nbsp;{l s='months' mod='younitedpay'}</span>
 </div>
 {if (bool) $show_ranges === true && empty($range_offers) === false}
