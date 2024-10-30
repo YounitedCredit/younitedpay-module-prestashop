@@ -18,7 +18,7 @@
 {if isset($yperror)}
 <div class="younitedpay-widget-root">
 {/if}
-<div class="yp-text-20 yp-mt-4 yp-mb-5 yp-h4 yp-font-bold{if isset($yperror)} yp-text-center{/if}">
+<div class="yp-text-base yp-mt-4 yp-mb-5 yp-h4 yp-text-center">
     <span>{l s='Start paying' mod='younitedpay'} {l s='in just 30 days !' mod='younitedpay'}</span>
 </div>
 <div class="yp-flex yp-justify-center yp-mt-6">
@@ -71,7 +71,7 @@
 
 <div>
 <div class="yp-pol-purpledark yp-flex yp-justify-center yp-align-center yp-pol-purple yp-font-bold yp-text-md yp-font-family-rg yp-mt-6 yp-mb-3">
-   <span class="yp-install-maturity-lite">{$offers[0].maturity|escape:'htmlall':'UTF-8'}</span> 
+   <span class="yp-install-maturity-lite">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span> 
    <span>&nbsp;{l s='months' mod='younitedpay'}</span>
 </div>
 {if (bool) $show_ranges === true && empty($range_offers) === false}

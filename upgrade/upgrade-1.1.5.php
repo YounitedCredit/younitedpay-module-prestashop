@@ -32,4 +32,6 @@ function upgrade_module_1_1_5($module)
     $module->registerHook('displayExpressCheckout');
     $module->registerHook('displayShoppingCartFooter');
     $module->unregisterHook('displayCartExtraProductActions');
+
+    return true;
 }
