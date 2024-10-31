@@ -68,7 +68,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var bool */
     public $isWhiteListOn;
 
-    /** @var bool */
+    /** @var int */
     public $isShownMonthly;
 
     /** @var bool */
@@ -164,12 +164,12 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
         $this->isProductionMode = (bool) $this->getValue($productionMode, $idShop, 'production_mode', false);
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
-        $this->isShownMonthly = (bool) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
+        $this->isShownMonthly = (int) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
         $this->showRangeOffers = (bool) $this->getValue(Younitedpay::SHOW_RANGE_OFFERS, $idShop, 'show_ranges', false);
         $this->minRangeOffers = (int) $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', 0);
         $this->maxRangeOffers = (int) $this->getValue(Younitedpay::MAX_RANGE_OFFERS, $idShop, 'max_ranges', 0);
-        $defMinRange = count($this->maturitylist) > 0 ? $this->maturitylist[0] : 10;
-        $defMaxRange = count($this->maturitylist) > 0 ? $this->maturitylist[count($this->maturitylist)] : 72;
+        $defMinRange = false === empty($this->maturitylist) ? $this->maturitylist[0] : 10;
+        $defMaxRange = false === empty($this->maturitylist) ? $this->maturitylist[count($this->maturitylist)] : 72;
         $this->minRangeInstall = (int) $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_installment', $defMinRange);
         $this->maxRangeInstall = (int) $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_installment', $defMaxRange);
         $this->widgetBorders = (bool) $this->getValue(Younitedpay::SHOW_WIDGET_BORDERS, $idShop, 'widget_borders', false);
@@ -384,9 +384,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     protected function postAppearance($idShop)
     {
         $frontHook = Tools::getValue('front_hook');
-        $isShownMonthly = Tools::getValue('show_monthly');
+        $frontHookCart = Tools::getValue('front_hook_cart');
+        $isShownMonthly = (int) Tools::getValue('show_monthly');
         $widgetBorders = Tools::getValue('widget_borders');
         Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::FRONT_HOOK_CART, $frontHookCart, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_WIDGET_BORDERS, $widgetBorders, false, null, $idShop);
     }
@@ -462,6 +464,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'disabled'
         );
 
+        $frontHookCart = Configuration::get(
+            Younitedpay::FRONT_HOOK_CART,
+            null,
+            null,
+            $idShop,
+            'disabled'
+        );
+
         $allMaturities = $this->getAllMaturities();
         $urlFormConfig = $this->context->link->getAdminLink('AdminYounitedpayConfiguration');
 
@@ -500,6 +510,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),
+            'front_hook_cart' => Tools::getValue('front_hook_cart', $frontHookCart),
             'link_help' => $this->context->link->getAdminLink('AdminYounitedpayHelp'),
             'maturities' => $allMaturities,
             'maturitylist' => $this->maturitylist,

@@ -18,13 +18,13 @@
 {if isset($yperror)}
 <div class="younitedpay-widget-root">
 {/if}
-<div class="yp-text-xl yp-mt-4 yp-mb-5 yp-h4 yp-font-bold{if isset($yperror)} yp-text-center{/if}">
+<div class="yp-text-base yp-mt-4 yp-mb-5 yp-h4 yp-text-center">
     <span>{l s='Start paying' mod='younitedpay'} {l s='in just 30 days !' mod='younitedpay'}</span>
 </div>
 <div class="yp-flex yp-justify-center yp-mt-6">
 {foreach from=$offers item=offer key=key}
    {assign var="background_block" value=''}
-   {if $key === 0}
+   {if (int) $key === (int) $selected_offer}
       {assign var="background_block" value='yp-bg-black-btn'}
    {/if}
    <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1 maturity_installment maturity_installment{$key|escape:'htmlall':'UTF-8'} {$background_block|escape:'htmlall':'UTF-8'}"
@@ -70,8 +70,8 @@
 </div>
 
 <div>
-<div class="yp-text-lg yp-pol-purpledark yp-flex yp-justify-center yp-align-center yp-pol-purple yp-font-bold yp-font-family-rg yp-mt-6 yp-mb-3">
-   <span class="yp-install-maturity-lite">{$offers[0].maturity|escape:'htmlall':'UTF-8'}</span> 
+<div class="yp-pol-purpledark yp-flex yp-justify-center yp-align-center yp-pol-purple yp-font-bold yp-text-md yp-font-family-rg yp-mt-6 yp-mb-3">
+   <span class="yp-install-maturity-lite">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span> 
    <span>&nbsp;{l s='months' mod='younitedpay'}</span>
 </div>
 {if (bool) $show_ranges === true && empty($range_offers) === false}
@@ -79,23 +79,19 @@
       <button class="yp-mobile yp-minus yp-mr-3">-</button>
       <input type="range" class="yp-custom-range yp-flex-grow yp-mr-3" 
             min="{$min_install|escape:'htmlall':'UTF-8'}" max="{$max_install|escape:'htmlall':'UTF-8'}" 
-            step="1" value="{$offers[0].maturity|escape:'htmlall':'UTF-8'}">
+            step="1" value="{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}">
       <button class="yp-mobile yp-plus">+</button>
    </div>
 {/if}
 </div>
 
 <div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-justify-between yp-items-center">
-<p class="yp-flex yp-items-center">   
+<p class="yp-flex yp-items-center yp-weight600 yp-pol-purpledark yp-text-20">
    <span>{l s='Your purchase for ' mod='younitedpay'}</span>&nbsp;
-   <span class="yp-pol-purple yp-font-bold yp-font-family-rg yp-install-amount">
-      {$offers[0].installment_amount|escape:'htmlall':'UTF-8'} €
+   <span class="yp-pol-purple yp-text-20 yp-font-bold yp-font-family-rg yp-install-amount">
+      {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €
    </span>&nbsp;
    <span>/ {l s='months' mod='younitedpay'}</span>
-</p>
-<p class="yp-pol-purpledark">   
-   <span class="yp-font-normal">{l s='Minimum monthly instalment' mod='younitedpay'}</span>
-   <span class="yp-weight600">10,00 € / {l s='months' mod='younitedpay'}</span>
 </p>
 </div>
 
@@ -108,12 +104,12 @@
       </p>
    </div>
    <div class="yp-flex yp-flex-row yp-justify-between yp-pb-6">
-      <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Interest and charges (excl. optional insurance)' mod='younitedpay'}</p>
+      <p class="yp-pol-purpledark yp-font-normal"><b>+</b> {l s='Interest (excl. optional insurance)' mod='younitedpay'}</p>
       <p class="yp-weight600 yp-pol-purpledark yp-mw85 yp-text-right">
          <span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
       </p>
    </div>
-   <div class="yp-flex yp-flex-row yp-justify-between yp-pol-purple yp-mb-2 yp-weight600">
+   <div class="yp-flex yp-flex-row yp-justify-between yp-pol-purple yp-mb-2 yp-text-20 yp-weight600">
       <span><b>= {l s='Total amount due' mod='younitedpay'}</b></span>
       <span class="yp-mw85 yp-text-right">
          <span class="yp-total">{$offer.total_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€
@@ -165,7 +161,7 @@
 
     <div class="yp-text-responsabilities{if isset($yperror)} yp-my-4{else} yp-mt-6{/if}">
 {if $iso_code == 'fr'}
-   <p>
+   <p class="yp-weight600 yp-pol-purpledark yp-text-20">
       {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
       {l s='obligation of repayment.' mod='younitedpay'}
       {if $iso_code == 'fr'}

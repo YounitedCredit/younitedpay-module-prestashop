@@ -99,7 +99,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_da36cfaf48b9e19896e23e120
 $_MODULE['<{younitedpay}prestashop>credit_informations_17cb410b0b2aa4384b0c458d706d42bb'] = 'Commencez à payer';
 $_MODULE['<{younitedpay}prestashop>credit_informations_e1ae93efa9d42298da41e682ae789ed7'] = 'dans 30 jours seulement !';
 $_MODULE['<{younitedpay}prestashop>credit_informations_ff9387cc0584e035780f28919879aad8'] = 'Montant total du crédit';
-$_MODULE['<{younitedpay}prestashop>credit_informations_0c2f5b1382cc9e9d9e640fed4ecd73f6'] = 'Intérêts et frais (hors assurance facultative)';
+$_MODULE['<{younitedpay}prestashop>credit_informations_57ba061b675b8bf8477da18b20e416a2'] = 'Intérêts (hors assurance facultative)';
 $_MODULE['<{younitedpay}prestashop>credit_informations_c0a28e86640fc07c7176d05888d82d6c'] = 'Montant total dû par l\'emprunteur';
 $_MODULE['<{younitedpay}prestashop>credit_informations_64408fc092e84b9eb352626a0bcbbdf7'] = 'TAEG fixe';
 $_MODULE['<{younitedpay}prestashop>credit_informations_7e799761feb5715796087949af518c85'] = 'Taux débiteur fixe';
@@ -190,6 +190,13 @@ $_MODULE['<{younitedpay}prestashop>appearence_b7634b6f99cd212164f5c9ead6aebb9a']
 $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd'] = 'Copier';
 $_MODULE['<{younitedpay}prestashop>appearence_722493c68ebd3b431bd3e1a39fd582d6'] = 'Afficher avec bordures';
 $_MODULE['<{younitedpay}prestashop>appearence_c2c0eda8007343fb1cda03418677025d'] = 'Ajoute des bordures noires sur le widget page produit.';
+$_MODULE['<{younitedpay}prestashop>appearence_fead58b908784f4b4bd2a1c7ac9469c5'] = 'En bas du total du panier';
+$_MODULE['<{younitedpay}prestashop>appearence_2f4d1732fbcfd5b2d9cbedc8056658bd'] = 'Après les lignes des produits';
+$_MODULE['<{younitedpay}prestashop>appearence_bb54cce5a0fb4e80d1b2dce5a28d6efb'] = 'Page panier';
+$_MODULE['<{younitedpay}prestashop>appearence_eb763a2e313718f33f55e1f0d84df6ee'] = 'Page produit';
+$_MODULE['<{younitedpay}prestashop>appearence_c52b97f29541f4896054910486f1d8a9'] = 'Page produit et panier';
+$_MODULE['<{younitedpay}prestashop>appearence_9771fa28ddf673318336253e89f39af5'] = 'Page panier uniquement';
+$_MODULE['<{younitedpay}prestashop>appearence_9ee62667bae48d7df974901c465db9c0'] = 'Page produit uniquement';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_c67b54a2992181659d25de92e68800fe'] = 'Indisponible';
 $_MODULE['<{younitedpay}prestashop>multishop-and-not-selected_810b5202d7119118cc0a7e4f8b2876c6'] = 'Pour configurer ce module vous devez sélectionner une boutique';
 $_MODULE['<{younitedpay}prestashop>configuration_5a2ebfb8baa378cfcfcba58bbb1380c2'] = 'Exigences';

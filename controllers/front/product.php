@@ -40,6 +40,10 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
         $qty = (int) \Tools::getValue('qty', 1);
         $price = $product->getPrice(true, $idAttribute) * $qty;
 
+        if (Tools::getValue('type') === 'cart') {
+            $price = Context::getContext()->cart->getOrderTotal();
+        }
+
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 

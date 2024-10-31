@@ -128,6 +128,10 @@ class PaymentService
         }
         $additionalAdress .= $customerAdress->address2 . ' ' . $customerAdress->other;
 
+        if (mb_strlen($additionalAdress) > 38) {
+            $additionalAdress = substr($additionalAdress, 0, 38);
+        }
+
         $gender = $customer->id_gender === 2 ? 'FEMALE' : 'MALE';
 
         $address = (new Address())

@@ -38,25 +38,35 @@
                             <label class="form-control-label col-lg-3 justify-content-end pt-1">
                                 {l s='Show monthly installments' mod='younitedpay'}
                             </label>
-                            <div class="col-lg-4 align-item-center">                           
-                                <span class="ps-switch ps-switch-lg disable_on_change" 
-                                        data-input="show_monthly_on" data-toggle="month">
-                                    <input type="radio" name="show_monthly" id="show_monthly_off" 
-                                        value="0"{if $configuration.show_monthly === false} checked{/if}/>
-                                    <label for="show_monthly_off">Off</label>
-                                    <input type="radio" name="show_monthly" id="show_monthly_on" 
-                                        value="1"{if $configuration.show_monthly === true} checked{/if}/>
-                                    <label for="show_monthly_on">On</label>
-                                    <span class="slide-button"></span>
-                                </span>
-                                <small class="form-text">
-                                    {l s='If you wish to only have theses informations on the cart you can select "Off" to hide it on the product pages.' mod='younitedpay'}
-                                </small>
+                            <div class="col-lg-5 align-item-center">     
+                                <select class="custom-select" name="show_monthly">
+                                    <option name="0" value="0"
+                                        {if $configuration.show_monthly == 0} selected{/if}>
+                                        {l s='Disabled' mod='younitedpay'}
+                                    </option>
+                                    <option name="1" value="1"
+                                        {if $configuration.show_monthly == 1} selected{/if}>
+                                        {l s='Product page only' mod='younitedpay'}
+                                    </option>
+                                    <option name="2" value="2"
+                                        {if $configuration.show_monthly == 2} selected{/if}>
+                                        {l s='Cart page only' mod='younitedpay'}
+                                    </option>
+                                    <option name="3" value="3"
+                                        {if $configuration.show_monthly == 3} selected{/if}>
+                                        {l s='Product and Cart pages' mod='younitedpay'}
+                                    </option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group mt-2 row">
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="delivered_status">
-                                {l s='Monthly installments location' mod='younitedpay'}
+                                <b>{l s='Monthly installments location' mod='younitedpay'}</b>
+                            </label>
+                        </div>
+                        <div class="form-group mt-2 row">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="delivered_status">
+                                {l s='Product page' mod='younitedpay'}
                             </label>
                             <div class="col-lg-5 align-item-center">
                                 <select class="custom-select" name="front_hook" data-month>
@@ -91,6 +101,32 @@
                             </div>
                         </div>
                         <div class="form-group mt-2 row">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="delivered_status">
+                                {l s='Cart page' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-5 align-item-center">
+                                <select class="custom-select" name="front_hook_cart" data-month>
+                                    <option name="disabled" value="disabled"
+                                        {if $configuration.front_hook_cart == 'disabled'} selected{/if}>
+                                        {l s='Disabled' mod='younitedpay'}
+                                    </option>
+                                    <option name="displayExpressCheckout" value="displayExpressCheckout"
+                                        title="{l s='At the bottom of the cart totals' mod='younitedpay'} (hook displayExpressCheckout)"
+                                        {if $configuration.front_hook_cart == 'displayExpressCheckout'} selected{/if}>
+                                        {l s='At the bottom of the cart totals' mod='younitedpay'}
+                                    </option>
+                                    <option name="displayShoppingCartFooter" value="displayShoppingCartFooter"
+                                        title="{l s='After the product\'s lines' mod='younitedpay'} (hook displayShoppingCartFooter)"
+                                        {if $configuration.front_hook_cart == 'displayShoppingCartFooter'} selected{/if}>
+                                        {l s='After the product\'s lines' mod='younitedpay'}
+                                    </option>
+                                </select> 
+                                <small class="form-text">
+                                    {l s='Theses values are locations registered by your current theme, you can choose any of them to place the widget where it looks the best.' mod='younitedpay'}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row">
                             <label class="form-control-label col-lg-3 justify-content-end pt-1">
                                 {l s='Display with borders' mod='younitedpay'}
                             </label>
@@ -115,7 +151,7 @@
                             </label>
                             <div class="col-lg-4 align-item-center input-group">
                                 <input type="text" disabled class="form-control 
-                                    {if $configuration.show_monthly === false}
+                                    {if $configuration.show_monthly === 0}
                                         widget_disabled
                                     {else}
                                         widget_enabled

@@ -136,9 +136,21 @@ class ProductService
 
         $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
         $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
+        $selectedOffer = 0;
         if (empty($offers) === false) {
             if ((int) $offers[0]['maturity'] < $minInstall) {
                 $minInstall = (int) $offers[0]['maturity'];
+            }
+            foreach ($offers as $key => $oneOffer) {
+                if ((int) $oneOffer['maturity'] === 36) {
+                    $selectedOffer = $key;
+                }
+                if ((int) $oneOffer['maturity'] === 24 && $selectedOffer === 0) {
+                    $selectedOffer = $key;
+                }
+            }
+            if ($selectedOffer === 0) {
+                $selectedOffer = count($offers) - 1;
             }
         }
         if (empty($rangeOffers) === false) {
@@ -159,6 +171,7 @@ class ProductService
             'show_ranges' => (int) $isRangeEnabled,
             'min_range' => (int) $minRange,
             'max_range' => (int) $maxRange,
+            'selected_offer' => (int) $selectedOffer,
             'min_install' => $minInstall,
             'max_install' => $maxInstall,
             'widget_borders' => $widgetBorder,
