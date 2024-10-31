@@ -95,6 +95,20 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $maturitylist;
 
+    const ALLOWED_FRONT_PRODUCT_HOOKS = [
+        'disabled',
+        'displayProductPriceBlock',
+        'displayAfterProductThumbs',
+        'displayProductAdditionalInfo',
+        'displayReassurance'
+    ];
+
+    const ALLOWED_FRONT_CART_HOOKS = [
+        'disabled',
+        'displayExpressCheckout',
+        'displayShoppingCartFooter'
+    ];
+
     /**
      * @see AdminController::initPageHeaderToolbar()
      */
@@ -384,11 +398,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     protected function postAppearance($idShop)
     {
         $frontHook = Tools::getValue('front_hook');
+        if (in_array($frontHook, self::ALLOWED_FRONT_PRODUCT_HOOKS) === true) {
+            Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
+        }
         $frontHookCart = Tools::getValue('front_hook_cart');
+        if (in_array($frontHookCart, self::ALLOWED_FRONT_CART_HOOKS) === true) {
+            Configuration::updateValue(Younitedpay::FRONT_HOOK_CART, $frontHookCart, false, null, $idShop);
+        }
         $isShownMonthly = (int) Tools::getValue('show_monthly');
-        $widgetBorders = Tools::getValue('widget_borders');
-        Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::FRONT_HOOK_CART, $frontHookCart, false, null, $idShop);
+        $widgetBorders = (int) Tools::getValue('widget_borders');
         Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_WIDGET_BORDERS, $widgetBorders, false, null, $idShop);
     }
