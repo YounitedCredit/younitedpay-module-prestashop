@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
 
@@ -28,6 +29,9 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
     /** @var \PaymentModule */
     public $module;
 
+    /** @var LoggerService */
+    private $loggerService;
+
     /** Prevent init content from Front Controller (case cart created by webhook) */
     public function init()
     {
@@ -35,6 +39,9 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
+        /** @var LoggerService $loggerService */
+        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
         $orderUrl = Context::getContext()->link->getPageLink(
             'order',
             null,
@@ -128,6 +135,15 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         try {
+            if (Tools::getValue('granted') !== false) {
+                if (Configuration::get(Younitedpay::WEBHOOK_ORDERS, null, null, null, false) === false) {
+                    $this->log('WebHook', 'Webhook will not create order.');
+                    $this->endResponse('[success]');
+                } else {
+                    $this->log('WebHook', 'Webhook will create order.');
+                }
+            }
+
             $orderCreated = $paymentService->validateOrder($cart, $customer, $amoutCreditRequested);
         } catch (Exception $ex) {
             $paymentService->logError(
@@ -186,18 +202,28 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
     protected function stopIfGrantedAction($message)
     {
         if (Tools::getValue('granted') !== false) {
-            /** @var PaymentService $paymentService */
-            $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
-            $paymentService->logError(
-                'Granted catched: [success] ' . $message,
-                'Error while creating order'
-            );
-            if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
-                $this->ajaxRender('[success]' . $message);
-                exit;
-            } else {
-                $this->ajaxDie('[success] ' . $message);
-            }
+            $this->log('WebHook - no customer redirect', 'Granted catched: [success] ' . $message);
+            $this->endResponse('[success] ' . $message);
+        }
+    }
+
+    private function log($title, $info)
+    {
+        $this->loggerService->addLog(
+            $info,
+            $title,
+            'info',
+            (new \ReflectionClass($this))->getShortName()
+        );
+    }
+
+    private function endResponse($message)
+    {
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+            $this->ajaxRender($message);
+            exit;
+        } else {
+            $this->ajaxDie($message);
         }
     }
 }

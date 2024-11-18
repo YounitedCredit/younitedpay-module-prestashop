@@ -157,6 +157,8 @@ $_MODULE['<{younitedpay}prestashop>settings-form_b9f5c797ebbf55adccdd8539a65a024
 $_MODULE['<{younitedpay}prestashop>settings-form_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_MODULE['<{younitedpay}prestashop>settings-form_0524317c1d882d879ecce066c0765424'] = 'Whitelist d\'IP';
 $_MODULE['<{younitedpay}prestashop>settings-form_4d36585a5f3d1f870341370512c811b3'] = 'Lorsque cette option est activée, seules les IP listées verront les composants du module sur le site.';
+$_MODULE['<{younitedpay}prestashop>settings-form_3f90d10db7f03a01bea6405b34a99ced'] = 'Commandes créées par webhook';
+$_MODULE['<{younitedpay}prestashop>settings-form_9d68df88682c103a97477387ef6e63c7'] = 'Avec cette option activée, les webhooks vont créer les commandes. Désactivez cette option si vous avez des problèmes avec les frais de livraisons et transporteurs.';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_5bef23eb7efff2736c5583bda59e5eb7'] = 'Créez votre compte';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_aaca5496a475b4139d79dab376970a34'] = 'Besoin d\'aide ?';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_2539b6dccbca22b746b1903387e3dcbd'] = 'Créez votre compte afin d\'avoir accès à votre Back Office YounitedPay, être mis en relation avec notre équipe commerciale et commencer à paramétrer l\'offre affichée à vos clients.';

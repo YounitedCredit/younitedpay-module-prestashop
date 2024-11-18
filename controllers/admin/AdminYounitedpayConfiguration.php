@@ -77,6 +77,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var bool */
     public $widgetBorders;
 
+    /** @var bool */
+    public $webHookOrders;
+
     /** @var int */
     public $minRangeOffers;
 
@@ -187,6 +190,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->minRangeInstall = (int) $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_installment', $defMinRange);
         $this->maxRangeInstall = (int) $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_installment', $defMaxRange);
         $this->widgetBorders = (bool) $this->getValue(Younitedpay::SHOW_WIDGET_BORDERS, $idShop, 'widget_borders', false);
+        $this->webHookOrders = (bool) $this->getValue(Younitedpay::WEBHOOK_ORDERS, $idShop, 'webhook_oders', false);
     }
 
     /**
@@ -422,6 +426,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
         $isProduction = Tools::getValue('production_mode');
+        $webHookOrders = Tools::getValue('webhook_orders');
         Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
@@ -431,6 +436,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
         Configuration::updateValue(Younitedpay::PRODUCTION_MODE, $isProduction, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::WEBHOOK_ORDERS, $webHookOrders, false, null, $idShop);
     }
 
     protected function postStateSubmit($idShop)
@@ -538,6 +544,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'min_installment' => $this->minRangeInstall,
             'max_installment' => $this->maxRangeInstall,
             'widget_borders' => $this->widgetBorders,
+            'webhook_orders' => $this->webHookOrders,
         ];
     }
 }
