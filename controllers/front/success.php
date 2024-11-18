@@ -136,7 +136,7 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
 
         try {
             if (Tools::getValue('granted') !== false) {
-                if (Configuration::get(Younitedpay::WEBHOOK_ORDERS, null, null, null, false) === false) {
+                if ((bool) Configuration::get(Younitedpay::WEBHOOK_ORDERS, null, null, null, false) === false) {
                     $this->log('WebHook', 'Webhook will not create order.');
                     $this->endResponse('[success]');
                 } else {
