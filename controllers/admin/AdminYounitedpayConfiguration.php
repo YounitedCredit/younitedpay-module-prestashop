@@ -103,13 +103,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         'displayProductPriceBlock',
         'displayAfterProductThumbs',
         'displayProductAdditionalInfo',
-        'displayReassurance'
+        'displayReassurance',
     ];
 
     const ALLOWED_FRONT_CART_HOOKS = [
         'disabled',
         'displayExpressCheckout',
-        'displayShoppingCartFooter'
+        'displayShoppingCartFooter',
     ];
 
     /**

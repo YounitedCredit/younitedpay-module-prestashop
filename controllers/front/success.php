@@ -39,7 +39,6 @@ class YounitedpaySuccessModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
-        /** @var LoggerService $loggerService */
         $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
         $orderUrl = Context::getContext()->link->getPageLink(
