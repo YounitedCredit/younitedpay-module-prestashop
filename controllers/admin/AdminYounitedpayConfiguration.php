@@ -77,6 +77,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var bool */
     public $widgetBorders;
 
+    /** @var bool */
+    public $webHookOrders;
+
     /** @var int */
     public $minRangeOffers;
 
@@ -94,6 +97,20 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     /** @var array */
     public $maturitylist;
+
+    const ALLOWED_FRONT_PRODUCT_HOOKS = [
+        'disabled',
+        'displayProductPriceBlock',
+        'displayAfterProductThumbs',
+        'displayProductAdditionalInfo',
+        'displayReassurance',
+    ];
+
+    const ALLOWED_FRONT_CART_HOOKS = [
+        'disabled',
+        'displayExpressCheckout',
+        'displayShoppingCartFooter',
+    ];
 
     /**
      * @see AdminController::initPageHeaderToolbar()
@@ -173,6 +190,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->minRangeInstall = (int) $this->getValue(Younitedpay::MIN_RANGE_INSTALMENT, $idShop, 'min_installment', $defMinRange);
         $this->maxRangeInstall = (int) $this->getValue(Younitedpay::MAX_RANGE_INSTALMENT, $idShop, 'max_installment', $defMaxRange);
         $this->widgetBorders = (bool) $this->getValue(Younitedpay::SHOW_WIDGET_BORDERS, $idShop, 'widget_borders', false);
+        $this->webHookOrders = (bool) $this->getValue(Younitedpay::WEBHOOK_ORDERS, $idShop, 'webhook_oders', false);
     }
 
     /**
@@ -384,11 +402,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     protected function postAppearance($idShop)
     {
         $frontHook = Tools::getValue('front_hook');
+        if (in_array($frontHook, self::ALLOWED_FRONT_PRODUCT_HOOKS) === true) {
+            Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
+        }
         $frontHookCart = Tools::getValue('front_hook_cart');
+        if (in_array($frontHookCart, self::ALLOWED_FRONT_CART_HOOKS) === true) {
+            Configuration::updateValue(Younitedpay::FRONT_HOOK_CART, $frontHookCart, false, null, $idShop);
+        }
         $isShownMonthly = (int) Tools::getValue('show_monthly');
-        $widgetBorders = Tools::getValue('widget_borders');
-        Configuration::updateValue(Younitedpay::FRONT_HOOK, $frontHook, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::FRONT_HOOK_CART, $frontHookCart, false, null, $idShop);
+        $widgetBorders = (int) Tools::getValue('widget_borders');
         Configuration::updateValue(Younitedpay::SHOW_MONTHLY, $isShownMonthly, false, null, $idShop);
         Configuration::updateValue(Younitedpay::SHOW_WIDGET_BORDERS, $widgetBorders, false, null, $idShop);
     }
@@ -404,6 +426,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
         $isProduction = Tools::getValue('production_mode');
+        $webHookOrders = Tools::getValue('webhook_orders');
         Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
@@ -413,6 +436,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
         Configuration::updateValue(Younitedpay::PRODUCTION_MODE, $isProduction, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::WEBHOOK_ORDERS, $webHookOrders, false, null, $idShop);
     }
 
     protected function postStateSubmit($idShop)
@@ -520,6 +544,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'min_installment' => $this->minRangeInstall,
             'max_installment' => $this->maxRangeInstall,
             'widget_borders' => $this->widgetBorders,
+            'webhook_orders' => $this->webHookOrders,
         ];
     }
 }

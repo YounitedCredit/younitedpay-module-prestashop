@@ -153,6 +153,25 @@
                             </small>
                         </div>
                     </div>
+                    <div class="form-group mt-2 row">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_orders">
+                            {l s='Webhook create orders' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">                        
+                            <span class="ps-switch ps-switch-lg">
+                                <input type="radio" name="webhook_orders" id="webhook_orders_off" 
+                                    value="0"{if $configuration.webhook_orders === false} checked{/if}/>
+                                <label for="webhook_orders_off">{l s='Disabled' mod='younitedpay'}</label>
+                                <input type="radio" name="webhook_orders" id="webhook_orders_on" 
+                                    value="1"{if $configuration.webhook_orders === true} checked{/if}/>
+                                <label for="webhook_orders_on">{l s='Enabled' mod='younitedpay'}</label>
+                                <span class="slide-button"></span>
+                            </span>
+                            <small class="form-text">
+                                {l s='When enabled, webhook will create orders. Disable this option if you have issues with shipping and prices.' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
