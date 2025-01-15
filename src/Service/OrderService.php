@@ -107,11 +107,14 @@ class OrderService
             $younitedContract->id_external_younitedpay_contract !== '' &&
             $order->module !== $this->module->name
         ) {
-            $this->cancelContract($order->id, $younitedContract->id_external_younitedpay_contract);
-
             return false;
         }
 
+        return $this->confirmContract($order, $younitedContract);
+    }
+
+    public function confirmContract(\Order $order, $younitedContract)
+    {
         if ($younitedContract->is_confirmed === true) {
             return true;
         }
@@ -345,10 +348,30 @@ class OrderService
         return true;
     }
 
-    public function renderTemplate($idOrder)
+    public function renderTemplate(\Order $order)
     {
         /** @var YounitedPayContract $younitedContract */
-        $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
+        $younitedContract = $this->getYounitedContract($order->id_cart);
+
+        if ((int) $younitedContract->id_order !== (int) $order->id) {
+            try {
+                \Db::getInstance()->update(
+                    YounitedPayContract::$definition['table'],
+                    [
+                        'id_order' => (int) $order->id,
+                    ],
+                    'id_cart = ' . (int) $order->id_cart
+                );
+                $this->confirmContract($order, $younitedContract);
+            } catch (Exception $ex) {
+                $this->loggerservice->addLog(
+                    'Exception while linking order to younited contract: ' . $ex->getMessage(),
+                    $order->reference,
+                    'Error',
+                    $this
+                );
+            }
+        }
 
         $dateState = $younitedContract->date_upd;
         $state = $this->l('Awaiting');

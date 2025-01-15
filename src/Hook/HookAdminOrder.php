@@ -141,14 +141,16 @@ class HookAdminOrder extends AbstractHook
             return;
         }
 
-        if ($order->module != $this->module->name) {
-            return;
-        }
-
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
-        return $orderservice->renderTemplate($order->id);
+        $younitedContract = $orderservice->getYounitedContract($order->id_cart);
+
+        if ($order->module != $this->module->name && \Validate::isLoadedObject($younitedContract) === false) {
+            return;
+        }
+
+        return $orderservice->renderTemplate($order);
     }
 
     public function displayAdminOrderTop($params)
