@@ -293,7 +293,7 @@ class PaymentService
         $contentResponse = $response['response'];
 
         if ($response['success'] === true && $contentResponse['offer'] && $contentResponse['status']) {
-            $statusOrderDone = ['INITIALIZED', 'GRANTED', 'CONFIRMED'];
+            $statusOrderDone = ['GRANTED', 'CONFIRMED'];
             if (in_array($contentResponse['status'], $statusOrderDone) === false) {
                 return false;
             }
