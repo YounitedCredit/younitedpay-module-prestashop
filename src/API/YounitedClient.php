@@ -46,6 +46,9 @@ class YounitedClient
     public $clientSecret;
 
     /** @var string */
+    public $shopCode;
+
+    /** @var string */
     public $webHookSecret;
 
     /** @var bool */
@@ -74,13 +77,14 @@ class YounitedClient
     {
         $this->clientId = $testCredentials['client_id'];
         $this->clientSecret = $testCredentials['client_secret'];
+        $this->shopCode = $testCredentials['shop_code'];
         $this->isProductionMode = $testCredentials['production_mode'];
         $this->webHookSecret = $testCredentials['webhook_secret'];
     }
 
     public function isCrendentialsSet()
     {
-        return empty($this->clientId) === false && empty($this->clientSecret) === false;
+        return empty($this->clientId) === false && empty($this->clientSecret) === false && empty($this->shopCode) === false;
     }
 
     /**
@@ -107,7 +111,7 @@ class YounitedClient
             $this->apiLogger->log($this, $request, 'Request ' . $classRequest, true);
 
             /** @var AbstractResponse $response */
-            $response = $client->setCredential($this->clientId, $this->clientSecret)
+            $response = $client->setCredential($this->clientId, $this->clientSecret, $this->shopCode)
                 ->sendRequest($request);
 
             $this->setTokenCache();
@@ -231,6 +235,13 @@ class YounitedClient
         );
         $this->clientSecret = Configuration::get(
             Younitedpay::CLIENT_SECRET . $suffix,
+            null,
+            null,
+            $idShop,
+            ''
+        );
+        $this->shopCode = Configuration::get(
+            Younitedpay::SHOP_CODE . $suffix,
             null,
             null,
             $idShop,

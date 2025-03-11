@@ -48,10 +48,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $clientSecret;
 
     /** @var string */
+    public $shopCode;
+
+    /** @var string */
     public $clientIDProduction;
 
     /** @var string */
     public $clientSecretProduction;
+
+    /** @var string */
+    public $shopCodeProduction;
 
     /** @var string */
     public $webHookSecret;
@@ -171,6 +177,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'client_secret',
             ''
         );
+        $this->shopCode = $this->getValue(Younitedpay::SHOP_CODE, $idShop, 'shop_code', '');
+        $this->shopCodeProduction = $this->getValue(Younitedpay::SHOP_CODE_PRODUCTION, $idShop, 'shop_code_production', '');
         $this->webHookSecret = $this->getValue(Younitedpay::WEBHOOK_SECRET, $idShop, 'webhook_secret', '');
         $this->webHookSecretProduction = $this->getValue(
             Younitedpay::WEBHOOK_SECRET_PRODUCTION,
@@ -419,9 +427,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $clientID = Tools::getValue('client_id');
         $clientSecret = Tools::getValue('client_secret');
+        $shopCode = Tools::getValue('shop_code');
         $webHookSecret = Tools::getValue('webhook_secret');
         $clientIDProd = Tools::getValue('client_id_production');
         $clientSecretProd = Tools::getValue('client_secret_production');
+        $shopCodeProd = Tools::getValue('shop_code_production');
         $webHookSecretProd = Tools::getValue('webhook_secret_production');
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
@@ -429,9 +439,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $webHookOrders = Tools::getValue('webhook_orders');
         Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOP_CODE, $shopCode, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION, $clientIDProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION, $clientSecretProd, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION, $shopCodeProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION, $webHookSecretProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
@@ -512,9 +524,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             ],
         ]);
 
-        $noConfig = empty($this->clientID) || empty($this->clientSecret);
+        $noConfig = empty($this->clientID) || empty($this->clientSecret) || empty($this->shopCode);
         if ($this->isProductionMode === true) {
-            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction);
+            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction) || empty($this->shopCodeProduction);
         }
 
         return [
@@ -522,9 +534,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
+            'shop_code' => $this->shopCode,
             'webhook_secret' => $this->webHookSecret,
             'client_id_production' => $this->clientIDProduction,
             'client_secret_production' => $this->clientSecretProduction,
+            'shop_code_production' => $this->shopCodeProduction,
             'webhook_secret_production' => $this->webHookSecretProduction,
             'whitelist_on' => $this->isWhiteListOn,
             'whitelist_ip' => $this->whitelistIP,

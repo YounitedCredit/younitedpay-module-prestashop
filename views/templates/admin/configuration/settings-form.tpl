@@ -72,6 +72,19 @@
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code">
+                            {l s='Shop Code' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">
+                            <input type="text" class="form-control"
+                                   placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" id="shop_code"
+                                   name="shop_code" value="{$configuration.shop_code|escape:'htmlall':'UTF-8'}" />
+                            <small class="form-text">
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret">
                             {l s='WebHook Secret' mod='younitedpay'}
                         </label>
@@ -103,8 +116,21 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production_production"
+                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production"
                                 name="client_secret_production" value="{$configuration.client_secret_production|escape:'htmlall':'UTF-8'}" />
+                            <small class="form-text">
+                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production">
+                            {l s='Shop Code' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-center">
+                            <input type="text" class="form-control"
+                                   placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" id="shop_code_production"
+                                   name="shop_code_production" value="{$configuration.shop_code_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
