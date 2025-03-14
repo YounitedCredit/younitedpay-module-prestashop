@@ -95,7 +95,7 @@ class ProductService
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
 
             $body = new BestPrice();
-            $body->setBorrowedAmount($productPrice);
+            $body->setBorrowedAmount((string) $productPrice);
 
             $request = new BestPriceRequest();
 

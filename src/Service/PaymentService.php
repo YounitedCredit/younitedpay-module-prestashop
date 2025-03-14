@@ -158,11 +158,11 @@ class PaymentService
             $basketItems[] = (new BasketItem())
                 ->setItemName($productInCart['name'])
                 ->setQuantity((int) $productInCart['cart_quantity'])
-                ->setUnitPrice((float) $productInCart['price']);
+                ->setUnitPrice((string) $productInCart['price']);
         }
 
         $basket = (new Basket())
-            ->setBasketAmount((float) $totalAmount)
+            ->setBasketAmount((string) $totalAmount)
             ->setItems($basketItems);
 
         $merchantUrls = (new MerchantUrls())
