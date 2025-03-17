@@ -37,6 +37,9 @@ class YounitedPayContract extends ObjectModel
     public $id_order;
 
     /** @var string */
+    public $payment_id;
+
+    /** @var string */
     public $id_external_younitedpay_contract;
 
     /** @var bool */
@@ -66,6 +69,9 @@ class YounitedPayContract extends ObjectModel
     /** @var float */
     public $withdrawn_amount;
 
+    /** @var int */
+    public $api_version;
+
     /** @var string */
     public $date_add;
 
@@ -88,6 +94,10 @@ class YounitedPayContract extends ObjectModel
             'id_order' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedInt',
+                'required' => false,
+            ],
+            'payment_id' => [
+                'type' => self::TYPE_STRING,
                 'required' => false,
             ],
             'id_external_younitedpay_contract' => [
@@ -133,6 +143,11 @@ class YounitedPayContract extends ObjectModel
             'withdrawn_amount' => [
                 'type' => self::TYPE_FLOAT,
                 'copy_post' => false,
+            ],
+            'api_version' => [
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedInt',
+                'required' => false,
             ],
             'date_add' => [
                 'type' => self::TYPE_DATE,
