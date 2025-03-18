@@ -75,13 +75,23 @@
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code">
                             {l s='Shop Code' mod='younitedpay'}
                         </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                   placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" id="shop_code"
-                                   name="shop_code" value="{$configuration.shop_code|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
+                        <div class="col-lg-4 align-item-start">
+                            {if $configuration.production_mode !== true}
+                                <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
+                                    name="shop_code" id="shop_code">
+                                    {foreach from=$configuration.shop_codes_list item='shop_code_name'}
+                                        {json_encode($shop_code_name)}
+                                        <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                            {if $shop_code_name.code == $configuration.shop_code} selected{/if}>
+                                            {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                        </option>
+                                    {/foreach}
+                                </select>
+                            {else}
+                                <small class="form-text">
+                                    {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                </small>
+                            {/if}
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
@@ -92,9 +102,6 @@
                             <input type="text" class="form-control"
                                 placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret"
                                 name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
@@ -127,13 +134,23 @@
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production">
                             {l s='Shop Code' mod='younitedpay'}
                         </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                   placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" id="shop_code_production"
-                                   name="shop_code_production" value="{$configuration.shop_code_production|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
+                        <div class="col-lg-4 align-item-start">
+                            {if $configuration.production_mode === true}
+                                <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
+                                    id="shop_code_production" name="shop_code_production">
+                                    {foreach from=$configuration.shop_codes_list item='shop_code_name'}
+                                        {json_encode($shop_code_name)}
+                                    <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                        {if $shop_code_name.code == $configuration.shop_code_production} selected{/if}>
+                                            {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                        </option>
+                                    {/foreach}
+                                </select>
+                            {else}
+                                <small class="form-text">
+                                    {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                </small>
+                            {/if}
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>

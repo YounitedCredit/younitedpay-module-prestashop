@@ -26,10 +26,11 @@ if (!defined('_PS_VERSION_')) {
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
+use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
-use YounitedPaySDK\Model\BestPrice;
+use YounitedPaySDK\Model\NewAPI\BestPrice;
 use YounitedPaySDK\Model\OfferItem;
-use YounitedPaySDK\Request\BestPriceRequest;
+use YounitedPaySDK\Request\NewAPI\BestPriceRequest;
 
 class ProductService
 {
@@ -44,15 +45,19 @@ class ProductService
     /** @var ConfigRepository */
     protected $configRepository;
 
+    /** @var ConfigService */
+    protected $configService;
+
     public function __construct(
         LoggerService $loggerservice,
-        ConfigRepository $configRepository,
+        ConfigService $configService,
         Younitedpay $module
     ) {
         $this->module = $module;
         $this->loggerservice = $loggerservice;
         $this->context = \Context::getContext();
-        $this->configRepository = $configRepository;
+        $this->configRepository = $configService->configRepository;
+        $this->configService = $configService;
     }
 
     public function getBestPrice($product_price, $selectedHook = 'widget')
@@ -74,9 +79,14 @@ class ProductService
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
+        $isProduction = (bool) $this->configRepository->getConfig(Younitedpay::PRODUCTION_MODE);
+        $shopCodeKey = $isProduction === false ? Younitedpay::SHOP_CODE : Younitedpay::SHOP_CODE_PRODUCTION;
+        $shopCode = $this->configRepository->getConfig($shopCodeKey);
         $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
         $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
         $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
+        $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
+        $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
         $widgetBorder = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_WIDGET_BORDERS, false);
 
         $offers = [];
@@ -94,8 +104,24 @@ class ProductService
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
 
-            $body = new BestPrice();
-            $body->setBorrowedAmount($productPrice);
+            $configMaturities = ['List' => '24,36'];
+            if ($isRangeEnabled) {
+                $configMaturities = [
+                    'Range' => [
+                        'Min' => $minInstall,
+                        'Max' => $maxInstall,
+                        'Step' => 1
+                    ],
+                ];
+            } else {
+                $configMaturities = [
+                    'List' => $this->getMaturitiesConfiguration($maturities),
+                ];
+            }
+            $body = (new BestPrice())
+                        ->setMaturity($configMaturities)
+                        ->setShopCode($shopCode)
+                        ->setBorrowedAmount($productPrice);
 
             $request = new BestPriceRequest();
 
@@ -134,8 +160,6 @@ class ProductService
             ]);
         }
 
-        $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
-        $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
         $selectedOffer = 0;
         if (empty($offers) === false) {
             if ((int) $offers[0]['maturity'] < $minInstall) {
@@ -200,7 +224,11 @@ class ProductService
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $marutitiesIn) === false) {
                 $marutitiesIn[] = $maturityIn;
-                $validOffers[] = $this->returnOffer($offer);
+                if (empty($validOffers) || $validOffers[0]['maturity'] < $offer->getMaturityInMonths()) {
+                    $validOffers[] = $this->returnOffer($offer);
+                } else {
+                    array_unshift($validOffers, $this->returnOffer($offer));
+                }
             }
         }
 
@@ -219,7 +247,11 @@ class ProductService
 
         $validOffers = [];
         foreach ($offers as $offer) {
-            $validOffers[] = $this->returnOffer($offer);
+            if (empty($validOffers) || $validOffers[0]['maturity'] < $offer->getMaturityInMonths()) {
+                $validOffers[] = $this->returnOffer($offer);
+            } else {
+                array_unshift($validOffers, $this->returnOffer($offer));
+            }
         }
 
         return $validOffers;
@@ -254,5 +286,18 @@ class ProductService
     public function isWhiteListedIP()
     {
         return $this->configRepository->checkIPWhitelist();
+    }
+
+    function getMaturitiesConfiguration($maturities)
+    {
+        if (empty($maturities)) {
+            return '36,24';
+        }
+        $config = [];
+        foreach($maturities as $oneMaturity) {
+            $config[] = $oneMaturity['maturity'];
+        }
+        
+        return implode(',', $config);
     }
 }

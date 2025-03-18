@@ -47,6 +47,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var string */
     public $clientSecret;
 
+    /** @var mixed */
+    public $shopCodeList;
+
     /** @var string */
     public $shopCode;
 
@@ -509,6 +512,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         );
 
         $allMaturities = $this->getAllMaturities();
+        $shopCodesList = $this->configService->getShopCodes($full = false);
         $urlFormConfig = $this->context->link->getAdminLink('AdminYounitedpayConfiguration');
 
         Media::addJsDef([
@@ -539,6 +543,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'client_id_production' => $this->clientIDProduction,
             'client_secret_production' => $this->clientSecretProduction,
             'shop_code_production' => $this->shopCodeProduction,
+            'shop_codes_list' => $shopCodesList,
             'webhook_secret_production' => $this->webHookSecretProduction,
             'whitelist_on' => $this->isWhiteListOn,
             'whitelist_ip' => $this->whitelistIP,

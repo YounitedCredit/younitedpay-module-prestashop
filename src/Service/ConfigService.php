@@ -31,6 +31,7 @@ use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Request\AvailableMaturitiesRequest;
+use YounitedPaySDK\Request\NewAPI\ShopsRequest;
 use YounitedPaySDK\Response\AbstractResponse;
 
 class ConfigService
@@ -48,7 +49,7 @@ class ConfigService
     protected $logger;
 
     /** @var ConfigRepository */
-    protected $configRepository;
+    public $configRepository;
 
     const DEF_MATURITIES = [10, 12, 24];
 
@@ -268,5 +269,48 @@ class ConfigService
     public function saveAllMaturities($maturities, $idShop)
     {
         $this->configRepository->saveAllMaturities($maturities, $idShop);
+    }
+
+    /**
+     * Return Shop Codes list from API
+     * 
+     * @param bool $fullList Full List from API or only name => code ?
+     */
+    public function getShopCodes($fullList = true)
+    {
+        $client = new YounitedClient($this->context->shop->id);
+
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $request = new ShopsRequest();
+
+        /** @var AbstractResponse $response */
+        $response = $client->sendRequest(null, $request);
+
+        if (empty($response) === true || null === $response || $response['success'] === false) {
+            return false;
+        }
+        $shopCodes = $response['response'];
+
+        if ($fullList === true) {
+            return [
+                'message' => $shopCodes,
+                'status' => true,
+            ];
+        }
+
+        $shopCodesNames = [];
+        foreach($shopCodes as $oneShopCode) {
+            if (isset($oneShopCode['name']) && isset($oneShopCode['code'])) {
+                $shopCodesNames[] = [
+                    'name' => $oneShopCode['name'],
+                    'code' => $oneShopCode['code'],
+                ];
+            }
+        }
+
+        return $shopCodesNames;
     }
 }

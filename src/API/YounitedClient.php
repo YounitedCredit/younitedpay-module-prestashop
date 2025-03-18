@@ -84,7 +84,7 @@ class YounitedClient
 
     public function isCrendentialsSet()
     {
-        return empty($this->clientId) === false && empty($this->clientSecret) === false && empty($this->shopCode) === false;
+        return empty($this->clientId) === false && empty($this->clientSecret) === false;
     }
 
     /**
