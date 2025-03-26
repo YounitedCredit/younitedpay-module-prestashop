@@ -180,6 +180,7 @@ class ProductService
         return [
             'template' => $this->module->fetch($template),
             'offers' => $offers,
+            'selectedOffer' => $selectedOffer,
         ];
     }
 
