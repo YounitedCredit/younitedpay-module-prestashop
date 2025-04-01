@@ -95,6 +95,7 @@
 </p>
 </div>
 
+{assign var="offer" value=$offers[$selected_offer]}
 <div class="yp-border-prple yp-border-2 yp-p-3 yp-rounded-bg yp-mt-6">
 <div class="yp-mb-8 yp-text-lg yp-pol-purpledark">
    <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
