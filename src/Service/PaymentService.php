@@ -168,7 +168,7 @@ class PaymentService
         $merchantUrls = (new MerchantUrls())
             ->setOnApplicationFailedRedirectUrl($this->getLink('error'))
             ->setOnApplicationSucceededRedirectUrl($this->getLink('success'))
-            ->setOnGrantedWebhookUrl($this->getLink('success', ['granted' => 1]))
+            // ->setOnGrantedWebhookUrl($this->getLink('success', ['granted' => 1]))
             ->setOnCanceledWebhookUrl($this->getLink('webhook', ['cancel' => 1]))
             ->setOnWithdrawnWebhookUrl($this->getLink('webhook', ['widhdrawn' => 1]));
 

@@ -28,9 +28,9 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
-use YounitedPaySDK\Model\NewAPI\BestPrice;
+use YounitedPaySDK\Model\NewAPI\GetOffers;
 use YounitedPaySDK\Model\OfferItem;
-use YounitedPaySDK\Request\NewAPI\BestPriceRequest;
+use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
 
 class ProductService
 {
@@ -118,12 +118,18 @@ class ProductService
                     'List' => $this->getMaturitiesConfiguration($maturities),
                 ];
             }
-            $body = (new BestPrice())
-                        ->setMaturity($configMaturities)
-                        ->setShopCode($shopCode)
-                        ->setBorrowedAmount($productPrice);
 
-            $request = new BestPriceRequest();
+            $body = (new GetOffers())->setShopCode($shopCode)->setAmount($productPrice);
+            if (isset($configMaturities['List'])) {
+                $body->setMaturityList($configMaturities['List']);
+            } else if (isset($configMaturities['Range'])) {
+                $body
+                    ->setMaturityRangeStep($configMaturities['Range']['Step'])
+                    ->setMaturityRangeMin($configMaturities['Range']['Min'])
+                    ->setMaturityRangeMax($configMaturities['Range']['Max']);
+            }
+
+            $request = new GetOffersRequest();
 
             try {
                 $response = $client->sendRequest($body, $request);
@@ -232,6 +238,7 @@ class ProductService
                 }
             }
         }
+        $this->sortOffers($validOffers);
 
         return $validOffers;
     }
@@ -248,14 +255,18 @@ class ProductService
 
         $validOffers = [];
         foreach ($offers as $offer) {
-            if (empty($validOffers) || $validOffers[0]['maturity'] < $offer->getMaturityInMonths()) {
-                $validOffers[] = $this->returnOffer($offer);
-            } else {
-                array_unshift($validOffers, $this->returnOffer($offer));
-            }
+            $validOffers[] = $this->returnOffer($offer);
         }
+        $this->sortOffers($validOffers);
 
         return $validOffers;
+    }
+
+    private function sortOffers(&$validOffers)
+    {
+        usort($validOffers, function ($a, $b) {
+            return $a['maturity'] > $b['maturity'];
+        });
     }
 
     /**
@@ -269,8 +280,8 @@ class ProductService
             'initial_amount' => \Tools::ps_round($offer->getRequestedAmount(), 2),
             'total_amount' => \Tools::ps_round($offer->getCreditTotalAmount(), 2),
             'interest_total' => \Tools::ps_round($offer->getInterestsTotalAmount(), 2),
-            'taeg' => \Tools::ps_round($offer->getAnnualPercentageRate() * 100, 2),
-            'tdf' => \Tools::ps_round($offer->getAnnualDebitRate() * 100, 2),
+            'taeg' => \Tools::ps_round($offer->getAnnualPercentageRate(), 2),
+            'tdf' => \Tools::ps_round($offer->getAnnualDebitRate(), 2),
         ];
     }
 
