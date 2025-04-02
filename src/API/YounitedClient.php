@@ -111,14 +111,17 @@ class YounitedClient
             $this->apiLogger->log($this, $request, 'Request ' . $classRequest, true);
 
             /** @var AbstractResponse $response */
-            $response = $client->setCredential($this->clientId, $this->clientSecret, $this->shopCode)
+            $response = $client
+                ->setCredential($this->clientId, $this->clientSecret)
                 ->sendRequest($request);
-
-            $this->setTokenCache();
 
             $this->apiLogger->log($this, $response, 'Response' . $classRequest, true);
 
             $statusCode = $response->getStatusCode();
+
+            if ($statusCode !== 401) {
+                $this->setTokenCache();
+            }
 
             $successStatuscode = [200, 201, 204];
 
@@ -157,13 +160,13 @@ class YounitedClient
      */
     private function getTokenCache(Client $client)
     {
-        /** @var CacheYounited $cachestorage */
-        $cachestorage = new CacheYounited();
+        /** @var CacheYounited $cacheStorage */
+        $cacheStorage = new CacheYounited();
 
-        $cacheExists = $cachestorage->exist('token_api');
+        $cacheExists = $cacheStorage->exist('token_api');
 
         if ($cacheExists === true) {
-            $cacheInformations = $cachestorage->get('token_api');
+            $cacheInformations = $cacheStorage->get('token_api');
             $this->apiLogger->log($this, 'token exists in cache: ' . json_encode($cacheInformations), 'Info');
             $token = $cacheInformations['content']['token'];
             /** @var \DateTimeInterface $expireAt */
@@ -180,14 +183,14 @@ class YounitedClient
      */
     private function setTokenCache()
     {
-        /** @var CacheYounited $cachestorage */
-        $cachestorage = new CacheYounited();
+        /** @var CacheYounited $cacheStorage */
+        $cacheStorage = new CacheYounited();
 
         $cache = Registry::getInstance();
         /** @var RegistryItem $cacheTokenItem */
         $cacheTokenItem = $cache->getItem('token');
 
-        $cachestorage->set('token_api', [
+        $cacheStorage->set('token_api', [
             'token' => $cacheTokenItem->get(),
             'expiresat' => $cacheTokenItem->getExpiredDate(),
         ]);
