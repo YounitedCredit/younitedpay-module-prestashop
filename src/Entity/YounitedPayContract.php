@@ -145,8 +145,7 @@ class YounitedPayContract extends ObjectModel
                 'copy_post' => false,
             ],
             'api_version' => [
-                'type' => self::TYPE_INT,
-                'validate' => 'isUnsignedInt',
+                'type' => self::TYPE_STRING,
                 'required' => false,
             ],
             'date_add' => [

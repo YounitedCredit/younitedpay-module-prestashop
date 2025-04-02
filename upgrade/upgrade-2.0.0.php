@@ -38,7 +38,7 @@ function upgrade_module_2_0_0($module)
         $installer = new ModuleInstaller($module);
         $result = $installer->installObjectModel(YounitedPayContract::class);
 
-        $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']) . '` ALTER `api_version` SET DEFAULT 1';
+        $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']) . '` ALTER `api_version` SET DEFAULT "2024-01-01"';
         $result &= Db::getInstance()->execute($query);
     } catch (Exception $e) {
         PrestaShopLogger::addLog($e->getMessage(), 3);
