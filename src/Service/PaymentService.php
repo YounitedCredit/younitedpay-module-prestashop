@@ -40,10 +40,12 @@ use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
 use YounitedPaySDK\Model\NewAPI\CustomExperience;
+use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
 use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
 use YounitedPaySDK\Request\LoadContractRequest;
+use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
 
 class PaymentService
 {
@@ -53,6 +55,9 @@ class PaymentService
 
     /** @var \Context */
     private $context;
+
+    /** @var YounitedClient */
+    private $client;
 
     /** @var LoggerService */
     protected $loggerservice;
@@ -256,11 +261,22 @@ class PaymentService
         /** @var ArrayCollection $responseObject */
         $responseObject = $response['response'];
 
-        $urlPayment = $responseObject['redirectUrl'];
+        if (false === empty($responseObject['contractReference']) || empty($responseObject['redirectUrl'])) {
+            $urlPayment = $responseObject['redirectUrl'];
+            $contractRef = $responseObject['contractReference'];
 
-        $contractRef = $responseObject['contractReference'];
+            $this->saveContractInit($contractRef);
+        } else {
+            $urlPayment = $responseObject['paymentLink'];
+            $paymentId = $responseObject['paymentId'];
 
-        $this->saveContractInit($contractRef);
+            $getPaymentResponse = $this->getApiPaymentById($paymentId);
+
+            $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+            $apiVersion = $getPaymentResponse['apiVersion'];
+
+            $this->saveContractInit($contractRef, $paymentId, $apiVersion);
+        }
 
         $response['url'] = $urlPayment;
 
@@ -306,10 +322,11 @@ class PaymentService
         return true;
     }
 
-    protected function saveContractInit($contractRef)
+    protected function saveContractInit($contractRef, $contractPaymentId = null, $apiVersion = '2024-01-01')
     {
         /** @var YounitedPayContract $contractYounited */
         $contractYounited = $this->getContractByCart($this->context->cart->id);
+        $contractYounited->payment_id = $contractPaymentId;
         $contractYounited->id_cart = $this->context->cart->id;
         $contractYounited->id_external_younitedpay_contract = $contractRef;
         $contractYounited->is_confirmed = false;
@@ -321,7 +338,35 @@ class PaymentService
         $contractYounited->withdrawn_date = '';
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
+        $contractYounited->api_version = $apiVersion;
         $contractYounited->save();
+    }
+
+    /**
+     * Get api payment by id
+     *
+     * @param string $paymentId
+     *
+     * @return bool|float False if nothing requested on the api payment id or error | Api Payment of id requested
+     */
+    public function getApiPaymentById($paymentId)
+    {
+        $client = new YounitedClient($this->context->shop->id);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $getPaymentRequestModel = (new GetPayment())->setId($paymentId);
+        $getPaymentRequest = (new GetPaymentRequest())->setModel($getPaymentRequestModel);
+        $getPaymentResponse = $client->sendRequest($getPaymentRequest, $getPaymentRequestModel);
+
+        if ($getPaymentResponse['success'] === true) {
+            $getPaymentResponse['response']['apiVersion'] = $getPaymentRequest->getApiVersion();
+
+            return $getPaymentResponse['response'];
+        }
+
+        return false;
     }
 
     /**
