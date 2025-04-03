@@ -29,13 +29,11 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Model\ActivateContract;
-use YounitedPaySDK\Model\CancelContract;
-use YounitedPaySDK\Model\ConfirmContract;
+use YounitedPaySDK\Model\NewAPI\Request\CancelPayment;
+use YounitedPaySDK\Model\NewAPI\Request\ExecutePayment;
 use YounitedPaySDK\Model\WithdrawContract;
-use YounitedPaySDK\Request\ActivateContractRequest;
-use YounitedPaySDK\Request\CancelContractRequest;
-use YounitedPaySDK\Request\ConfirmContractRequest;
+use YounitedPaySDK\Request\NewAPI\CancelPaymentRequest;
+use YounitedPaySDK\Request\NewAPI\ExecutePaymentRequest;
 use YounitedPaySDK\Request\WithdrawContractRequest;
 
 class OrderService
@@ -86,64 +84,6 @@ class OrderService
         return ['success' => true];
     }
 
-    /**
-     * Confirm the contract - Update the database and make a request to the API
-     *
-     * @param \Order $order
-     *
-     * @return bool $response True if confirmation correctly sent to Younited
-     */
-    public function confirmOrder(\Order $order)
-    {
-        /** @var YounitedPayContract younitedContract */
-        $younitedContract = $this->paymentrepository->getContractByCart($order->id_cart);
-
-        if ($order !== null && $order->module !== $this->module->name) {
-            return false;
-        }
-
-        if (
-            \Validate::isLoadedObject($younitedContract) &&
-            $younitedContract->id_external_younitedpay_contract !== '' &&
-            $order->module !== $this->module->name
-        ) {
-            return false;
-        }
-
-        return $this->confirmContract($order, $younitedContract);
-    }
-
-    public function confirmContract(\Order $order, $younitedContract)
-    {
-        if ($younitedContract->is_confirmed === true) {
-            return true;
-        }
-
-        $clientBuildReturn = $this->buildClient();
-        if ($clientBuildReturn['success'] !== true) {
-            return false;
-        }
-
-        $body = (new ConfirmContract())
-            ->setMerchantOrderId((string) $order->reference)
-            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract);
-
-        $request = new ConfirmContractRequest();
-
-        $response = $this->sendRequest($body, $request, 'confirm contract');
-
-        if ((bool) $response['success'] === false) {
-            $this->loggerservice->addLog(
-                'Error while confirming Younited Pay Order',
-                $order->reference,
-                'Error',
-                $this
-            );
-        }
-
-        return $this->paymentrepository->activateContract($order->id);
-    }
-
     protected function sendRequest($body, $request, $type)
     {
         try {
@@ -192,10 +132,10 @@ class OrderService
             return true;
         }
 
-        $body = (new CancelContract())
-                ->setContractReference($refContract);
+        $body = (new CancelPayment())
+                ->setId($younitedContract->payment_id);
 
-        $request = new CancelContractRequest();
+        $request = new CancelPaymentRequest();
 
         $this->sendRequest($body, $request, 'cancel contract');
 
@@ -338,10 +278,10 @@ class OrderService
 
         $this->paymentrepository->activateContract($idOrder);
 
-        $body = (new ActivateContract())
-            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract);
+        $body = (new ExecutePayment())
+            ->setId((string) $younitedContract->payment_id);
 
-        $request = new ActivateContractRequest();
+        $request = new ExecutePaymentRequest();
 
         $this->sendRequest($body, $request, 'activate order');
 
@@ -362,7 +302,6 @@ class OrderService
                     ],
                     'id_cart = ' . (int) $order->id_cart
                 );
-                $this->confirmContract($order, $younitedContract);
             } catch (Exception $ex) {
                 $this->loggerservice->addLog(
                     'Exception while linking order to younited contract: ' . $ex->getMessage(),
@@ -381,11 +320,6 @@ class OrderService
             case (bool) $younitedContract->is_activated === true:
                 $dateState = $younitedContract->activation_date;
                 $state = $this->l('Activated');
-                break;
-
-            case (bool) $younitedContract->is_confirmed === true:
-                $dateState = $younitedContract->confirmation_date;
-                $state = $this->l('Confirmed');
                 break;
 
             case (bool) $younitedContract->is_withdrawn === true:

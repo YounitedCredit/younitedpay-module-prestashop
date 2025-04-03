@@ -41,7 +41,6 @@ class HookAdminOrder extends AbstractHook
         'displayAdminOrderContentOrder',
         'displayAdminOrderTabContent',
         'actionOrderStatusPostUpdate',
-        'actionValidateOrder',
         'actionOrderSlipAdd',
         'displayAdminOrder',
         'displayAdminOrderTop',
@@ -112,17 +111,6 @@ class HookAdminOrder extends AbstractHook
 
             $orderservice->withdrawnContract($order->id, '', $amountWithdrawn);
         }
-    }
-
-    public function actionValidateOrder($params)
-    {
-        /** @var \Order $order */
-        $order = $params['order'];
-
-        /** @var OrderService $orderservice */
-        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
-
-        $orderservice->confirmOrder($order);
     }
 
     private function renderTemplate($params)
