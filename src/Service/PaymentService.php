@@ -30,6 +30,7 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use YounitedPaySDK\Adapter\CreatePaymentAdapter;
 use YounitedPaySDK\Model\Address;
 use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
@@ -38,6 +39,8 @@ use YounitedPaySDK\Model\InitializeContract;
 use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
+use YounitedPaySDK\Model\NewAPI\CustomExperience;
+use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
 use YounitedPaySDK\Request\LoadContractRequest;
@@ -79,9 +82,9 @@ class PaymentService
      */
     public function createContract($maturity, $totalAmount)
     {
-        $customerAdress = new \Address($this->context->cart->id_address_delivery);
+        $customerAddress = new \Address($this->context->cart->id_address_delivery);
 
-        $isPhoneInternational = $this->isInternationalPhone($customerAdress);
+        $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
         if ($isPhoneInternational === false) {
             return [
@@ -100,7 +103,36 @@ class PaymentService
             ];
         }
 
-        $response = $this->sendContractRequest($maturity, $totalAmount, $customerAdress, $client);
+        try {
+            $response = $this->sendContractRequest($maturity, $totalAmount, $customerAddress, $client);
+        } catch (\PrestaShopDatabaseException $e) {
+            $this->logError($e->getMessage(), 'sendContractRequest PrestaShopDatabaseException');
+            $this->logError($e->getTraceAsString(), 'sendContractRequest PrestaShopDatabaseException');
+
+            return [
+                'success' => false,
+                'status' => 0,
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
+            ];
+        } catch (\PrestaShopException $e) {
+            $this->logError($e->getMessage(), 'sendContractRequest PrestaShopException');
+            $this->logError($e->getTraceAsString(), 'sendContractRequest PrestaShopException');
+
+            return [
+                'success' => false,
+                'status' => 0,
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
+            ];
+        } catch (\Exception $e) {
+            $this->logError($e->getMessage(), 'sendContractRequest Exception');
+            $this->logError($e->getTraceAsString(), 'sendContractRequest Exception');
+
+            return [
+                'success' => false,
+                'status' => 0,
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
+            ];
+        }
 
         if ($response['success'] === false) {
             $this->logError('Bad response : ' . json_encode($response));
@@ -111,22 +143,27 @@ class PaymentService
         return $this->treatResponse($response);
     }
 
-    protected function sendContractRequest($maturity, $totalAmount, $customerAdress, $client)
+    /**
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     * @throws \Exception
+     */
+    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, $client)
     {
         $customer = $this->context->customer;
-        $country = new \Country($customerAdress->id_country);
+        $country = new \Country($customerAddress->id_country);
 
         $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
             ? new \DateTime($customer->birthday . 'T00:00:00')
             : null;
 
-        $adresseStreet = $customerAdress->address1;
+        $adresseStreet = $customerAddress->address1;
         $additionalAdress = '';
         if (mb_strlen($adresseStreet) > 38) {
             $additionalAdress = substr($adresseStreet, 38) . ' ';
             $adresseStreet = substr($adresseStreet, 0, 38);
         }
-        $additionalAdress .= $customerAdress->address2 . ' ' . $customerAdress->other;
+        $additionalAdress .= $customerAddress->address2 . ' ' . $customerAddress->other;
 
         if (mb_strlen($additionalAdress) > 38) {
             $additionalAdress = substr($additionalAdress, 0, 38);
@@ -138,8 +175,8 @@ class PaymentService
             ->setStreetNumber('')
             ->setStreetName($adresseStreet)
             ->setAdditionalAddress($additionalAdress)
-            ->setCity($customerAdress->city)
-            ->setPostalCode($customerAdress->postcode)
+            ->setCity($customerAddress->city)
+            ->setPostalCode($customerAddress->postcode)
             ->setCountryCode($country->iso_code);
 
         $personalInformation = (new PersonalInformation())
@@ -185,9 +222,33 @@ class PaymentService
 
         $request = new InitializeContractRequest();
 
+        $shopCode = Configuration::get(Younitedpay::SHOP_CODE,null, null, $this->context->shop->id);
+        $webhookUrl = $this->getLink('webhook');
+        $redirectUrl = $this->getLink('validation');
+        $request = $this->convertOldRequest($request, $shopCode, $webhookUrl, $redirectUrl);
+
         $this->loggerservice->addLogAPI(json_encode($body), 'Info', $this);
 
         return $client->sendRequest($body, $request);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function convertOldRequest($oldRequest, $shopCode, $webhookUrl, $redirectUrl, $apiVersion = '2025-01-01')
+    {
+        $technicalInformation = (new TechnicalInformation())
+            ->setWebhookNotificationUrl($webhookUrl)
+            ->setApiVersion($apiVersion);
+
+        $customExperience = (new CustomExperience())
+            ->setCustomerRedirectUrl($redirectUrl);
+
+        return (new CreatePaymentAdapter())
+            ->setShopCode($shopCode)
+            ->setTechnicalInformation($technicalInformation)
+            ->setCustomExperience($customExperience)
+            ->convertInitializeContract($oldRequest);
     }
 
     protected function treatResponse($response)
@@ -206,7 +267,7 @@ class PaymentService
         return $response;
     }
 
-    public function isInternationalPhone(\Address $customerAdress)
+    public function isInternationalPhone(\Address $customerAddress)
     {
         $this->cellPhone = '';
         $regValidPhone = '/^\+33\d{9}/';
@@ -215,31 +276,31 @@ class PaymentService
             $regValidPhone = '/^\+34\d{9}/';
         }
 
-        if (empty($customerAdress->phone) === true && empty($customerAdress->phone_mobile) === true) {
+        if (empty($customerAddress->phone) === true && empty($customerAddress->phone_mobile) === true) {
 
             return true;
         }
 
-        $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone);
+        $isPhoneInternational = preg_match($regValidPhone, $customerAddress->phone);
         if ($isPhoneInternational === 1) {
-            $this->cellPhone = $customerAdress->phone;
+            $this->cellPhone = $customerAddress->phone;
 
             return true;
         } else {
-            $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone_mobile);
+            $isPhoneInternational = preg_match($regValidPhone, $customerAddress->phone_mobile);
             if ($isPhoneInternational === 1) {
-                $this->cellPhone = $customerAdress->phone_mobile;
+                $this->cellPhone = $customerAddress->phone_mobile;
 
                 return true;
             }
         }
 
-        if (empty($customerAdress->phone_mobile) === false) {
-            $this->cellPhone = $customerAdress->phone_mobile;
+        if (empty($customerAddress->phone_mobile) === false) {
+            $this->cellPhone = $customerAddress->phone_mobile;
         }
 
-        if (empty($customerAdress->phone) === false) {
-            $this->cellPhone = $customerAdress->phone;
+        if (empty($customerAddress->phone) === false) {
+            $this->cellPhone = $customerAddress->phone;
         }
         
         return true;
@@ -247,7 +308,6 @@ class PaymentService
 
     protected function saveContractInit($contractRef)
     {
-        $dateNull = '0000-00-00 00:00:00';
         /** @var YounitedPayContract $contractYounited */
         $contractYounited = $this->getContractByCart($this->context->cart->id);
         $contractYounited->id_cart = $this->context->cart->id;
@@ -318,7 +378,7 @@ class PaymentService
      *
      * @return bool Result of validation
      */
-    public function validateOrder($cart, $customer = null, $total)
+    public function validateOrder($cart, $customer, $total)
     {
         $context = \Context::getContext();
         $currency = $context->currency;
@@ -358,7 +418,7 @@ class PaymentService
             return $this->paymentrepository->confirmContract($this->context->cart->id, $this->module->currentOrder);
         }
 
-        return $orderCreated;
+        return false;
     }
 
     /**
