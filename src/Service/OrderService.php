@@ -31,10 +31,10 @@ use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Model\NewAPI\Request\CancelPayment;
 use YounitedPaySDK\Model\NewAPI\Request\ExecutePayment;
-use YounitedPaySDK\Model\WithdrawContract;
+use YounitedPaySDK\Model\NewAPI\Request\RefundPayment;
 use YounitedPaySDK\Request\NewAPI\CancelPaymentRequest;
 use YounitedPaySDK\Request\NewAPI\ExecutePaymentRequest;
-use YounitedPaySDK\Request\WithdrawContractRequest;
+use YounitedPaySDK\Request\NewAPI\RefundPaymentRequest;
 
 class OrderService
 {
@@ -161,11 +161,12 @@ class OrderService
 
         $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);
 
-        $body = (new WithdrawContract())
+        $body = (new RefundPayment())
+                ->setPaymentId($younitedContract->payment_id)
                 ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
-                ->setContractReference($refContract);
+                ->setIdempotencyKey($refContract);
 
-        $request = new WithdrawContractRequest();
+        $request = new RefundPaymentRequest();
 
         $this->sendRequest($body, $request, 'withdraw contract');
 
