@@ -25,11 +25,15 @@ use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
-use YounitedPaySDK\Client as WebHookClient;
-use YounitedPaySDK\Response\AbstractResponse;
+use YounitedPaySDK\Webhook\Webhook;
 
 class YounitedpayWebhookModuleFrontController extends ModuleFrontController
 {
+    const EVENT_TYPE_PAYMENT_CREATED = 'payment.created';
+    const EVENT_TYPE_PAYMENT_UPDATED = 'payment.updated';
+    const EVENT_TYPE_REFUND_CREATED = 'refund.created';
+    const EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL = 'personal-loan.customer-withdrawal';
+
     /** @var \PaymentModule */
     public $module;
 
@@ -43,42 +47,46 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
-        $clientSDK = new WebHookClient();
+        /* @var LoggerService */
+        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
         $idShop = $this->context->shop->id;
         $isProduction = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
         $suffix = $isProduction === true ? '_PRODUCTION' : '';
         $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
-        $clientSDK->setCredential('', $webHookSecret);
 
-        /* @var LoggerService */
-        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+        $webhookNotification = (new Webhook($webHookSecret))->getEventNotification();
 
-        /** @var AbstractResponse $response */
-        $response = $clientSDK->retrieveCallbackResponse();
-
-        $this->loggerService->addLogAPI(json_encode($response), 'Info', $this);
-
-        if ($response->getStatusCode() === 401) {
-            $this->endResponse('Accès refusé : ' . $response->getReasonPhrase());
+        if (empty($webhookNotification)) {
+            $this->endResponse('No parameter caught on webhook', false);
         }
+
+        $this->loggerService->addLogAPI(json_encode($webhookNotification->jsonSerialize()), 'Info', $this);
 
         $idCart = (int) Tools::getValue('id_cart');
 
-        if ($idCart === false) {
-            $this->endResponse('Error, no Cart Id Provided');
+        $cart = new Cart($idCart);
+
+        if (Validate::isLoadedObject($cart) === false
+            || $this->module->active == 0
+            || $cart->id_address_delivery == 0
+            || $cart->id_address_invoice == 0
+            || $cart->id_customer == 0) {
+            $this->endResponse('Error with the cart on webhook');
         }
 
-        if (Tools::getValue('cancel') !== false) {
-            $this->updateContractStatus($idCart, 'cancel');
-            $this->endResponse('Cancel contract confirmed Cart ID' . $idCart);
+        switch ($webhookNotification->getType()) {
+            case self::EVENT_TYPE_REFUND_CREATED:
+                $this->processRefundCreated($idCart);
+                break;
+            case self::EVENT_TYPE_PAYMENT_CREATED:
+            case self::EVENT_TYPE_PAYMENT_UPDATED:
+            case self::EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL:
+                $this->endResponse('Event type not treat on webhook', false);
+                break;
+            default:
+                $this->endResponse('Unknown event type caught on webhook', false);
         }
-
-        if (Tools::getValue('widhdrawn') !== false) {
-            $this->updateContractStatus($idCart, 'withdrawn');
-            $this->endResponse('Withdrawn contract confirmed Cart ID' . $idCart);
-        }
-
-        $this->endResponse('No parameter catched on webhook', false);
     }
 
     protected function endResponse($message, $error = true)
@@ -86,13 +94,19 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         if ($error) {
             $this->loggerService->addLog($message, '[younitedpay webhook]', 'info', $this);
         }
-        $this->ajaxDie($message);
+
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+            $this->ajaxRender($message);
+            exit;
+        } else {
+            $this->ajaxDie($message);
+        }
     }
 
-    protected function updateContractStatus($idCart, $typeUpdate)
+    protected function processRefundCreated($idCart)
     {
-        /** @var OrderService $orderservice */
-        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
+        /** @var OrderService $orderService */
+        $orderService = ServiceContainer::getInstance()->get(OrderService::class);
 
         /** @var PaymentService $paymentService */
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
@@ -103,42 +117,62 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         if ((int) $younitedContract->id_order <= 0) {
             $this->endResponse('Error on contract activation, no order found with this cart (ID ' . $idCart . ')');
         }
+
         $order = new Order($younitedContract->id_order);
 
-        if ($typeUpdate === 'cancel') {
-            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
-            if ($newIdState === $order->current_state) {
-                $this->endResponse('Already canceled (Order ' . $order->id . ' - ' . $order->reference . ')');
-            }
-
-            if ($orderservice->setCancelOnYounitedContract($idCart) !== true) {
-                $this->endResponse('Error on contract cancelation (Cart ID ' . $idCart . ')');
-            }
-
-            $this->setCurrentState((int) $newIdState, $order);
+        $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+        if ((int) $newIdState === $order->current_state) {
+            $this->endResponse('Already canceled (Order ' . $order->id . ' - ' . $order->reference . ')');
         }
 
-        if ($typeUpdate === 'withdrawn') {
-            $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
-            if ($orderservice->setWithdrawnOnYounitedContract($idCart) !== true) {
-                $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
-            }
+        if ($orderService->setWithdrawnOnYounitedContract($idCart) !== true) {
+            $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
         }
+
+        $this->setCurrentState((int) $newIdState, $order);
+
+        $this->endResponse('Withdrawn contract confirmed Cart ID' . $idCart);
     }
 
-    /** Set current order status
+    /**
+     * Set current order status
+     *
      * @param int $id_order_state
+     *
+     * @return bool
      */
-    public function setCurrentState($id_order_state, $order)
+    private function setCurrentState($id_order_state, $order)
     {
         if (empty($id_order_state) || (int) $id_order_state === (int) $order->current_state) {
             return false;
         }
+
         $history = new OrderHistory();
         $history->id_order = (int) $order->id;
         $history->id_employee = 0;
         $use_existings_payment = !$order->hasInvoice();
         $history->changeIdOrderState((int) $id_order_state, $order, $use_existings_payment);
-        $history->add();
+
+        try {
+            return $history->add();
+        } catch (PrestaShopDatabaseException $e) {
+            $this->logError($e->getMessage(), 'setCurrentState PrestaShopDatabaseException');
+            $this->logError($e->getTraceAsString(), 'setCurrentState PrestaShopDatabaseException');
+            return false;
+        } catch (PrestaShopException $e) {
+            $this->logError($e->getMessage(), 'setCurrentState PrestaShopException');
+            $this->logError($e->getTraceAsString(), 'setCurrentState PrestaShopException');
+            return false;
+        }
+    }
+
+    private function logError($error, $title = 'Error')
+    {
+        $this->loggerService->addLog(
+            $error,
+            $title,
+            'error',
+            $this
+        );
     }
 }

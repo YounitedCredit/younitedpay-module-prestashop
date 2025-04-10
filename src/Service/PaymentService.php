@@ -49,6 +49,9 @@ use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
 
 class PaymentService
 {
+    const PAYMENT_STATUS_ACCEPTED = 'Accepted';
+    const PAYMENT_STATUS_EXECUTED = 'Executed';
+
     use TranslateTrait;
 
     public $module;
@@ -398,7 +401,7 @@ class PaymentService
         $contentResponse = $response['response'];
 
         if ($response['success'] === true && $contentResponse['offer'] && $contentResponse['status']) {
-            $statusOrderDone = ['GRANTED', 'CONFIRMED'];
+            $statusOrderDone = [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED];
             if (in_array($contentResponse['status'], $statusOrderDone) === false) {
                 return false;
             }
