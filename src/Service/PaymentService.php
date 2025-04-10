@@ -228,8 +228,8 @@ class PaymentService
         $request = new InitializeContractRequest();
 
         $shopCode = Configuration::get(Younitedpay::SHOP_CODE,null, null, $this->context->shop->id);
-        $webhookUrl = $this->getLink('webhook');
-        $redirectUrl = $this->getLink('validation');
+        $webhookUrl = $this->getLink('webhook', ['id_cart' => $this->context->cart->id]);
+        $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
         $request = $this->convertOldRequest($request, $shopCode, $webhookUrl, $redirectUrl);
 
         $this->loggerservice->addLogAPI(json_encode($body), 'Info', $this);
