@@ -156,7 +156,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         }
         Context::getContext()->cookie->__unset('younitedpaysave');
 
-        /* @var ConfigService $configService */
+        /** @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
         $this->content .= $this->renderConfiguration();
@@ -361,7 +361,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $this->postAppearance($idShop);
             $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
-            $this->ajaxDie($this->postAddNewMaturity($idShop));
+            $this->ajaxOutput($this->postAddNewMaturity($idShop));
+
+            return;
+        } elseif (Tools::isSubmit('testWebHookURL')) {
+            /** @var ConfigService $configService */
+            $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
+            $this->ajaxOutput($this->configService->testWebhook());
 
             return;
         }
@@ -533,6 +539,22 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                         'WebHook URL sent to clipboard',
                         'AdminYounitedpayConfiguration'
                     ),
+                    'success' => $this->module->l(
+                        'Success',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                    'error' => $this->module->l(
+                        'Warning',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                    'success_webhook' => $this->module->l(
+                        'WebHook response ok !',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                    'error_webhook' => $this->module->l(
+                        'WebHook response error -:( - Check title for more informations',
+                        'AdminYounitedpayConfiguration'
+                    ),
                 ],
             ],
         ]);
@@ -574,6 +596,19 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'max_installment' => $this->maxRangeInstall,
             'widget_borders' => $this->widgetBorders,
             'webhook_orders' => $this->webHookOrders,
+            'webhook_url' => \Context::getContext()->link->getModuleLink('younitedpay', 'notification', [
+                'id_cart' => 'test_webhook',
+            ]),
         ];
+    }
+
+    private function ajaxOutput($message)
+    {
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+            $this->ajaxRender($message);
+            exit;
+        } else {
+            $this->ajaxDie($message);
+        }
     }
 }

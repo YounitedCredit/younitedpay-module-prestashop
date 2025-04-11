@@ -215,6 +215,45 @@
                             </small>
                         </div>
                     </div>
+                    <div class="form-group mt-2 row">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="widget_info">
+                        {l s='Test Webhook Integration' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-6 align-item-center input-group">
+                            <input type="text" disabled class="form-control 
+                                {if $configuration.show_monthly === 0}
+                                    widget_disabled
+                                {else}
+                                    widget_enabled
+                                {/if}" 
+                                style="border-right:none;font-weight:bold;" data-month id="widget_input"
+                                value="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
+                                title="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}" />
+                            <div class="input-group-append copy-clipboard" 
+                                data-message="{l s='Widget content copied to clipboard' mod='younitedpay'}" 
+                                data-clipboard-copy="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}">
+                                <span class="input-group-text" style="border-left:none;" 
+                                    title="{l s='Copy to clipboard' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn" 
+                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">content_paste</i>
+                                </span>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text" 
+                                        data-test-url="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
+                                        data-test-webhook style="border-left:none;" 
+                                    title="{l s='Test the notification' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn" 
+                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">webhook</i>
+                                </span>
+                                <span class="input-group-text" data-test-webhook-result style="border-left:none;display:none;" 
+                                    title="{l s='Test the notification' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn" 
+                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">error</i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

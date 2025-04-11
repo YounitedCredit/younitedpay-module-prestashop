@@ -17,6 +17,7 @@
  */
 
 var younitedEvents = false;
+var webHookTestLaunched = false;
 var refundEvent = false;
 
 document.onreadystatechange = function() {
@@ -35,6 +36,54 @@ document.onreadystatechange = function() {
     });
     $('.disable_on_change').click(function(e) {
         toggleDisabledZone(e);
+    });
+    $('[data-test-webhook]').click(function(e) {
+        if (webHookTestLaunched === true) {
+            return;
+        }
+        webHookTestLaunched = true;
+        var formData = new FormData();
+        formData.append('testWebHookURL', $('[data-test-url]').attr('data-test-url'));
+
+        $.ajax({
+            type: "POST",
+            data: formData,
+            processData: false,
+            enctype: 'multipart/form-data',
+            contentType : false,
+            cache : false,
+            url: younitedpay.admin_url,
+            success: function(data) {
+                webHookTestLaunched = false;
+                const response = JSON.parse(data);
+                let success = 'error';
+                let color = '#FAB000';
+                if (response && response.success && response.success !== false) {
+                    success = 'check';
+                    color = '#25B9D7';
+                    $.growl.notice({
+                        title: younitedpay.translations.success,
+                        message: younitedpay.translations.success_webhook,
+                        duration: 5000,
+                        location: 'br'
+                    });
+                } else {
+                    $.growl.warning({
+                        title: younitedpay.translations.error,
+                        message: younitedpay.translations.error_webhook,
+                        duration: 5000,
+                        location: 'br'
+                    });
+                }
+                $('[data-test-webhook-result] i').css('color', color);
+                $('[data-test-webhook-result] i').text(success);
+                $('[data-test-webhook-result] i').attr('title', `Status: ${response.status} - Message: ${response.response}`);
+                $('[data-test-webhook-result]').show();
+                console.log(response);
+                console.log(response.success);
+                console.log(response.status);
+            }
+        });      
     });
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);

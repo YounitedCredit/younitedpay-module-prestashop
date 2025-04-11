@@ -30,8 +30,10 @@ use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
 use YounitedPaySDK\Request\AvailableMaturitiesRequest;
 use YounitedPaySDK\Request\NewAPI\ShopsRequest;
+use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
 use YounitedPaySDK\Response\AbstractResponse;
 
 class ConfigService
@@ -312,5 +314,28 @@ class ConfigService
         }
 
         return $shopCodesNames;
+    }
+
+    public function testWebhook()
+    {
+        $client = new YounitedClient($this->context->shop->id);
+
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $model = (new WebHookIntegration())->setWebhookUrl(\Tools::getValue('testWebHookURL'));
+
+        $response = $client->sendRequest($model, new WebHooksIntegrationRequest());
+        $responseWebHook = $response;
+        if (isset($response['response']['responseStatusCode'])) {
+            $responseWebHook = [
+                'status' => $response['response']['responseStatusCode'],
+                'success' => true,
+                'response' => $response['response']['responseBody'],
+            ];
+        }
+
+        return json_encode($responseWebHook);
     }
 }
