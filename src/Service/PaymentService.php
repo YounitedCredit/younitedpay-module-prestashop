@@ -233,7 +233,7 @@ class PaymentService
         $shopCode = Configuration::get(Younitedpay::SHOP_CODE,null, null, $this->context->shop->id);
         $webhookUrl = $this->getLink('webhook', ['id_cart' => $this->context->cart->id]);
         $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
-        $request = $this->convertOldRequest($request, $shopCode, $webhookUrl, $redirectUrl);
+        $request = $this->convertOldRequest($request->setModel($body), $shopCode, $webhookUrl, $redirectUrl);
 
         $this->loggerservice->addLogAPI(json_encode($body), 'Info', $this);
 
@@ -264,7 +264,7 @@ class PaymentService
         /** @var ArrayCollection $responseObject */
         $responseObject = $response['response'];
 
-        if (false === empty($responseObject['contractReference']) || empty($responseObject['redirectUrl'])) {
+        if (false === empty($responseObject['contractReference']) && false === empty($responseObject['redirectUrl'])) {
             $urlPayment = $responseObject['redirectUrl'];
             $contractRef = $responseObject['contractReference'];
 
@@ -361,7 +361,7 @@ class PaymentService
 
         $getPaymentRequestModel = (new GetPayment())->setId($paymentId);
         $getPaymentRequest = (new GetPaymentRequest())->setModel($getPaymentRequestModel);
-        $getPaymentResponse = $client->sendRequest($getPaymentRequest, $getPaymentRequestModel);
+        $getPaymentResponse = $client->sendRequest($getPaymentRequestModel, $getPaymentRequest);
 
         if ($getPaymentResponse['success'] === true) {
             $getPaymentResponse['response']['apiVersion'] = $getPaymentRequest->getApiVersion();
@@ -391,27 +391,15 @@ class PaymentService
             return false;
         }
 
-        $bodyContractRequest = (new LoadContract())
-            ->setContractReference($younitedContract->id_external_younitedpay_contract);
+        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id);
 
-        $requestContract = new LoadContractRequest();
-
-        $response = $client->sendRequest($bodyContractRequest, $requestContract);
-
-        $contentResponse = $response['response'];
-
-        if ($response['success'] === true && $contentResponse['offer'] && $contentResponse['status']) {
+        if (false === empty($getPaymentResponse) && $getPaymentResponse['amount'] && $getPaymentResponse['status']) {
             $statusOrderDone = [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED];
-            if (in_array($contentResponse['status'], $statusOrderDone) === false) {
+            if (in_array($getPaymentResponse['status'], $statusOrderDone) === false) {
                 return false;
             }
 
-            $offer = $contentResponse['offer'];
-            if (isset($offer['requestedAmount']) === false) {
-                return false;
-            }
-
-            return (float) $offer['requestedAmount'];
+            return (float) $getPaymentResponse['amount'];
         }
 
         return false;

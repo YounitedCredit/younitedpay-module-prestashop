@@ -99,7 +99,7 @@ class YounitedClient
         try {
             /** @var AbstractRequest $request */
             $request = $requestObject;
-            if ($body instanceof AbstractModel) {
+            if (empty((string) $request->getBody()) && $body instanceof AbstractModel) {
                 $request = $requestObject->setModel($body);
             }
             if ($this->isProductionMode === false) {
