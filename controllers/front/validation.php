@@ -62,7 +62,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
         $younitedPaymentStatus = $younitedPayment['status'];
 
         if (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED])) {
-            $redirectUrl = $this->processPaymentSuccess();
+            $redirectUrl = $this->processPaymentSuccess($younitedPayment['amount']);
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_CANCELLED, self::PAYMENT_STATUS_FAILED])) {
             $redirectUrl = $this->processPaymentError($younitedPaymentStatus);
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_INITIALIZED, self::PAYMENT_STATUS_APPROVED])) {
@@ -113,7 +113,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
         );
     }
 
-    private function processPaymentSuccess()
+    private function processPaymentSuccess($paymentAmount)
     {
         $orderUrl = Context::getContext()->link->getPageLink(
             'order',
@@ -183,8 +183,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
 
         parent::init();
 
-        $amountCreditRequested = $paymentService->getCreditRequestedAmount($cart);
-        if ($amountCreditRequested === false) {
+        if ($paymentAmount === false) {
             $this->errors[] = $this->l('Error: impossible to retrieve amount of payment done on Younited Pay', 'validation');
 
             $paymentService->logError(
@@ -196,13 +195,13 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
         }
 
         $amountCart = $cart->getOrderTotal(true, \Cart::BOTH);
-        if (abs($amountCreditRequested - $amountCart) > 0.5) {
+        if (abs($paymentAmount - $amountCart) > 0.5) {
             $this->errors[] = $this->l(
                 'Error: the amount of the contract is different than the total of the cart',
                 'success'
             );
 
-            $errorCart = sprintf($this->l('Cart: %s€ - Contract: %s€', 'validation'), $amountCart, $amountCreditRequested);
+            $errorCart = sprintf($this->l('Cart: %s€ - Contract: %s€', 'validation'), $amountCart, $paymentAmount);
             $this->errors[] = $errorCart;
 
             $paymentService->logError(
@@ -225,7 +224,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
                 }
             }
 
-            $orderCreated = $paymentService->validateOrder($cart, $customer, $amountCreditRequested);
+            $orderCreated = $paymentService->validateOrder($cart, $customer, $paymentAmount);
         } catch (Exception $ex) {
             $paymentService->logError(
                 json_encode([
