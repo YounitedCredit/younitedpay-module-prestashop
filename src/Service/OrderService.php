@@ -29,9 +29,11 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use YounitedPaySDK\Model\GetPaymentId;
 use YounitedPaySDK\Model\NewAPI\Request\CancelPayment;
 use YounitedPaySDK\Model\NewAPI\Request\ExecutePayment;
 use YounitedPaySDK\Model\NewAPI\Request\RefundPayment;
+use YounitedPaySDK\Request\GetPaymentIdRequest;
 use YounitedPaySDK\Request\NewAPI\CancelPaymentRequest;
 use YounitedPaySDK\Request\NewAPI\ExecutePaymentRequest;
 use YounitedPaySDK\Request\NewAPI\RefundPaymentRequest;
@@ -335,11 +337,21 @@ class OrderService
                 break;
         }
 
+        if (empty($younitedContract->payment_id) || is_null($younitedContract->payment_id)) {
+            $clientBuildReturn = $this->buildClient();
+            if ($clientBuildReturn['success'] === true) {
+                $this->getPaymentIdFromLegacy($younitedContract);   
+            } else {
+                $younitedContract->payment_id = 'Unknown - Error from API';
+            }
+        }
+
         \Context::getContext()->smarty->assign([
             'iso_lang' => \Context::getContext()->language->iso_code,
             'payment' => [
-                'id' => $younitedContract->id_external_younitedpay_contract,
-                'url' => $younitedContract->id_external_younitedpay_contract,
+                'id' => $younitedContract->payment_id,
+                'api_version' => (int) $younitedContract->api_version <= 0 ? '2024' : $younitedContract->api_version,
+                'reference' => $younitedContract->id_external_younitedpay_contract,
                 'date' => $younitedContract->date_add,
                 'date_state' => $dateState,
                 'status' => $state,
@@ -371,5 +383,22 @@ class OrderService
         }
 
         return new YounitedPayContract();
+    }
+
+    /**
+     * Retrieve paymentId with contract reference (new id)
+     *
+     * @param YounitedPayContract $younitedContract
+     */
+    private function getPaymentIdFromLegacy(YounitedPayContract &$younitedContract)
+    {
+        $body = (new GetPaymentId())->setContractReference($younitedContract->id_external_younitedpay_contract);
+        $response = $this->sendRequest($body, new GetPaymentIdRequest(), 'GetPaymentIdRequest');
+        if (isset($response['paymentId'])) {
+            $younitedContract->payment_id = $response['paymentId'];
+            $this->paymentrepository->updatePaymentId($younitedContract->id_order, $response['paymentId']);
+        } else {
+            $younitedContract->payment_id = 'Unknown - Not found';
+        }
     }
 }

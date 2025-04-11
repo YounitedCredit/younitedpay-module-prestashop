@@ -42,6 +42,8 @@ function upgrade_module_2_0_0($module)
 
         $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']) . '` ALTER `api_version` SET DEFAULT "2024-01-01"';
         $result &= Db::getInstance()->execute($query);
+
+        Configuration::updateGlobalValue(Younitedpay::USE_NEW_API, 1);
     } catch (Exception $e) {
         PrestaShopLogger::addLog($e->getMessage(), 3);
         $result = false;

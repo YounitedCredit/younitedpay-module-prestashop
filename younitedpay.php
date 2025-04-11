@@ -167,6 +167,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const PREFERRED_ISO_CODE = 'FR';
 
+    const USE_NEW_API = 'YOUNITEDPAY_USE_NEW_API';
+
     const AVAILABLE_CURRENCIES = [
         'EUR',
     ];

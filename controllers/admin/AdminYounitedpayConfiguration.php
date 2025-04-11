@@ -261,6 +261,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                     'AdminYounitedpayConfiguration'
                 ),
             ];
+            
+            if ($tplVars['configuration']['use_new_api'] === false) {
+                $this->errors[] = 'Warning ! Using API v1 for creating contracts !';
+            }
 
             $alertHere = empty($this->confirmations) && empty($this->errors);
 
@@ -338,6 +342,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $idShop = $this->context->shop->id;
         $isSubmitted = false;
         $isCacheFlushNeeded = true;
+
+        if (Tools::isSubmit('switchAPI') !== false) {
+            $isUseAPIv2 = (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true);
+            Configuration::updateGlobalValue(Younitedpay::USE_NEW_API, (int) !$isUseAPIv2);
+        }
 
         if (Tools::isSubmit('account_submit')) {
             $this->postAccountSubmit($idShop);
@@ -535,6 +544,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         return [
             'url_form_config' => $urlFormConfig,
+            'use_new_api' => (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true),
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,

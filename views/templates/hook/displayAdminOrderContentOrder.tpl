@@ -22,7 +22,9 @@
 <div class="tab-pane" id="younitedpay">
     <p>
         <b>{l s='Payment ID' mod='younitedpay'}</b><br />        
-        {$payment.id|escape:'html':'UTF-8'}        
+        <span title="{l s='Payment ID' mod='younitedpay'} - {$payment.id|escape:'html':'UTF-8'} - API v.{$payment.api_version|escape:'html':'UTF-8'}">
+            {$payment.reference|escape:'html':'UTF-8'}
+        </span>
     </p>
 
     <p>

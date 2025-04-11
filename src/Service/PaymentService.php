@@ -156,7 +156,7 @@ class PaymentService
      * @throws \PrestaShopException
      * @throws \Exception
      */
-    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, $client)
+    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, YounitedClient $client)
     {
         $customer = $this->context->customer;
         $country = new \Country($customerAddress->id_country);
@@ -230,12 +230,17 @@ class PaymentService
 
         $request = new InitializeContractRequest();
 
+        $isUseAPIv2 = (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true);
+
+        if ($isUseAPIv2 === false) {
+            $this->loggerservice->addLogAPI('Old contract body:' . json_encode($body), 'Info', $this);
+            return $client->sendRequest($body, $request);
+        }
+
         $shopCode = Configuration::get(Younitedpay::SHOP_CODE,null, null, $this->context->shop->id);
-        $webhookUrl = $this->getLink('webhook', ['id_cart' => $this->context->cart->id]);
+        $webhookUrl = $this->getLink('notification', ['id_cart' => $this->context->cart->id]);
         $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
         $request = $this->convertOldRequest($request->setModel($body), $shopCode, $webhookUrl, $redirectUrl);
-
-        $this->loggerservice->addLogAPI(json_encode($body), 'Info', $this);
 
         return $client->sendRequest($body, $request);
     }
@@ -252,11 +257,15 @@ class PaymentService
         $customExperience = (new CustomExperience())
             ->setCustomerRedirectUrl($redirectUrl);
 
-        return (new CreatePaymentAdapter())
+        $adapter = (new CreatePaymentAdapter())
             ->setShopCode($shopCode)
             ->setTechnicalInformation($technicalInformation)
             ->setCustomExperience($customExperience)
             ->convertInitializeContract($oldRequest);
+
+        $this->loggerservice->addLogAPI('New contract body:' . (string) $adapter->getBody(), 'Info', $this);
+        
+        return $adapter;
     }
 
     protected function treatResponse($response)
