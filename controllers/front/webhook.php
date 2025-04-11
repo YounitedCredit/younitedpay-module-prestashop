@@ -34,6 +34,8 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
     const EVENT_TYPE_REFUND_CREATED = 'refund.created';
     const EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL = 'personal-loan.customer-withdrawal';
 
+    const PAYMENT_STATUS_CANCELLED = 'Cancelled';
+
     /** @var \PaymentModule */
     public $module;
 
@@ -76,11 +78,17 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         }
 
         switch ($webhookNotification->getType()) {
+            case self::EVENT_TYPE_PAYMENT_UPDATED:
+                if ($webhookNotification->getData()->getStatus() !== self::PAYMENT_STATUS_CANCELLED) {
+                    $this->endResponse('Event type not treat on webhook', false);
+                }
+
+                $this->processWebhookEvent($idCart, 'cancel');
+                break;
             case self::EVENT_TYPE_REFUND_CREATED:
-                $this->processRefundCreated($idCart);
+                $this->processWebhookEvent($idCart, 'refund');
                 break;
             case self::EVENT_TYPE_PAYMENT_CREATED:
-            case self::EVENT_TYPE_PAYMENT_UPDATED:
             case self::EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL:
                 $this->endResponse('Event type not treat on webhook', false);
                 break;
@@ -103,7 +111,11 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         }
     }
 
-    protected function processRefundCreated($idCart)
+    /**
+     * @param int $idCart
+     * @param string $updateType
+     */
+    protected function processWebhookEvent($idCart, $updateType)
     {
         /** @var OrderService $orderService */
         $orderService = ServiceContainer::getInstance()->get(OrderService::class);
@@ -111,7 +123,6 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         /** @var PaymentService $paymentService */
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
 
-        /** @var YounitedPayContract $younitedContract */
         $younitedContract = $paymentService->getContractByCart($idCart);
 
         if ((int) $younitedContract->id_order <= 0) {
@@ -120,18 +131,37 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
 
         $order = new Order($younitedContract->id_order);
 
-        $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
-        if ((int) $newIdState === $order->current_state) {
-            $this->endResponse('Already canceled (Order ' . $order->id . ' - ' . $order->reference . ')');
+        if ($updateType === 'cancel') {
+            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int)Configuration::get('PS_OS_CANCELED');
+
+            if ((int)$newIdState === $order->current_state) {
+                $this->endResponse('Already cancelled (Order ' . $order->id . ' - ' . $order->reference . ')');
+            }
+
+            if ($orderService->setCancelOnYounitedContract($order->id_cart) !== true) {
+                $this->endResponse('Error on contract cancellation (Cart ID ' . $idCart . ')');
+            }
+
+            $this->setCurrentState((int) $newIdState, $order);
+
+            $this->endResponse('Cancellation contract confirmed Cart ID' . $order->id_cart);
+        } elseif ($updateType === 'refund') {
+            $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+
+            if ((int) $newIdState === $order->current_state) {
+                $this->endResponse('Already withdraw (Order ' . $order->id . ' - ' . $order->reference . ')');
+            }
+
+            if ($orderService->setWithdrawnOnYounitedContract($order->id_cart) !== true) {
+                $this->endResponse('Error on contract Withdrawn (Cart ID ' . $order->id_cart . ')');
+            }
+
+            $this->setCurrentState((int) $newIdState, $order);
+
+            $this->endResponse('Withdrawn contract confirmed Cart ID' . $order->id_cart);
         }
 
-        if ($orderService->setWithdrawnOnYounitedContract($idCart) !== true) {
-            $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
-        }
-
-        $this->setCurrentState((int) $newIdState, $order);
-
-        $this->endResponse('Withdrawn contract confirmed Cart ID' . $idCart);
+        $this->endResponse('Event type not treat on webhook', false);
     }
 
     /**
