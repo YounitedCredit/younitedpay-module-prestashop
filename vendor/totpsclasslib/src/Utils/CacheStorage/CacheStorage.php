@@ -20,7 +20,7 @@
  * @author    202-ecommerce <tech@202-ecommerce.com>
  * @copyright Copyright (c) 202-ecommerce
  * @license   Commercial license
- * @version   release/2.3.2
+ * @version   release/2.3.3
  */
 
 namespace YounitedpayClasslib\Utils\CacheStorage;
@@ -179,6 +179,7 @@ class CacheStorage
     {
         $fileName = $this->getKeyFileName($key);
         $content = $this->buildCacheContent($content, $params, $optional);
+        $content = str_replace(['<?php', '<?', '?>'], '', $content);
         $filename = $fileName . uniqid('', true) . '.tmp';
         $dateGeneration = date('Y-m-d H:i:s');
         file_put_contents($filename, "<?php\r\r//Generated $dateGeneration\r\rreturn " . $content . ';', LOCK_EX);
