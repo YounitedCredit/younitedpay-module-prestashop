@@ -86,7 +86,7 @@ class OrderService
         return ['success' => true];
     }
 
-    protected function sendRequest($body, $request, $type)
+    protected function sendRequest($body, $request, $type, $refContract = '')
     {
         try {
             $response = $this->client->sendRequest($body, $request);
@@ -95,12 +95,6 @@ class OrderService
                 'success' => false,
                 'response' => $ex->getMessage(),
             ];
-        }
-
-        try {
-            $refContract = $body->getContractReference();
-        } catch (Exception $ex) {
-            $refContract = json_encode($body);
         }
 
         if ($response['success'] === false) {
@@ -139,7 +133,7 @@ class OrderService
 
         $request = new CancelPaymentRequest();
 
-        $this->sendRequest($body, $request, 'cancel contract');
+        $this->sendRequest($body, $request, 'cancel contract', $younitedContract->payment_id);
 
         return true;
     }
@@ -170,7 +164,7 @@ class OrderService
 
         $request = new RefundPaymentRequest();
 
-        $this->sendRequest($body, $request, 'withdraw contract');
+        $this->sendRequest($body, $request, 'withdraw contract', $younitedContract->payment_id);
 
         return true;
     }
@@ -286,7 +280,7 @@ class OrderService
 
         $request = new ExecutePaymentRequest();
 
-        $this->sendRequest($body, $request, 'activate order');
+        $this->sendRequest($body, $request, 'activate order', $younitedContract->payment_id);
 
         return true;
     }
