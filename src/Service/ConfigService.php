@@ -119,7 +119,7 @@ class ConfigService
             return [
                 'message' => $this->l('No credential saved'),
                 'maturityList' => self::DEF_MATURITIES,
-                'status' => false,
+                'status' => 'no_credentials',
             ];
         }
 
@@ -132,7 +132,7 @@ class ConfigService
             return [
                 'message' => $this->l('Response error'),
                 'maturityList' => self::DEF_MATURITIES,
-                'status' => false,
+                'status' => 'api_error',
             ];
         }
         $maturityList = $response['response'];
@@ -140,7 +140,7 @@ class ConfigService
         return [
             'message' => $this->l('Connexion Ok'),
             'maturityList' => count($maturityList) > 0 ? $maturityList : self::DEF_MATURITIES,
-            'status' => true,
+            'status' => 'ok',
         ];
     }
 
@@ -185,7 +185,8 @@ class ConfigService
 
         return [
             'maturityList' => $isApiConnected['maturityList'],
-            'connected' => $isApiConnected['status'],
+            'connected' => $isApiConnected['status'] === 'ok',
+            'status' => $isApiConnected['status'],
             'specs' => [
                 [
                     'name' => 'CURL',
@@ -278,12 +279,12 @@ class ConfigService
      * 
      * @param bool $fullList Full List from API or only name => code ?
      */
-    public function getShopCodes($fullList = true)
+    public function getShopCodes()
     {
         $client = new YounitedClient($this->context->shop->id);
 
         if ($client->isCrendentialsSet() === false) {
-            return false;
+            return [];
         }
 
         $request = new ShopsRequest();
@@ -292,16 +293,9 @@ class ConfigService
         $response = $client->sendRequest(null, $request);
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
-            return false;
+            return [];
         }
         $shopCodes = $response['response'];
-
-        if ($fullList === true) {
-            return [
-                'message' => $shopCodes,
-                'status' => true,
-            ];
-        }
 
         $shopCodesNames = [];
         foreach($shopCodes as $oneShopCode) {

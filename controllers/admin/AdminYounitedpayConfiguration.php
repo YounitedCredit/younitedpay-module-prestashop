@@ -249,6 +249,21 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $cachestorage = new CacheYounited();
             $cachestorage->set('maturitylist', json_encode($this->maturitylist));
 
+            $nokeysText = $this->module->l(
+                'Please enter your API credentials before changing the module’s settings',
+                'AdminYounitedpayConfiguration'
+            );
+
+            $nokeysTextShopCode = $this->module->l(
+                'API Credentials saved. Please select your shop code before changing the module’s settings',
+                'AdminYounitedpayConfiguration'
+            );
+
+            $badConfig = $this->module->l(
+                'Error with your credentials, please check the keys and the environment (production or test)',
+                'AdminYounitedpayConfiguration'
+            );
+
             $tplVars = [
                 'configuration' => $this->getConfigurationVariables(),
                 'connected' => $specsVariables['connected'],
@@ -256,10 +271,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
                 'shop_img_url' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/img/',
-                'no_keys_text' => $this->module->l(
-                    'Please enter your API credentials before changing the module’s settings',
-                    'AdminYounitedpayConfiguration'
-                ),
+                'no_keys_text' => $nokeysText,
+                'no_shop_text' => $nokeysTextShopCode,
+                'bad_config_text' => $badConfig,
             ];
             
             if ($tplVars['configuration']['use_new_api'] === false) {
@@ -527,7 +541,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         );
 
         $allMaturities = $this->getAllMaturities();
-        $shopCodesList = $this->configService->getShopCodes($full = false);
+        $shopCodesList = $this->configService->getShopCodes();
         $urlFormConfig = $this->context->link->getAdminLink('AdminYounitedpayConfiguration');
 
         Media::addJsDef([
@@ -559,9 +573,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             ],
         ]);
 
-        $noConfig = empty($this->clientID) || empty($this->clientSecret) || empty($this->shopCode);
+        $noConfig = empty($this->clientID) || empty($this->clientSecret);
+        $noShopCode = empty($this->shopCode);
         if ($this->isProductionMode === true) {
-            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction) || empty($this->shopCodeProduction);
+            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction);
+            $noShopCode = empty($this->shopCodeProduction);
         }
 
         return [
@@ -582,6 +598,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'show_monthly' => $this->isShownMonthly,
             'widget_info' => '{widget name="younitedpay" amount="149.90"}',
             'no_config' => $noConfig,
+            'no_shop_code' => $noShopCode,
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),

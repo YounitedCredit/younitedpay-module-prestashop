@@ -27,10 +27,16 @@
                     <div class="col-sm-11">{l s='3. Display' mod='younitedpay'}</div>
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12
-                    {if $configuration.no_config === true}
-                        backimg" style="background: url('{$shop_img_url|escape:'htmlall':'UTF-8'}/appearance-no-config.png');min-height:260px;">
-                        <div class="infotext" style="margin-top:100px;">
-                            <p>{$no_keys_text|escape:'htmlall':'UTF-8'}</p>
+                    {if $configuration.no_config === true || $configuration.no_shop_code || $connected === false}
+                        backimg" style="background: url('{$shop_img_url|escape:'htmlall':'UTF-8'}/appearence-no-config.png');min-height:600px;">
+                        <div class="infotext" style="margin-top:250px;">
+                            {if $configuration.no_config === true}
+                                <p>{$no_keys_text|escape:'htmlall':'UTF-8'}</p>
+                            {elseif $configuration.no_shop_code === true}
+                                <p>{$no_shop_text|escape:'htmlall':'UTF-8'}</p>
+                            {else}
+                                <p>{$bad_config_text|escape:'htmlall':'UTF-8'}</p>
+                            {/if}
                         </div>
                     {else}
                         ">
