@@ -162,7 +162,7 @@ class PaymentService
         $country = new \Country($customerAddress->id_country);
 
         $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
-            ? new \DateTime($customer->birthday . 'T00:00:00')
+            ? (new \DateTime($customer->birthday))->format('Y-m-d')
             : null;
 
         $adresseStreet = $customerAddress->address1;
