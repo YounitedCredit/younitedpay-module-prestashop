@@ -77,7 +77,7 @@ class YounitedClient
     {
         $this->clientId = $testCredentials['client_id'];
         $this->clientSecret = $testCredentials['client_secret'];
-        $this->shopCode = $testCredentials['shop_code'];
+        $this->shopCode = $testCredentials['shop_code'] ?? '';
         $this->isProductionMode = $testCredentials['production_mode'];
         $this->webHookSecret = $testCredentials['webhook_secret'];
     }
