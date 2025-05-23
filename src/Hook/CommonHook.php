@@ -23,8 +23,11 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Configuration;
 use Context;
+use Shop;
 use Younitedpay;
+use YounitedpayAddon\API\YounitedClient;
 use YounitedpayClasslib\Hook\AbstractHook;
 
 class CommonHook extends AbstractHook
@@ -48,6 +51,23 @@ class CommonHook extends AbstractHook
                     ],
                 ],
             ]);
+        }
+
+        foreach (Shop::getShops() as $oneShop) {
+            $idShop = $oneShop['id_shop'];
+            $client = new YounitedClient($idShop);
+            $isProductionMode = (bool) Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
+            $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $idShop);
+            $shopCodeProduction = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $idShop);
+            if ($client->isCrendentialsSet() === false) {
+                continue;
+            }
+            $shopCodeNotSet = $isProductionMode === false ? empty($shopCode) : empty($shopCodeProduction);
+            if ($shopCodeNotSet === true) {
+                $controller->warnings[] = $this->l(
+                    'Younited Pay Module - Warning - No shop code selected - please configure your Shop code for Shop N°' . $idShop
+                );
+            }
         }
     }
 
