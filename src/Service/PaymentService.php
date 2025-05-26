@@ -323,14 +323,6 @@ class PaymentService
             }
         }
 
-        if (empty($customerAddress->phone_mobile) === false) {
-            $this->cellPhone = $customerAddress->phone_mobile;
-        }
-
-        if (empty($customerAddress->phone) === false) {
-            $this->cellPhone = $customerAddress->phone;
-        }
-        
         return true;
     }
 
