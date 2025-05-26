@@ -30,8 +30,9 @@ use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use YounitedPaySDK\Model\NewAPI\GetOffers;
 use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
-use YounitedPaySDK\Request\AvailableMaturitiesRequest;
+use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
 use YounitedPaySDK\Request\NewAPI\ShopsRequest;
 use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
 use YounitedPaySDK\Response\AbstractResponse;
@@ -123,10 +124,24 @@ class ConfigService
             ];
         }
 
-        $request = new AvailableMaturitiesRequest();
+        if (empty($client->shopCode) === true) {
+            return [
+                'message' => $this->l('No Shop Code saved'),
+                'maturityList' => self::DEF_MATURITIES,
+                'status' => 'no_shop_code',
+            ];
+        }
+
+        $body = (new GetOffers())->setShopCode($client->shopCode)
+            ->setAmount(1500)
+            ->setMaturityRangeStep(1)
+            ->setMaturityRangeMin(1)
+            ->setMaturityRangeMax(84);
+
+        $request = new GetOffersRequest();
 
         /** @var AbstractResponse $response */
-        $response = $client->sendRequest(null, $request);
+        $response = $client->sendRequest($body, $request);
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
             return [
@@ -135,11 +150,14 @@ class ConfigService
                 'status' => 'api_error',
             ];
         }
-        $maturityList = $response['response'];
+        $maturityList = [];
+        foreach ($response['response'] as $oneOffer) {
+            $maturityList[] = (int) $oneOffer->getMaturityInMonths();
+        }
 
         return [
             'message' => $this->l('Connexion Ok'),
-            'maturityList' => count($maturityList) > 0 ? $maturityList : self::DEF_MATURITIES,
+            'maturityList' => count($maturityList) > 0 ? asort($maturityList) : self::DEF_MATURITIES,
             'status' => 'ok',
         ];
     }
@@ -276,7 +294,7 @@ class ConfigService
 
     /**
      * Return Shop Codes list from API
-     * 
+     *
      * @param bool $fullList Full List from API or only name => code ?
      */
     public function getShopCodes()
@@ -298,7 +316,7 @@ class ConfigService
         $shopCodes = $response['response'];
 
         $shopCodesNames = [];
-        foreach($shopCodes as $oneShopCode) {
+        foreach ($shopCodes as $oneShopCode) {
             if (isset($oneShopCode['name']) && isset($oneShopCode['code'])) {
                 $shopCodesNames[] = [
                     'name' => $oneShopCode['name'],
