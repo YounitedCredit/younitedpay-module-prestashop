@@ -152,12 +152,14 @@ class ConfigService
         }
         $maturityList = [];
         foreach ($response['response'] as $oneOffer) {
-            $maturityList[] = (int) $oneOffer->getMaturityInMonths();
+            if (in_array((int) $oneOffer->getMaturityInMonths(), $maturityList) === false) {
+                $maturityList[] = (int) $oneOffer->getMaturityInMonths();
+            }
         }
 
         return [
             'message' => $this->l('Connexion Ok'),
-            'maturityList' => count($maturityList) > 0 ? asort($maturityList) : self::DEF_MATURITIES,
+            'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
             'status' => 'ok',
         ];
     }
@@ -349,5 +351,14 @@ class ConfigService
         }
 
         return json_encode($responseWebHook);
+    }
+
+    private function sortOffers($validOffers)
+    {
+        usort($validOffers, function ($a, $b) {
+            return $a > $b;
+        });
+
+        return $validOffers;
     }
 }
