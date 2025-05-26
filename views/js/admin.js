@@ -165,7 +165,7 @@ function toggleAccordion()
     var younitedButton = $(this)[0];
     var younitedZone = younitedButton.getAttribute('data-target');
     var younitedButtonId = younitedButton.getAttribute('id');
-    $($.find(younitedZone.toString())).slideToggle();
+    $(younitedZone.toString()).slideToggle();
     $('#' + younitedButtonId + ' a').toggleClass('collapsed');
 }
 
