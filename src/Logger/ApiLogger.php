@@ -77,6 +77,14 @@ class ApiLogger
             mkdir($logDir);
             copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
             copy(_PS_MODULE_DIR_ . $this->module->name . '/logs/.htaccess', $logDir . '/.htaccess');
+
+            try {
+                $this->deleteLogFilesOld();
+            } catch (\Exception $ex) {
+                $this->stream = fopen($logDir . '/' . $this->logname, 'a+');
+                $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
+                $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
+            }
         }
 
         $logFile = $logDir . '/' . $this->logname;
@@ -85,14 +93,6 @@ class ApiLogger
             if ($fileSize > self::MAX_LOG_FILE_SIZE) {
                 unlink($logFile);
             }
-        }
-
-        try {
-            $this->deleteLogFilesOld();
-        } catch (\Exception $ex) {
-            $this->stream = fopen($logFile, 'a+');
-            $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
-            $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
         }
 
         if ($this->fileLoggerActivated === false) {
@@ -149,7 +149,7 @@ class ApiLogger
     /**
      * Delete log files older than three month
      */
-    private function deleteLogFilesOld($deleteFromDays = 60)
+    public function deleteLogFilesOld($deleteFromDays = 60)
     {
         $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
         $previousLogDirs = scandir($logDir);
