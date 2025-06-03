@@ -30,7 +30,6 @@ jobs:
 
           sudo apt-get update && sudo apt-get install xmlstarlet -y
           MODULE_VERSION=$(xmlstarlet sel -t -v '/project/property[@name="TARGETVERSION"]/@value' 202/build.xml)
-          MODULE_VERSION=$MODULE_VERSION-$PROJECT_VERSION
 
           find ./ -type f -exec sed -i "s/@version@/$MODULE_VERSION/g" {} +
           
@@ -74,9 +73,10 @@ jobs:
           unzip -l "$MODULE_NAME.zip"
 
           find "./$MODULE_NAME" -type f -exec md5sum "{}" + > "$MODULE_NAME.md5"
+          MODULE_BUILD_NUMBER=$MODULE_VERSION-$PROJECT_VERSION
 
-          cp "$MODULE_NAME.zip" "$PROJECT_DIR/$MODULE_NAME-$MODULE_VERSION-prod.zip"
-          cp "$MODULE_NAME.md5" "$PROJECT_DIR/$MODULE_NAME-$MODULE_VERSION-prod.md5"
+          cp "$MODULE_NAME.zip" "$PROJECT_DIR/$MODULE_NAME-$MODULE_BUILD_NUMBER-prod.zip"
+          cp "$MODULE_NAME.md5" "$PROJECT_DIR/$MODULE_NAME-$MODULE_BUILD_NUMBER-prod.md5"
 
           cd "$PROJECT_DIR"
           find . -type f ! \( -name "*.zip" -o -name "*.md5" \) -delete
