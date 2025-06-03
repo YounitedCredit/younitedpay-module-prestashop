@@ -23,12 +23,15 @@ if (!defined('_PS_VERSION_')) {
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
 require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 
 class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerController
 {
     private $logPath;
+
+    public $multishop_context = 1;
 
     public function __construct()
     {
@@ -65,36 +68,53 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
 
     public function saveConfiguration()
     {
-        $shops = \Shop::getShops(false, null, true);
-        $shops[] = 0;
-        $idShop = \Context::getContext()->shop->id;
-        $loggerFileState = Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE, null, null, $idShop, '');
-        $isLoggerActive = Tools::getValue(Younitedpay::IS_FILE_LOGGER_ACTIVE);
+        $saveForEveryShops = (bool) Tools::getValue('younitedpay_processlogger_multishop_processLogger');
 
-        if ($loggerFileState !== $isLoggerActive) {
-            Configuration::updateValue(
-                Younitedpay::IS_FILE_LOGGER_ACTIVE,
-                (bool) $isLoggerActive,
-                false,
-                null,
-                $idShop
+        $warningChangedAdded = false;
+        foreach(\Shop::getShops(true, null, true) as $key => $idShop) {
+            if ($saveForEveryShops === false && (int) $idShop !== \Context::getContext()->shop->id) {
+                continue;
+            }
+
+            $this->saveItemIfSubmitted(ProcessLoggerExtension::QUIET_MODE, $idShop);
+            $this->saveItemIfSubmitted(ProcessLoggerExtension::ERASING_DISABLED, $idShop);
+            $this->saveItemIfSubmitted(ProcessLoggerExtension::ERASING_DAYSMAX, $idShop, false);
+
+            $this->confirmations[] = $this->module->l(
+                'Log parameters are successfully updated!',
+                'AdminProcessLoggerController'
             );
 
-            $infoActivation = 'Logger file ';
-            $infoActivation .= (bool) $isLoggerActive === true ? 'enabled ' : 'disabled ';
-            $infoActivation .= date('Y-m-d H:i:s') . ' by ';
-            $infoActivation .= $this->context->employee->firstname . ' ' . $this->context->employee->lastname;
-            $infoActivation .= ' (id ' . $this->context->employee->id . ' on shop ' . $idShop . ')';
+            $loggerFileState = Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE, null, null, $idShop, '');
+            if (Tools::isSubmit(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false) {
+                continue;
+            }
+            
+            $isLoggerActive = Tools::getValue(Younitedpay::IS_FILE_LOGGER_ACTIVE);
+            if ($loggerFileState !== $isLoggerActive) {
+                $this->saveItemIfSubmitted(Younitedpay::IS_FILE_LOGGER_ACTIVE, $idShop);
 
-            /** @var LoggerService $loggerService */
-            $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
-            $loggerService->addLog(
-                $infoActivation,
-                'file logger',
-                'info',
-                (new \ReflectionClass($this))->getShortName()
-            );
-            $this->confirmations[] = $infoActivation;
+                if ($warningChangedAdded === true) {
+                    continue;
+                }
+                $warningChangedAdded = true;
+
+                $infoActivation = 'Logger file ';
+                $infoActivation .= (bool) $isLoggerActive === true ? 'enabled ' : 'disabled ';
+                $infoActivation .= date('Y-m-d H:i:s') . ' by ';
+                $infoActivation .= $this->context->employee->firstname . ' ' . $this->context->employee->lastname;
+                $infoActivation .= ' (id ' . $this->context->employee->id . ' on shop ' . $idShop . ')';
+
+                /** @var LoggerService $loggerService */
+                $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+                $loggerService->addLog(
+                    $infoActivation,
+                    'file logger',
+                    'info',
+                    (new \ReflectionClass($this))->getShortName()
+                );
+                $this->confirmations[] = $infoActivation;
+            }
         }
     }
 
@@ -174,5 +194,26 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         }
 
         return true;
+    }
+
+    /**
+     * Save field if submitted
+     * 
+     * @param string $item - key of field to check
+     * @param int $idShop - shop to save in
+     */
+    private function saveItemIfSubmitted($item, $idShop, $isBoolean = true)
+    {
+        if (Tools::isSubmit($item)) {
+            $value = Tools::getValue($item);
+
+            Configuration::updateValue(
+                $item,
+                $isBoolean ? (bool) $value : (int) $value,
+                false,
+                null,
+                $idShop
+            );
+        }
     }
 }
