@@ -41,6 +41,8 @@ class ApiLogger
 
     private $isUnitTest;
 
+    private $fileLoggerActivated = false;
+
     /**
      * @var Logger
      */
@@ -54,6 +56,7 @@ class ApiLogger
         $hashOfDay = md5(_COOKIE_KEY_ . $date);
         $this->logname = $this->module->name . '-' . $date . '-' . $hashOfDay . '.log';
         if ($isUnitTest === false) {
+            $this->fileLoggerActivated = (bool) \Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE);
             $this->build();
         }
     }
@@ -83,13 +86,25 @@ class ApiLogger
                 unlink($logFile);
             }
         }
+
+        try {
+            $this->deleteLogFilesOld();
+        } catch (\Exception $ex) {
+            $this->stream = fopen($logFile, 'a+');
+            $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
+            $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
+        }
+
+        if ($this->fileLoggerActivated === false) {
+            return true;
+        }
         $this->stream = fopen($logFile, 'a+');
         $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
     }
 
     public function log($object, $data, $type = 'Error', $isObject = false)
     {
-        if (\Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false || $this->isUnitTest === true) {
+        if ($this->fileLoggerActivated === false || $this->isUnitTest === true) {
             return true;
         }
 
@@ -99,12 +114,12 @@ class ApiLogger
         }
 
         if (substr($type, 0, 8) === 'Response') {
-            // if ($type === 'ResponseBestPriceRequest' && \Tools::getvalue('younitedfulllogs') === false) {
-                // $response = $data->getModel();
-                // $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
-            // } else {
+            if ($type === 'ResponseBestPriceRequest' && \Tools::getvalue('younitedfulllogs') === false) {
+                $response = $data->getModel();
+                $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
+            } else {
                 $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($data->getModel()));
-            // }
+            }
         }
 
         $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);
@@ -126,8 +141,57 @@ class ApiLogger
 
     public function __destruct()
     {
-        if ($this->isUnitTest === false) {
+        if ($this->isUnitTest === false && $this->fileLoggerActivated !== false) {
             fclose($this->stream);
+        }
+    }
+
+    /**
+     * Delete log files older than three month
+     */
+    private function deleteLogFilesOld($deleteFromDays = 60)
+    {
+        $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
+        $previousLogDirs = scandir($logDir);
+        $origin = new \DateTimeImmutable('now');
+        foreach ($previousLogDirs as $oneLogFolder) {
+            if (in_array($oneLogFolder, ['.', '..', date('Ym')]) === true || is_dir($logDir . $oneLogFolder) === false) {
+                continue;
+            }
+            $filesWereDeleted = false;
+            $logFiles = scandir($logDir . $oneLogFolder);
+            foreach ($logFiles as $oneFileLog) {
+                if (in_array($oneFileLog, ['.', '..', '.htaccess', 'index.php']) === true) {
+                    continue;
+                }
+                $fileNameExploded = explode('-', str_replace('.log', '', $oneFileLog));
+                $dateFile = \sprintf(
+                    '%s-%s-%s',
+                    substr($fileNameExploded[1], 0, 4),
+                    substr($fileNameExploded[1], 4, 2),
+                    substr($fileNameExploded[1], 6, 2)
+                );
+                if (count($fileNameExploded) !== 3 || \mb_strlen($fileNameExploded[1]) !== 8) {
+                    continue;
+                }
+                $target = new \DateTimeImmutable($dateFile);
+                $interval = $origin->diff($target);
+                if ((int) $interval->format('%a') > $deleteFromDays) {
+                    $filesWereDeleted = true;
+                    @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
+                }
+            }
+            if ($filesWereDeleted === false) {
+                if (count($logFiles) <= 3) {
+                    foreach ($logFiles as $oneFileLog) {
+                        if (in_array($oneFileLog, ['.', '..']) === true) {
+                            continue;
+                        }
+                        @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
+                    }
+                    @rmdir($logDir . $oneLogFolder);
+                }
+            }
         }
     }
 }
