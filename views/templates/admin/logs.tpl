@@ -36,6 +36,13 @@
             {/foreach}
         </ul>
     </div>
+    <div class="panel-body">
+    <form action="{$ajax_remove_old_logs|escape:'htmlall':'UTF-8'}" id="formRemoveLogs" method="POST">
+      <input type="hidden" name="submitDeleteOldLogs" />
+      <a href="#formRemoveLogs" type="submit" class="btn btn-default" onclick="$('#formRemoveLogs').submit();return;">
+        <i class="icon-trash"></i></i>{l s='Remove old log files' mod='younitedpay'}
+      </a>
+    </div>
 </div>
 
 {if isset($logfile_content)}

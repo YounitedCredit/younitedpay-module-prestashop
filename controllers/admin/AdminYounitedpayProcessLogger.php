@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
@@ -64,6 +65,10 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         if ($isLoggerFileActive !== false) {
             $this->showLogFiles();
         }
+
+        if (Tools::isSubmit('submitDeleteOldLogs')) {
+            ApiLogger::getInstance()->deleteLogFilesOld();
+        }
     }
 
     public function saveConfiguration()
@@ -71,7 +76,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
         $saveForEveryShops = (bool) Tools::getValue('younitedpay_processlogger_multishop_processLogger');
 
         $warningChangedAdded = false;
-        foreach(\Shop::getShops(true, null, true) as $key => $idShop) {
+        foreach (\Shop::getShops(true, null, true) as $key => $idShop) {
             if ($saveForEveryShops === false && (int) $idShop !== \Context::getContext()->shop->id) {
                 continue;
             }
@@ -89,7 +94,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
             if (Tools::isSubmit(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false) {
                 continue;
             }
-            
+
             $isLoggerActive = Tools::getValue(Younitedpay::IS_FILE_LOGGER_ACTIVE);
             if ($loggerFileState !== $isLoggerActive) {
                 $this->saveItemIfSubmitted(Younitedpay::IS_FILE_LOGGER_ACTIVE, $idShop);
@@ -148,6 +153,10 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
                 ]);
             }
         }
+        $this->context->smarty->assign(
+            'ajax_remove_old_logs',
+            $this->context->link->getAdminLink('AdminYounitedpayProcessLogger')
+        );
 
         $contentLogs = $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/logs.tpl'
@@ -198,7 +207,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
 
     /**
      * Save field if submitted
-     * 
+     *
      * @param string $item - key of field to check
      * @param int $idShop - shop to save in
      */
