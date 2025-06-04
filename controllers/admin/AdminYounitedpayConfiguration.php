@@ -423,6 +423,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         $this->context->smarty->assign([
             'key' => Tools::getValue('younitedpay_maturities', 0),
+            'configuration' => [
+                'show_ranges' => $this->showRangeOffers,
+            ],
             'maturitylist' => $this->maturitylist,
             'maturity' => [
                 'id_younitedpay_configuration' => 0,
