@@ -87,7 +87,7 @@ function ypUpdatePaymentURL(maturity)
 {
     if (typeof younitedpay.url_payment !== 'undefined') {
         var link = younitedpay.url_payment + '&maturity=' + maturity;
-        $('.js-payment-option-form #payment-form').each((index, form) => {
+        $('form').each((index, form) => {
             var action = $(form).attr('action');
             if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
                 $(form).attr('action', link);
