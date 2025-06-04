@@ -128,6 +128,7 @@ class OrderService
             return true;
         }
 
+        $this->paymentrepository->cancelContract($younitedContract->id_order);
         $body = (new CancelPayment())
                 ->setId($younitedContract->payment_id);
 
@@ -156,6 +157,7 @@ class OrderService
         }
 
         $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);
+        $this->paymentrepository->withdrawnContract($younitedContract->id_order);
 
         $body = (new RefundPayment())
                 ->setPaymentId($younitedContract->payment_id)

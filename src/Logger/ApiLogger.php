@@ -114,7 +114,7 @@ class ApiLogger
         }
 
         if (substr($type, 0, 8) === 'Response') {
-            if ($type === 'ResponseBestPriceRequest' && \Tools::getvalue('younitedfulllogs') === false) {
+            if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
                 $response = $data->getModel();
                 $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
             } else {
