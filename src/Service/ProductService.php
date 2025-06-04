@@ -265,7 +265,7 @@ class ProductService
     private function sortOffers(&$validOffers)
     {
         usort($validOffers, function ($a, $b) {
-            return $a['maturity'] > $b['maturity'];
+            return $a['maturity'] > $b['maturity'] ? -1 : 1;
         });
     }
 
