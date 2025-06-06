@@ -34,7 +34,8 @@
                                 <p>{$no_keys_text|escape:'htmlall':'UTF-8'}</p>
                             {elseif $configuration.no_shop_code === true}
                                 <p>{$no_shop_text|escape:'htmlall':'UTF-8'}</p>
-                            {else}
+                            {/if}
+                            {if $connected === false && $configuration.no_config === false}
                                 <p>{$bad_config_text|escape:'htmlall':'UTF-8'}</p>
                             {/if}
                         </div>

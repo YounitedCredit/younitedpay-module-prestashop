@@ -237,10 +237,9 @@ class PaymentService
             return $client->sendRequest($body, $request);
         }
 
-        $shopCode = Configuration::get(Younitedpay::SHOP_CODE,null, null, $this->context->shop->id);
         $webhookUrl = $this->getLink('notification', ['id_cart' => $this->context->cart->id]);
         $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
-        $request = $this->convertOldRequest($request->setModel($body), $shopCode, $webhookUrl, $redirectUrl);
+        $request = $this->convertOldRequest($request->setModel($body), $client->shopCode, $webhookUrl, $redirectUrl);
 
         return $client->sendRequest($body, $request);
     }

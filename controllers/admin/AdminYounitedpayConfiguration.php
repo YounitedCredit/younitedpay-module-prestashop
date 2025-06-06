@@ -156,7 +156,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         }
         Context::getContext()->cookie->__unset('younitedpaysave');
 
-        /** @var ConfigService $configService */
+        /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
         $this->content .= $this->renderConfiguration();
@@ -264,8 +264,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'AdminYounitedpayConfiguration'
             );
 
+            $configurationVariables = $this->getConfigurationVariables();
+            if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
+                $this->context->controller->errors[] = $badConfig;
+            }
+
             $tplVars = [
-                'configuration' => $this->getConfigurationVariables(),
+                'configuration' => $configurationVariables,
                 'connected' => $specsVariables['connected'],
                 'config_check' => $specsVariables['specs'],
                 'webhook_url_text' => $urlWebhook,
@@ -275,7 +280,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'no_shop_text' => $nokeysTextShopCode,
                 'bad_config_text' => $badConfig,
             ];
-            
+
             if ($tplVars['configuration']['use_new_api'] === false) {
                 $this->errors[] = 'Warning ! Using API v1 for creating contracts !';
             }
@@ -379,7 +384,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             return;
         } elseif (Tools::isSubmit('testWebHookURL')) {
-            /** @var ConfigService $configService */
+            /* @var ConfigService $configService */
             $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
             $this->ajaxOutput($this->configService->testWebhook());
 
@@ -474,11 +479,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $webHookOrders = Tools::getValue('webhook_orders');
         Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::SHOP_CODE, $shopCode, false, null, $idShop);
+        if ($shopCode !== false) {
+            Configuration::updateValue(Younitedpay::SHOP_CODE, $shopCode, false, null, $idShop);
+        }
+        if ($shopCodeProd !== false) {
+            Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION, $shopCodeProd, false, null, $idShop);
+        }
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION, $clientIDProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION, $clientSecretProd, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION, $shopCodeProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION, $webHookSecretProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);

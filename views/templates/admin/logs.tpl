@@ -39,9 +39,25 @@
     <div class="panel-body">
     <form action="{$ajax_remove_old_logs|escape:'htmlall':'UTF-8'}" id="formRemoveLogs" method="POST">
       <input type="hidden" name="submitDeleteOldLogs" />
-      <a href="#formRemoveLogs" type="submit" class="btn btn-default" onclick="$('#formRemoveLogs').submit();return;">
-        <i class="icon-trash"></i></i>{l s='Remove old log files' mod='younitedpay'}
-      </a>
+      <div class="form-group mt-2 row">
+          <label class="control-label col-md-1">
+            {l s='Remove logs files older that' mod='younitedpay'}
+          </label>
+          <div class="col-lg-1 align-item-center input-group">
+              <input type="text" class="form-control" name="remove_from_days" value="60" style="height:54px;padding:8px;" />
+              <div class="input-group-addon" style="border-left:none;height:54px;padding:6px;">
+                {l s='days' mod='younitedpay'}
+                <a href="#formRemoveLogs" type="submit" class="btn btn-secondary" onclick="$('#formRemoveLogs').submit();return;">
+                  <i class="icon-trash"></i></i>
+                </a>
+              </div>
+          </div>
+          <div class="col-lg-12">
+            <p class="help-block">
+              {l s='Remove files before the number of days filled here. Fill 0 to remove all logs from files.'}
+            </p>
+          </div>
+      </div>
     </div>
 </div>
 

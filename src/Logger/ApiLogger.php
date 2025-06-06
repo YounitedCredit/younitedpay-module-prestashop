@@ -77,14 +77,6 @@ class ApiLogger
             mkdir($logDir);
             copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
             copy(_PS_MODULE_DIR_ . $this->module->name . '/logs/.htaccess', $logDir . '/.htaccess');
-
-            try {
-                $this->deleteLogFilesOld();
-            } catch (\Exception $ex) {
-                $this->stream = fopen($logDir . '/' . $this->logname, 'a+');
-                $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
-                $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
-            }
         }
 
         $logFile = $logDir . '/' . $this->logname;
@@ -92,6 +84,16 @@ class ApiLogger
             $fileSize = filesize($logFile);
             if ($fileSize > self::MAX_LOG_FILE_SIZE) {
                 unlink($logFile);
+            }
+        } else {
+            try {
+                $this->deleteLogFilesOld();
+            } catch (\Exception $ex) {
+                if (is_dir($logDir)) {
+                    $this->stream = fopen($logDir . '/' . $this->logname, 'a+');
+                    $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
+                    $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
+                }
             }
         }
 
@@ -147,15 +149,17 @@ class ApiLogger
     }
 
     /**
-     * Delete log files older than three month
+     * Delete log files older than days specified (default = 60 days)
+     *
+     * @param int $deleteFromDays Number of days to delete - 0 = all days
      */
-    public function deleteLogFilesOld($deleteFromDays = 60)
+    public function deleteLogFilesOld(int $deleteFromDays = 60)
     {
         $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
         $previousLogDirs = scandir($logDir);
         $origin = new \DateTimeImmutable('now');
         foreach ($previousLogDirs as $oneLogFolder) {
-            if (in_array($oneLogFolder, ['.', '..', date('Ym')]) === true || is_dir($logDir . $oneLogFolder) === false) {
+            if (in_array($oneLogFolder, ['.', '..']) === true || is_dir($logDir . $oneLogFolder) === false) {
                 continue;
             }
             $filesWereDeleted = false;
@@ -176,7 +180,7 @@ class ApiLogger
                 }
                 $target = new \DateTimeImmutable($dateFile);
                 $interval = $origin->diff($target);
-                if ((int) $interval->format('%a') > $deleteFromDays) {
+                if ((int) $interval->format('%a') >= $deleteFromDays) {
                     $filesWereDeleted = true;
                     @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
                 }
@@ -191,6 +195,22 @@ class ApiLogger
                     }
                     @rmdir($logDir . $oneLogFolder);
                 }
+            }
+        }
+        foreach ($previousLogDirs as $oneLogFolder) {
+            if (in_array($oneLogFolder, ['.', '..', date('Ym')]) === true || is_dir($logDir . $oneLogFolder) === false) {
+                continue;
+            }
+            $filesWereDeleted = false;
+            $logFiles = scandir($logDir . $oneLogFolder);
+            if (count($logFiles) <= 3) {
+                foreach ($logFiles as $oneFileLog) {
+                    if (in_array($oneFileLog, ['.', '..']) === true) {
+                        continue;
+                    }
+                    @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
+                }
+                @rmdir($logDir . $oneLogFolder);
             }
         }
     }
