@@ -59,15 +59,15 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
     {
         parent::initContent();
 
+        if (Tools::isSubmit('submitDeleteOldLogs')) {
+            ApiLogger::getInstance()->deleteLogFilesOld((int) Tools::getValue('remove_from_days'));
+        }
+
         $idShop = \Context::getContext()->shop->id;
         $isLoggerFileActive = Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE, null, null, $idShop);
 
         if ($isLoggerFileActive !== false) {
             $this->showLogFiles();
-        }
-
-        if (Tools::isSubmit('submitDeleteOldLogs')) {
-            ApiLogger::getInstance()->deleteLogFilesOld();
         }
     }
 
