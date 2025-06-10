@@ -225,17 +225,13 @@ class ProductService
     protected function getValidOffers($offers, $maturities)
     {
         $validOffers = [];
-        $marutitiesIn = [];
+        $maturitiesIn = [];
         foreach ($offers as $offer) {
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
-            if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $marutitiesIn) === false) {
+            if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
                 $marutitiesIn[] = $maturityIn;
-                if (empty($validOffers) || $validOffers[0]['maturity'] < $offer->getMaturityInMonths()) {
-                    $validOffers[] = $this->returnOffer($offer);
-                } else {
-                    array_unshift($validOffers, $this->returnOffer($offer));
-                }
+                $validOffers[] = $this->returnOffer($offer);
             }
         }
         $this->sortOffers($validOffers);

@@ -36,7 +36,6 @@ use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
 use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
-use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
 use YounitedPaySDK\Model\NewAPI\CustomExperience;
@@ -44,7 +43,6 @@ use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
 use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
-use YounitedPaySDK\Request\LoadContractRequest;
 use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
 
 class PaymentService

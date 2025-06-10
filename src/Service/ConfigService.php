@@ -356,7 +356,7 @@ class ConfigService
     private function sortOffers($validOffers)
     {
         usort($validOffers, function ($a, $b) {
-            return $a > $b;
+            return $a > $b ? 1 : -1;
         });
 
         return $validOffers;
