@@ -26,6 +26,7 @@ if (!defined('_PS_VERSION_')) {
 use Cart;
 use Configuration;
 use Exception;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 use Younitedpay;
 use YounitedpayAddon\Entity\YounitedPayContract;
@@ -166,7 +167,8 @@ class HookAdminOrder extends AbstractHook
                 null
             );
             $order->id_carrier = $cart->id_carrier;
-            $computingPrecision = \Context::getContext()->getComputingPrecision();
+            $priceComputingPrecision = new ComputingPrecision();
+            $computingPrecision = $priceComputingPrecision->getPrecision(\Context::getContext()->currency->precision);
 
             $order->total_shipping_tax_excl = Tools::ps_round(
                 (float) $cart->getPackageShippingCost($cart->id_carrier, false),
