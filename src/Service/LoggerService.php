@@ -60,6 +60,10 @@ class LoggerService
     public function addLog($msg, $name = null, $level = 'info', $class = null, $objectModel = null, $objectId = null)
     {
         $class = null === $class ? $this : $class;
+        if ($objectModel === null && isset(\Context::getContext()->cart->id)) {
+            $objectModel = 'Cart';
+            $objectId = \Context::getContext()->cart->id;
+        }
         $this->logger->openLogger();
         $this->logger->addLog($msg, $objectModel, $objectId, $name, $level);
         $this->logger->closeLogger();

@@ -39,20 +39,23 @@
     <div class="panel-body">
     <form action="{$ajax_remove_old_logs|escape:'htmlall':'UTF-8'}" id="formRemoveLogs" method="POST">
       <input type="hidden" name="submitDeleteOldLogs" />
-      <div class="form-group mt-2 row">
-          <label class="control-label col-md-1">
+      <div class="form-group mt-3 row yp_row_remove">
+          <label class="control-label col-lg-2">
             {l s='Remove logs files older that' mod='younitedpay'}
           </label>
-          <div class="col-lg-1 align-item-center input-group">
-              <input type="text" class="form-control" name="remove_from_days" value="60" style="height:54px;padding:8px;" />
-              <div class="input-group-addon" style="border-left:none;height:54px;padding:6px;">
+          <div class="col-lg-2 input-group">
+              <input type="text" class="form-control" name="remove_from_days" value="60" />
+              <div class="input-group-addon" id="yp_addon_days">
                 {l s='days' mod='younitedpay'}
-                <a href="#formRemoveLogs" type="submit" class="btn btn-secondary" onclick="$('#formRemoveLogs').submit();return;">
-                  <i class="icon-trash"></i></i>
-                </a>
               </div>
           </div>
-          <div class="col-lg-12">
+          <a href="#formRemoveLogs" type="submit" class="btn btn-default">
+            <i class="icon-trash"></i></i>
+          </a>
+      </div>
+      <div class="form-group yp_row_remove">
+          <label class="control-label col-lg-2"></label>
+          <div class="col-lg-12 input-group">
             <p class="help-block">
               {l s='Remove files before the number of days filled here. Fill 0 to remove all logs from files.'}
             </p>
@@ -79,6 +82,12 @@
         this.parentElement.querySelector(".nestedyp").classList.toggle("activeyp");
         this.classList.toggle("caretyp-down");
     });
+
+    $('#formRemoveLogs a').click(function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $('#formRemoveLogs').submit();
+    })
 </script>
 
 <style>
@@ -119,5 +128,24 @@ ul#yp-fileslist, #yp-fileslist ul {
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
 .activeyp {
   display: block;
+}
+
+.yp_row_remove {
+  display: flex;
+  align-items: center;
+}
+
+.yp_row_remove a {
+  margin-left:5px;
+}
+
+.yp_row_remove [name="remove_from_days"} {
+  padding:8px;
+  width:65px;
+}
+
+#yp_addon_days {
+  border-left:none;
+  padding:6px;
 }
 </style>

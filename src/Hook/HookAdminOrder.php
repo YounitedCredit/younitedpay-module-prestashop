@@ -23,7 +23,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Cart;
 use Configuration;
+use Exception;
+use Tools;
 use Younitedpay;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\OrderService;
@@ -116,13 +119,100 @@ class HookAdminOrder extends AbstractHook
 
     public function actionValidateOrder($params)
     {
-        /** @var \Order $order */
-        $order = $params['order'];
+        if (isset($order->module) === false || $order->module !== 'younitedpay') {
+            return true;
+        }
 
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
         $orderservice->confirmOrder($order);
+
+        $countOrders = \Order::getByReference($order->reference)->count();
+
+        /** @var Cart $cart */
+        $cart = $params['cart'];
+
+        /** @var LoggerService $loggerService */
+        $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
+        if ($order->id_carrier !== $cart->id_carrier && $countOrders > 1) {
+            $loggerService->addLog(
+                sprintf(
+                    'Cannot update - more than one order (split packages) - Do not Updating wrong carrier %s (order) to %s (cart)',
+                    $order->id_carrier,
+                    $cart->id_carrier
+                ),
+                'actionValidateOrder',
+                'error',
+                null
+            );
+
+            return true;
+        }
+        if ($order->id_carrier !== $cart->id_carrier) {
+            $loggerService->addLog(
+                sprintf(
+                    'Updating wrong carrier %s (order) to %s (cart)',
+                    $order->id_carrier,
+                    $cart->id_carrier
+                ),
+                'Updating carrier',
+                'error',
+                null
+            );
+            $order->id_carrier = $cart->id_carrier;
+            $computingPrecision = \Context::getContext()->getComputingPrecision();
+
+            $order->total_shipping_tax_excl = Tools::ps_round(
+                (float) $cart->getPackageShippingCost($cart->id_carrier, false),
+                $computingPrecision
+            );
+            $order->total_shipping_tax_incl = Tools::ps_round(
+                (float) $cart->getPackageShippingCost($cart->id_carrier, true),
+                $computingPrecision
+            );
+            $order->total_shipping = $order->total_shipping_tax_incl;
+
+            $order->total_wrapping_tax_excl = Tools::ps_round(
+                (float) abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, null, $cart->id_carrier)),
+                $computingPrecision
+            );
+            $order->total_wrapping_tax_incl = Tools::ps_round(
+                (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, null, $cart->id_carrier)),
+                $computingPrecision
+            );
+            $order->total_wrapping = $order->total_wrapping_tax_incl;
+
+            $order->total_paid_tax_excl = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, Cart::BOTH, null, $cart->id_carrier),
+                $computingPrecision
+            );
+            $order->total_paid_tax_incl = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, Cart::BOTH, null, $cart->id_carrier),
+                $computingPrecision
+            );
+
+            $idOrderCarrier = (int) $order->getIdOrderCarrier();
+            if ($idOrderCarrier > 0) {
+                $orderCarrier = new \OrderCarrier($idOrderCarrier);
+                $orderCarrier->id_carrier = $cart->id_carrier;
+                $orderCarrier->shipping_cost_tax_excl = (float) $order->total_shipping_tax_excl;
+                $orderCarrier->shipping_cost_tax_incl = (float) $order->total_shipping_tax_incl;
+                try {
+                    $orderCarrier->save();
+                } catch (Exception $ex) {
+                    $loggerService->addLog('Error while updating orderCarrier', 'actionValidateOrder');
+                    $loggerService->addLog($ex->getMessage(), 'actionValidateOrder');
+                }
+            }
+            try {
+                $order->save();
+            } catch (Exception $ex) {
+                $loggerService->addLog('Error while updating order', 'actionValidateOrder');
+                $loggerService->addLog($ex->getMessage(), 'actionValidateOrder');
+            }
+        }
     }
 
     private function renderTemplate($params)
