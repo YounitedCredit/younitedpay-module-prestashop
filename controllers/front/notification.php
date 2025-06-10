@@ -92,6 +92,10 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
                 $this->processWebhookEvent($idCart, 'refund');
                 break;
             case self::EVENT_TYPE_PAYMENT_CREATED:
+                $_POST['id_cart'] = (int) $idCart;
+                $_POST['granted'] = 1;
+                $controller = new YounitedpayValidationModuleFrontController();
+                $this->endResponse($controller->initContent());
             case self::EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL:
                 $this->endResponse('Event type not treat on webhook', false);
                 break;

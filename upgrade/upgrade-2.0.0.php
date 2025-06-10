@@ -23,6 +23,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use YounitedpayClasslib\Install\ModuleInstaller;
 
 /**
@@ -38,12 +39,16 @@ function upgrade_module_2_0_0($module)
         $installer = new ModuleInstaller($module);
         $result = $installer->installObjectModel(YounitedPayContract::class);
 
-        $result &= $module->unregisterHook('actionValidateOrder');
-
         $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']) . '` ALTER `api_version` SET DEFAULT "2024-01-01"';
         $result &= Db::getInstance()->execute($query);
 
         Configuration::updateGlobalValue(Younitedpay::USE_NEW_API, 1);
+        foreach (\Shop::getShops(true, null, true) as $key => $idShop) {
+            $dayConf = (int) \Configuration::get(ProcessLoggerExtension::ERASING_DAYSMAX, null, null, $idShop, 5);
+            if ($dayConf === 5) {
+                \Configuration::updateValue(ProcessLoggerExtension::ERASING_DAYSMAX, 120, false, null, $idShop);
+            }
+        }
     } catch (Exception $e) {
         PrestaShopLogger::addLog($e->getMessage(), 3);
         $result = false;
