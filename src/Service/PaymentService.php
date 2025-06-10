@@ -216,7 +216,6 @@ class PaymentService
         }
 
         if (empty($customerAdress->phone) === true && empty($customerAdress->phone_mobile) === true) {
-
             return true;
         }
 
@@ -233,7 +232,7 @@ class PaymentService
                 return true;
             }
         }
-        
+
         return true;
     }
 
