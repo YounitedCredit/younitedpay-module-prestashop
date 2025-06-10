@@ -168,8 +168,11 @@ class HookAdminOrder extends AbstractHook
             $order->id_carrier = $cart->id_carrier;
             $context = \Context::getContext();
             $computingPrecision = _PS_PRICE_COMPUTE_PRECISION_;
-            if (\method_exists($context, 'getComputingPrecision') === true) {
-                $computingPrecision = \Context::getContext()->getComputingPrecision();
+            try {
+                if (method_exists($context, 'getComputingPrecision') === true) {
+                    $computingPrecision = $context->getComputingPrecision();
+                }
+            } catch (Exception $ex) {
             }
 
             $order->total_shipping_tax_excl = Tools::ps_round(
