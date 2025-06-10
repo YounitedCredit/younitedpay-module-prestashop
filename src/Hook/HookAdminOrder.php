@@ -24,14 +24,15 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use Cart;
-use Configuration;
-use Exception;
 use Tools;
+use Exception;
 use Younitedpay;
-use YounitedpayAddon\Entity\YounitedPayContract;
+use Configuration;
 use YounitedpayAddon\Service\OrderService;
-use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
+use YounitedpayAddon\Service\LoggerService;
+use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayAddon\Entity\YounitedPayContract;
 
 class HookAdminOrder extends AbstractHook
 {
@@ -119,6 +120,9 @@ class HookAdminOrder extends AbstractHook
 
     public function actionValidateOrder($params)
     {
+        /** @var \Order $order */
+        $order = $params['order'];
+        
         if (isset($order->module) === false || $order->module !== 'younitedpay') {
             return true;
         }
