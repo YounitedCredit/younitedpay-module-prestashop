@@ -55,8 +55,12 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         $isProduction = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
         $suffix = $isProduction === true ? '_PRODUCTION' : '';
         $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
+        $webhook = new Webhook($webHookSecret);
+        if ($webhook->getErrorResponse() !== false) {
+            $this->endResponse($webhook->getErrorResponse());
+        }
 
-        $webhookNotification = (new Webhook($webHookSecret))->getEventNotification();
+        $webhookNotification = $webhook->getEventNotification();
 
         if (empty($webhookNotification)) {
             $this->endResponse('No parameter caught on webhook', false);
@@ -100,6 +104,8 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
     {
         if ($error) {
             $this->loggerService->addLog($message, '[younitedpay notification]', 'info', $this);
+        } else {
+            $this->loggerService->addLogAPI($message, '[younitedpay notification]', $this);
         }
 
         if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
