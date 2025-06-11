@@ -34,7 +34,7 @@ jobs:
           find ./ -type f -exec sed -i "s/@version@/$MODULE_VERSION/g" {} +
           
           composer global require prestashop/autoindex
-          cat 202/index.php > ~/.composer/vendor/prestashop/autoindex/assets/index.php
+          cat index.php > ~/.composer/vendor/prestashop/autoindex/assets/index.php
           ~/.composer/vendor/bin/autoindex --exclude=202
           rm -f composer.lock
           [ -d "./vendor" ] && find ./vendor -mindepth 1 ! -regex '^./vendor/totpsclasslib\(/.*\)?' -delete
