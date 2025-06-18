@@ -24,7 +24,7 @@
                     <div class="panel panel-default mb-3">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading0" data-target="#collapse0">
                             <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
+                                <a role="button" class="collapsed" title="" data-parent="#accordion"
                                     href="#collapse0" aria-expanded="true" aria-controls="collapse0">
                                     {l s='What is YounitedPay ?' mod='younitedpay'}
                                 </a>
@@ -40,7 +40,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading1" data-target="#collapse1">
                             <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
+                                <a role="button" class="collapsed" title="" data-parent="#accordion"
                                     href="#collapse1" aria-expanded="true" aria-controls="collapse1">
                                     {l s='How does YounitedPay ?' mod='younitedpay'}                                    
                                 </a>
@@ -55,7 +55,7 @@
                     <div class="panel panel-default mb-3">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading3" data-target="#collapse3">
                             <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
+                                <a role="button" class="collapsed" title="" data-parent="#accordion"
                                     href="#collapse3" aria-expanded="true">
                                     {l s='How do I display YounitedPay on my product page ?' mod='younitedpay'}
                                 </a>
@@ -70,7 +70,7 @@
                     <div class="panel panel-default mb-3">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading4" data-target="#collapse4">
                             <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
+                                <a role="button" class="collapsed" title="" data-parent="#accordion"
                                     href="#collapse4" aria-expanded="true">
                                     {l s='How are refunds processed ?' mod='younitedpay'}
                                 </a>
@@ -87,7 +87,7 @@
                     <div class="panel panel-default mb-3">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading5" data-target="#collapse5">
                             <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
+                                <a role="button" class="collapsed" title="" data-parent="#accordion"
                                     href="#collapse5" aria-expanded="true">
                                     {l s='How can I test the module if I don\'t have a staging environment for my website ?' mod='younitedpay'}
                                 </a>
@@ -102,7 +102,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading2" data-target="#collapse2">
                             <h4 class="panel-title">
-                                <a role="button" title="" data-parent="#accordion"
+                                <a role="button" class="collapsed" title="" data-parent="#accordion"
                                     href="#collapse2" aria-expanded="true">
                                     {l s='What information should I add to my General Terms and Conditins (GTC) ?' mod='younitedpay'}
                                 </a>
