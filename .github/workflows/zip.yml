@@ -4,8 +4,6 @@ on: [ push ]
 env:
   PROJECT_NAME: younitedpay
   PROJECT_VERSION: ${{ github.sha }}
-  YP_DATE: $(date + %Y-%m-%d_%H-%M)
-  YP_VERSION: 2.0.0
 
 jobs:
   zip:
@@ -33,6 +31,7 @@ jobs:
           sudo apt-get update && sudo apt-get install xmlstarlet -y
           MODULE_VERSION=$(xmlstarlet sel -t -v '/project/property[@name="TARGETVERSION"]/@value' 202/build.xml)
           echo "YP_VERSION=$MODULE_VERSION" >> $GITHUB_ENV
+          echo "YP_DATE=$(date + '%Y-%m-%d_%H:%M')" >> $GITHUB_ENV
 
           find ./ -type f -exec sed -i "s/@version@/$MODULE_VERSION/g" {} +
           
