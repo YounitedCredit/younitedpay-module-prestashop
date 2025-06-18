@@ -63,7 +63,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         $webhookNotification = $webhook->getEventNotification();
 
         if (empty($webhookNotification)) {
-            $this->endResponse('No parameter caught on webhook', false);
+            $this->endResponse('400 - No parameter caught on webhook', false);
         }
 
         $this->loggerService->addLogAPI(json_encode($webhookNotification->jsonSerialize()), 'Info', $this);
@@ -72,18 +72,22 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
         $cart = new Cart($idCart);
 
+        if (Tools::getValue('id_cart') === 'test_webhook') {
+            $this->endResponse('200 - Test complete ! Well done!');
+        }
+
         if (Validate::isLoadedObject($cart) === false
             || $this->module->active == 0
             || $cart->id_address_delivery == 0
             || $cart->id_address_invoice == 0
             || $cart->id_customer == 0) {
-            $this->endResponse('Error with the cart on webhook');
+            $this->endResponse('200 - Error with the cart on webhook');
         }
 
         switch ($webhookNotification->getType()) {
             case self::EVENT_TYPE_PAYMENT_UPDATED:
                 if ($webhookNotification->getData()->getStatus() !== self::PAYMENT_STATUS_CANCELLED) {
-                    $this->endResponse('Event type not treat on webhook', false);
+                    $this->endResponse('400 - Event type not treat on webhook', false);
                 }
 
                 $this->processWebhookEvent($idCart, 'cancel');
@@ -97,10 +101,10 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
                 $controller = new YounitedpayValidationModuleFrontController();
                 $this->endResponse($controller->initContent());
             case self::EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL:
-                $this->endResponse('Event type not treat on webhook', false);
+                $this->endResponse('400 - Event type not treat on webhook', false);
                 break;
             default:
-                $this->endResponse('Unknown event type caught on webhook', false);
+                $this->endResponse('400 - Unknown event type caught on webhook', false);
         }
     }
 
@@ -135,7 +139,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         $younitedContract = $paymentService->getContractByCart($idCart);
 
         if ((int) $younitedContract->id_order <= 0) {
-            $this->endResponse('Error on contract activation, no order found with this cart (ID ' . $idCart . ')');
+            $this->endResponse('200 - Error on contract activation, no order found with this cart (ID ' . $idCart . ')');
         }
 
         $order = new Order($younitedContract->id_order);
@@ -144,33 +148,33 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
             $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int)Configuration::get('PS_OS_CANCELED');
 
             if ((int)$newIdState === $order->current_state) {
-                $this->endResponse('Already cancelled (Order ' . $order->id . ' - ' . $order->reference . ')');
+                $this->endResponse('200 - Already cancelled (Order ' . $order->id . ' - ' . $order->reference . ')');
             }
 
             if ($orderService->setCancelOnYounitedContract($order->id_cart) !== true) {
-                $this->endResponse('Error on contract cancellation (Cart ID ' . $idCart . ')');
+                $this->endResponse('200 - Error on contract cancellation (Cart ID ' . $idCart . ')');
             }
 
             $this->setCurrentState((int) $newIdState, $order);
 
-            $this->endResponse('Cancellation contract confirmed Cart ID' . $order->id_cart);
+            $this->endResponse('200 - Cancellation contract confirmed Cart ID' . $order->id_cart);
         } elseif ($updateType === 'refund') {
             $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
 
             if ((int) $newIdState === $order->current_state) {
-                $this->endResponse('Already withdraw (Order ' . $order->id . ' - ' . $order->reference . ')');
+                $this->endResponse('200 - Already withdraw (Order ' . $order->id . ' - ' . $order->reference . ')');
             }
 
             if ($orderService->setWithdrawnOnYounitedContract($order->id_cart) !== true) {
-                $this->endResponse('Error on contract Withdrawn (Cart ID ' . $order->id_cart . ')');
+                $this->endResponse('200 - Error on contract Withdrawn (Cart ID ' . $order->id_cart . ')');
             }
 
             $this->setCurrentState((int) $newIdState, $order);
 
-            $this->endResponse('Withdrawn contract confirmed Cart ID' . $order->id_cart);
+            $this->endResponse('200 - Withdrawn contract confirmed Cart ID' . $order->id_cart);
         }
 
-        $this->endResponse('Event type not treat on webhook', false);
+        $this->endResponse('400 - Event type not treat on webhook', false);
     }
 
     /**

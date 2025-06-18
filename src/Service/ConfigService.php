@@ -343,9 +343,10 @@ class ConfigService
         $response = $client->sendRequest($model, new WebHooksIntegrationRequest());
         $responseWebHook = $response;
         if (isset($response['response']['responseStatusCode'])) {
+            $statutResponse = (int) substr($response['response']['responseBody'], 0, 3);
             $responseWebHook = [
-                'status' => $response['response']['responseStatusCode'],
-                'success' => true,
+                'status' => $statutResponse,
+                'success' => $statutResponse === 200 ? true : false,
                 'response' => $response['response']['responseBody'],
             ];
         }

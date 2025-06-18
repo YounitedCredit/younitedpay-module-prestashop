@@ -77,7 +77,7 @@ document.onreadystatechange = function() {
                 }
                 $('[data-test-webhook-result] i').css('color', color);
                 $('[data-test-webhook-result] i').text(success);
-                $('[data-test-webhook-result] i').attr('title', `Status: ${response.status} - Message: ${response.response.requestBody}`);
+                $('[data-test-webhook-result] i').attr('title', `Status: ${response.status} - Message: ${response.response}`);
                 $('[data-test-webhook-result]').show();
                 console.log(response);
                 console.log(response.success);
