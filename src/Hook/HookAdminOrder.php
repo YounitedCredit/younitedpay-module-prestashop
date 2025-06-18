@@ -226,6 +226,7 @@ class HookAdminOrder extends AbstractHook
                 (float) $cart->getOrderTotal(true, Cart::BOTH, null, $cart->id_carrier),
                 $computingPrecision
             );
+            $order->total_paid = $order->total_paid_tax_incl;
 
             $idOrderCarrier = (int) $order->getIdOrderCarrier();
             if ($idOrderCarrier > 0) {
