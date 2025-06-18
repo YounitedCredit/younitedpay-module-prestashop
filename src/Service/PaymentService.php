@@ -309,7 +309,7 @@ class PaymentService
      *
      * @return bool Result of validation
      */
-    public function validateOrder($cart, $customer = null, $total)
+    public function validateOrder($cart, $customer = null, $total = 0)
     {
         $context = \Context::getContext();
         $currency = $context->currency;
