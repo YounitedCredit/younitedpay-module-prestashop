@@ -31,7 +31,6 @@ jobs:
           sudo apt-get update && sudo apt-get install xmlstarlet -y
           MODULE_VERSION=$(xmlstarlet sel -t -v '/project/property[@name="TARGETVERSION"]/@value' 202/build.xml)
           echo "YP_VERSION=$MODULE_VERSION" >> $GITHUB_ENV
-          echo "YP_DATE=$(date + '%Y-%m-%d_%H:%M')" >> $GITHUB_ENV
 
           find ./ -type f -exec sed -i "s/@version@/$MODULE_VERSION/g" {} +
           
@@ -88,6 +87,6 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ env.YP_VERSION }}-${{ github.run_id }}-${{ env.YP_DATE }}
+          name: ${{ env.PROJECT_NAME }}-${{ env.YP_VERSION }}-${{ github.run_id }}-${{ github.event.repository.updated_at}}
           path: |
             .
