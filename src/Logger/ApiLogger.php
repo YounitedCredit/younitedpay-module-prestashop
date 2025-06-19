@@ -119,7 +119,7 @@ class ApiLogger
         if (substr($type, 0, 8) === 'Response') {
             $response = $data->getModel();
             if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
-                if ($response instanceof Error || \is_countable($response) === false) {
+                if ($response instanceof Error || is_array($response) === false) {
                     $this->logger->addInfo($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
                 } else {
                     $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
