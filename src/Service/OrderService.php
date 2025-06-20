@@ -310,7 +310,15 @@ class OrderService
                 );
             }
         }
+        \Context::getContext()->smarty->assign($this->getContractInformations($younitedContract));
 
+        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderContentOrder.tpl';
+
+        return \Context::getContext()->smarty->fetch($template);
+    }
+
+    public function getContractInformations($younitedContract)
+    {
         $dateState = $younitedContract->date_upd;
         $state = $this->l('Awaiting');
         $stateWithdrawn = false;
@@ -342,7 +350,7 @@ class OrderService
             }
         }
 
-        \Context::getContext()->smarty->assign([
+        return [
             'iso_lang' => \Context::getContext()->language->iso_code,
             'payment' => [
                 'id' => $younitedContract->payment_id,
@@ -356,11 +364,7 @@ class OrderService
             ],
             'shop_url' => __PS_BASE_URI__,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
-        ]);
-
-        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderContentOrder.tpl';
-
-        return \Context::getContext()->smarty->fetch($template);
+        ];
     }
 
     /**

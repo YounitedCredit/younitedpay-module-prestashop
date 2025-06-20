@@ -107,6 +107,15 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         ],
         [
             'name' => [
+                'en' => 'Contracts',
+                'fr' => 'Contrats',
+            ],
+            'class_name' => 'AdminYounitedpayContracts',
+            'parent_class_name' => 'AdminYounitedParent',
+            'visible' => true,
+        ],
+        [
+            'name' => [
                 'en' => 'FAQ',
                 'fr' => 'FAQ',
                 'es' => 'Sección de preguntas',
