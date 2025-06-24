@@ -41,6 +41,8 @@ class ApiLogger
 
     private $isUnitTest;
 
+    private $fileLoggerActivated = false;
+
     /**
      * @var Logger
      */
@@ -54,6 +56,7 @@ class ApiLogger
         $hashOfDay = md5(_COOKIE_KEY_ . $date);
         $this->logname = $this->module->name . '-' . $date . '-' . $hashOfDay . '.log';
         if ($isUnitTest === false) {
+            $this->fileLoggerActivated = (bool) \Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE);
             $this->build();
         }
     }
@@ -82,6 +85,20 @@ class ApiLogger
             if ($fileSize > self::MAX_LOG_FILE_SIZE) {
                 unlink($logFile);
             }
+        } else {
+            try {
+                $this->deleteLogFilesOld();
+            } catch (\Exception $ex) {
+                if (is_dir($logDir)) {
+                    $this->stream = fopen($logDir . '/' . $this->logname, 'a+');
+                    $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
+                    $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
+                }
+            }
+        }
+
+        if ($this->fileLoggerActivated === false) {
+            return true;
         }
         $this->stream = fopen($logFile, 'a+');
         $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
@@ -89,7 +106,7 @@ class ApiLogger
 
     public function log($object, $data, $type = 'Error', $isObject = false)
     {
-        if (\Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === false || $this->isUnitTest === true) {
+        if ($this->fileLoggerActivated === false || $this->isUnitTest === true) {
             return true;
         }
 
@@ -126,8 +143,75 @@ class ApiLogger
 
     public function __destruct()
     {
-        if ($this->isUnitTest === false) {
+        if ($this->isUnitTest === false && $this->fileLoggerActivated !== false) {
             fclose($this->stream);
+        }
+    }
+
+    /**
+     * Delete log files older than days specified (default = 60 days)
+     *
+     * @param int $deleteFromDays Number of days to delete - 0 = all days
+     */
+    public function deleteLogFilesOld(int $deleteFromDays = 60)
+    {
+        $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
+        $previousLogDirs = scandir($logDir);
+        $origin = new \DateTimeImmutable('now');
+        foreach ($previousLogDirs as $oneLogFolder) {
+            if (in_array($oneLogFolder, ['.', '..']) === true || is_dir($logDir . $oneLogFolder) === false) {
+                continue;
+            }
+            $filesWereDeleted = false;
+            $logFiles = scandir($logDir . $oneLogFolder);
+            foreach ($logFiles as $oneFileLog) {
+                if (in_array($oneFileLog, ['.', '..', '.htaccess', 'index.php']) === true) {
+                    continue;
+                }
+                $fileNameExploded = explode('-', str_replace('.log', '', $oneFileLog));
+                $dateFile = \sprintf(
+                    '%s-%s-%s',
+                    substr($fileNameExploded[1], 0, 4),
+                    substr($fileNameExploded[1], 4, 2),
+                    substr($fileNameExploded[1], 6, 2)
+                );
+                if (count($fileNameExploded) !== 3 || \mb_strlen($fileNameExploded[1]) !== 8) {
+                    continue;
+                }
+                $target = new \DateTimeImmutable($dateFile);
+                $interval = $origin->diff($target);
+                if ((int) $interval->format('%a') >= $deleteFromDays) {
+                    $filesWereDeleted = true;
+                    @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
+                }
+            }
+            if ($filesWereDeleted === false) {
+                if (count($logFiles) <= 3) {
+                    foreach ($logFiles as $oneFileLog) {
+                        if (in_array($oneFileLog, ['.', '..']) === true) {
+                            continue;
+                        }
+                        @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
+                    }
+                    @rmdir($logDir . $oneLogFolder);
+                }
+            }
+        }
+        foreach ($previousLogDirs as $oneLogFolder) {
+            if (in_array($oneLogFolder, ['.', '..', date('Ym')]) === true || is_dir($logDir . $oneLogFolder) === false) {
+                continue;
+            }
+            $filesWereDeleted = false;
+            $logFiles = scandir($logDir . $oneLogFolder);
+            if (count($logFiles) <= 3) {
+                foreach ($logFiles as $oneFileLog) {
+                    if (in_array($oneFileLog, ['.', '..']) === true) {
+                        continue;
+                    }
+                    @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
+                }
+                @rmdir($logDir . $oneLogFolder);
+            }
         }
     }
 }

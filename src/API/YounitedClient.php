@@ -160,7 +160,6 @@ class YounitedClient
 
         if ($cacheExists === true) {
             $cacheInformations = $cachestorage->get('token_api');
-            $this->apiLogger->log($this, 'token exists in cache: ' . json_encode($cacheInformations), 'Info');
             $token = $cacheInformations['content']['token'];
             /** @var \DateTimeInterface $expireAt */
             $expireAt = $cacheInformations['content']['expiresat'];

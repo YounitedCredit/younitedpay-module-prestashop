@@ -92,6 +92,7 @@ class HookPayment extends AbstractHook
         $templateCredit = $productservice->getBestPrice($this->cartPrice);
 
         $totalOffers = $templateCredit['offers'];
+        $selectedOffer = isset($templateCredit['selectedOffer']) ? (int) $templateCredit['selectedOffer'] : 0;
 
         if (empty($totalOffers) === true) {
             $loggerservice->addLogAPI('No offers in checkout for ' . $this->cartPrice, 'Info', $this);
@@ -102,7 +103,7 @@ class HookPayment extends AbstractHook
         $paymentOptions = [];
         Context::getContext()->smarty->assign('iso_code', Context::getContext()->language->iso_code);
         try {
-            $paymentOptions = $this->getYounitedPaymentOption($errorMessage, $totalOffers);
+            $paymentOptions = $this->getYounitedPaymentOption($errorMessage, $totalOffers, $selectedOffer);
         } catch (\Exception $ex) {
             $msg = [
                 'code' => $ex->getCode(),
@@ -114,7 +115,7 @@ class HookPayment extends AbstractHook
         return $paymentOptions;
     }
 
-    protected function getYounitedPaymentOption($errorMessage, $totalOffers)
+    protected function getYounitedPaymentOption($errorMessage, $totalOffers, int $selectedOffer)
     {
         $logoPayment = Media::getMediaPath(
             _PS_MODULE_DIR_ . $this->module->name . '/views/img/logo-younitedpay-payment.png'
@@ -128,7 +129,7 @@ class HookPayment extends AbstractHook
             'payment',
             [
                 'amount' => $this->cartPrice,
-                'maturity' => $totalOffers[0]['maturity'],
+                'maturity' => $totalOffers[$selectedOffer]['maturity'],
             ],
             true
         );

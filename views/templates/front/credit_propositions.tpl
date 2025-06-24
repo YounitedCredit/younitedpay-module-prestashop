@@ -19,80 +19,79 @@
 <div class="younitedpay-widget-root">
    {if count($offers) > 0}
    <div class="younited_block yp-pb-0 yp-pt-2 yp-my-2{if isset($widget_borders) && (bool) $widget_borders === true} widget_border{/if}">
-         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap">
-            <img class="yp-mb-2 yp-logo lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" data-ll-status="loaded">
-            {foreach from=$offers item=offer key=key}
-               {assign var="background_block" value=''}
-               {if (int) $key === (int) $selected_offer}
-                  {assign var="background_block" value='yp-bg-black-btn'}
-               {/if}
-               <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-1 yp-mb-1 maturity_installment maturity_installment{$key|escape:'htmlall':'UTF-8'} {$background_block|escape:'htmlall':'UTF-8'}"
-                     data-key="{$key|escape:'htmlall':'UTF-8'}" 
-                     data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}" 
-                     data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
-                     data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
-                     data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
-                     data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
-                     data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
-                     data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
-                  <span class="yp-inline-block yp-h-10">
-                     <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
-                        blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
-                        <span class="yp-flex flexmiddle yp-p-2 yp-rounded-sm yp-transition-colors 
-                           yp-duration-500 yp-select-none">
-                        {$offer.maturity|escape:'htmlall':'UTF-8'}x
-                        </span>
-                     </span>
-                  </span>
-               </span> 
-            {/foreach}
-            {if (bool) $show_ranges === true && empty($range_offers) === false}
-               <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-1 yp-mb-1 maturity_installment maturity_installment9999"
-                     data-key="9999" 
-                     data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}" 
-                     data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
-                     data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
-                     data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
-                     data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
-                     data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
-                     data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
-                     title="{l s='Customise' mod='younitedpay'}">
-                  <span class="yp-inline-block yp-h-10">
-                     <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
-                        blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
-                        <span class="yp-flex flexmiddle yp-p-2 yp-rounded-sm yp-transition-colors 
-                           yp-duration-500 yp-select-none">{l s='...' mod='younitedpay'}</span>
+      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap">
+         <img class="yp-mb-2 yp-logo lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" data-ll-status="loaded">
+         {foreach from=$offers item=offer key=key}
+            {assign var="background_block" value=''}
+            {if (int) $key === (int) $selected_offer}
+               {assign var="background_block" value='yp-bg-black-btn'}
+            {/if}
+            <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-1 yp-mb-1 maturity_installment maturity_installment{$key|escape:'htmlall':'UTF-8'} {$background_block|escape:'htmlall':'UTF-8'}"
+                  data-key="{$key|escape:'htmlall':'UTF-8'}" 
+                  data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}" 
+                  data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
+                  data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
+                  data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
+                  data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
+                  data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
+                  data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
+               <span class="yp-inline-block yp-h-10">
+                  <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
+                     blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
+                     <span class="yp-flex flexmiddle yp-p-2 yp-rounded-sm yp-transition-colors 
+                        yp-duration-500 yp-select-none">
+                     {$offer.maturity|escape:'htmlall':'UTF-8'}x
                      </span>
                   </span>
                </span>
-            {/if}
-
-         {assign var=offer_max_line value=4}
-         {if $hook_younited == 'displayAfterProductThumbs'}
-            {assign var=offer_max_line value=3}
-         {/if}
-
-         {assign var=price_at_bottom value=false}
-         {if count($offers) >= $offer_max_line && $hook_younited != 'widget'}
-            {assign var=price_at_bottom value=true}
-         {/if}
-
-         {if $price_at_bottom == true}
-         </div>
-         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
-            <hr class="yp-border-prple yp-opacity-50">
-         {/if}            
-            <span class="yp-justify-start yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{else} yp-pl-3{/if}">
-               <span class="yp-h-7 yp-flex yp-items-center"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
-                  <span class="younitedpay_infoinstallment yp-install-amount">
-                     {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €
-                  </span>&nbsp;
-                  <span>/</span>&nbsp;
-                  <span>{l s='months' mod='younitedpay'}</span>
+            </span> 
+         {/foreach}
+         {if (bool) $show_ranges === true && empty($range_offers) === false}
+            <span class="yp-flex yp-flex-row yp-space-x-1 yp-mx-1 yp-mb-1 maturity_installment maturity_installment9999"
+                  data-key="9999" 
+                  data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}" 
+                  data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
+                  data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
+                  data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
+                  data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
+                  data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
+                  data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+                  title="{l s='Customise' mod='younitedpay'}">
+               <span class="yp-inline-block yp-h-10">
+                  <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
+                     blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
+                     <span class="yp-flex flexmiddle yp-p-2 yp-rounded-sm yp-transition-colors 
+                        yp-duration-500 yp-select-none">{l s='...' mod='younitedpay'}</span>
+                  </span>
+               </span>
             </span>
-         </div>
+         {/if}
+
+      {assign var=offer_max_line value=4}
+      {if $hook_younited == 'displayAfterProductThumbs'}
+         {assign var=offer_max_line value=3}
+      {/if}
+
+      {assign var=price_at_bottom value=false}
+      {if count($offers) >= $offer_max_line && $hook_younited != 'widget'}
+         {assign var=price_at_bottom value=true}
+      {/if}
+
+      {if $price_at_bottom == true}
       </div>
-   {/if}
+      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
+         <hr class="yp-border-prple yp-opacity-50">
+      {/if}            
+         <span class="yp-justify-start yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{else} yp-pl-3{/if}">
+            <span class="yp-h-7 yp-flex yp-items-center"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
+               <span class="younitedpay_infoinstallment yp-install-amount">
+                  {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €
+               </span>&nbsp;
+               <span>/</span>&nbsp;
+               <span>{l s='months' mod='younitedpay'}</span>
+         </span>
+      </div>
+   </div>
    <div id="younited_popupzone"
       class="yp-inset-0 yp-flex yp-fixed yp-justify-center yp-items-center yp-z-100 yp-bg-black yp-bg-opacity-50" style="display:none!important;">
       <div
@@ -175,5 +174,6 @@
          </div>
       </div>
    </div>
+   {/if}
 </div>
 </div>
