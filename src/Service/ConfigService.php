@@ -120,18 +120,25 @@ class ConfigService
             return [
                 'message' => $this->l('No credential saved'),
                 'maturityList' => self::DEF_MATURITIES,
-                'status' => 'no_credentials',
+                'shopCodeList' => [],
+                'status' => ['no_credentials'],
             ];
         }
 
+        $message = '';
+        $errorStatus = [];
         if (empty($client->shopCode) === true) {
-            return [
-                'message' => $this->l('No Shop Code saved'),
-                'maturityList' => self::DEF_MATURITIES,
-                'status' => 'no_shop_code',
-            ];
+            $message = $this->l('No Shop Code saved');
+            $errorStatus[] = 'no_shop_code';
         }
-
+        
+        $shopCodeList = $this->getShopCodes();
+        if (empty($shopCodeList) === true) {
+            $message .= ($message === '') ? '' : ' - ';
+            $message .= 'Shop codes: ' . $this->l('Response error');
+            $errorStatus[] = 'api_error';
+        }
+        
         $body = (new GetOffers())->setShopCode($client->shopCode)
             ->setAmount(1500)
             ->setMaturityRangeStep(1)
@@ -140,14 +147,26 @@ class ConfigService
 
         $request = new GetOffersRequest();
 
+        if (empty($client->shopCode) === true) {
+            $request = new AvailableMaturitiesRequest();
+
+            $body = null;
+        }
+
         /** @var AbstractResponse $response */
         $response = $client->sendRequest($body, $request);
 
         if (empty($response) === true || null === $response || $response['success'] === false) {
+            $message .= ($message === '') ? '' : ' - ';
+            $message .= $this->l('Response error');
+            $errorStatus[] = 'maturities_error';
+        }
+        if (empty($errorStatus) === false) {
             return [
-                'message' => $this->l('Response error'),
+                'message' => $message,
                 'maturityList' => self::DEF_MATURITIES,
-                'status' => 'api_error',
+                'shopCodeList' => $shopCodeList,
+                'status' => $errorStatus,
             ];
         }
         $maturityList = [];
@@ -160,6 +179,7 @@ class ConfigService
         return [
             'message' => $this->l('Connexion Ok'),
             'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
+            'shopCodeList' => $shopCodeList,
             'status' => 'ok',
         ];
     }
@@ -205,6 +225,7 @@ class ConfigService
 
         return [
             'maturityList' => $isApiConnected['maturityList'],
+            'shopCodeList' => $isApiConnected['shopCodeList'],
             'connected' => $isApiConnected['status'] === 'ok',
             'status' => $isApiConnected['status'],
             'specs' => [

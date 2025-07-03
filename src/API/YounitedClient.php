@@ -172,8 +172,6 @@ class YounitedClient
             /** @var \DateTimeInterface $expireAt */
             $expireAt = $cacheInformations['content']['expiresat'];
             $client->setTokenCache($token, $expireAt->getTimestamp());
-        } else {
-            $this->apiLogger->log($this, 'new token made', 'Info');
         }
     }
 

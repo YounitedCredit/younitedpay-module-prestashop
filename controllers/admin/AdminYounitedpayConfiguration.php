@@ -244,6 +244,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $specsVariables = $this->configService->checkSpecifications($this->isProductionMode);
             $this->maturitylist = $specsVariables['maturityList'];
+            $this->shopCodeList = $specsVariables['shopCodeList'];
 
             /** @var CacheYounited $cachestorage */
             $cachestorage = new CacheYounited();
@@ -553,7 +554,6 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         );
 
         $allMaturities = $this->getAllMaturities();
-        $shopCodesList = $this->configService->getShopCodes();
         $urlFormConfig = $this->context->link->getAdminLink('AdminYounitedpayConfiguration');
 
         Media::addJsDef([
@@ -603,7 +603,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'client_id_production' => $this->clientIDProduction,
             'client_secret_production' => $this->clientSecretProduction,
             'shop_code_production' => $this->shopCodeProduction,
-            'shop_codes_list' => $shopCodesList,
+            'shop_codes_list' => $this->shopCodeList,
             'webhook_secret_production' => $this->webHookSecretProduction,
             'whitelist_on' => $this->isWhiteListOn,
             'whitelist_ip' => $this->whitelistIP,

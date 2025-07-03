@@ -64,9 +64,7 @@ class CommonHook extends AbstractHook
             }
             $shopCodeNotSet = $isProductionMode === false ? empty($shopCode) : empty($shopCodeProduction);
             if ($shopCodeNotSet === true) {
-                $controller->warnings[] = $this->l(
-                    'Younited Pay Module - Warning - No shop code selected - please configure your Shop code for Shop N°' . $idShop
-                );
+                $controller->warnings[] = $this->l('Younited Pay Module - Warning - No shop code selected - please configure your Shop code for Shop N°' . $idShop);
             }
         }
     }
