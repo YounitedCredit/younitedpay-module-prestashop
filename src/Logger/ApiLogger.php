@@ -75,9 +75,9 @@ class ApiLogger
     {
         $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/' . date('Ym');
         if (is_dir($logDir) === false) {
-            mkdir($logDir);
-            copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
-            copy(_PS_MODULE_DIR_ . $this->module->name . '/logs/.htaccess', $logDir . '/.htaccess');
+            mkdir($logDir, 0755);
+            @copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
+            @copy(_PS_MODULE_DIR_ . $this->module->name . '/logs/.htaccess', $logDir . '/.htaccess');
         }
 
         $logFile = $logDir . '/' . $this->logname;
@@ -161,6 +161,7 @@ class ApiLogger
     public function deleteLogFilesOld(int $deleteFromDays = 60)
     {
         $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
+        $currentMonthDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/' . date('Ym');
         $previousLogDirs = scandir($logDir);
         $origin = new \DateTimeImmutable('now');
         foreach ($previousLogDirs as $oneLogFolder) {
@@ -198,12 +199,17 @@ class ApiLogger
                         }
                         @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
                     }
-                    @rmdir($logDir . $oneLogFolder);
+                    if ($logDir . $oneLogFolder !== $currentMonthDir) {
+                        @rmdir($logDir . $oneLogFolder);
+                    }
                 }
             }
         }
         foreach ($previousLogDirs as $oneLogFolder) {
             if (in_array($oneLogFolder, ['.', '..', date('Ym')]) === true || is_dir($logDir . $oneLogFolder) === false) {
+                continue;
+            }
+            if ($oneLogFolder === $currentMonthDir) {
                 continue;
             }
             $filesWereDeleted = false;
