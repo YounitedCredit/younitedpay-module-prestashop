@@ -29,7 +29,12 @@
         <div style="display:none">{$contract|escape:'htmlall':'UTF-8'|replace:"\n":'<br/>'}</div>
         <h2>{l s='API Response (Younited)' mod='younitedpay'}</h2>
         <div>
-            {$api|escape:'htmlall':'UTF-8'|replace:"\n":'<br/>'}
+            {if $api != false && $api != 'false'}
+                {$api|escape:'htmlall':'UTF-8'|replace:"\n":'<br/>'}
+            {else}
+                {l s='Error with API response - please check that the credentials used to create the order are set correctly.' mod='younitedpay'}<br />
+                {l s='For example, if you have registered this command with a Sandbox account and changed the environment to Production.' mod='younitedpay'}
+            {/if}
         </div>
         <a onclick="history.back();" class="btn btn-primary pull-right">{l s='Back' mod='younitedpay'}</a>
     </div>

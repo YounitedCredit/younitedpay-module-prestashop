@@ -31,7 +31,7 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpaycontracts_f62dedad685b570f499
 $_MODULE['<{younitedpay}prestashop>adminyounitedpaycontracts_4ce512295824db41767c20ab489c3a74'] = 'Date de remboursement';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpaycontracts_f53c1ebef1d12dafe0e228236c393be7'] = 'Montant remboursé';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpaycontracts_a7384ed09a8bc2d8b230cb202c7614a5'] = 'Version API';
-$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_b4a34d3f58b039e7685c2e39b5413757'] = 'Mise à jour effectuée avec succès';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_90f0ccbffc10d1a05b5aed5b85dd8e62'] = 'Mise à jour effectuée avec succès';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Merci d\'entrer vos identifiants avant de faire la configuration du module.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_7beeeb3e3e0ca1dfdcb32eb7b220d0c9'] = 'Identifiant API enregistrés. Merci de sélectionner votre Shop Code avant de faire la configuration.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ecc204e478d0835c58a'] = 'Erreur avec vos identifiants, veuillez vérifier les clés et l\'environnement (production ou test).';
@@ -135,6 +135,8 @@ $_MODULE['<{younitedpay}prestashop>viewcontract_f49498143b94e78415d06029763412b9
 $_MODULE['<{younitedpay}prestashop>viewcontract_bfc0f5839eae402b870d9f2b239a6684'] = 'Information en base de données (PrestaShop)';
 $_MODULE['<{younitedpay}prestashop>viewcontract_3068eefc82be316823b518231981f0c3'] = 'Réponse API (Younited)';
 $_MODULE['<{younitedpay}prestashop>viewcontract_0557fa923dcee4d0f86b1409f5c2167f'] = 'Retour';
+$_MODULE['<{younitedpay}prestashop>viewcontract_90f0ccbffc10d1a05b5aed5b85dd8e62'] = 'Erreur avec la réponse API - merci de vérifier que les identifiants utilisés pour créer la commande sont bien configurés.';
+$_MODULE['<{younitedpay}prestashop>viewcontract_b1eac71c7e7d3e3eb1caa3dbe318d0dc'] = 'Par exemple, si vous avez enregistré cette commande avec un compte en Sandbox et changé l\'environnement à Production.';
 $_MODULE['<{younitedpay}prestashop>states-form_e3c0f87e5187231c898ca50305ec70e3'] = '2. Paramétrage';
 $_MODULE['<{younitedpay}prestashop>states-form_0bf421443af9ff277cce958bbfd2c92f'] = 'Selon la loi, le crédit ne doit être activé que lorsque la commande a été livrée au client. Veuillez vous assurer que les statuts choisis reflètent cette obligation légale.';
 $_MODULE['<{younitedpay}prestashop>states-form_5cde411c151569ee4a56162adfc7d9eb'] = 'Statut d\'activation du crédit';
