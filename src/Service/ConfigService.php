@@ -146,33 +146,30 @@ class ConfigService
             ->setMaturityRangeMax(84);
 
         $request = new GetOffersRequest();
+        $maturityList = self::DEF_MATURITIES;
 
-        if (empty($client->shopCode) === true) {
-            $request = new AvailableMaturitiesRequest();
+        if (empty($client->shopCode) === false) {
+            /** @var AbstractResponse $response */
+            $response = $client->sendRequest($body, $request);
 
-            $body = null;
-        }
-
-        /** @var AbstractResponse $response */
-        $response = $client->sendRequest($body, $request);
-
-        if (empty($response) === true || null === $response || $response['success'] === false) {
-            $message .= ($message === '') ? '' : ' - ';
-            $message .= $this->l('Response error');
-            $errorStatus[] = 'maturities_error';
-        }
-        if (empty($errorStatus) === false) {
-            return [
-                'message' => $message,
-                'maturityList' => self::DEF_MATURITIES,
-                'shopCodeList' => $shopCodeList,
-                'status' => $errorStatus,
-            ];
-        }
-        $maturityList = [];
-        foreach ($response['response'] as $oneOffer) {
-            if (in_array((int) $oneOffer->getMaturityInMonths(), $maturityList) === false) {
-                $maturityList[] = (int) $oneOffer->getMaturityInMonths();
+            if (empty($response) === true || null === $response || $response['success'] === false) {
+                $message .= ($message === '') ? '' : ' - ';
+                $message .= $this->l('Response error');
+                $errorStatus[] = 'maturities_error';
+            }
+            if (empty($errorStatus) === false) {
+                return [
+                    'message' => $message,
+                    'maturityList' => $maturityList,
+                    'shopCodeList' => $shopCodeList,
+                    'status' => $errorStatus,
+                ];
+            }
+            $maturityList = [];
+            foreach ($response['response'] as $oneOffer) {
+                if (in_array((int) $oneOffer->getMaturityInMonths(), $maturityList) === false) {
+                    $maturityList[] = (int) $oneOffer->getMaturityInMonths();
+                }
             }
         }
 
