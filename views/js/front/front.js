@@ -111,6 +111,9 @@ function hidePopup(e)
 
 function updateCreditZone(event)
 {
+    if (typeof younitedpay === 'undefined' || !younitedpay) {
+        return;
+    }
     var ajaxData = {
         ajax: true,
         id_product: younitedpay.id_product,
