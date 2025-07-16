@@ -352,7 +352,7 @@ class ConfigService
     {
         $client = new YounitedClient($this->context->shop->id);
 
-        if ($client->isCrendentialsSet() === false) {
+        if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return false;
         }
 

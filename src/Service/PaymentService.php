@@ -101,7 +101,7 @@ class PaymentService
         }
 
         $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false) {
+        if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,
                 'status' => 0,

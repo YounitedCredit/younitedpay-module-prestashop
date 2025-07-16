@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Service\PaymentService;

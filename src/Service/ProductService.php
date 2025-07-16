@@ -63,7 +63,7 @@ class ProductService
     public function getBestPrice($product_price, $selectedHook = 'widget')
     {
         $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false) {
+        if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false  || $client->shopCode === '') {
             return $this->noOffers();
         }
 
@@ -79,9 +79,6 @@ class ProductService
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist((string) $productPrice);
 
-        $isProduction = (bool) $this->configRepository->getConfig(Younitedpay::PRODUCTION_MODE);
-        $shopCodeKey = $isProduction === false ? Younitedpay::SHOP_CODE : Younitedpay::SHOP_CODE_PRODUCTION;
-        $shopCode = $this->configRepository->getConfig($shopCodeKey);
         $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
         $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
         $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
@@ -119,7 +116,7 @@ class ProductService
                 ];
             }
 
-            $body = (new GetOffers())->setShopCode($shopCode)->setAmount($productPrice);
+            $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount($productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
             } else if (isset($configMaturities['Range'])) {

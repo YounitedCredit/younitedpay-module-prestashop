@@ -51,7 +51,7 @@ class HookPayment extends AbstractHook
     public function paymentOptions($params)
     {
         $client = new YounitedClient(Context::getContext()->shop->id);
-        if (!$this->module->active || $client->isCrendentialsSet() === false) {
+        if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [];
         }
 
