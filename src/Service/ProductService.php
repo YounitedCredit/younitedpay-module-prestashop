@@ -226,6 +226,9 @@ class ProductService
         foreach ($offers as $offer) {
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
+            if ((int) $offer->getMonthlyInstallmentAmount() < 10) {
+                continue;
+            }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
                 $marutitiesIn[] = $maturityIn;
                 $validOffers[] = $this->returnOffer($offer);
@@ -248,6 +251,9 @@ class ProductService
 
         $validOffers = [];
         foreach ($offers as $offer) {
+            if ((int) $offer->getMonthlyInstallmentAmount() < 10) {
+                continue;
+            }
             $validOffers[] = $this->returnOffer($offer);
         }
         $this->sortOffers($validOffers);

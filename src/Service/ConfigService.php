@@ -177,7 +177,7 @@ class ConfigService
             'message' => $this->l('Connexion Ok'),
             'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
             'shopCodeList' => $shopCodeList,
-            'status' => 'ok',
+            'status' => empty($errorStatus) ? 'ok' : $errorStatus,
         ];
     }
 
