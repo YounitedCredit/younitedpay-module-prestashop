@@ -273,15 +273,21 @@ class ProductService
      */
     protected function returnOffer(OfferItem $offer)
     {
-        return [
+        $data = [
             'maturity' => (int) $offer->getMaturityInMonths(),
-            'installment_amount' => \Tools::ps_round($offer->getMonthlyInstallmentAmount(), 2),
-            'initial_amount' => \Tools::ps_round($offer->getRequestedAmount(), 2),
-            'total_amount' => \Tools::ps_round($offer->getCreditTotalAmount(), 2),
-            'interest_total' => \Tools::ps_round($offer->getInterestsTotalAmount(), 2),
-            'taeg' => \Tools::ps_round($offer->getAnnualPercentageRate(), 2),
-            'tdf' => \Tools::ps_round($offer->getAnnualDebitRate(), 2),
+            'installment_amount' => number_format(round($offer->getMonthlyInstallmentAmount(),2), 2, '.', ''),
+            'initial_amount' => number_format(round($offer->getRequestedAmount(),2), 2, '.', ''),
+            'total_amount' => number_format(round($offer->getCreditTotalAmount(),2), 2, '.', ''),
+            'interest_total' => number_format(round($offer->getInterestsTotalAmount(),2), 2, '.', ''),
+            'taeg' => number_format(round($offer->getAnnualPercentageRate(),2), 2, '.', ''),
+            'tdf' => number_format(round($offer->getAnnualDebitRate(),2), 2, '.', ''),
         ];
+
+        foreach($data as $key => &$value) {
+            $value = str_replace('.00', '', $value);
+        }
+
+        return $data;
     }
 
     public function getAllMaturities($productPrice, $isRangeEnabled)
