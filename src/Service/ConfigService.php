@@ -137,6 +137,7 @@ class ConfigService
             $message .= ($message === '') ? '' : ' - ';
             $message .= 'Shop codes: ' . $this->l('Response error');
             $errorStatus[] = 'api_error';
+            $client->shopCode = '';
         }
         
         $body = (new GetOffers())->setShopCode($client->shopCode)
@@ -154,7 +155,7 @@ class ConfigService
 
             if (empty($response) === true || null === $response || $response['success'] === false) {
                 $message .= ($message === '') ? '' : ' - ';
-                $message .= $this->l('Response error');
+                $message .= $this->l('Offers response error');
                 $errorStatus[] = 'maturities_error';
             }
             if (empty($errorStatus) === false) {
@@ -174,10 +175,10 @@ class ConfigService
         }
 
         return [
-            'message' => $this->l('Connexion Ok'),
+            'message' => empty($errorStatus) ? $this->l('Connexion Ok') : $this->l('Response error'),
             'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
             'shopCodeList' => $shopCodeList,
-            'status' => empty($errorStatus) ? 'ok' : $errorStatus,
+            'status' => empty($errorStatus) ? ['ok'] : $errorStatus,
         ];
     }
 
@@ -244,7 +245,7 @@ class ConfigService
                 [
                     'name' => $this->l('Connected to API'),
                     'info' => $isApiConnected['message'],
-                    'ok' => (bool) $isApiConnected['status'],
+                    'ok' => in_array('ok', $isApiConnected['status']),
                 ],
                 [
                     'name' => $this->l('Production environment'),

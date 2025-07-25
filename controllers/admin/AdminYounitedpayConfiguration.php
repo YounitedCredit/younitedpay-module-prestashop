@@ -267,7 +267,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $configurationVariables = $this->getConfigurationVariables();
             if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
-                if ($configurationVariables['no_shop_code'] === false) {
+                if (in_array('api_error', $specsVariables['status']) === true) {
                     $this->context->controller->errors[] = $badConfig;
                 }
             }
