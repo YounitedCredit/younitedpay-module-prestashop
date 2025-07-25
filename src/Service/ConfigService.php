@@ -224,7 +224,7 @@ class ConfigService
         return [
             'maturityList' => $isApiConnected['maturityList'],
             'shopCodeList' => $isApiConnected['shopCodeList'],
-            'connected' => $isApiConnected['status'] === 'ok',
+            'connected' => in_array('ok', $isApiConnected['status']),
             'status' => $isApiConnected['status'],
             'specs' => [
                 [
