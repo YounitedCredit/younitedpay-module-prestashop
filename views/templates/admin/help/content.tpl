@@ -102,6 +102,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading pt-3 younitedpay-collapse" role="tab" id="heading2" data-target="#collapse2">
                             <h4 class="panel-title">
+
                                 <a role="button" title="" class="collapsed" data-parent="#accordion" 
                                     href="#collapse2" aria-expanded="true">
                                     {l s='What information should I add to my General Terms and Conditins (GTC) ?' mod='younitedpay'}

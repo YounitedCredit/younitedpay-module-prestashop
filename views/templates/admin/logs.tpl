@@ -57,7 +57,7 @@
           <label class="control-label col-lg-2"></label>
           <div class="col-lg-12 input-group">
             <p class="help-block">
-              {l s='Remove files before the number of days filled here. Fill 0 to remove all logs from files.'}
+              {l s='Remove files before the number of days filled here. Fill 0 to remove all logs from files.' mod='younitedpay'}
             </p>
           </div>
       </div>
