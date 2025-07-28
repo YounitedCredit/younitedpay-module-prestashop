@@ -175,7 +175,7 @@ class ConfigService
         }
 
         return [
-            'message' => empty($errorStatus) ? $this->l('Connexion Ok') : $this->l('Response error'),
+            'message' => empty($errorStatus) ? $this->l('Connexion Ok') : $message,
             'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
             'shopCodeList' => $shopCodeList,
             'status' => empty($errorStatus) ? ['ok'] : $errorStatus,

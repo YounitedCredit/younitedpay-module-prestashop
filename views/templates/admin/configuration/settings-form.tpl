@@ -140,11 +140,12 @@
                                 <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
                                     id="shop_code_production" name="shop_code_production">
                                     {foreach from=$configuration.shop_codes_list item='shop_code_name'}
-                                        {json_encode($shop_code_name)}
-                                    <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
-                                        {if $shop_code_name.code == $configuration.shop_code_production} selected{/if}>
-                                            {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
-                                        </option>
+                                        {if empty($shop_code_name.code) === false}
+                                            <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                                {if $shop_code_name.code == $configuration.shop_code_production} selected{/if}>
+                                                {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                            </option>
+                                        {/if}
                                     {/foreach}
                                 </select>
                             {else}
