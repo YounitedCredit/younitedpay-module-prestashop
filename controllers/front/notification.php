@@ -145,9 +145,9 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         $order = new Order($younitedContract->id_order);
 
         if ($updateType === 'cancel') {
-            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int)Configuration::get('PS_OS_CANCELED');
+            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
 
-            if ((int)$newIdState === $order->current_state) {
+            if ((int) $newIdState === $order->current_state) {
                 $this->endResponse('200 - Already cancelled (Order ' . $order->id . ' - ' . $order->reference . ')');
             }
 
@@ -201,10 +201,12 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         } catch (PrestaShopDatabaseException $e) {
             $this->logError($e->getMessage(), 'setCurrentState PrestaShopDatabaseException');
             $this->logError($e->getTraceAsString(), 'setCurrentState PrestaShopDatabaseException');
+
             return false;
         } catch (PrestaShopException $e) {
             $this->logError($e->getMessage(), 'setCurrentState PrestaShopException');
             $this->logError($e->getTraceAsString(), 'setCurrentState PrestaShopException');
+
             return false;
         }
     }

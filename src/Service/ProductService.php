@@ -26,7 +26,6 @@ if (!defined('_PS_VERSION_')) {
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
-use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedPaySDK\Model\NewAPI\GetOffers;
 use YounitedPaySDK\Model\OfferItem;
@@ -63,7 +62,7 @@ class ProductService
     public function getBestPrice($product_price, $selectedHook = 'widget')
     {
         $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false  || $client->shopCode === '') {
+        if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false || $client->shopCode === '') {
             return $this->noOffers();
         }
 
@@ -107,7 +106,7 @@ class ProductService
                     'Range' => [
                         'Min' => $minInstall,
                         'Max' => $maxInstall,
-                        'Step' => 1
+                        'Step' => 1,
                     ],
                 ];
             } else {
@@ -119,7 +118,7 @@ class ProductService
             $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount($productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
-            } else if (isset($configMaturities['Range'])) {
+            } elseif (isset($configMaturities['Range'])) {
                 $body
                     ->setMaturityRangeStep($configMaturities['Range']['Step'])
                     ->setMaturityRangeMin($configMaturities['Range']['Min'])
@@ -275,15 +274,15 @@ class ProductService
     {
         $data = [
             'maturity' => (int) $offer->getMaturityInMonths(),
-            'installment_amount' => number_format(round($offer->getMonthlyInstallmentAmount(),2), 2, '.', ''),
-            'initial_amount' => number_format(round($offer->getRequestedAmount(),2), 2, '.', ''),
-            'total_amount' => number_format(round($offer->getCreditTotalAmount(),2), 2, '.', ''),
-            'interest_total' => number_format(round($offer->getInterestsTotalAmount(),2), 2, '.', ''),
-            'taeg' => number_format(round($offer->getAnnualPercentageRate(),2), 2, '.', ''),
-            'tdf' => number_format(round($offer->getAnnualDebitRate(),2), 2, '.', ''),
+            'installment_amount' => number_format(round($offer->getMonthlyInstallmentAmount(), 2), 2, '.', ''),
+            'initial_amount' => number_format(round($offer->getRequestedAmount(), 2), 2, '.', ''),
+            'total_amount' => number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', ''),
+            'interest_total' => number_format(round($offer->getInterestsTotalAmount(), 2), 2, '.', ''),
+            'taeg' => number_format(round($offer->getAnnualPercentageRate(), 2), 2, '.', ''),
+            'tdf' => number_format(round($offer->getAnnualDebitRate(), 2), 2, '.', ''),
         ];
 
-        foreach($data as $key => &$value) {
+        foreach ($data as $key => &$value) {
             $value = str_replace('.00', '', $value);
         }
 
@@ -311,10 +310,10 @@ class ProductService
             return '36,24';
         }
         $config = [];
-        foreach($maturities as $oneMaturity) {
+        foreach ($maturities as $oneMaturity) {
             $config[] = $oneMaturity['maturity'];
         }
-        
+
         return implode(',', $config);
     }
 }

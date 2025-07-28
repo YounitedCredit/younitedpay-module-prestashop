@@ -157,7 +157,7 @@ class HookAdminOrder extends AbstractHook
         }
 
         $countOrders = \Order::getByReference($order->reference)->count();
-        
+
         /** @var Cart $cart */
         $cart = $params['cart'];
 
@@ -175,6 +175,7 @@ class HookAdminOrder extends AbstractHook
                 'error',
                 null
             );
+
             return true;
         }
         if ($order->id_carrier !== $cart->id_carrier) {

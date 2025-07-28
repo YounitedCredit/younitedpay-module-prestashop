@@ -131,7 +131,7 @@ class ConfigService
             $message = $this->l('No Shop Code saved');
             $errorStatus[] = 'no_shop_code';
         }
-        
+
         $shopCodeList = $this->getShopCodes();
         if (empty($shopCodeList) === true) {
             $message .= ($message === '') ? '' : ' - ';
@@ -139,7 +139,7 @@ class ConfigService
             $errorStatus[] = 'api_error';
             $client->shopCode = '';
         }
-        
+
         $body = (new GetOffers())->setShopCode($client->shopCode)
             ->setAmount(1500)
             ->setMaturityRangeStep(1)

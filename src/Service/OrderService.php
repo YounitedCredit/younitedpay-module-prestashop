@@ -33,9 +33,9 @@ use YounitedPaySDK\Model\NewAPI\GetPaymentId;
 use YounitedPaySDK\Model\NewAPI\Request\CancelPayment;
 use YounitedPaySDK\Model\NewAPI\Request\ExecutePayment;
 use YounitedPaySDK\Model\NewAPI\Request\RefundPayment;
-use YounitedPaySDK\Request\NewAPI\GetPaymentIdRequest;
 use YounitedPaySDK\Request\NewAPI\CancelPaymentRequest;
 use YounitedPaySDK\Request\NewAPI\ExecutePaymentRequest;
+use YounitedPaySDK\Request\NewAPI\GetPaymentIdRequest;
 use YounitedPaySDK\Request\NewAPI\RefundPaymentRequest;
 
 class OrderService
@@ -344,7 +344,7 @@ class OrderService
         if (empty($younitedContract->payment_id) || is_null($younitedContract->payment_id)) {
             $clientBuildReturn = $this->buildClient();
             if ($clientBuildReturn['success'] === true) {
-                $this->getPaymentIdFromLegacy($younitedContract);   
+                $this->getPaymentIdFromLegacy($younitedContract);
             } else {
                 $younitedContract->payment_id = 'Unknown - Error from API';
             }

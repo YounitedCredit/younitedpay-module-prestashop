@@ -47,10 +47,9 @@ use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
 
 class PaymentService
 {
+    use TranslateTrait;
     const PAYMENT_STATUS_ACCEPTED = 'Accepted';
     const PAYMENT_STATUS_EXECUTED = 'Executed';
-
-    use TranslateTrait;
 
     public $module;
 
@@ -232,6 +231,7 @@ class PaymentService
 
         if ($isUseAPIv2 === false) {
             $this->loggerservice->addLogAPI('Old contract body:' . json_encode($body), 'Info', $this);
+
             return $client->sendRequest($body, $request);
         }
 
@@ -261,7 +261,7 @@ class PaymentService
             ->convertInitializeContract($oldRequest);
 
         $this->loggerservice->addLogAPI('New contract body:' . (string) $adapter->getBody(), 'Info', $this);
-        
+
         return $adapter;
     }
 
@@ -302,7 +302,6 @@ class PaymentService
         }
 
         if (empty($customerAddress->phone) === true && empty($customerAddress->phone_mobile) === true) {
-
             return true;
         }
 

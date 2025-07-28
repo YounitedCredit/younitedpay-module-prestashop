@@ -650,7 +650,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         ];
     }
 
-    private function verifyShopCode($shopCode) {
+    private function verifyShopCode($shopCode)
+    {
         foreach ($this->shopCodeList as $oneCodeLine) {
             if ($oneCodeLine['code'] === $shopCode) {
                 return true;
