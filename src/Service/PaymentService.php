@@ -281,10 +281,14 @@ class PaymentService
 
             $getPaymentResponse = $this->getApiPaymentById($paymentId);
 
-            $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
-            $apiVersion = $getPaymentResponse['apiVersion'];
+            if ($getPaymentResponse !== false) {
+                $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+                $apiVersion = $getPaymentResponse['apiVersion'];
 
-            $this->saveContractInit($contractRef, $paymentId, $apiVersion);
+                $this->saveContractInit($contractRef, $paymentId, $apiVersion);
+            } else {
+                $this->saveContractInit('', $paymentId, '2025-01-01');
+            }
         }
 
         $response['url'] = $urlPayment;
@@ -347,7 +351,7 @@ class PaymentService
      *
      * @param string $paymentId
      *
-     * @return bool|float False if nothing requested on the api payment id or error | Api Payment of id requested
+     * @return bool|mixed False if nothing requested on the api payment id or error | Api Payment of id requested
      */
     public function getApiPaymentById($paymentId)
     {

@@ -60,6 +60,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
             $this->endResponse($webhook->getErrorResponse());
         }
 
+        /** @var YounitedPaySDK\Model\Webhook\EventNotification */
         $webhookNotification = $webhook->getEventNotification();
 
         if (empty($webhookNotification)) {
@@ -100,6 +101,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
                 $_POST['granted'] = 1;
                 $controller = new YounitedpayValidationModuleFrontController();
                 $this->endResponse($controller->initContent());
+                break;
             case self::EVENT_TYPE_PERSONAL_LOAN_CUSTOMER_WITHDRAWAL:
                 $this->endResponse('400 - Event type not treat on webhook', false);
                 break;

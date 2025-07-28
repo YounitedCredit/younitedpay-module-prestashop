@@ -40,7 +40,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
     /** @var string Associated table name */
     public $table = 'younitedpay_contract';
 
-    /** @var string Activate bootstrap */
+    /** @var bool Is bootstrap enabled */
     public $bootstrap = true;
 
     public function __construct()

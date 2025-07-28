@@ -304,7 +304,7 @@ class ProductService
         return $this->configRepository->checkIPWhitelist();
     }
 
-    function getMaturitiesConfiguration($maturities)
+    public function getMaturitiesConfiguration($maturities)
     {
         if (empty($maturities)) {
             return '36,24';

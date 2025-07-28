@@ -315,8 +315,6 @@ class ConfigService
 
     /**
      * Return Shop Codes list from API
-     *
-     * @param bool $fullList Full List from API or only name => code ?
      */
     public function getShopCodes()
     {

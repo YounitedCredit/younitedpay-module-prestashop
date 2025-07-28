@@ -58,9 +58,9 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
 
         $younitedPayment = $paymentService->getApiPaymentById($younitedContract->payment_id);
 
-        $younitedPaymentStatus = $younitedPayment['status'];
+        $younitedPaymentStatus = $younitedPayment['status'] ?? '';
 
-        if (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED])) {
+        if (isset($younitedPayment['amount']) && in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED])) {
             $redirectUrl = $this->processPaymentSuccess($younitedPayment['amount']);
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_CANCELLED, self::PAYMENT_STATUS_FAILED])) {
             $redirectUrl = $this->processPaymentError($younitedPaymentStatus);
