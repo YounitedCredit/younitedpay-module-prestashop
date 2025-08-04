@@ -20,7 +20,7 @@
  * @author    202-ecommerce <tech@202-ecommerce.com>
  * @copyright Copyright (c) 202-ecommerce
  * @license   Commercial license
- * @version   release/2.3.2
+ * @version   release/2.3.3
  */
 
 namespace YounitedpayClasslib\Extensions\ProcessMonitor;
@@ -59,7 +59,7 @@ class ProcessMonitorHandler
         if (empty($this->process->id)) {
             $this->process = new ProcessMonitorObjectModel();
             $this->process->name = $name;
-            $this->process->data = Tools::jsonEncode(array());
+            $this->process->data = json_encode(array());
             $this->process->date_add = date('Y-m-d H:i:s');
         }
         if (!empty($this->process->pid)) {
@@ -103,7 +103,7 @@ class ProcessMonitorHandler
             );
         }
 
-        return Tools::jsonDecode($this->process->data, true);
+        return json_decode($this->process->data, true);
     }
 
     /**
@@ -120,7 +120,7 @@ class ProcessMonitorHandler
         }
 
         if (false === empty($data)) {
-            $this->process->data = Tools::jsonEncode($data);
+            $this->process->data = json_encode($data);
         }
         $this->process->last_update = date('Y-m-d H:i:s');
         $endTime = $this->microtimeFloat();

@@ -184,4 +184,23 @@ class PaymentRepository
             'id_order = ' . (int) $idOrder
         );
     }
+
+    /**
+     * Update the paymentId for the contract
+     *
+     * @param int $idOrder Id Of Order concerned for update
+     * @param string $paymentId
+     *
+     * @return bool Operation done / fail
+     */
+    public function updatePaymentId($idOrder, $paymentId)
+    {
+        return Db::getInstance()->update(
+            YounitedPayContract::$definition['table'],
+            [
+                'payment_id' => (float) $paymentId,
+            ],
+            'id_order = ' . (int) $idOrder
+        );
+    }
 }

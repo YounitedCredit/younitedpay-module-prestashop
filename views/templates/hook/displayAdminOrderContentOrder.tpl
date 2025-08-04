@@ -22,7 +22,9 @@
 <div class="tab-pane" id="younitedpay">
     <p>
         <b>{l s='Payment ID' mod='younitedpay'}</b><br />        
-        {$payment.id|escape:'html':'UTF-8'}        
+        <span title="{l s='Payment ID' mod='younitedpay'} - {$payment.id|escape:'html':'UTF-8'} - API v.{$payment.api_version|escape:'html':'UTF-8'}">
+            {$payment.reference|escape:'html':'UTF-8'}
+        </span>
     </p>
 
     <p>
@@ -30,10 +32,21 @@
         {$payment.date|date_format:$date_formating|escape:'htmlall':'UTF-8'}
     </p>
 
-    <p><b>
-        {l s='Payment Method' mod='younitedpay'}</b><br />
-        <img style="height:45px;" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" />
-    </p>
+    {if isset($younitedcontract) === false}
+        <p><b>
+            {l s='Payment Method' mod='younitedpay'}</b><br />
+            <img style="height:45px;" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" />
+        </p>
+    {else}
+        <p>
+            <b>{l s='Order ID' mod='younitedpay'}</b><br />
+            {$younitedcontract->id_order|escape:'htmlall':'UTF-8'}
+        </p>
+        <p>
+            <b>{l s='Cart ID' mod='younitedpay'}</b><br />
+            {$younitedcontract->id_cart|escape:'htmlall':'UTF-8'}
+        </p>
+    {/if}
 
     <p>
         <b>{l s='Payment Status' mod='younitedpay'}</b><br />

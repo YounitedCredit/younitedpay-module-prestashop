@@ -47,11 +47,20 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var string */
     public $clientSecret;
 
+    /** @var mixed */
+    public $shopCodeList;
+
+    /** @var string */
+    public $shopCode;
+
     /** @var string */
     public $clientIDProduction;
 
     /** @var string */
     public $clientSecretProduction;
+
+    /** @var string */
+    public $shopCodeProduction;
 
     /** @var string */
     public $webHookSecret;
@@ -147,6 +156,12 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         }
         Context::getContext()->cookie->__unset('younitedpaysave');
 
+        $cookieShortCodeError = Context::getContext()->cookie->__get('younitedpayerrorshopcode');
+        if ($cookieShortCodeError == 'error') {
+            $this->warnings[] = $this->module->l('Shop code not allowed', 'AdminYounitedpayConfiguration');
+        }
+        Context::getContext()->cookie->__unset('younitedpayerrorshopcode');
+
         /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
 
@@ -171,6 +186,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'client_secret',
             ''
         );
+        $this->shopCode = $this->getValue(Younitedpay::SHOP_CODE, $idShop, 'shop_code', '');
+        $this->shopCodeProduction = $this->getValue(Younitedpay::SHOP_CODE_PRODUCTION, $idShop, 'shop_code_production', '');
         $this->webHookSecret = $this->getValue(Younitedpay::WEBHOOK_SECRET, $idShop, 'webhook_secret', '');
         $this->webHookSecretProduction = $this->getValue(
             Younitedpay::WEBHOOK_SECRET_PRODUCTION,
@@ -233,23 +250,50 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
             $specsVariables = $this->configService->checkSpecifications($this->isProductionMode);
             $this->maturitylist = $specsVariables['maturityList'];
+            $this->shopCodeList = $specsVariables['shopCodeList'];
 
             /** @var CacheYounited $cachestorage */
             $cachestorage = new CacheYounited();
             $cachestorage->set('maturitylist', json_encode($this->maturitylist));
+            $cachestorage->set('shopCodeList', json_encode($this->shopCodeList));
+
+            $nokeysText = $this->module->l(
+                'Please enter your API credentials before changing the module’s settings',
+                'AdminYounitedpayConfiguration'
+            );
+
+            $nokeysTextShopCode = $this->module->l(
+                'API Credentials saved. Please select your shop code before changing the module’s settings',
+                'AdminYounitedpayConfiguration'
+            );
+
+            $badConfig = $this->module->l(
+                'Error with your credentials, please check the keys and the environment (production or test)',
+                'AdminYounitedpayConfiguration'
+            );
+
+            $configurationVariables = $this->getConfigurationVariables();
+            if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
+                if (in_array('api_error', $specsVariables['status']) === true) {
+                    $this->context->controller->errors[] = $badConfig;
+                }
+            }
 
             $tplVars = [
-                'configuration' => $this->getConfigurationVariables(),
+                'configuration' => $configurationVariables,
                 'connected' => $specsVariables['connected'],
                 'config_check' => $specsVariables['specs'],
                 'webhook_url_text' => $urlWebhook,
                 'webhook_url' => $urlWebhook,
                 'shop_img_url' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/img/',
-                'no_keys_text' => $this->module->l(
-                    'Please enter your API credentials before changing the module’s settings',
-                    'AdminYounitedpayConfiguration'
-                ),
+                'no_keys_text' => $nokeysText,
+                'no_shop_text' => $nokeysTextShopCode,
+                'bad_config_text' => $badConfig,
             ];
+
+            if ($tplVars['configuration']['use_new_api'] === false) {
+                $this->errors[] = 'Warning ! Using API v1 for creating contracts !';
+            }
 
             $alertHere = empty($this->confirmations) && empty($this->errors);
 
@@ -328,6 +372,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $isSubmitted = false;
         $isCacheFlushNeeded = true;
 
+        if (Tools::isSubmit('switchAPI') !== false) {
+            $isUseAPIv2 = (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true);
+            Configuration::updateGlobalValue(Younitedpay::USE_NEW_API, (int) !$isUseAPIv2);
+        }
+
         if (Tools::isSubmit('account_submit')) {
             $this->postAccountSubmit($idShop);
             $isSubmitted = true;
@@ -341,7 +390,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $this->postAppearance($idShop);
             $isSubmitted = true;
         } elseif (Tools::isSubmit('younitedpay_add_maturity')) {
-            $this->ajaxDie($this->postAddNewMaturity($idShop));
+            $this->ajaxOutput($this->postAddNewMaturity($idShop));
+
+            return;
+        } elseif (Tools::isSubmit('testWebHookURL')) {
+            /* @var ConfigService $configService */
+            $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
+            $this->ajaxOutput($this->configService->testWebhook());
 
             return;
         }
@@ -383,6 +438,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         $this->context->smarty->assign([
             'key' => Tools::getValue('younitedpay_maturities', 0),
+            'configuration' => [
+                'show_ranges' => $this->showRangeOffers,
+            ],
             'maturitylist' => $this->maturitylist,
             'maturity' => [
                 'id_younitedpay_configuration' => 0,
@@ -419,9 +477,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $clientID = Tools::getValue('client_id');
         $clientSecret = Tools::getValue('client_secret');
+        $shopCode = Tools::getValue('shop_code');
         $webHookSecret = Tools::getValue('webhook_secret');
         $clientIDProd = Tools::getValue('client_id_production');
         $clientSecretProd = Tools::getValue('client_secret_production');
+        $shopCodeProd = Tools::getValue('shop_code_production');
         $webHookSecretProd = Tools::getValue('webhook_secret_production');
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
@@ -429,6 +489,22 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $webHookOrders = Tools::getValue('webhook_orders');
         Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+        $cacheExists = $cachestorage->exist('shopCodeList');
+
+        if ($cacheExists === true && $cachestorage->isExpired('shopCodeList') === false) {
+            $cacheInformations = $cachestorage->get('shopCodeList');
+            $this->shopCodeList = json_decode($cacheInformations['content'], true);
+        } else {
+            $this->shopCodeList = [];
+        }
+        if ($shopCode !== false && $this->verifyShopCode($shopCode) !== false) {
+            Configuration::updateValue(Younitedpay::SHOP_CODE, $shopCode, false, null, $idShop);
+        }
+        if ($shopCodeProd !== false && $this->verifyShopCode($shopCodeProd) !== false) {
+            Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION, $shopCodeProd, false, null, $idShop);
+        }
         Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION, $clientIDProd, false, null, $idShop);
         Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION, $clientSecretProd, false, null, $idShop);
@@ -508,29 +584,52 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                         'WebHook URL sent to clipboard',
                         'AdminYounitedpayConfiguration'
                     ),
+                    'success' => $this->module->l(
+                        'Success',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                    'error' => $this->module->l(
+                        'Warning',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                    'success_webhook' => $this->module->l(
+                        'WebHook response ok !',
+                        'AdminYounitedpayConfiguration'
+                    ),
+                    'error_webhook' => $this->module->l(
+                        'WebHook response error -:( - Check title for more informations',
+                        'AdminYounitedpayConfiguration'
+                    ),
                 ],
             ],
         ]);
 
         $noConfig = empty($this->clientID) || empty($this->clientSecret);
+        $noShopCode = empty($this->shopCode);
         if ($this->isProductionMode === true) {
             $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction);
+            $noShopCode = empty($this->shopCodeProduction);
         }
 
         return [
             'url_form_config' => $urlFormConfig,
+            'use_new_api' => (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true),
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
+            'shop_code' => $this->shopCode,
             'webhook_secret' => $this->webHookSecret,
             'client_id_production' => $this->clientIDProduction,
             'client_secret_production' => $this->clientSecretProduction,
+            'shop_code_production' => $this->shopCodeProduction,
+            'shop_codes_list' => $this->shopCodeList,
             'webhook_secret_production' => $this->webHookSecretProduction,
             'whitelist_on' => $this->isWhiteListOn,
             'whitelist_ip' => $this->whitelistIP,
             'show_monthly' => $this->isShownMonthly,
             'widget_info' => '{widget name="younitedpay" amount="149.90"}',
             'no_config' => $noConfig,
+            'no_shop_code' => $noShopCode,
             'order_states' => $this->configService->getOrderStates(),
             'delivered_status' => Tools::getValue('delivered_status', $deliveredStatus),
             'front_hook' => Tools::getValue('front_hook', $frontHook),
@@ -545,6 +644,32 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'max_installment' => $this->maxRangeInstall,
             'widget_borders' => $this->widgetBorders,
             'webhook_orders' => $this->webHookOrders,
+            'webhook_url' => \Context::getContext()->link->getModuleLink('younitedpay', 'notification', [
+                'id_cart' => 'test_webhook',
+            ]),
         ];
+    }
+
+    private function verifyShopCode($shopCode)
+    {
+        foreach ($this->shopCodeList as $oneCodeLine) {
+            if ($oneCodeLine['code'] === $shopCode) {
+                return true;
+            }
+        }
+
+        Context::getContext()->cookie->__set('younitedpayerrorshopcode', 'error');
+
+        return false;
+    }
+
+    private function ajaxOutput($message)
+    {
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+            $this->ajaxRender($message);
+            exit;
+        } else {
+            $this->ajaxDie($message);
+        }
     }
 }

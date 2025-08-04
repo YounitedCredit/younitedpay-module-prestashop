@@ -26,6 +26,7 @@ if (!defined('_PS_VERSION_')) {
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Younitedpay;
+use YounitedPaySDK\Model\NewAPI\Error;
 
 class ApiLogger
 {
@@ -74,9 +75,9 @@ class ApiLogger
     {
         $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/' . date('Ym');
         if (is_dir($logDir) === false) {
-            mkdir($logDir);
-            copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
-            copy(_PS_MODULE_DIR_ . $this->module->name . '/logs/.htaccess', $logDir . '/.htaccess');
+            mkdir($logDir, 0755);
+            @copy(_PS_MODULE_DIR_ . $this->module->name . '/index.php', $logDir . '/index.php');
+            @copy(_PS_MODULE_DIR_ . $this->module->name . '/logs/.htaccess', $logDir . '/.htaccess');
         }
 
         $logFile = $logDir . '/' . $this->logname;
@@ -116,11 +117,15 @@ class ApiLogger
         }
 
         if (substr($type, 0, 8) === 'Response') {
-            if ($type === 'ResponseBestPriceRequest' && \Tools::getvalue('younitedfulllogs') === false) {
-                $response = $data->getModel();
-                $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
+            $response = $data->getModel();
+            if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
+                if ($response instanceof Error || is_array($response) === false) {
+                    $this->logger->addInfo($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
+                } else {
+                    $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
+                }
             } else {
-                $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($data->getModel()));
+                $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($response));
             }
         }
 
@@ -156,6 +161,7 @@ class ApiLogger
     public function deleteLogFilesOld(int $deleteFromDays = 60)
     {
         $logDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/';
+        $currentMonthDir = _PS_MODULE_DIR_ . $this->module->name . '/logs/' . date('Ym');
         $previousLogDirs = scandir($logDir);
         $origin = new \DateTimeImmutable('now');
         foreach ($previousLogDirs as $oneLogFolder) {
@@ -193,12 +199,17 @@ class ApiLogger
                         }
                         @unlink($logDir . $oneLogFolder . '/' . $oneFileLog);
                     }
-                    @rmdir($logDir . $oneLogFolder);
+                    if ($logDir . $oneLogFolder !== $currentMonthDir) {
+                        @rmdir($logDir . $oneLogFolder);
+                    }
                 }
             }
         }
         foreach ($previousLogDirs as $oneLogFolder) {
             if (in_array($oneLogFolder, ['.', '..', date('Ym')]) === true || is_dir($logDir . $oneLogFolder) === false) {
+                continue;
+            }
+            if ($oneLogFolder === $currentMonthDir) {
                 continue;
             }
             $filesWereDeleted = false;

@@ -107,6 +107,15 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         ],
         [
             'name' => [
+                'en' => 'Contracts',
+                'fr' => 'Contrats',
+            ],
+            'class_name' => 'AdminYounitedpayContracts',
+            'parent_class_name' => 'AdminYounitedParent',
+            'visible' => true,
+        ],
+        [
+            'name' => [
                 'en' => 'FAQ',
                 'fr' => 'FAQ',
                 'es' => 'Sección de preguntas',
@@ -121,9 +130,13 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const CLIENT_ID = 'YOUNITEDPAY_CLIENT_ID';
 
+    const SHOP_CODE = 'YOUNITEDPAY_SHOP_CODE';
+
     const CLIENT_SECRET_PRODUCTION = 'YOUNITEDPAY_CLIENT_SECRET_PRODUCTION';
 
     const CLIENT_ID_PRODUCTION = 'YOUNITEDPAY_CLIENT_ID_PRODUCTION';
+
+    const SHOP_CODE_PRODUCTION = 'YOUNITEDPAY_SHOP_CODE_PRODUCTION';
 
     const PRODUCTION_MODE = 'YOUNITEDPAY_PRODUCTION_MODE';
 
@@ -162,6 +175,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
     const MAX_RANGE_OFFERS = 'YOUNITEDPAY_MAX_RANGE_OFFERS';
 
     const PREFERRED_ISO_CODE = 'FR';
+
+    const USE_NEW_API = 'YOUNITEDPAY_USE_NEW_API';
 
     const AVAILABLE_CURRENCIES = [
         'EUR',

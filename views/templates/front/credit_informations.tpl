@@ -139,13 +139,13 @@
    younitedpay.rangeOffers = [
       {foreach from=$range_offers item=range_offer key=key}
          {
-            "maturity" : {$range_offer['maturity']|escape:'htmlall':'UTF-8'},
-            "installment_amount" : {$range_offer['installment_amount']|escape:'htmlall':'UTF-8'},
-            "initial_amount" : {$range_offer['initial_amount']|escape:'htmlall':'UTF-8'},
-            "total_amount" : {$range_offer['total_amount']|escape:'htmlall':'UTF-8'},
-            "interest_total" : {$range_offer['interest_total']|escape:'htmlall':'UTF-8'},
-            "taeg" : {$range_offer['taeg']|escape:'htmlall':'UTF-8'},
-            "tdf" : {$range_offer['tdf']|escape:'htmlall':'UTF-8'},
+            "maturity" : "{$range_offer['maturity']|escape:'htmlall':'UTF-8'}",
+            "installment_amount" : "{$range_offer['installment_amount']|escape:'htmlall':'UTF-8'}",
+            "initial_amount" : "{$range_offer['initial_amount']|escape:'htmlall':'UTF-8'}",
+            "total_amount" : "{$range_offer['total_amount']|escape:'htmlall':'UTF-8'}",
+            "interest_total" : "{$range_offer['interest_total']|escape:'htmlall':'UTF-8'}",
+            "taeg" : "{$range_offer['taeg']|escape:'htmlall':'UTF-8'}",
+            "tdf" : "{$range_offer['tdf']|escape:'htmlall':'UTF-8'}",
          }{if $key < count($range_offers) - 1},{/if}
       {/foreach}
    ];

@@ -17376,7 +17376,7 @@ a.tags-input .tag:focus {
 
 .nobootstrap {
     background-color: unset !important;
-    padding: 100px 10px 100px;
+    padding: 155px 10px 100px;
     min-width: unset !important
 }
 
@@ -17470,10 +17470,6 @@ body {
 
 #content .page-head {
     margin-bottom: 25px;
-}
-
-#content .alert {
-    margin-top: 55px;
 }
 
 .younitedpayApp .hidden {

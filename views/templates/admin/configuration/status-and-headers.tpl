@@ -15,7 +15,7 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
-<div class="younitedpayApp mb-2{if $alert == false} mt-5{/if}">
+<div class="younitedpayApp mb-2">
   <div class="row">
     <div class="col-sm-12 pr-5 pl-5">
       <div class="row justify-content-center">

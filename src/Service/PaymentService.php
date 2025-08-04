@@ -30,26 +30,34 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
+use YounitedPaySDK\Adapter\CreatePaymentAdapter;
 use YounitedPaySDK\Model\Address;
 use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
 use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
-use YounitedPaySDK\Model\LoadContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
+use YounitedPaySDK\Model\NewAPI\CustomExperience;
+use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
+use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
-use YounitedPaySDK\Request\LoadContractRequest;
+use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
 
 class PaymentService
 {
     use TranslateTrait;
+    const PAYMENT_STATUS_ACCEPTED = 'Accepted';
+    const PAYMENT_STATUS_EXECUTED = 'Executed';
 
     public $module;
 
     /** @var \Context */
     private $context;
+
+    /** @var YounitedClient */
+    private $client;
 
     /** @var LoggerService */
     protected $loggerservice;
@@ -79,9 +87,9 @@ class PaymentService
      */
     public function createContract($maturity, $totalAmount)
     {
-        $customerAdress = new \Address($this->context->cart->id_address_delivery);
+        $customerAddress = new \Address($this->context->cart->id_address_delivery);
 
-        $isPhoneInternational = $this->isInternationalPhone($customerAdress);
+        $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
         if ($isPhoneInternational === false) {
             return [
@@ -92,7 +100,7 @@ class PaymentService
         }
 
         $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false) {
+        if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,
                 'status' => 0,
@@ -100,7 +108,36 @@ class PaymentService
             ];
         }
 
-        $response = $this->sendContractRequest($maturity, $totalAmount, $customerAdress, $client);
+        try {
+            $response = $this->sendContractRequest($maturity, $totalAmount, $customerAddress, $client);
+        } catch (\PrestaShopDatabaseException $e) {
+            $this->logError($e->getMessage(), 'sendContractRequest PrestaShopDatabaseException');
+            $this->logError($e->getTraceAsString(), 'sendContractRequest PrestaShopDatabaseException');
+
+            return [
+                'success' => false,
+                'status' => 0,
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
+            ];
+        } catch (\PrestaShopException $e) {
+            $this->logError($e->getMessage(), 'sendContractRequest PrestaShopException');
+            $this->logError($e->getTraceAsString(), 'sendContractRequest PrestaShopException');
+
+            return [
+                'success' => false,
+                'status' => 0,
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
+            ];
+        } catch (\Exception $e) {
+            $this->logError($e->getMessage(), 'sendContractRequest Exception');
+            $this->logError($e->getTraceAsString(), 'sendContractRequest Exception');
+
+            return [
+                'success' => false,
+                'status' => 0,
+                'response' => $this->l('Please contact the shop owner payment is actually not possible'),
+            ];
+        }
 
         if ($response['success'] === false) {
             $this->logError('Bad response : ' . json_encode($response));
@@ -111,22 +148,27 @@ class PaymentService
         return $this->treatResponse($response);
     }
 
-    protected function sendContractRequest($maturity, $totalAmount, $customerAdress, $client)
+    /**
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     * @throws \Exception
+     */
+    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, YounitedClient $client)
     {
         $customer = $this->context->customer;
-        $country = new \Country($customerAdress->id_country);
+        $country = new \Country($customerAddress->id_country);
 
         $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
-            ? new \DateTime($customer->birthday . 'T00:00:00')
+            ? (new \DateTime($customer->birthday))->format('Y-m-d')
             : null;
 
-        $adresseStreet = $customerAdress->address1;
+        $adresseStreet = $customerAddress->address1;
         $additionalAdress = '';
         if (mb_strlen($adresseStreet) > 38) {
             $additionalAdress = substr($adresseStreet, 38) . ' ';
             $adresseStreet = substr($adresseStreet, 0, 38);
         }
-        $additionalAdress .= $customerAdress->address2 . ' ' . $customerAdress->other;
+        $additionalAdress .= $customerAddress->address2 . ' ' . $customerAddress->other;
 
         if (mb_strlen($additionalAdress) > 38) {
             $additionalAdress = substr($additionalAdress, 0, 38);
@@ -138,8 +180,8 @@ class PaymentService
             ->setStreetNumber('')
             ->setStreetName($adresseStreet)
             ->setAdditionalAddress($additionalAdress)
-            ->setCity($customerAdress->city)
-            ->setPostalCode($customerAdress->postcode)
+            ->setCity($customerAddress->city)
+            ->setPostalCode($customerAddress->postcode)
             ->setCountryCode($country->iso_code);
 
         $personalInformation = (new PersonalInformation())
@@ -185,9 +227,42 @@ class PaymentService
 
         $request = new InitializeContractRequest();
 
-        $this->loggerservice->addLogAPI(json_encode($body), 'Info', $this);
+        $isUseAPIv2 = (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true);
+
+        if ($isUseAPIv2 === false) {
+            $this->loggerservice->addLogAPI('Old contract body:' . json_encode($body), 'Info', $this);
+
+            return $client->sendRequest($body, $request);
+        }
+
+        $webhookUrl = $this->getLink('notification', ['id_cart' => $this->context->cart->id]);
+        $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
+        $request = $this->convertOldRequest($request->setModel($body), $client->shopCode, $webhookUrl, $redirectUrl);
 
         return $client->sendRequest($body, $request);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function convertOldRequest($oldRequest, $shopCode, $webhookUrl, $redirectUrl, $apiVersion = '2025-01-01')
+    {
+        $technicalInformation = (new TechnicalInformation())
+            ->setWebhookNotificationUrl($webhookUrl)
+            ->setApiVersion($apiVersion);
+
+        $customExperience = (new CustomExperience())
+            ->setCustomerRedirectUrl($redirectUrl);
+
+        $adapter = (new CreatePaymentAdapter())
+            ->setShopCode($shopCode)
+            ->setTechnicalInformation($technicalInformation)
+            ->setCustomExperience($customExperience)
+            ->convertInitializeContract($oldRequest);
+
+        $this->loggerservice->addLogAPI('New contract body:' . (string) $adapter->getBody(), 'Info', $this);
+
+        return $adapter;
     }
 
     protected function treatResponse($response)
@@ -195,18 +270,33 @@ class PaymentService
         /** @var ArrayCollection $responseObject */
         $responseObject = $response['response'];
 
-        $urlPayment = $responseObject['redirectUrl'];
+        if (false === empty($responseObject['contractReference']) && false === empty($responseObject['redirectUrl'])) {
+            $urlPayment = $responseObject['redirectUrl'];
+            $contractRef = $responseObject['contractReference'];
 
-        $contractRef = $responseObject['contractReference'];
+            $this->saveContractInit($contractRef);
+        } else {
+            $urlPayment = $responseObject['paymentLink'];
+            $paymentId = $responseObject['paymentId'];
 
-        $this->saveContractInit($contractRef);
+            $getPaymentResponse = $this->getApiPaymentById($paymentId);
+
+            if ($getPaymentResponse !== false) {
+                $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+                $apiVersion = $getPaymentResponse['apiVersion'];
+
+                $this->saveContractInit($contractRef, $paymentId, $apiVersion);
+            } else {
+                $this->saveContractInit('', $paymentId, '2025-01-01');
+            }
+        }
 
         $response['url'] = $urlPayment;
 
         return $response;
     }
 
-    public function isInternationalPhone(\Address $customerAdress)
+    public function isInternationalPhone(\Address $customerAddress)
     {
         $this->cellPhone = '';
         $regValidPhone = '/^\+33\d{9}/';
@@ -215,19 +305,19 @@ class PaymentService
             $regValidPhone = '/^\+34\d{9}/';
         }
 
-        if (empty($customerAdress->phone) === true && empty($customerAdress->phone_mobile) === true) {
+        if (empty($customerAddress->phone) === true && empty($customerAddress->phone_mobile) === true) {
             return true;
         }
 
-        $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone);
+        $isPhoneInternational = preg_match($regValidPhone, $customerAddress->phone);
         if ($isPhoneInternational === 1) {
-            $this->cellPhone = $customerAdress->phone;
+            $this->cellPhone = $customerAddress->phone;
 
             return true;
         } else {
-            $isPhoneInternational = preg_match($regValidPhone, $customerAdress->phone_mobile);
+            $isPhoneInternational = preg_match($regValidPhone, $customerAddress->phone_mobile);
             if ($isPhoneInternational === 1) {
-                $this->cellPhone = $customerAdress->phone_mobile;
+                $this->cellPhone = $customerAddress->phone_mobile;
 
                 return true;
             }
@@ -236,11 +326,11 @@ class PaymentService
         return true;
     }
 
-    protected function saveContractInit($contractRef)
+    protected function saveContractInit($contractRef, $contractPaymentId = null, $apiVersion = '2024-01-01')
     {
-        $dateNull = '0000-00-00 00:00:00';
         /** @var YounitedPayContract $contractYounited */
         $contractYounited = $this->getContractByCart($this->context->cart->id);
+        $contractYounited->payment_id = $contractPaymentId;
         $contractYounited->id_cart = $this->context->cart->id;
         $contractYounited->id_external_younitedpay_contract = $contractRef;
         $contractYounited->is_confirmed = false;
@@ -252,7 +342,35 @@ class PaymentService
         $contractYounited->withdrawn_date = '';
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
+        $contractYounited->api_version = $apiVersion;
         $contractYounited->save();
+    }
+
+    /**
+     * Get api payment by id
+     *
+     * @param string $paymentId
+     *
+     * @return bool|mixed False if nothing requested on the api payment id or error | Api Payment of id requested
+     */
+    public function getApiPaymentById($paymentId)
+    {
+        $client = new YounitedClient($this->context->shop->id);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $getPaymentRequestModel = (new GetPayment())->setId($paymentId);
+        $getPaymentRequest = (new GetPaymentRequest())->setModel($getPaymentRequestModel);
+        $getPaymentResponse = $client->sendRequest($getPaymentRequestModel, $getPaymentRequest);
+
+        if ($getPaymentResponse['success'] === true) {
+            $getPaymentResponse['response']['apiVersion'] = $getPaymentRequest->getApiVersion();
+
+            return $getPaymentResponse['response'];
+        }
+
+        return false;
     }
 
     /**
@@ -274,27 +392,15 @@ class PaymentService
             return false;
         }
 
-        $bodyContractRequest = (new LoadContract())
-            ->setContractReference($younitedContract->id_external_younitedpay_contract);
+        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id);
 
-        $requestContract = new LoadContractRequest();
-
-        $response = $client->sendRequest($bodyContractRequest, $requestContract);
-
-        $contentResponse = $response['response'];
-
-        if ($response['success'] === true && $contentResponse['offer'] && $contentResponse['status']) {
-            $statusOrderDone = ['GRANTED', 'CONFIRMED'];
-            if (in_array($contentResponse['status'], $statusOrderDone) === false) {
+        if (false === empty($getPaymentResponse) && $getPaymentResponse['amount'] && $getPaymentResponse['status']) {
+            $statusOrderDone = [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED];
+            if (in_array($getPaymentResponse['status'], $statusOrderDone) === false) {
                 return false;
             }
 
-            $offer = $contentResponse['offer'];
-            if (isset($offer['requestedAmount']) === false) {
-                return false;
-            }
-
-            return (float) $offer['requestedAmount'];
+            return (float) $getPaymentResponse['amount'];
         }
 
         return false;
@@ -349,7 +455,7 @@ class PaymentService
             return $this->paymentrepository->confirmContract($this->context->cart->id, $this->module->currentOrder);
         }
 
-        return $orderCreated;
+        return false;
     }
 
     /**

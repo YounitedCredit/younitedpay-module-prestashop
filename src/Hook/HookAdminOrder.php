@@ -26,6 +26,7 @@ if (!defined('_PS_VERSION_')) {
 use Cart;
 use Configuration;
 use Exception;
+use OrderCarrier;
 use Tools;
 use Younitedpay;
 use YounitedpayAddon\Entity\YounitedPayContract;
@@ -45,8 +46,8 @@ class HookAdminOrder extends AbstractHook
         'displayAdminOrderContentOrder',
         'displayAdminOrderTabContent',
         'actionOrderStatusPostUpdate',
-        'actionValidateOrder',
         'actionOrderSlipAdd',
+        'actionValidateOrder',
         'displayAdminOrder',
         'displayAdminOrderTop',
     ];
@@ -88,7 +89,7 @@ class HookAdminOrder extends AbstractHook
             return;
         }
 
-        $statusActivating = json_decode(\Configuration::get(Younitedpay::ORDER_STATE_DELIVERED), true);
+        $statusActivating = json_decode(Configuration::get(Younitedpay::ORDER_STATE_DELIVERED), true);
 
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
@@ -118,6 +119,34 @@ class HookAdminOrder extends AbstractHook
         }
     }
 
+    private function renderTemplate($params)
+    {
+        $order = null;
+        if (isset($params['order'])) {
+            /** @var \Order $order */
+            $order = $params['order'];
+        }
+        if (isset($params['id_order'])) {
+            /** @var \Order $order */
+            $order = new \Order((int) $params['id_order']);
+        }
+
+        if (\Validate::isLoadedObject($order) === false) {
+            return;
+        }
+
+        /** @var OrderService $orderservice */
+        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
+
+        $younitedContract = $orderservice->getYounitedContract($order->id_cart);
+
+        if ($order->module != $this->module->name && \Validate::isLoadedObject($younitedContract) === false) {
+            return;
+        }
+
+        return $orderservice->renderTemplate($order);
+    }
+
     public function actionValidateOrder($params)
     {
         /** @var \Order $order */
@@ -126,11 +155,6 @@ class HookAdminOrder extends AbstractHook
         if (isset($order->module) === false || $order->module !== 'younitedpay') {
             return true;
         }
-
-        /** @var OrderService $orderservice */
-        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
-
-        $orderservice->confirmOrder($order);
 
         $countOrders = \Order::getByReference($order->reference)->count();
 
@@ -203,10 +227,11 @@ class HookAdminOrder extends AbstractHook
                 (float) $cart->getOrderTotal(true, Cart::BOTH, null, $cart->id_carrier),
                 $computingPrecision
             );
+            $order->total_paid = $order->total_paid_tax_incl;
 
             $idOrderCarrier = (int) $order->getIdOrderCarrier();
             if ($idOrderCarrier > 0) {
-                $orderCarrier = new \OrderCarrier($idOrderCarrier);
+                $orderCarrier = new OrderCarrier($idOrderCarrier);
                 $orderCarrier->id_carrier = $cart->id_carrier;
                 $orderCarrier->shipping_cost_tax_excl = (float) $order->total_shipping_tax_excl;
                 $orderCarrier->shipping_cost_tax_incl = (float) $order->total_shipping_tax_incl;
@@ -224,34 +249,6 @@ class HookAdminOrder extends AbstractHook
                 $loggerService->addLog($ex->getMessage(), 'actionValidateOrder');
             }
         }
-    }
-
-    private function renderTemplate($params)
-    {
-        $order = null;
-        if (isset($params['order'])) {
-            /** @var \Order $order */
-            $order = $params['order'];
-        }
-        if (isset($params['id_order'])) {
-            /** @var \Order $order */
-            $order = new \Order((int) $params['id_order']);
-        }
-
-        if (\Validate::isLoadedObject($order) === false) {
-            return;
-        }
-
-        /** @var OrderService $orderservice */
-        $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
-
-        $younitedContract = $orderservice->getYounitedContract($order->id_cart);
-
-        if ($order->module != $this->module->name && \Validate::isLoadedObject($younitedContract) === false) {
-            return;
-        }
-
-        return $orderservice->renderTemplate($order);
     }
 
     public function displayAdminOrderTop($params)
@@ -303,11 +300,11 @@ class HookAdminOrder extends AbstractHook
 
     public function actionOrderSlipAdd($params)
     {
-        if (\Tools::isSubmit('doPartialRefundYounitedPay')) {
+        if (Tools::isSubmit('doPartialRefundYounitedPay')) {
             /** @var OrderService $orderservice */
             $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
-            $params = array_merge(\Tools::getAllValues(), $params);
+            $params = array_merge(Tools::getAllValues(), $params);
             $amountToRefund = $orderservice->calculatePartialRefund($params);
 
             return $orderservice->withdrawnContract($params['order']->id, '', (float) $amountToRefund);

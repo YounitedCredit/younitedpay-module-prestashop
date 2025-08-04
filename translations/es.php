@@ -8,6 +8,8 @@ $_MODULE['<{younitedpay}prestashop>younitedpay_71ed18e89d45a93baadf99ee7f9248de'
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_b4a34d3f58b039e7685c2e39b5413757'] = 'Actualización exitosa.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Por favor, introduzca sus credenciales API antes de cambiar la configuración del módulo';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'URL de WebHook enviada al portapapeles';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ecc204e478d0835c58a'] = 'Error con sus credenciales, por favor compruebe las claves y el entorno (producción o prueba)';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_7beeeb3e3e0ca1dfdcb32eb7b220d0c9'] = 'Credenciales API guardadas. Por favor, seleccione su código de tienda antes de cambiar la configuración del módulo';
 $_MODULE['<{younitedpay}prestashop>payment_bd977e4e0df5b77d0692529a85e7a00f'] = 'Error durante el pago, inténtalo de nuevo.';
 $_MODULE['<{younitedpay}prestashop>success_3770b6bfff2dbe20053b13ba9d199d80'] = 'Error con el carrito. Actualice su página.';
 $_MODULE['<{younitedpay}prestashop>success_c59f7641151b3baf1419ec0f778dd21b'] = 'Error con el cliente. Por favor verifique su pedido.';
@@ -17,6 +19,8 @@ $_MODULE['<{younitedpay}prestashop>success_ae26c8dfe5e8e70ba3f146cfaf4677c9'] = 
 $_MODULE['<{younitedpay}prestashop>success_0d004564c3fbbee1d9ff7fb532ade422'] = 'Error al crear el pedido. Inténtalo de nuevo.';
 $_MODULE['<{younitedpay}prestashop>error_1b73668f7dfe439c5e2ccd547188da5f'] = 'Has cancelado el pago.';
 $_MODULE['<{younitedpay}prestashop>error_69c805a66c1d403dcc818c63e45d9a05'] = 'Pago rechazado o se produce un error durante la validación. Inténtalo de nuevo.';
+$_MODULE['<{younitedpay}prestashop>validation_1b73668f7dfe439c5e2ccd547188da5f'] = 'Has cancelado el pago.';
+$_MODULE['<{younitedpay}prestashop>validation_69c805a66c1d403dcc818c63e45d9a05'] = 'Pago rechazado o se produce un error durante la validación. Inténtalo de nuevo.';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_d3b206d196cd6be3a2764c1fb90b200f'] = 'Eliminar seleccionado';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_53c6a96a3df980c3270d6ed82b6f174b'] = '¿Desea eliminar los elementos seleccionados?';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
