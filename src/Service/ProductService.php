@@ -115,6 +115,10 @@ class ProductService
                 ];
             }
 
+            if ($this->isApiCallNeeded($configMaturities, $productPrice) === false) {
+                return $this->noOffers();
+            }
+
             $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount($productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
@@ -315,5 +319,34 @@ class ProductService
         }
 
         return implode(',', $config);
+    }
+
+    /**
+     * Check if we will have an API call for more than 10 euros / months
+     * Will return true at first maturity that match the criteria to make the API call
+     *
+     * @param mixed $configMaturities List or ranges of maturities
+     * @param float $productPrice
+     *
+     * @return bool
+     */
+    private function isApiCallNeeded($configMaturities, $productPrice)
+    {
+        $maturities = [];
+        if (isset($configMaturities['List'])) {
+            $maturities = explode(',', $configMaturities['List']);
+        } else {
+            $maturities = [$configMaturities['Range']['Min'], $configMaturities['Range']['Max']];
+        }
+        foreach($maturities as $oneMaturity) {
+            if ((int) $oneMaturity > 0) {
+                $monthInstallment = (int) $productPrice / (int) $oneMaturity;
+                if ((int) $monthInstallment >= 10) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
