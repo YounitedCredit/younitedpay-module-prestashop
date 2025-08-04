@@ -57,14 +57,14 @@ function YpchangeInstallment(key, maturity = 0)
     }
     var actualOffer = parseInt(key);
     var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
-    var infoInstallmentAmount = parseFloat(maturityZone.attr('data-amount'));
+    var infoInstallmentAmount = maturityZone.attr('data-amount');
     var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
     var infoInstallmentMaturity = currentMaturity + 'x';
-    var initialAmount = parseFloat(maturityZone.attr('data-initamount'));
-    var taeg = parseFloat(maturityZone.attr('data-taeg'));
-    var tdf = parseFloat(maturityZone.attr('data-tdf'));
-    var totalAmount = parseFloat(maturityZone.attr('data-totalamount'));
-    var interestTotal = parseFloat(maturityZone.attr('data-interesttotal'));
+    var initialAmount = maturityZone.attr('data-initamount');
+    var taeg = maturityZone.attr('data-taeg');
+    var tdf = maturityZone.attr('data-tdf');
+    var totalAmount = maturityZone.attr('data-totalamount');
+    var interestTotal = maturityZone.attr('data-interesttotal');
     
     $('.maturity_installment').removeClass('yp-bg-black-btn');
     $('.maturity_installment' + key).addClass('yp-bg-black-btn');
@@ -111,6 +111,9 @@ function hidePopup(e)
 
 function updateCreditZone(event)
 {
+    if (typeof younitedpay === 'undefined' || !younitedpay) {
+        return;
+    }
     var ajaxData = {
         ajax: true,
         id_product: younitedpay.id_product,

@@ -72,6 +72,30 @@
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code">
+                            {l s='Shop Code' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-start">
+                            {if $configuration.production_mode !== true}
+                                <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
+                                    name="shop_code" id="shop_code">
+                                    {foreach from=$configuration.shop_codes_list item='shop_code_name'}
+                                        {if empty($shop_code_name.code) === false}
+                                            <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                                {if $shop_code_name.code == $configuration.shop_code} selected{/if}>
+                                                {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                            </option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            {else}
+                                <small class="form-text">
+                                    {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                </small>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret">
                             {l s='WebHook Secret' mod='younitedpay'}
                         </label>
@@ -79,9 +103,6 @@
                             <input type="text" class="form-control"
                                 placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret"
                                 name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
@@ -103,11 +124,35 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production_production"
+                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production"
                                 name="client_secret_production" value="{$configuration.client_secret_production|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                             </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production">
+                            {l s='Shop Code' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 align-item-start">
+                            {if $configuration.production_mode === true}
+                                <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
+                                    id="shop_code_production" name="shop_code_production">
+                                    {foreach from=$configuration.shop_codes_list item='shop_code_name'}
+                                        {if empty($shop_code_name.code) === false}
+                                            <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                                {if $shop_code_name.code == $configuration.shop_code_production} selected{/if}>
+                                                {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                            </option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            {else}
+                                <small class="form-text">
+                                    {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                </small>
+                            {/if}
                         </div>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
@@ -170,6 +215,45 @@
                             <small class="form-text">
                                 {l s='When enabled, webhook will create orders. Disable this option if you have issues with shipping and prices.' mod='younitedpay'}
                             </small>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="widget_info">
+                        {l s='Test Webhook Integration' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-6 align-item-center input-group">
+                            <input type="text" disabled class="form-control 
+                                {if $configuration.show_monthly === 0}
+                                    widget_disabled
+                                {else}
+                                    widget_enabled
+                                {/if}" 
+                                style="border-right:none;font-weight:bold;" data-month id="widget_input"
+                                value="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
+                                title="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}" />
+                            <div class="input-group-append copy-clipboard" 
+                                data-message="{l s='Widget content copied to clipboard' mod='younitedpay'}" 
+                                data-clipboard-copy="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}">
+                                <span class="input-group-text" style="border-left:none;" 
+                                    title="{l s='Copy to clipboard' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn" 
+                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">content_paste</i>
+                                </span>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text" 
+                                        data-test-url="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
+                                        data-test-webhook style="border-left:none;" 
+                                    title="{l s='Test the notification' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn" 
+                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">webhook</i>
+                                </span>
+                                <span class="input-group-text" data-test-webhook-result style="border-left:none;display:none;" 
+                                    title="{l s='Test the notification' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn" 
+                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">error</i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

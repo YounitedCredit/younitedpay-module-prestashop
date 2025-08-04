@@ -51,8 +51,8 @@ class HookPayment extends AbstractHook
     public function paymentOptions($params)
     {
         $client = new YounitedClient(Context::getContext()->shop->id);
-        if (!$this->module->active || $client->isCrendentialsSet() === false) {
-            return;
+        if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
+            return [];
         }
 
         /** @var ProductService $productservice */
@@ -115,7 +115,7 @@ class HookPayment extends AbstractHook
         return $paymentOptions;
     }
 
-    protected function getYounitedPaymentOption($errorMessage, $totalOffers, int $selectedOffer)
+    protected function getYounitedPaymentOption($errorMessage, $totalOffers, $selectedOffer)
     {
         $logoPayment = Media::getMediaPath(
             _PS_MODULE_DIR_ . $this->module->name . '/views/img/logo-younitedpay-payment.png'

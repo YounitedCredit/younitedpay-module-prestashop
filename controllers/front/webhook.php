@@ -86,7 +86,13 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         if ($error) {
             $this->loggerService->addLog($message, '[younitedpay webhook]', 'info', $this);
         }
-        $this->ajaxDie($message);
+
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+            $this->ajaxRender($message);
+            exit;
+        } else {
+            $this->ajaxDie($message);
+        }
     }
 
     protected function updateContractStatus($idCart, $typeUpdate)

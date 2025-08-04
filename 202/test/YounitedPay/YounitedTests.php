@@ -51,6 +51,7 @@ abstract class YounitedTests extends TestCase
             'client_secret' => 'my-client-secret',
             'production_mode' => false,
             'webhook_secret' => 'my-webhook-secret',
+            'shop_code' => 'my-shop-code',
         ];
 
         $secretFile = __DIR__ . 'YounitedPayAuth.php';

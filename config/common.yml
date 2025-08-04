@@ -37,7 +37,7 @@ services:
     class: 'YounitedpayAddon\Service\ProductService'
     arguments:
       - '@YounitedpayAddon\Service\LoggerService'
-      - '@YounitedpayAddon\Repository\ConfigRepository'
+      - '@YounitedpayAddon\Service\ConfigService'
       - '@younitedpay'
 
   YounitedpayAddon\Service\PaymentService:

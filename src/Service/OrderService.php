@@ -29,14 +29,14 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Model\ActivateContract;
-use YounitedPaySDK\Model\CancelContract;
-use YounitedPaySDK\Model\ConfirmContract;
-use YounitedPaySDK\Model\WithdrawContract;
-use YounitedPaySDK\Request\ActivateContractRequest;
-use YounitedPaySDK\Request\CancelContractRequest;
-use YounitedPaySDK\Request\ConfirmContractRequest;
-use YounitedPaySDK\Request\WithdrawContractRequest;
+use YounitedPaySDK\Model\NewAPI\GetPaymentId;
+use YounitedPaySDK\Model\NewAPI\Request\CancelPayment;
+use YounitedPaySDK\Model\NewAPI\Request\ExecutePayment;
+use YounitedPaySDK\Model\NewAPI\Request\RefundPayment;
+use YounitedPaySDK\Request\NewAPI\CancelPaymentRequest;
+use YounitedPaySDK\Request\NewAPI\ExecutePaymentRequest;
+use YounitedPaySDK\Request\NewAPI\GetPaymentIdRequest;
+use YounitedPaySDK\Request\NewAPI\RefundPaymentRequest;
 
 class OrderService
 {
@@ -86,65 +86,7 @@ class OrderService
         return ['success' => true];
     }
 
-    /**
-     * Confirm the contract - Update the database and make a request to the API
-     *
-     * @param \Order $order
-     *
-     * @return bool $response True if confirmation correctly sent to Younited
-     */
-    public function confirmOrder(\Order $order)
-    {
-        /** @var YounitedPayContract younitedContract */
-        $younitedContract = $this->paymentrepository->getContractByCart($order->id_cart);
-
-        if ($order !== null && $order->module !== $this->module->name) {
-            return false;
-        }
-
-        if (
-            \Validate::isLoadedObject($younitedContract) &&
-            $younitedContract->id_external_younitedpay_contract !== '' &&
-            $order->module !== $this->module->name
-        ) {
-            return false;
-        }
-
-        return $this->confirmContract($order, $younitedContract);
-    }
-
-    public function confirmContract(\Order $order, $younitedContract)
-    {
-        if ($younitedContract->is_confirmed === true) {
-            return true;
-        }
-
-        $clientBuildReturn = $this->buildClient();
-        if ($clientBuildReturn['success'] !== true) {
-            return false;
-        }
-
-        $body = (new ConfirmContract())
-            ->setMerchantOrderId((string) $order->reference)
-            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract);
-
-        $request = new ConfirmContractRequest();
-
-        $response = $this->sendRequest($body, $request, 'confirm contract');
-
-        if ((bool) $response['success'] === false) {
-            $this->loggerservice->addLog(
-                'Error while confirming Younited Pay Order',
-                $order->reference,
-                'Error',
-                $this
-            );
-        }
-
-        return $this->paymentrepository->activateContract($order->id);
-    }
-
-    protected function sendRequest($body, $request, $type)
+    protected function sendRequest($body, $request, $type, $refContract = '')
     {
         try {
             $response = $this->client->sendRequest($body, $request);
@@ -153,12 +95,6 @@ class OrderService
                 'success' => false,
                 'response' => $ex->getMessage(),
             ];
-        }
-
-        try {
-            $refContract = $body->getContractReference();
-        } catch (Exception $ex) {
-            $refContract = json_encode($body);
         }
 
         if ($response['success'] === false) {
@@ -192,12 +128,13 @@ class OrderService
             return true;
         }
 
-        $body = (new CancelContract())
-                ->setContractReference($refContract);
+        $this->paymentrepository->cancelContract($younitedContract->id_order);
+        $body = (new CancelPayment())
+                ->setId($younitedContract->payment_id);
 
-        $request = new CancelContractRequest();
+        $request = new CancelPaymentRequest();
 
-        $this->sendRequest($body, $request, 'cancel contract');
+        $this->sendRequest($body, $request, 'cancel contract', $younitedContract->payment_id);
 
         return true;
     }
@@ -220,14 +157,16 @@ class OrderService
         }
 
         $this->paymentrepository->setWithdrawnAmount($idOrder, $amountWithdraw);
+        $this->paymentrepository->withdrawnContract($younitedContract->id_order);
 
-        $body = (new WithdrawContract())
+        $body = (new RefundPayment())
+                ->setPaymentId($younitedContract->payment_id)
                 ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
-                ->setContractReference($refContract);
+                ->setIdempotencyKey($refContract);
 
-        $request = new WithdrawContractRequest();
+        $request = new RefundPaymentRequest();
 
-        $this->sendRequest($body, $request, 'withdraw contract');
+        $this->sendRequest($body, $request, 'withdraw contract', $younitedContract->payment_id);
 
         return true;
     }
@@ -338,12 +277,12 @@ class OrderService
 
         $this->paymentrepository->activateContract($idOrder);
 
-        $body = (new ActivateContract())
-            ->setContractReference((string) $younitedContract->id_external_younitedpay_contract);
+        $body = (new ExecutePayment())
+            ->setId((string) $younitedContract->payment_id);
 
-        $request = new ActivateContractRequest();
+        $request = new ExecutePaymentRequest();
 
-        $this->sendRequest($body, $request, 'activate order');
+        $this->sendRequest($body, $request, 'activate order', $younitedContract->payment_id);
 
         return true;
     }
@@ -362,7 +301,6 @@ class OrderService
                     ],
                     'id_cart = ' . (int) $order->id_cart
                 );
-                $this->confirmContract($order, $younitedContract);
             } catch (Exception $ex) {
                 $this->loggerservice->addLog(
                     'Exception while linking order to younited contract: ' . $ex->getMessage(),
@@ -372,7 +310,15 @@ class OrderService
                 );
             }
         }
+        \Context::getContext()->smarty->assign($this->getContractInformations($younitedContract));
 
+        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderContentOrder.tpl';
+
+        return \Context::getContext()->smarty->fetch($template);
+    }
+
+    public function getContractInformations($younitedContract)
+    {
         $dateState = $younitedContract->date_upd;
         $state = $this->l('Awaiting');
         $stateWithdrawn = false;
@@ -381,11 +327,6 @@ class OrderService
             case (bool) $younitedContract->is_activated === true:
                 $dateState = $younitedContract->activation_date;
                 $state = $this->l('Activated');
-                break;
-
-            case (bool) $younitedContract->is_confirmed === true:
-                $dateState = $younitedContract->confirmation_date;
-                $state = $this->l('Confirmed');
                 break;
 
             case (bool) $younitedContract->is_withdrawn === true:
@@ -400,11 +341,21 @@ class OrderService
                 break;
         }
 
-        \Context::getContext()->smarty->assign([
+        if (empty($younitedContract->payment_id) || is_null($younitedContract->payment_id)) {
+            $clientBuildReturn = $this->buildClient();
+            if ($clientBuildReturn['success'] === true) {
+                $this->getPaymentIdFromLegacy($younitedContract);
+            } else {
+                $younitedContract->payment_id = 'Unknown - Error from API';
+            }
+        }
+
+        return [
             'iso_lang' => \Context::getContext()->language->iso_code,
             'payment' => [
-                'id' => $younitedContract->id_external_younitedpay_contract,
-                'url' => $younitedContract->id_external_younitedpay_contract,
+                'id' => $younitedContract->payment_id,
+                'api_version' => (int) $younitedContract->api_version <= 0 ? '2024' : $younitedContract->api_version,
+                'reference' => $younitedContract->id_external_younitedpay_contract,
                 'date' => $younitedContract->date_add,
                 'date_state' => $dateState,
                 'status' => $state,
@@ -413,11 +364,7 @@ class OrderService
             ],
             'shop_url' => __PS_BASE_URI__,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
-        ]);
-
-        $template = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/hook/displayAdminOrderContentOrder.tpl';
-
-        return \Context::getContext()->smarty->fetch($template);
+        ];
     }
 
     /**
@@ -436,5 +383,22 @@ class OrderService
         }
 
         return new YounitedPayContract();
+    }
+
+    /**
+     * Retrieve paymentId with contract reference (new id)
+     *
+     * @param YounitedPayContract $younitedContract
+     */
+    private function getPaymentIdFromLegacy(YounitedPayContract &$younitedContract)
+    {
+        $body = (new GetPaymentId())->setContractReference($younitedContract->id_external_younitedpay_contract);
+        $response = $this->sendRequest($body, new GetPaymentIdRequest(), 'GetPaymentIdRequest');
+        if (isset($response['paymentId'])) {
+            $younitedContract->payment_id = $response['paymentId'];
+            $this->paymentrepository->updatePaymentId($younitedContract->id_order, $response['paymentId']);
+        } else {
+            $younitedContract->payment_id = 'Unknown - Not found';
+        }
     }
 }

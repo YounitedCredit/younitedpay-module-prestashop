@@ -30,7 +30,11 @@ use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Request\AvailableMaturitiesRequest;
+use YounitedPaySDK\Model\NewAPI\GetOffers;
+use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
+use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
+use YounitedPaySDK\Request\NewAPI\ShopsRequest;
+use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
 use YounitedPaySDK\Response\AbstractResponse;
 
 class ConfigService
@@ -48,7 +52,7 @@ class ConfigService
     protected $logger;
 
     /** @var ConfigRepository */
-    protected $configRepository;
+    public $configRepository;
 
     const DEF_MATURITIES = [10, 12, 24];
 
@@ -116,28 +120,65 @@ class ConfigService
             return [
                 'message' => $this->l('No credential saved'),
                 'maturityList' => self::DEF_MATURITIES,
-                'status' => false,
+                'shopCodeList' => [],
+                'status' => ['no_credentials'],
             ];
         }
 
-        $request = new AvailableMaturitiesRequest();
-
-        /** @var AbstractResponse $response */
-        $response = $client->sendRequest(null, $request);
-
-        if (empty($response) === true || null === $response || $response['success'] === false) {
-            return [
-                'message' => $this->l('Response error'),
-                'maturityList' => self::DEF_MATURITIES,
-                'status' => false,
-            ];
+        $message = '';
+        $errorStatus = [];
+        if (empty($client->shopCode) === true) {
+            $message = $this->l('No Shop Code saved');
+            $errorStatus[] = 'no_shop_code';
         }
-        $maturityList = $response['response'];
+
+        $shopCodeList = $this->getShopCodes();
+        if (empty($shopCodeList) === true) {
+            $message .= ($message === '') ? '' : ' - ';
+            $message .= 'Shop codes: ' . $this->l('Response error');
+            $errorStatus[] = 'api_error';
+            $client->shopCode = '';
+        }
+
+        $body = (new GetOffers())->setShopCode($client->shopCode)
+            ->setAmount(1500)
+            ->setMaturityRangeStep(1)
+            ->setMaturityRangeMin(1)
+            ->setMaturityRangeMax(84);
+
+        $request = new GetOffersRequest();
+        $maturityList = self::DEF_MATURITIES;
+
+        if (empty($client->shopCode) === false) {
+            /** @var AbstractResponse $response */
+            $response = $client->sendRequest($body, $request);
+
+            if (empty($response) === true || null === $response || $response['success'] === false) {
+                $message .= ($message === '') ? '' : ' - ';
+                $message .= $this->l('Offers response error');
+                $errorStatus[] = 'maturities_error';
+            }
+            if (empty($errorStatus) === false) {
+                return [
+                    'message' => $message,
+                    'maturityList' => $maturityList,
+                    'shopCodeList' => $shopCodeList,
+                    'status' => $errorStatus,
+                ];
+            }
+            $maturityList = [];
+            foreach ($response['response'] as $oneOffer) {
+                if (in_array((int) $oneOffer->getMaturityInMonths(), $maturityList) === false) {
+                    $maturityList[] = (int) $oneOffer->getMaturityInMonths();
+                }
+            }
+        }
 
         return [
-            'message' => $this->l('Connexion Ok'),
-            'maturityList' => count($maturityList) > 0 ? $maturityList : self::DEF_MATURITIES,
-            'status' => true,
+            'message' => empty($errorStatus) ? $this->l('Connexion Ok') : $message,
+            'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
+            'shopCodeList' => $shopCodeList,
+            'status' => empty($errorStatus) ? ['ok'] : $errorStatus,
         ];
     }
 
@@ -182,7 +223,9 @@ class ConfigService
 
         return [
             'maturityList' => $isApiConnected['maturityList'],
-            'connected' => $isApiConnected['status'],
+            'shopCodeList' => $isApiConnected['shopCodeList'],
+            'connected' => in_array('ok', $isApiConnected['status']),
+            'status' => $isApiConnected['status'],
             'specs' => [
                 [
                     'name' => 'CURL',
@@ -202,7 +245,7 @@ class ConfigService
                 [
                     'name' => $this->l('Connected to API'),
                     'info' => $isApiConnected['message'],
-                    'ok' => (bool) $isApiConnected['status'],
+                    'ok' => in_array('ok', $isApiConnected['status']),
                 ],
                 [
                     'name' => $this->l('Production environment'),
@@ -268,5 +311,72 @@ class ConfigService
     public function saveAllMaturities($maturities, $idShop)
     {
         $this->configRepository->saveAllMaturities($maturities, $idShop);
+    }
+
+    /**
+     * Return Shop Codes list from API
+     */
+    public function getShopCodes()
+    {
+        $client = new YounitedClient($this->context->shop->id);
+
+        if ($client->isCrendentialsSet() === false) {
+            return [];
+        }
+
+        $request = new ShopsRequest();
+
+        /** @var AbstractResponse $response */
+        $response = $client->sendRequest(null, $request);
+
+        if (empty($response) === true || null === $response || $response['success'] === false) {
+            return [];
+        }
+        $shopCodes = $response['response'];
+
+        $shopCodesNames = [];
+        foreach ($shopCodes as $oneShopCode) {
+            if (isset($oneShopCode['name']) && isset($oneShopCode['code'])) {
+                $shopCodesNames[] = [
+                    'name' => $oneShopCode['name'],
+                    'code' => $oneShopCode['code'],
+                ];
+            }
+        }
+
+        return $shopCodesNames;
+    }
+
+    public function testWebhook()
+    {
+        $client = new YounitedClient($this->context->shop->id);
+
+        if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
+            return false;
+        }
+
+        $model = (new WebHookIntegration())->setWebhookUrl(\Tools::getValue('testWebHookURL'));
+
+        $response = $client->sendRequest($model, new WebHooksIntegrationRequest());
+        $responseWebHook = $response;
+        if (isset($response['response']['responseStatusCode'])) {
+            $statutResponse = (int) substr($response['response']['responseBody'], 0, 3);
+            $responseWebHook = [
+                'status' => $statutResponse,
+                'success' => $statutResponse === 200 ? true : false,
+                'response' => $response['response']['responseBody'],
+            ];
+        }
+
+        return json_encode($responseWebHook);
+    }
+
+    private function sortOffers($validOffers)
+    {
+        usort($validOffers, function ($a, $b) {
+            return $a > $b ? 1 : -1;
+        });
+
+        return $validOffers;
     }
 }

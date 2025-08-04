@@ -1,0 +1,58 @@
+<?php
+/**
+ * Copyright since 2022 Younited Credit
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to tech@202-ecommerce.com so we can send you a copy immediately.
+ *
+ * @author	 202 ecommerce <tech@202-ecommerce.com>
+ * @copyright 2022 Younited Credit
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
+ */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
+use YounitedpayClasslib\Install\ModuleInstaller;
+
+/**
+ * @param YounitedPay $module
+ *
+ * @return bool
+ *
+ * @throws PrestaShopException
+ */
+function upgrade_module_2_0_0($module)
+{
+    try {
+        $installer = new ModuleInstaller($module);
+        $result = $installer->installObjectModel(YounitedPayContract::class);
+        $installer->uninstallModuleAdminControllers();
+        $installer->installAdminControllers();
+
+        $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']) . '` ALTER `api_version` SET DEFAULT "2024-01-01"';
+        $result &= Db::getInstance()->execute($query);
+
+        Configuration::updateGlobalValue(Younitedpay::USE_NEW_API, 1);
+        foreach (\Shop::getShops(true, null, true) as $key => $idShop) {
+            $dayConf = (int) \Configuration::get(ProcessLoggerExtension::ERASING_DAYSMAX, null, null, $idShop, 5);
+            if ($dayConf === 5) {
+                \Configuration::updateValue(ProcessLoggerExtension::ERASING_DAYSMAX, 120, false, null, $idShop);
+            }
+        }
+    } catch (Exception $e) {
+        PrestaShopLogger::addLog($e->getMessage(), 3);
+        $result = false;
+    }
+
+    return $result;
+}
