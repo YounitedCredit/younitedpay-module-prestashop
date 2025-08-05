@@ -369,7 +369,7 @@ class ProductService
         } else {
             $maturities = [$configMaturities['Range']['Min'], $configMaturities['Range']['Max']];
         }
-        foreach($maturities as $oneMaturity) {
+        foreach ($maturities as $oneMaturity) {
             if ((int) $oneMaturity > 0) {
                 $monthInstallment = (int) $productPrice / (int) $oneMaturity;
                 if ((int) $monthInstallment >= 10) {
