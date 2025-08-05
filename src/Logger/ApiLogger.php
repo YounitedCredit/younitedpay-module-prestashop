@@ -179,7 +179,7 @@ class ApiLogger
         }
 
         if (substr($type, 0, 7) === 'Request') {
-            /** @var AbstractRequest $data */
+            /** @var \YounitedPaySDK\Request\AbstractRequest $data */
             $logData = 'Request ' . ($data->getMethod() ?? 'GET') . ' to ' . $data->getUri();
         }
         $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);

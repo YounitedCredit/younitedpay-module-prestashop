@@ -249,7 +249,7 @@ class ProductService
 
         return [
             'template' => $this->module->fetch('module:younitedpay/views/templates/front/credit_propositions.tpl'),
-            'offers' => []
+            'offers' => [],
         ];
     }
 
