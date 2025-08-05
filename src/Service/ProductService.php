@@ -47,6 +47,9 @@ class ProductService
     /** @var ConfigService */
     protected $configService;
 
+    /** @var string */
+    protected $selectedHook;
+
     public function __construct(
         LoggerService $loggerservice,
         ConfigService $configService,
@@ -61,6 +64,11 @@ class ProductService
 
     public function getBestPrice($product_price, $selectedHook = 'widget')
     {
+        $this->selectedHook = $selectedHook;
+        if (\Tools::getValue('action') === 'refresh') {
+            return $this->noOffers();
+        }
+
         $client = new YounitedClient($this->context->shop->id);
         if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false || $client->shopCode === '') {
             return $this->noOffers();
@@ -216,9 +224,32 @@ class ProductService
 
     protected function noOffers()
     {
-        return [
-            'template' => '',
+        $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
+        $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
+        $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
+        $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
+        $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
+        $widgetBorder = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_WIDGET_BORDERS, false);
+
+        $this->context->smarty->assign([
+            'shop_url' => __PS_BASE_URI__,
+            'iso_code' => \Context::getContext()->language->iso_code,
+            'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
+            'hook_younited' => $this->selectedHook,
             'offers' => [],
+            'range_offers' => [],
+            'show_ranges' => (int) $isRangeEnabled,
+            'min_range' => (int) $minRange,
+            'max_range' => (int) $maxRange,
+            'selected_offer' => 0,
+            'min_install' => $minInstall,
+            'max_install' => $maxInstall,
+            'widget_borders' => $widgetBorder,
+        ]);
+
+        return [
+            'template' => $this->module->fetch('module:younitedpay/views/templates/front/credit_propositions.tpl'),
+            'offers' => []
         ];
     }
 
