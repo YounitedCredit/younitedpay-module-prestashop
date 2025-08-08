@@ -69,16 +69,16 @@ function YpchangeInstallment(key, maturity = 0)
     $('.maturity_installment').removeClass('yp-bg-black-btn');
     $('.maturity_installment' + key).addClass('yp-bg-black-btn');
 
-    $('.yp-install-amount').html(infoInstallmentAmount + " €");
-    $('.yp-install-maturity').html(infoInstallmentMaturity);
-    $('.yp-tdf').html(tdf);
-    $('.yp-taeg').html(taeg);
-    $('.yp-total').html(totalAmount);
-    $('.yp-interest').html(interestTotal);
-    $('.yp-amount').html(initialAmount);
+    $('.yp-install-amount').text(infoInstallmentAmount + " €");
+    $('.yp-install-maturity').text(infoInstallmentMaturity);
+    $('.yp-tdf').text(tdf);
+    $('.yp-taeg').text(taeg);
+    $('.yp-total').text(totalAmount);
+    $('.yp-interest').text(interestTotal);
+    $('.yp-amount').text(initialAmount);
 
     $('.yp-custom-range').val(currentMaturity);
-    $('.yp-install-maturity-lite').html(currentMaturity);
+    $('.yp-install-maturity-lite').text(currentMaturity);
 
     ypUpdatePaymentURL(currentMaturity);
 }

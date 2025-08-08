@@ -23,10 +23,13 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use PrestaShopLogger;
 use Younitedpay;
 use YounitedPaySDK\Model\NewAPI\Error;
+use YounitedPaySDK\Response\NewAPI\GetOffersResponse;
 
 class ApiLogger
 {
@@ -111,25 +114,16 @@ class ApiLogger
             return true;
         }
 
-        $logData = $data;
-        if ($isObject === true) {
-            $logData = json_encode($data);
+        try {
+            $this->logData($object, $data, $type, $isObject);
+
+            return true;
+        } catch (Exception $ex) {
+            $fileException = $ex->getFile() . ' - L.' . $ex->getLine();
+            PrestaShopLogger::addLog('Exception on logging files :' . $ex->getMessage() . ' on file: ' . $fileException);
         }
 
-        if (substr($type, 0, 8) === 'Response') {
-            $response = $data->getModel();
-            if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
-                if ($response instanceof Error || is_array($response) === false) {
-                    $this->logger->addInfo($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
-                } else {
-                    $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . count($response));
-                }
-            } else {
-                $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($response));
-            }
-        }
-
-        $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);
+        return true;
     }
 
     private function getClass($object)
@@ -151,6 +145,44 @@ class ApiLogger
         if ($this->isUnitTest === false && $this->fileLoggerActivated !== false) {
             fclose($this->stream);
         }
+    }
+
+    private function logData($object, $data, $type = 'Error', $isObject = false)
+    {
+        $logData = $data;
+        if ($isObject === true) {
+            $logData = json_encode($data);
+        }
+
+        if (substr($type, 0, 8) === 'Response') {
+            $response = $data->getModel();
+            if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
+                if ($response instanceof Error && $response instanceof GetOffersResponse === false) {
+                    $this->logger->addInfo($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
+                } else {
+                    try {
+                        $count = count(json_decode(json_encode($response), true));
+                    } catch (Exception $ex) {
+                        $count = 'Error count';
+                    }
+                    $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . $count);
+                }
+            } else {
+                $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($response));
+            }
+            $headers = $data->getHeaders() ?? [];
+            $logData = \json_encode([
+                'x-azure-ref' => $headers['x-azure-ref'] ?? 'missing',
+                'Request-Context' => $headers['Request-Context'] ?? 'missing',
+                'statusCode' => $headers['statusCode'] ?? 'missing',
+            ]);
+        }
+
+        if (substr($type, 0, 7) === 'Request') {
+            /** @var \YounitedPaySDK\Request\AbstractRequest $data */
+            $logData = 'Request ' . ($data->getMethod() ?? 'GET') . ' to ' . $data->getUri();
+        }
+        $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);
     }
 
     /**
