@@ -46,6 +46,16 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
     {
     }
 
+    /**
+     * Sets controller CSS and JS files.
+     * Do not do anything here to prevent Hook actionFrontControllerSetMedia to trigger (useless and can generate issues)
+     *
+     * @return bool
+     */
+    public function setMedia()
+    {
+    }
+
     public function initContent()
     {
         /* @var LoggerService */
@@ -87,6 +97,20 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
         switch ($webhookNotification->getType()) {
             case self::EVENT_TYPE_PAYMENT_UPDATED:
+                $status = $webhookNotification->getData()->getStatus();
+                $paymentAcceptedOrExecuted = [
+                    YounitedpayValidationModuleFrontController::PAYMENT_STATUS_ACCEPTED,
+                    YounitedpayValidationModuleFrontController::PAYMENT_STATUS_EXECUTED,
+                ];
+                if (in_array($status, $paymentAcceptedOrExecuted) === true) {
+                    if ($cart->orderExists() === true) {
+                        $this->endResponse('200 - Order is already created on this cart', false);
+                    }
+                    $_POST['id_cart'] = (int) $idCart;
+                    $_POST['granted'] = 1;
+                    $controller = new YounitedpayValidationModuleFrontController();
+                    $this->endResponse($controller->initContent());
+                }
                 if ($webhookNotification->getData()->getStatus() !== self::PAYMENT_STATUS_CANCELLED) {
                     $this->endResponse('400 - Event type not treat on webhook', false);
                 }

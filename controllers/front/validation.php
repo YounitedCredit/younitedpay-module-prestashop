@@ -44,6 +44,16 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
     {
     }
 
+    /**
+     * Sets controller CSS and JS files.
+     * Do not do anything here to prevent Hook actionFrontControllerSetMedia to trigger (useless and can generate issues)
+     *
+     * @return bool
+     */
+    public function setMedia()
+    {
+    }
+
     public function initContent()
     {
         $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);

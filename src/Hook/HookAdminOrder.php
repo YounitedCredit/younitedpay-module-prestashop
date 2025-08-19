@@ -164,7 +164,7 @@ class HookAdminOrder extends AbstractHook
         /** @var LoggerService $loggerService */
         $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
-        if ($order->id_carrier !== $cart->id_carrier && $countOrders > 1) {
+        if ((int) $order->id_carrier !== (int) $cart->id_carrier && $countOrders > 1) {
             $loggerService->addLog(
                 sprintf(
                     'Cannot update - more than one order (split packages) - Do not Updating wrong carrier %s (order) to %s (cart)',
@@ -178,7 +178,7 @@ class HookAdminOrder extends AbstractHook
 
             return true;
         }
-        if ($order->id_carrier !== $cart->id_carrier) {
+        if ((int) $order->id_carrier !== (int) $cart->id_carrier) {
             $loggerService->addLog(
                 sprintf(
                     'Updating wrong carrier %s (order) to %s (cart)',
