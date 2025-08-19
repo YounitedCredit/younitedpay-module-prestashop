@@ -40,10 +40,12 @@ use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
 use YounitedPaySDK\Model\NewAPI\CustomExperience;
 use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
+use YounitedPaySDK\Model\NewAPI\Request\UpdateMerchantReference;
 use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
 use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
+use YounitedPaySDK\Request\NewAPI\UpdateMerchantReferenceRequest;
 
 class PaymentService
 {
@@ -368,6 +370,34 @@ class PaymentService
             $getPaymentResponse['response']['apiVersion'] = $getPaymentRequest->getApiVersion();
 
             return $getPaymentResponse['response'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Update Merchant Reference
+     *
+     * @param string $paymentId
+     * @param string $merchantReference
+     *
+     * @return bool False if nothing requested on the api payment id or error | True if operation succeeded
+     */
+    public function updateMerchantReference($paymentId, $merchantReference)
+    {
+        $client = new YounitedClient($this->context->shop->id);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $updateMerchantReferenceRequestModel = (new UpdateMerchantReference())
+            ->setPaymentId($paymentId)
+            ->setMerchantReference($merchantReference);
+        $updateMerchantReferenceRequest = (new UpdateMerchantReferenceRequest())->setModel($updateMerchantReferenceRequestModel);
+        $updateMerchantReferenceResponse = $client->sendRequest($updateMerchantReferenceRequestModel, $updateMerchantReferenceRequest);
+
+        if ($updateMerchantReferenceResponse['success'] === true) {
+            return true;
         }
 
         return false;

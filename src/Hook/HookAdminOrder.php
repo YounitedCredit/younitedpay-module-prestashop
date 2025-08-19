@@ -32,6 +32,7 @@ use Younitedpay;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\OrderService;
+use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
 
@@ -157,6 +158,14 @@ class HookAdminOrder extends AbstractHook
         }
 
         $countOrders = \Order::getByReference($order->reference)->count();
+
+        /** @var OrderService $orderService */
+        $orderService = ServiceContainer::getInstance()->get(OrderService::class);
+        $younitedContract = $orderService->getYounitedContract($order->id, 'order');
+
+        /** @var PaymentService $paymentService */
+        $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
+        $paymentService->updateMerchantReference($younitedContract->payment_id, $order->reference);
 
         /** @var Cart $cart */
         $cart = $params['cart'];
