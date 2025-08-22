@@ -165,7 +165,7 @@ class HookAdminOrder extends AbstractHook
 
         /** @var PaymentService $paymentService */
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
-        $paymentService->updateMerchantReference($younitedContract->payment_id, $order->reference);
+        $paymentService->updateMerchantReference($younitedContract->payment_id, $order->reference . '-' . $order->id);
 
         /** @var Cart $cart */
         $cart = $params['cart'];
