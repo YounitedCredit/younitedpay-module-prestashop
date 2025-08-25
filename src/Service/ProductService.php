@@ -195,6 +195,9 @@ class ProductService
             if ((int) $rangeOffers[count($rangeOffers) - 1]['maturity'] < $maxInstall) {
                 $maxInstall = (int) $rangeOffers[count($rangeOffers) - 1]['maturity'];
             }
+            if ((int) $rangeOffers[0]['maturity'] !== $minInstall) {
+                $minInstall = (int) $rangeOffers[0]['maturity'];
+            }
         }
 
         $template = 'module:younitedpay/views/templates/front/credit_propositions.tpl';
