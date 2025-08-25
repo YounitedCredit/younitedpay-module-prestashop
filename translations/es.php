@@ -214,6 +214,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_07fce9628c3f8ef8de71a2bf4
 $_MODULE['<{younitedpay}prestashop>credit_informations_da36cfaf48b9e19896e23e1207040d1e'] = 'meses';
 $_MODULE['<{younitedpay}prestashop>credit_informations_9d11b84fbe0d9eeb9136dd867fedf8fd'] = 'Tu compra por ';
 $_MODULE['<{younitedpay}prestashop>credit_informations_ff9387cc0584e035780f28919879aad8'] = 'Importe total del crédito';
+$_MODULE['<{younitedpay}prestashop>credit_informations_5440eb39365d33294cfc6a743eea442b'] = 'Importe a pagar hoy';
 $_MODULE['<{younitedpay}prestashop>credit_informations_57ba061b675b8bf8477da18b20e416a2'] = 'intereses (excluido el seguro opcional)';
 $_MODULE['<{younitedpay}prestashop>credit_informations_c0a28e86640fc07c7176d05888d82d6c'] = 'Importe total adeudado';
 $_MODULE['<{younitedpay}prestashop>credit_informations_64408fc092e84b9eb352626a0bcbbdf7'] = 'TAE';

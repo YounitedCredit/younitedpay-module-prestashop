@@ -311,6 +311,7 @@ class ProductService
             'maturity' => (int) $offer->getMaturityInMonths(),
             'installment_amount' => number_format(round($offer->getMonthlyInstallmentAmount(), 2), 2, '.', ''),
             'initial_amount' => number_format(round($offer->getRequestedAmount(), 2), 2, '.', ''),
+            'down_payment_amount' => number_format(round($offer->getDownPaymentAmount(), 2), 2, '.', ''),
             'total_amount' => number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', ''),
             'interest_total' => number_format(round($offer->getInterestsTotalAmount(), 2), 2, '.', ''),
             'taeg' => number_format(round($offer->getAnnualPercentageRate(), 2), 2, '.', ''),

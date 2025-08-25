@@ -51,6 +51,7 @@ function YpchangeInstallment(key, maturity = 0)
                 zoneCustom.attr('data-tdf', offer.tdf);
                 zoneCustom.attr('data-totalamount', offer.total_amount);
                 zoneCustom.attr('data-interesttotal', offer.interest_total);
+                zoneCustom.attr('data-downpayment', offer.down_payment_amount);
                 key = "9999";
             }
         });
@@ -65,6 +66,7 @@ function YpchangeInstallment(key, maturity = 0)
     var tdf = maturityZone.attr('data-tdf');
     var totalAmount = maturityZone.attr('data-totalamount');
     var interestTotal = maturityZone.attr('data-interesttotal');
+    var downPaymentAmount = maturityZone.attr('data-downpayment');
     
     $('.maturity_installment').removeClass('yp-bg-black-btn');
     $('.maturity_installment' + key).addClass('yp-bg-black-btn');
@@ -76,6 +78,7 @@ function YpchangeInstallment(key, maturity = 0)
     $('.yp-total').text(totalAmount);
     $('.yp-interest').text(interestTotal);
     $('.yp-amount').text(initialAmount);
+    $('.yp-down-amount').text(downPaymentAmount);
 
     $('.yp-custom-range').val(currentMaturity);
     $('.yp-install-maturity-lite').text(currentMaturity);

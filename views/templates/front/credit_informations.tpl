@@ -33,6 +33,7 @@
          data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
          data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
          data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
+         data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}" 
          data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
          data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
          data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
@@ -54,6 +55,7 @@
          data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}" 
          data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}" 
          data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}" 
+         data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}" 
          data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
          data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
          data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
@@ -99,6 +101,12 @@
 <div class="yp-border-prple yp-border-2 yp-p-3 yp-rounded-bg yp-mt-6">
 <div class="yp-mb-8 yp-text-lg yp-pol-purpledark">
    <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
+      <p class="yp-pol-purpledark yp-font-normal">{l s='Amount to pay today' mod='younitedpay'}</p>
+      <p class="yp-weight600 yp-pol-purpledark yp-mw85 yp-text-right">
+         <span class="yp-down-amount">{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€
+      </p>
+   </div>
+   <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
       <p class="yp-pol-purpledark yp-font-normal">{l s='Total credit amount' mod='younitedpay'}</p>
       <p class="yp-weight600 yp-pol-purpledark yp-mw85 yp-text-right">
          <span class="yp-amount">{$offer.initial_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€
@@ -141,6 +149,7 @@
          {
             "maturity" : "{$range_offer['maturity']|escape:'htmlall':'UTF-8'}",
             "installment_amount" : "{$range_offer['installment_amount']|escape:'htmlall':'UTF-8'}",
+            "down_payment_amount" : "{$range_offer['down_payment_amount']|escape:'htmlall':'UTF-8'}",
             "initial_amount" : "{$range_offer['initial_amount']|escape:'htmlall':'UTF-8'}",
             "total_amount" : "{$range_offer['total_amount']|escape:'htmlall':'UTF-8'}",
             "interest_total" : "{$range_offer['interest_total']|escape:'htmlall':'UTF-8'}",

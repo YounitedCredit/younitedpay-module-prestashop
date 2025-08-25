@@ -111,6 +111,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_07fce9628c3f8ef8de71a2bf4
 $_MODULE['<{younitedpay}prestashop>credit_informations_da36cfaf48b9e19896e23e1207040d1e'] = 'mois';
 $_MODULE['<{younitedpay}prestashop>credit_informations_9d11b84fbe0d9eeb9136dd867fedf8fd'] = 'Votre achat pour ';
 $_MODULE['<{younitedpay}prestashop>credit_informations_ff9387cc0584e035780f28919879aad8'] = 'Montant total du crédit';
+$_MODULE['<{younitedpay}prestashop>credit_informations_5440eb39365d33294cfc6a743eea442b'] = 'Montant à payer aujourd\'hui';
 $_MODULE['<{younitedpay}prestashop>credit_informations_57ba061b675b8bf8477da18b20e416a2'] = 'Intérêts (hors assurance facultative)';
 $_MODULE['<{younitedpay}prestashop>credit_informations_c0a28e86640fc07c7176d05888d82d6c'] = 'Montant total dû par l\'emprunteur';
 $_MODULE['<{younitedpay}prestashop>credit_informations_64408fc092e84b9eb352626a0bcbbdf7'] = 'TAEG fixe';
