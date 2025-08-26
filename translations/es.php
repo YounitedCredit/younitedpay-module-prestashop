@@ -263,7 +263,7 @@ $_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'
 $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a9d'] = 'Reembolso con Younited Pay';
 $_MODULE['<{younitedpay}prestashop>commonhook_afb5a47d1504231a95cfca9e52a217f4'] = 'Se debe seleccionar Generar un comprobante de crédito para reembolsar con Younited Pay';
 $_MODULE['<{younitedpay}prestashop>commonhook_f473fb6d1cd3a547bad7d0bdecbf6656'] = 'Reembolso con Younited Pay';
-$_MODULE['<{younitedpay}prestashop>commonhook_2fea9e3cbb2db27d0996daf6698e00fc'] = 'Younited Pay Module - Attention - Aucun shop code sélectionné - merci de configurer le shop code pour votre boutique N°';
+$_MODULE['<{younitedpay}prestashop>commonhook_b64441d52e55413e9445111e4179c0c2'] = 'Módulo Younited Pay - Atención - No se ha seleccionado ningún shop code - Por favor, configure el shop code para su tienda N.°';
 $_MODULE['<{younitedpay}prestashop>orderservice_30d6c29a7421ce981cfe2441d730257e'] = 'Póngase en contacto con el propietario de la tienda. El pago no es posible.';
 $_MODULE['<{younitedpay}prestashop>orderservice_c7bece6685d4556fcb8dfdcd72d720f5'] = 'Esperando';
 $_MODULE['<{younitedpay}prestashop>orderservice_cb456215c3333db0551bd0788bc258c7'] = 'Activado';

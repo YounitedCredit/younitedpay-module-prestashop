@@ -64,7 +64,7 @@ $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_5988c28d05527a0d
 $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a9d'] = 'Rembourser sur Younited Pay';
 $_MODULE['<{younitedpay}prestashop>commonhook_afb5a47d1504231a95cfca9e52a217f4'] = '\"Générer un avoir\" doit être sélectionné pour le remboursement avec Younited Pay';
 $_MODULE['<{younitedpay}prestashop>commonhook_f473fb6d1cd3a547bad7d0bdecbf6656'] = 'Remboursement Younited Pay';
-$_MODULE['<{younitedpay}prestashop>commonhook_2fea9e3cbb2db27d0996daf6698e00fc'] = 'Younited Pay Module - Attention - Aucun shop code sélectionné - merci de configurer le shop code pour votre boutique N°';
+$_MODULE['<{younitedpay}prestashop>commonhook_b64441d52e55413e9445111e4179c0c2'] = 'Younited Pay Module - Attention - Aucun shop code sélectionné - Merci de configurer le shop code pour votre boutique N°';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'Non disponible pour cette monnaie (uniquement EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'Non disponible pour ce Pays (uniquement France comme adresse de livraison)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'] = 'Payez en plusieurs fois avec ';
