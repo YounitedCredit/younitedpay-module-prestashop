@@ -60,13 +60,20 @@ function YpchangeInstallment(key, maturity = 0)
     var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
     var infoInstallmentAmount = maturityZone.attr('data-amount');
     var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
-    var infoInstallmentMaturity = currentMaturity + 'x';
     var initialAmount = maturityZone.attr('data-initamount');
     var taeg = maturityZone.attr('data-taeg');
     var tdf = maturityZone.attr('data-tdf');
     var totalAmount = maturityZone.attr('data-totalamount');
     var interestTotal = maturityZone.attr('data-interesttotal');
     var downPaymentAmount = maturityZone.attr('data-downpayment');
+    if (parseInt(downPaymentAmount) <= 0) {
+        $('#yp_buy_now').removeClass('hidden');
+        $('.yp-down-amount').parent().parent().addClass('hidden');
+    } else {
+        $('.yp-down-amount').parent().parent().removeClass('hidden');
+        $('#yp_buy_now').addClass('hidden');
+    }
+    var infoInstallmentMaturity = currentMaturity + 'x';
     
     $('.maturity_installment').removeClass('yp-bg-black-btn');
     $('.maturity_installment' + key).addClass('yp-bg-black-btn');

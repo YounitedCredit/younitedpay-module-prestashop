@@ -263,11 +263,11 @@ class ProductService
         foreach ($offers as $offer) {
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
-            if ((int) $offer->getMonthlyInstallmentAmount() < 10) {
+            if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
                 continue;
             }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
-                $marutitiesIn[] = $maturityIn;
+                $maturitiesIn[] = $maturityIn;
                 $validOffers[] = $this->returnOffer($offer);
             }
         }
@@ -320,6 +320,11 @@ class ProductService
             'taeg' => number_format(round($offer->getAnnualPercentageRate(), 2), 2, '.', ''),
             'tdf' => number_format(round($offer->getAnnualDebitRate(), 2), 2, '.', ''),
         ];
+        if ((int) $offer->getMaturityInMonths() < 6) {
+            $data['total_amount'] = (int) $offer->getMaturityInMonths() + 1;
+            $data['total_amount'] = $data['initial_amount'];
+            $data['initial_amount'] = number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', '');
+        }
 
         foreach ($data as $key => &$value) {
             $value = str_replace('.00', '', $value);

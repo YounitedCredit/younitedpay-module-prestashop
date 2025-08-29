@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{younitedpay}prestashop>younitedpay_bb8956c67b82c7444a80c6b2433dd8b4'] = '¿Confirma que desea desinstalar este módulo?';
 $_MODULE['<{younitedpay}prestashop>younitedpay_4edca116def73110ec69474ff52d16b2'] = 'Younited Pay - Soluciones de pago con Crédito Instantáneo';
 $_MODULE['<{younitedpay}prestashop>younitedpay_71ed18e89d45a93baadf99ee7f9248de'] = 'Mejore la experiencia de sus clientes con crédito instantáneo e impulse su conversión';
@@ -225,6 +225,8 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_25ff5aab384673e670be53f2b
 $_MODULE['<{younitedpay}prestashop>credit_informations_0d2817b3bb4f955d0257ce6cef5f56a4'] = ' Comprueba tu capacidad';
 $_MODULE['<{younitedpay}prestashop>credit_informations_3d8bdadc574b071acc6d05c3fdd02f82'] = ' de pagar el préstamo';
 $_MODULE['<{younitedpay}prestashop>credit_informations_cf1a13db4892dc497407a6568ff284e6'] = ' antes de comprometerte.';
+$_MODULE['<{younitedpay}prestashop>credit_informations_4aad22f3df1bc0d72f68b9d8bb37c3b2'] = 'Pago en';
+$_MODULE['<{younitedpay}prestashop>credit_informations_f2b798f672d4b42c0359ced11d4f10cd'] = 'plazos';
 $_MODULE['<{younitedpay}prestashop>payment_infos_d114aa83545b406fa108e137f8b46a2b'] = 'Importe total adeudado de %s€.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_593dd52a5af57d12839b6a6ca69b5cab'] = 'Pagarás %s';
 $_MODULE['<{younitedpay}prestashop>payment_infos_efa966fd6ee131ed0c2ae702e9ac40b7'] = 'cuotas mensuales de %s€';
