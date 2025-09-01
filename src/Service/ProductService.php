@@ -320,8 +320,8 @@ class ProductService
             'taeg' => number_format(round($offer->getAnnualPercentageRate(), 2), 2, '.', ''),
             'tdf' => number_format(round($offer->getAnnualDebitRate(), 2), 2, '.', ''),
         ];
-        if ((int) $offer->getMaturityInMonths() < 6) {
-            $data['total_amount'] = (int) $offer->getMaturityInMonths() + 1;
+        if ($data['maturity'] < 6) {
+            ++$data['maturity'];
             $data['total_amount'] = $data['initial_amount'];
             $data['initial_amount'] = number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', '');
         }

@@ -168,13 +168,12 @@ class ConfigService
             }
             $maturityList = [];
             foreach ($response['response'] as $oneOffer) {
-                if (in_array((int) $oneOffer->getMaturityInMonths(), $maturityList) === false) {
-                    $maturity = (int) $oneOffer->getMaturityInMonths();
-                    if ((int) $oneOffer->getDownPaymentAmount() <= 0) {
-                        $maturityList[] = $maturity;
-                    } elseif ((int) $oneOffer->getDownPaymentAmount() > 0 && $maturity < 5) {
-                        $maturityList[] = $maturity + 1;
-                    }
+                $maturity = (int) $oneOffer->getMaturityInMonths();
+                if ($maturity < 5) {
+                    ++$maturity;
+                }
+                if (in_array($maturity, $maturityList) === false) {
+                    $maturityList[] = $maturity;
                 }
             }
         }
@@ -204,7 +203,7 @@ class ConfigService
         $this->curl = $curl;
 
         $apiLogger = ApiLogger::getInstance();
-        if (\Younitedpay::IS_FILE_LOGGER_ACTIVE === true) {
+        if (Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === true) {
             $apiLogger->log($this, $response, 'Config Response', false);
         }
 
