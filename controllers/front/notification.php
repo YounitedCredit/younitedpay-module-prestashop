@@ -44,6 +44,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
     /** Prevent init content from Front Controller (case cart created by webhook) */
     public function init()
     {
+        return true;
     }
 
     /**

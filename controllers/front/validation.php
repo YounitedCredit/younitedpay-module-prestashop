@@ -52,6 +52,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
      */
     public function setMedia()
     {
+        return true;
     }
 
     public function initContent()
@@ -228,12 +229,19 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
                     $this->log('WebHook', 'Webhook will not create order.');
                     $this->endResponse('[success]');
                 } else {
+                    // $this->log('Get Delivery options before', 'before - ' . $cart->getDeliveryOption());
+                    // $this->log('Delivery options', '$cart->delivery_option - ' . $cart->delivery_option);
+                    // $cart->setDeliveryOption($cart->delivery_option);
+                    // $this->log('Get Delivery options', 'after - ' . $cart->getDeliveryOption());
+                    // $this->log('Get Delivery options list', 'list - ' . $cart->getDeliveryOptionList());
+                    //$this->context->cart->getDeliveryOptionList()
                     $this->log('WebHook', 'Webhook will create order.');
                 }
             }
 
             $orderCreated = $paymentService->validateOrder($cart, $customer, $paymentAmount);
         } catch (Exception $ex) {
+            $this->loggerService->addLogAPI('Error creating order ' . $ex->getTraceAsString(), 'Error', $this);
             $paymentService->logError(
                 json_encode([
                     'message' => $ex->getMessage(),
