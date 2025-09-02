@@ -67,11 +67,11 @@ function YpchangeInstallment(key, maturity = 0)
     var interestTotal = maturityZone.attr('data-interesttotal');
     var downPaymentAmount = maturityZone.attr('data-downpayment');
     if (parseInt(downPaymentAmount) <= 0) {
-        $('#yp_buy_now').removeClass('hidden');
+        $('#yp_buy_now').css('visibility', 'visible');
         $('.yp-down-amount').parent().parent().addClass('hidden');
     } else {
         $('.yp-down-amount').parent().parent().removeClass('hidden');
-        $('#yp_buy_now').addClass('hidden');
+        $('#yp_buy_now').css('visibility', 'hidden');
     }
     var infoInstallmentMaturity = currentMaturity + 'x';
     

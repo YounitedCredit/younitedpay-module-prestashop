@@ -266,6 +266,9 @@ class ProductService
             if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
                 continue;
             }
+            if ($maturityIn < 6) {
+                ++$maturityIn;
+            }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
                 $maturitiesIn[] = $maturityIn;
                 $validOffers[] = $this->returnOffer($offer);

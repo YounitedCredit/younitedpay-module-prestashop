@@ -123,6 +123,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_0d2817b3bb4f955d0257ce6ce
 $_MODULE['<{younitedpay}prestashop>credit_informations_3d8bdadc574b071acc6d05c3fdd02f82'] = 'remboursement';
 $_MODULE['<{younitedpay}prestashop>credit_informations_4aad22f3df1bc0d72f68b9d8bb37c3b2'] = 'Paiement en';
 $_MODULE['<{younitedpay}prestashop>credit_informations_f2b798f672d4b42c0359ced11d4f10cd'] = 'fois';
+$_MODULE['<{younitedpay}prestashop>credit_informations_cf1a13db4892dc497407a6568ff284e6'] = 'avant de vous engager.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_d114aa83545b406fa108e137f8b46a2b'] = 'Montant total dû de %s€.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_593dd52a5af57d12839b6a6ca69b5cab'] = 'Vous remboursez %s';
 $_MODULE['<{younitedpay}prestashop>payment_infos_efa966fd6ee131ed0c2ae702e9ac40b7'] = 'mensualités de %s€';
