@@ -55,6 +55,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
      */
     public function setMedia()
     {
+        return true;
     }
 
     public function initContent()
