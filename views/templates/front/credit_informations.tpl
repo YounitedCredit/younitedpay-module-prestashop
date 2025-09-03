@@ -18,7 +18,12 @@
 {if isset($yperror)}
 <div class="younitedpay-widget-root">
 {/if}
-<div id="yp_buy_now" class="yp-text-base yp-mt-4 yp-mb-5 yp-h4 yp-text-center">
+{assign var="offerWithDownPayment" value=false}
+{if (int) $offers[$selected_offer].down_payment_amount > 0}
+   {assign var="offerWithDownPayment" value=true}
+{/if}
+<div id="yp_buy_now" class="yp-text-base yp-mt-4 yp-mb-5 yp-h4 yp-text-center" 
+   {if $offerWithDownPayment === true} style="visibility:hidden;"{/if}>
     <span>{l s='Start paying' mod='younitedpay'} {l s='in just 30 days !' mod='younitedpay'}</span>
 </div>
 <div class="yp-flex yp-justify-center yp-mt-6">
@@ -109,7 +114,7 @@
          <span class="yp-total">{$offer.total_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€
       </span>
    </div>
-   <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2">
+   <div class="yp-flex yp-flex-row yp-justify-between yp-mb-2{if $offerWithDownPayment === false} hidden{/if}">
       <p class="yp-pol-purpledark yp-font-normal">&nbsp;&nbsp;&nbsp;{l s='Amount to pay today' mod='younitedpay'}</p>
       <p class="yp-weight600 yp-pol-purpledark yp-mw85 yp-text-right">
          <span class="yp-down-amount">{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€
