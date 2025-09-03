@@ -116,7 +116,7 @@ class YounitedClient
             $additionnalHeaders = [];
             if ($this->isTestUnit === false) {
                 $additionnalHeaders = [
-                    'cms_version' => _PS_VERSION_ ?? 'unknown',
+                    'cms_version' => 'PrestaShop ' . (defined('_PS_VERSION_') ? _PS_VERSION_ : 'unknown'),
                     'cms_version_module' => (new Younitedpay())->version ?? 'unknown',
                 ];
             }
