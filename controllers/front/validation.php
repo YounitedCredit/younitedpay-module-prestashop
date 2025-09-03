@@ -69,14 +69,18 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
         $younitedPayment = $paymentService->getApiPaymentById($younitedContract->payment_id);
 
         $younitedPaymentStatus = $younitedPayment['status'] ?? '';
+        $processType = 'Order created with success';
 
         if (isset($younitedPayment['amount']) && in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED])) {
             $redirectUrl = $this->processPaymentSuccess($younitedPayment['amount']);
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_CANCELLED, self::PAYMENT_STATUS_FAILED])) {
             $redirectUrl = $this->processPaymentError($younitedPaymentStatus);
+            $processType = 'Error on payment (amount or status mismatch)';
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_INITIALIZED, self::PAYMENT_STATUS_APPROVED])) {
             $redirectUrl = $this->processPendingPayment();
+            $processType = 'Pending payment in status ' . $younitedPaymentStatus;
         } else {
+            $processType = 'Payment out of process - no status match (' . $younitedPaymentStatus . ')';
             $redirectUrl = Context::getContext()->link->getPageLink(
                 'order',
                 null,
@@ -85,6 +89,9 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
                     'step' => 1,
                 ]
             );
+        }
+        if (Tools::getValue('granted') !== false) {
+            return '200 - ' . $processType;
         }
 
         $this->redirectWithNotifications($redirectUrl);
@@ -229,12 +236,6 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
                     $this->log('WebHook', 'Webhook will not create order.');
                     $this->endResponse('[success]');
                 } else {
-                    // $this->log('Get Delivery options before', 'before - ' . $cart->getDeliveryOption());
-                    // $this->log('Delivery options', '$cart->delivery_option - ' . $cart->delivery_option);
-                    // $cart->setDeliveryOption($cart->delivery_option);
-                    // $this->log('Get Delivery options', 'after - ' . $cart->getDeliveryOption());
-                    // $this->log('Get Delivery options list', 'list - ' . $cart->getDeliveryOptionList());
-                    //$this->context->cart->getDeliveryOptionList()
                     $this->log('WebHook', 'Webhook will create order.');
                 }
             }
