@@ -112,7 +112,7 @@ class ProductService
             if ($isRangeEnabled) {
                 $configMaturities = [
                     'Range' => [
-                        'Min' => $minInstall,
+                        'Min' => $minInstall < 6 ? $minInstall - 1 : $minInstall,
                         'Max' => $maxInstall,
                         'Step' => 1,
                     ],
@@ -358,7 +358,8 @@ class ProductService
         }
         $config = [];
         foreach ($maturities as $oneMaturity) {
-            $config[] = $oneMaturity['maturity'];
+            $maturity = (int) $oneMaturity['maturity'] < 6 ? $oneMaturity['maturity'] - 1 : $oneMaturity['maturity'];
+            $config[] = $maturity;
         }
 
         return implode(',', $config);
