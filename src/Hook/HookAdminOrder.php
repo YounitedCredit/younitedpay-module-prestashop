@@ -157,15 +157,27 @@ class HookAdminOrder extends AbstractHook
             return true;
         }
 
+        /** @var LoggerService $loggerService */
+        $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
         $countOrders = \Order::getByReference($order->reference)->count();
 
         /** @var OrderService $orderService */
         $orderService = ServiceContainer::getInstance()->get(OrderService::class);
-        $younitedContract = $orderService->getYounitedContract($order->id, 'order');
+        $younitedContract = $orderService->getYounitedContract($order->id_cart, 'cart');
 
         /** @var PaymentService $paymentService */
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
-        $paymentService->updateMerchantReference($younitedContract->payment_id, $order->reference . '-' . $order->id);
+        $paymentService->updateMerchantReference($younitedContract->payment_id, $order);
+
+        $loggerService->addLogAPI(
+            sprintf(
+                '[actionValidateOrder] - Updating merchant reference for order %s',
+                $order->id . '-' . $order->reference
+            ),
+            'Info',
+            $this
+        );
 
         /** @var Cart $cart */
         $cart = $params['cart'];
