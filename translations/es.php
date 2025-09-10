@@ -163,9 +163,9 @@ $_MODULE['<{younitedpay}prestashop>settings-form_b9f5c797ebbf55adccdd8539a65a024
 $_MODULE['<{younitedpay}prestashop>settings-form_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activada';
 $_MODULE['<{younitedpay}prestashop>settings-form_0524317c1d882d879ecce066c0765424'] = 'Whitelist de IP';
 $_MODULE['<{younitedpay}prestashop>settings-form_4d36585a5f3d1f870341370512c811b3'] = 'Al activarse, sólo las IPs listadas podrán ver los componentes del módulo en la web';
-$_MODULE['<{younitedpay}prestashop>settings-form_3f90d10db7f03a01bea6405b34a99ced'] = 'Webhook create orders';
+$_MODULE['<{younitedpay}prestashop>settings-form_3f90d10db7f03a01bea6405b34a99ced'] = 'Webhook crear pedidos';
 $_MODULE['<{younitedpay}prestashop>settings-form_9d68df88682c103a97477387ef6e63c7'] = 'Al activarse, el weebhook creará carritos. Desactive esta opción si tiene problemas con el envío y precios.';
-$_MODULE['<{younitedpay}prestashop>settings-form_d94083a4abd0424d2de57586b8a4f024'] = 'Test Webhook Integration';
+$_MODULE['<{younitedpay}prestashop>settings-form_d94083a4abd0424d2de57586b8a4f024'] = 'Probar integración de webhook';
 $_MODULE['<{younitedpay}prestashop>settings-form_b7634b6f99cd212164f5c9ead6aebb9a'] = 'Contenido de Widget copiado al portapapeles';
 $_MODULE['<{younitedpay}prestashop>settings-form_a612782072a3b8f151c5e2120ef20efd'] = 'Copiar al portapapeles';
 $_MODULE['<{younitedpay}prestashop>settings-form_65cf8c765e377e00763d10ceb5d4939a'] = 'Testar notificación';
