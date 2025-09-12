@@ -84,7 +84,6 @@ class AdminYounitedpayContractsController extends ModuleAdminController
 
     public function initContent()
     {
-        // $this->display = 'list';
         parent::initContent();
     }
 
@@ -95,16 +94,37 @@ class AdminYounitedpayContractsController extends ModuleAdminController
 
         /** @var PaymentService $paymentService */
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
+
+        if (Tools::getValue('paymentId') !== false) {
+            $order = new Order((int) $younitedContract->id_order);
+            if (Validate::isLoadedObject($order) === true) {
+                $paymentService->updateMerchantReference($younitedContract->payment_id, $order);
+                \Context::getContext()->controller->confirmations[] = $this->l('Order reference updated on Younited Pay Dashboard.');
+            } else {
+                \Context::getContext()->controller->warnings[] = $this->l('Error: Order linked to this contract not found.');
+            }
+        }
+
         $api = $paymentService->getApiPaymentById($younitedContract->payment_id);
 
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
         $this->context->smarty->assign($orderservice->getContractInformations($younitedContract));
+        $updateReferenceUrl = '';
+        if ($api !== false && strpos($api['merchantReference'], '-') === false && (int) $younitedContract->id_order > 0) {
+            $updateReferenceUrl = \Context::getContext()->link->getAdminLink('AdminYounitedpayContracts', true, [], [
+                'id_younitedpay_contract' => $younitedContract->id_younitedpay_contract,
+                'paymentId' => $younitedContract->payment_id,
+                'viewyounitedpay_contract' => '',
+            ]);
+        }
 
         $this->context->smarty->assign([
             'younitedcontract' => $younitedContract,
             'contract' => json_encode($younitedContract, JSON_PRETTY_PRINT),
             'api' => json_encode($api, JSON_PRETTY_PRINT),
+            'update_reference_url' => $updateReferenceUrl,
+            'contracts_url' => \Context::getContext()->link->getAdminLink('AdminYounitedpayContracts'),
         ]);
 
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . '/younitedpay/views/templates/admin/viewcontract.tpl');

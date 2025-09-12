@@ -44,6 +44,17 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
     {
     }
 
+    /**
+     * Sets controller CSS and JS files.
+     * Do not do anything here to prevent Hook actionFrontControllerSetMedia to trigger (useless and can generate issues)
+     *
+     * @return bool
+     */
+    public function setMedia()
+    {
+        return true;
+    }
+
     public function initContent()
     {
         $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
@@ -58,14 +69,18 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
         $younitedPayment = $paymentService->getApiPaymentById($younitedContract->payment_id);
 
         $younitedPaymentStatus = $younitedPayment['status'] ?? '';
+        $processType = 'Order created with success';
 
         if (isset($younitedPayment['amount']) && in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED])) {
             $redirectUrl = $this->processPaymentSuccess($younitedPayment['amount']);
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_CANCELLED, self::PAYMENT_STATUS_FAILED])) {
             $redirectUrl = $this->processPaymentError($younitedPaymentStatus);
+            $processType = 'Error on payment (amount or status mismatch)';
         } elseif (in_array($younitedPaymentStatus, [self::PAYMENT_STATUS_INITIALIZED, self::PAYMENT_STATUS_APPROVED])) {
             $redirectUrl = $this->processPendingPayment();
+            $processType = 'Pending payment in status ' . $younitedPaymentStatus;
         } else {
+            $processType = 'Payment out of process - no status match (' . $younitedPaymentStatus . ')';
             $redirectUrl = Context::getContext()->link->getPageLink(
                 'order',
                 null,
@@ -74,6 +89,9 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
                     'step' => 1,
                 ]
             );
+        }
+        if (Tools::getValue('granted') !== false) {
+            return '200 - ' . $processType;
         }
 
         $this->redirectWithNotifications($redirectUrl);
@@ -224,6 +242,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
 
             $orderCreated = $paymentService->validateOrder($cart, $customer, $paymentAmount);
         } catch (Exception $ex) {
+            $this->loggerService->addLogAPI('Error creating order ' . $ex->getTraceAsString(), 'Error', $this);
             $paymentService->logError(
                 json_encode([
                     'message' => $ex->getMessage(),

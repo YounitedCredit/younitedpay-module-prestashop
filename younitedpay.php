@@ -91,6 +91,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
             'name' => [
                 'en' => 'Settings',
                 'fr' => 'Configuration',
+                'es' => 'Configuración',
             ],
             'class_name' => 'AdminYounitedpayConfiguration',
             'parent_class_name' => 'AdminYounitedParent',
@@ -100,6 +101,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
             'name' => [
                 'en' => 'Logs',
                 'fr' => 'Logs',
+                'es' => 'Registros',
             ],
             'class_name' => 'AdminYounitedpayProcessLogger',
             'parent_class_name' => 'AdminYounitedParent',
@@ -109,6 +111,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
             'name' => [
                 'en' => 'Contracts',
                 'fr' => 'Contrats',
+                'es' => 'Contratos',
             ],
             'class_name' => 'AdminYounitedpayContracts',
             'parent_class_name' => 'AdminYounitedParent',

@@ -32,6 +32,7 @@ use Younitedpay;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\OrderService;
+use YounitedpayAddon\Service\PaymentService;
 use YounitedpayAddon\Utils\ServiceContainer;
 use YounitedpayClasslib\Hook\AbstractHook;
 
@@ -156,7 +157,27 @@ class HookAdminOrder extends AbstractHook
             return true;
         }
 
+        /** @var LoggerService $loggerService */
+        $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
         $countOrders = \Order::getByReference($order->reference)->count();
+
+        /** @var OrderService $orderService */
+        $orderService = ServiceContainer::getInstance()->get(OrderService::class);
+        $younitedContract = $orderService->getYounitedContract($order->id_cart, 'cart');
+
+        /** @var PaymentService $paymentService */
+        $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
+        $paymentService->updateMerchantReference($younitedContract->payment_id, $order);
+
+        $loggerService->addLogAPI(
+            sprintf(
+                '[actionValidateOrder] - Updating merchant reference for order %s',
+                $order->id . '-' . $order->reference
+            ),
+            'Info',
+            $this
+        );
 
         /** @var Cart $cart */
         $cart = $params['cart'];
@@ -164,7 +185,7 @@ class HookAdminOrder extends AbstractHook
         /** @var LoggerService $loggerService */
         $loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
-        if ($order->id_carrier !== $cart->id_carrier && $countOrders > 1) {
+        if ((int) $order->id_carrier !== (int) $cart->id_carrier && $countOrders > 1) {
             $loggerService->addLog(
                 sprintf(
                     'Cannot update - more than one order (split packages) - Do not Updating wrong carrier %s (order) to %s (cart)',
@@ -178,7 +199,7 @@ class HookAdminOrder extends AbstractHook
 
             return true;
         }
-        if ($order->id_carrier !== $cart->id_carrier) {
+        if ((int) $order->id_carrier !== (int) $cart->id_carrier) {
             $loggerService->addLog(
                 sprintf(
                     'Updating wrong carrier %s (order) to %s (cart)',

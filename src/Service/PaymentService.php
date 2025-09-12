@@ -40,10 +40,12 @@ use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
 use YounitedPaySDK\Model\NewAPI\CustomExperience;
 use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
+use YounitedPaySDK\Model\NewAPI\Request\UpdateMerchantReference;
 use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
 use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
+use YounitedPaySDK\Request\NewAPI\UpdateMerchantReferenceRequest;
 
 class PaymentService
 {
@@ -370,6 +372,42 @@ class PaymentService
             return $getPaymentResponse['response'];
         }
 
+        return false;
+    }
+
+    /**
+     * Update Merchant Reference
+     *
+     * @param string $paymentId
+     * @param \Order $order
+     *
+     * @return bool False if nothing requested on the api payment id or error | True if operation succeeded
+     */
+    public function updateMerchantReference($paymentId, $order)
+    {
+        $merchantReference = $order->reference . '-' . $order->id;
+        $idShop = $order->id_shop ?? ( $this->context->shop->id > 0 ? $this->context->shop->id : 1);
+        $client = new YounitedClient($idShop);
+        if ($client->isCrendentialsSet() === false) {
+            $this->loggerservice->addLogAPI('No credentials set for this shop :' . $idShop, 'Info', $this);
+            return false;
+        }
+
+        try {
+            $updateMerchantReferenceRequestModel = (new UpdateMerchantReference())
+                ->setPaymentId($paymentId)
+                ->setMerchantReference($merchantReference);
+            $updateMerchantReferenceRequest = (new UpdateMerchantReferenceRequest())->setModel($updateMerchantReferenceRequestModel);
+            $updateMerchantReferenceResponse = $client->sendRequest($updateMerchantReferenceRequestModel, $updateMerchantReferenceRequest);
+        } catch (\Exception $ex) {
+            $this->loggerservice->addLogAPI('[updateMerchantReference] Exception - ' . $ex->getMessage(), 'Info', $this);
+            $this->loggerservice->addLogAPI('[updateMerchantReference] Trace - ' . $ex->getTraceAsString(), 'Info', $this);
+            return false;
+        }
+
+        if ($updateMerchantReferenceResponse['success'] === true) {
+            return true;
+        }
         return false;
     }
 

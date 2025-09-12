@@ -112,7 +112,7 @@ class ProductService
             if ($isRangeEnabled) {
                 $configMaturities = [
                     'Range' => [
-                        'Min' => $minInstall,
+                        'Min' => $minInstall < 6 ? $minInstall - 1 : $minInstall,
                         'Max' => $maxInstall,
                         'Step' => 1,
                     ],
@@ -195,6 +195,9 @@ class ProductService
             if ((int) $rangeOffers[count($rangeOffers) - 1]['maturity'] < $maxInstall) {
                 $maxInstall = (int) $rangeOffers[count($rangeOffers) - 1]['maturity'];
             }
+            if ((int) $rangeOffers[0]['maturity'] !== $minInstall) {
+                $minInstall = (int) $rangeOffers[0]['maturity'];
+            }
         }
 
         $template = 'module:younitedpay/views/templates/front/credit_propositions.tpl';
@@ -260,11 +263,14 @@ class ProductService
         foreach ($offers as $offer) {
             /** @var OfferItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
-            if ((int) $offer->getMonthlyInstallmentAmount() < 10) {
+            if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
                 continue;
             }
+            if ($maturityIn < 6) {
+                ++$maturityIn;
+            }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
-                $marutitiesIn[] = $maturityIn;
+                $maturitiesIn[] = $maturityIn;
                 $validOffers[] = $this->returnOffer($offer);
             }
         }
@@ -311,11 +317,17 @@ class ProductService
             'maturity' => (int) $offer->getMaturityInMonths(),
             'installment_amount' => number_format(round($offer->getMonthlyInstallmentAmount(), 2), 2, '.', ''),
             'initial_amount' => number_format(round($offer->getRequestedAmount(), 2), 2, '.', ''),
+            'down_payment_amount' => number_format(round($offer->getDownPaymentAmount(), 2), 2, '.', ''),
             'total_amount' => number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', ''),
             'interest_total' => number_format(round($offer->getInterestsTotalAmount(), 2), 2, '.', ''),
             'taeg' => number_format(round($offer->getAnnualPercentageRate(), 2), 2, '.', ''),
             'tdf' => number_format(round($offer->getAnnualDebitRate(), 2), 2, '.', ''),
         ];
+        if ($data['maturity'] < 6) {
+            ++$data['maturity'];
+            $data['total_amount'] = $data['initial_amount'];
+            $data['initial_amount'] = number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', '');
+        }
 
         foreach ($data as $key => &$value) {
             $value = str_replace('.00', '', $value);
@@ -346,7 +358,8 @@ class ProductService
         }
         $config = [];
         foreach ($maturities as $oneMaturity) {
-            $config[] = $oneMaturity['maturity'];
+            $maturity = (int) $oneMaturity['maturity'] < 6 ? $oneMaturity['maturity'] - 1 : $oneMaturity['maturity'];
+            $config[] = $maturity;
         }
 
         return implode(',', $config);

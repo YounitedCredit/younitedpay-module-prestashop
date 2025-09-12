@@ -60,6 +60,9 @@ class YounitedClient
     /** @var ApiLogger */
     public $apiLogger;
 
+    /** @var bool */
+    public $isTestUnit = false;
+
     public function __construct($idShop, $testCredentials = [])
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
@@ -67,6 +70,7 @@ class YounitedClient
         if (empty($testCredentials) === false) {
             $this->apiLogger = ApiLogger::getInstance(true);
             $this->testCredentials($testCredentials);
+            $this->isTestUnit = true;
         } else {
             $this->apiLogger = ApiLogger::getInstance();
             $this->setApiCredentials($idShop);
@@ -109,11 +113,18 @@ class YounitedClient
             $classRequest = (new \ReflectionClass($requestObject))->getShortName();
 
             $this->apiLogger->log($this, $request, 'Request ' . $classRequest, true);
+            $additionnalHeaders = [];
+            if ($this->isTestUnit === false) {
+                $additionnalHeaders = [
+                    'cms_version' => 'PrestaShop ' . (defined('_PS_VERSION_') ? _PS_VERSION_ : 'unknown'),
+                    'cms_version_module' => (new Younitedpay())->version ?? 'unknown',
+                ];
+            }
 
             /** @var AbstractResponse $response */
             $response = $client
                 ->setCredential($this->clientId, $this->clientSecret)
-                ->sendRequest($request);
+                ->sendRequest($request, $additionnalHeaders);
 
             $this->apiLogger->log($this, $response, 'Response' . $classRequest, true);
 

@@ -36,6 +36,11 @@
                 {l s='For example, if you have registered this command with a Sandbox account and changed the environment to Production.' mod='younitedpay'}
             {/if}
         </div>
-        <a onclick="history.back();" class="btn btn-primary pull-right">{l s='Back' mod='younitedpay'}</a>
+        {if $update_reference_url != ''}
+            <a href="{$update_reference_url|escape:'htmlall':'UTF-8'}" style="margin-left:8px"; class="btn btn-default pull-right">
+                {l s='Update Order reference' mod='younitedpay'}
+            </a>
+        {/if}
+        <a href="{$contracts_url|escape:'htmlall':'UTF-8'}" class="btn btn-primary pull-right">{l s='Back' mod='younitedpay'}</a>
     </div>
 </div>
