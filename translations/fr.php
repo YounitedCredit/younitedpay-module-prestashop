@@ -105,6 +105,14 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_389712f8988344dbc947629a7
 $_MODULE['<{younitedpay}prestashop>credit_propositions_565629aab091cf074ee823997c991f87'] = ' votre compte bancaire';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_43303bb45cf16dc537d2c174bc1a111d'] = 'Recevez une réponse en ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_ee982d11cab241f90070d6255ffe0d7e'] = 'quelques secondes';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_489d5355c8ebf85ad59500645d7a5b6e'] = 'Un crédit vous engage et doit';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_25ff5aab384673e670be53f2ba39ce82'] = 'être remboursé. Vérifiez vos';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6cef5f56a4'] = 'capacités de';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_3d8bdadc574b071acc6d05c3fdd02f82'] = 'remboursement';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_4aad22f3df1bc0d72f68b9d8bb37c3b2'] = 'Paiement en';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_f2b798f672d4b42c0359ced11d4f10cd'] = 'fois';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_cf1a13db4892dc497407a6568ff284e6'] = 'avant de vous engager.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_fa6829ab4ab765e39c905d9c92d7c095'] = 'Cliquer pour en savoir plus';
 $_MODULE['<{younitedpay}prestashop>credit_informations_17cb410b0b2aa4384b0c458d706d42bb'] = 'Commencez à payer';
 $_MODULE['<{younitedpay}prestashop>credit_informations_e1ae93efa9d42298da41e682ae789ed7'] = 'dans 30 jours seulement !';
 $_MODULE['<{younitedpay}prestashop>credit_informations_07fce9628c3f8ef8de71a2bf4eee4b6c'] = 'Personnaliser';
