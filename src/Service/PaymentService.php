@@ -386,12 +386,15 @@ class PaymentService
     public function updateMerchantReference($paymentId, $order)
     {
         $merchantReference = $order->reference . '-' . $order->id;
-        $idShop = $order->id_shop ?? ( $this->context->shop->id > 0 ? $this->context->shop->id : 1);
+        $idShop = $order->id_shop ?? ($this->context->shop->id > 0 ? $this->context->shop->id : 1);
         $client = new YounitedClient($idShop);
         if ($client->isCrendentialsSet() === false) {
             $this->loggerservice->addLogAPI('No credentials set for this shop :' . $idShop, 'Info', $this);
+
             return false;
         }
+        $this->loggerservice->addLogAPI('Using credentials for shop N°' . $idShop, 'Info', $this);
+        $this->loggerservice->addLogAPI('With paymentId: ' . $paymentId, 'Info', $this);
 
         try {
             $updateMerchantReferenceRequestModel = (new UpdateMerchantReference())
@@ -402,12 +405,14 @@ class PaymentService
         } catch (\Exception $ex) {
             $this->loggerservice->addLogAPI('[updateMerchantReference] Exception - ' . $ex->getMessage(), 'Info', $this);
             $this->loggerservice->addLogAPI('[updateMerchantReference] Trace - ' . $ex->getTraceAsString(), 'Info', $this);
+
             return false;
         }
 
         if ($updateMerchantReferenceResponse['success'] === true) {
             return true;
         }
+
         return false;
     }
 

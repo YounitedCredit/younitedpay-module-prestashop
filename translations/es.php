@@ -259,6 +259,12 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_565629aab091cf074ee823997
 $_MODULE['<{younitedpay}prestashop>credit_propositions_43303bb45cf16dc537d2c174bc1a111d'] = 'Recibe tu respuesta';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_ee982d11cab241f90070d6255ffe0d7e'] = 'en segundos';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_d3d2e617335f08df83599665eef8a418'] = 'Cerrar';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_489d5355c8ebf85ad59500645d7a5b6e'] = 'Empieza a pagar dentro de 30 días.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_25ff5aab384673e670be53f2ba39ce82'] = ' obligación de pago.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6cef5f56a4'] = ' Comprueba tu capacidad';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_3d8bdadc574b071acc6d05c3fdd02f82'] = ' de pagar el préstamo';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_cf1a13db4892dc497407a6568ff284e6'] = ' antes de comprometerte.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_fa6829ab4ab765e39c905d9c92d7c095'] = 'Haga clic para obtener más información';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'No disponible en esta moneda (solo EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'No disponible para este país (solo Francia para la dirección de facturación).';
 $_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'] = 'Paga a plazos con';

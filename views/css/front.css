@@ -1416,3 +1416,7 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
         height: 32px;
     }
 }
+
+#yp-kml {
+    text-decoration: underline!important;
+}

@@ -41,6 +41,9 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
     /** @var LoggerService */
     public $loggerService;
 
+    /** @var string */
+    private $paymentId;
+
     /** Prevent init content from Front Controller (case cart created by webhook) */
     public function init()
     {
@@ -96,6 +99,8 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
             || $cart->id_customer == 0) {
             $this->endResponse('200 - Error with the cart on webhook');
         }
+
+        $this->paymentId = $webhookNotification->getData()->getPaymentId() ?? '';
 
         switch ($webhookNotification->getType()) {
             case self::EVENT_TYPE_PAYMENT_UPDATED:
@@ -168,6 +173,15 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
         if ((int) $younitedContract->id_order <= 0) {
             $this->endResponse('200 - Error on contract activation, no order found with this cart (ID ' . $idCart . ')');
+        }
+
+        if ($younitedContract->payment_id !== $this->paymentId) {
+            $this->endResponse(sprintf(
+                '200 - PaymentId is not anymore on this Cart - IdCart: %s - paymentId: %s - cart paymentId: %s',
+                $idCart,
+                $this->paymentId,
+                $younitedContract->payment_id
+            ));
         }
 
         $order = new Order($younitedContract->id_order);
