@@ -578,6 +578,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         Media::addJsDef([
             'younitedpay' => [
                 'maturities' => count($allMaturities) + 1,
+                'nobootstrap' => true,
                 'admin_url' => $urlFormConfig,
                 'translations' => [
                     'copy_link_webhook' => $this->module->l(
