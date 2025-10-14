@@ -30,6 +30,7 @@ use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ModuleInitialiser;
 use YounitedpayAddon\Utils\PaymentModuleTrait;
 use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedpayAddon\Utils\ToolsYounited;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
 class Younitedpay extends PaymentModule implements WidgetInterface
@@ -200,7 +201,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
         $this->__pmConstruct();
 
-        $this->secure_key = Tools::encrypt($this->name);
+        $this->secure_key = ToolsYounited::hash($this->name);
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
         $this->displayName = $this->l('Younited Pay - Instant Credit Payment solutions');
         $this->description = $this->l('Enhance your customer experience with Instant Credit and boost your conversion.');
