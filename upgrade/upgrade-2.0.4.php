@@ -16,28 +16,29 @@
  * @copyright 2022 Younited Credit
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  */
-
-namespace YounitedpayAddon\Utils;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use Tools;
+use YounitedpayAddon\Entity\YounitedPayContract;
 
-class ToolsYounited 
+/**
+ * @param YounitedPay $module
+ *
+ * @return bool
+ *
+ * @throws PrestaShopException
+ */
+function upgrade_module_2_0_4($module)
 {
-    public static function hash($string)
-    {
-        if (version_compare(_PS_VERSION_, '9.0.0', '<')) {
-            return Tools::encrypt($string);
-        }
-
-        return Tools::hash($string);
+    try {
+        $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']);
+        $query .= '` CHANGE `withdrawn_amount` `withdrawn_amount` DECIMAL(10,2) NOT NULL;';
+        $result = Db::getInstance()->execute($query);
+    } catch (Exception $e) {
+        PrestaShopLogger::addLog($e->getMessage(), 3);
+        $result = false;
     }
 
-    public static function formatPrice($price)
-    {
-        return str_replace('.00', '', number_format(round($price, 2), 2, '.', ''));
-    }
+    return $result;
 }
