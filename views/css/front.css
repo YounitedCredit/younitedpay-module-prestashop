@@ -42,7 +42,7 @@
     width:52px;
 }
 
-#younited_popupzone .maturity_installment9999 :first-child, .payment-options .maturity_installment9999 :first-child {
+#younited_popupzone .maturity_installment9999 :first-child, #checkout .maturity_installment9999 :first-child {
     width:auto;
 }
 
