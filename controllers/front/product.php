@@ -70,9 +70,19 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
             ]
         );
 
-        $this->ajaxDie(json_encode([
+        $this->endResponse(json_encode([
             'content' => $templateCredit['template'],
             'number_offers' => $numberOffers,
         ]));
+    }
+
+    private function endResponse($message)
+    {
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+            $this->ajaxRender($message);
+            exit;
+        } else {
+            $this->ajaxDie($message);
+        }
     }
 }
