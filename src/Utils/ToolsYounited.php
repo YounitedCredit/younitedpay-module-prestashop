@@ -25,7 +25,7 @@ if (!defined('_PS_VERSION_')) {
 
 use Tools;
 
-class ToolsYounited 
+class ToolsYounited
 {
     public static function hash($string)
     {
