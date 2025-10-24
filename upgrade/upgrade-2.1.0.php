@@ -29,7 +29,7 @@ use YounitedpayAddon\Entity\YounitedPayContract;
  *
  * @throws PrestaShopException
  */
-function upgrade_module_2_0_4($module)
+function upgrade_module_2_1_0($module)
 {
     try {
         $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']);
