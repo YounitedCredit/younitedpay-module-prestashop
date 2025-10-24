@@ -26,6 +26,10 @@ document.onreadystatechange = function() {
     }
 
     $('.younitedpay-collapse').click(toggleAccordion);
+    if (younitedpay && younitedpay.nobootstrap === true) {
+        // If we are on the configuration of help admin controller - not on orders
+        $('#content').removeClass('bootstrap').addClass('nobootstrap');
+    }
     addEventsMaturity();
     addDoubleListEvent();    
     $('#younitedpay_maturitybtn').click(function(e) {

@@ -46,6 +46,11 @@ class AdminYounitedpayHelpController extends ModuleAdminController
         parent::setMedia($isNewTheme);
         $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/admin.js');
         $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/admin.css');
+        Media::addJsDef([
+            'younitedpay' => [
+                'nobootstrap' => true,
+            ],
+        ]);
     }
 
     public function initContent()
