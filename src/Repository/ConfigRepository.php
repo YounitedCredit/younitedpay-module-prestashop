@@ -98,7 +98,7 @@ class ConfigRepository
             $ipWhitelisted = [];
         }
 
-        if (is_array($ipWhitelisted) === false) {
+        if (empty($ipWhitelisted) === true) {
             return true;
         }
 

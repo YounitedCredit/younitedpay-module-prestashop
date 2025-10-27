@@ -132,7 +132,7 @@ class AdminYounitedpayProcessLoggerController extends AdminProcessLoggerControll
                 $logsFilesFull[$aMonth] = glob($this->logPath . $aMonth . '/*.log');
             }
         }
-        $logsFiles = $logsFilesFull !== false ? $this->onlyFileNames($logsFilesFull) : [];
+        $logsFiles = empty($logsFilesFull) !== false ? $this->onlyFileNames($logsFilesFull) : [];
         $this->context->smarty->assign([
             'logs_files' => $logsFiles,
             'logs_url' => $this->context->link->getAdminLink(

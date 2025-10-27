@@ -214,7 +214,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
      * @param string $key Configuration key to get
      * @param int $idShop Id Shop concerned
      * @param string $param Param return in form while saving
-     * @param string $defValue Default value if nothing's found
+     * @param mixed $defValue Default value if nothing's found
      *
      * @return string|bool Value get by Configuration
      */
@@ -545,8 +545,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $idShop = $this->context->shop->id;
 
-        $deliveredname = null !== _PS_OS_DELIVERED_ ? _PS_OS_DELIVERED_ : '_PS_OS_DELIVERED_';
-        $defaultdelivered = Configuration::getGlobalValue($deliveredname);
+        $defaultdelivered = false !== getenv('_PS_OS_DELIVERED_') ? _PS_OS_DELIVERED_ : Configuration::get('PS_OS_DELIVERED');
 
         $deliveredStatus = Configuration::get(
             Younitedpay::ORDER_STATE_DELIVERED,

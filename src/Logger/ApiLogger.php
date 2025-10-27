@@ -29,7 +29,7 @@ use Monolog\Logger;
 use PrestaShopLogger;
 use Younitedpay;
 use YounitedPaySDK\Model\NewAPI\Error;
-use YounitedPaySDK\Response\NewAPI\GetOffersResponse;
+use YounitedPaySDK\Model\Error as Errorv1;
 
 class ApiLogger
 {
@@ -157,7 +157,7 @@ class ApiLogger
         if (substr($type, 0, 8) === 'Response') {
             $response = $data->getModel();
             if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
-                if ($response instanceof Error && $response instanceof GetOffersResponse === false) {
+                if ($response instanceof Error || $response instanceof Errorv1) {
                     $this->logger->addInfo($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
                 } else {
                     try {

@@ -141,7 +141,7 @@ class ConfigService
         }
 
         $body = (new GetOffers())->setShopCode($client->shopCode)
-            ->setAmount(1500)
+            ->setAmount('1500')
             ->setMaturityRangeStep(1)
             ->setMaturityRangeMin(1)
             ->setMaturityRangeMax(84);
@@ -150,10 +150,10 @@ class ConfigService
         $maturityList = self::DEF_MATURITIES;
 
         if (empty($client->shopCode) === false) {
-            /** @var AbstractResponse $response */
+            /** @var mixed $response */
             $response = $client->sendRequest($body, $request);
 
-            if (empty($response) === true || null === $response || $response['success'] === false) {
+            if (empty($response) === true || $response['success'] === false) {
                 $message .= ($message === '') ? '' : ' - ';
                 $message .= $this->l('Offers response error');
                 $errorStatus[] = 'maturities_error';
@@ -203,7 +203,7 @@ class ConfigService
         $this->curl = $curl;
 
         $apiLogger = ApiLogger::getInstance();
-        if (Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === true) {
+        if ((bool) Configuration::get(Younitedpay::IS_FILE_LOGGER_ACTIVE) === true) {
             $apiLogger->log($this, $response, 'Config Response', false);
         }
 
@@ -213,7 +213,7 @@ class ConfigService
     public function checkSpecifications($isProductionMode)
     {
         $curlInfos = curl_version();
-        $versionOpenSSL = null !== OPENSSL_VERSION_NUMBER ? OPENSSL_VERSION_NUMBER : -1;
+        $versionOpenSSL = false !== getenv('OPENSSL_VERSION_NUMBER') ? OPENSSL_VERSION_NUMBER : -1;
         $versionSSLCURL = $curlInfos !== false ? $curlInfos['version'] . ' ' . $curlInfos['ssl_version'] : '';
 
         $sslActivated = $this->isSslActive();
@@ -271,7 +271,7 @@ class ConfigService
         $aOrdersSel = json_decode($selectedOrders, true);
         if ($aOrdersSel == null || is_array($aOrdersSel) === false) {
             $aOrdersSel = [
-                _PS_OS_DELIVERED_ !== null
+                false !== getenv('_PS_OS_DELIVERED_')
                 ? _PS_OS_DELIVERED_
                 : Configuration::get('_PS_OS_DELIVERED_', null, null, $idShop),
             ];
@@ -330,10 +330,10 @@ class ConfigService
 
         $request = new ShopsRequest();
 
-        /** @var AbstractResponse $response */
+        /** @var mixed $response */
         $response = $client->sendRequest(null, $request);
 
-        if (empty($response) === true || null === $response || $response['success'] === false) {
+        if (empty($response) === true || $response['success'] === false) {
             return [];
         }
         $shopCodes = $response['response'];

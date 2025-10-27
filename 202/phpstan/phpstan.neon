@@ -15,4 +15,4 @@ parameters:
       - '#Class OnePageCheckoutPSPaymentModuleFrontController not found+#'
 
   reportUnmatchedIgnoredErrors: false
-  level: 3
+  level: 5

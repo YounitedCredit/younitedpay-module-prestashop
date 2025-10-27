@@ -187,7 +187,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         $order = new Order($younitedContract->id_order);
 
         if ($updateType === 'cancel') {
-            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
+            $newIdState = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
 
             if ((int) $newIdState === $order->current_state) {
                 $this->endResponse('200 - Already cancelled (Order ' . $order->id . ' - ' . $order->reference . ')');
@@ -201,7 +201,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
             $this->endResponse('200 - Cancellation contract confirmed Cart ID' . $order->id_cart);
         } elseif ($updateType === 'refund') {
-            $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+            $newIdState = false !== getenv('_PS_OS_REFUND_') ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
 
             if ((int) $newIdState === $order->current_state) {
                 $this->endResponse('200 - Already withdraw (Order ' . $order->id . ' - ' . $order->reference . ')');

@@ -85,6 +85,7 @@ class ServiceContainer
 
     public function get($serviceName)
     {
+        /** @var \Younitedpay|bool $module */
         $module = \Module::getInstanceByName('younitedpay');
         if ($module === false) {
             return;

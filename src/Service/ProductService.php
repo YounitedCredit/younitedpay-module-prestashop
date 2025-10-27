@@ -128,7 +128,7 @@ class ProductService
                 return $this->noOffers();
             }
 
-            $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount($productPrice);
+            $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount((string) $productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
             } elseif (isset($configMaturities['Range'])) {

@@ -67,8 +67,17 @@ class ModuleInitialiser
         });
 
         foreach ($shops as $idShop) {
-            if (!Db::getInstance()->execute(sprintf($query, $idModule, $idShop, $currencies))) {
-                return false;
+            foreach ($currencies as $oneCurrency) {
+                if (!Db::getInstance()->execute(
+                    sprintf(
+                        $query, 
+                        (int) $idModule, 
+                        (int) $idShop, 
+                        (int) $oneCurrency
+                    )
+                )) {
+                    return false;
+                }
             }
         }
 
