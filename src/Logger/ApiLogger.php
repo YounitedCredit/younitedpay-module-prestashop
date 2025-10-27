@@ -28,8 +28,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PrestaShopLogger;
 use Younitedpay;
-use YounitedPaySDK\Model\NewAPI\Error;
 use YounitedPaySDK\Model\Error as Errorv1;
+use YounitedPaySDK\Model\NewAPI\Error;
 
 class ApiLogger
 {

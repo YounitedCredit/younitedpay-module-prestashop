@@ -35,7 +35,6 @@ use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
 use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
 use YounitedPaySDK\Request\NewAPI\ShopsRequest;
 use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
-use YounitedPaySDK\Response\AbstractResponse;
 
 class ConfigService
 {

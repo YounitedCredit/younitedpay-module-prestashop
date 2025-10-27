@@ -70,9 +70,9 @@ class ModuleInitialiser
             foreach ($currencies as $oneCurrency) {
                 if (!Db::getInstance()->execute(
                     sprintf(
-                        $query, 
-                        (int) $idModule, 
-                        (int) $idShop, 
+                        $query,
+                        (int) $idModule,
+                        (int) $idShop,
                         (int) $oneCurrency
                     )
                 )) {

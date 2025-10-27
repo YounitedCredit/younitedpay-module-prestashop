@@ -108,7 +108,7 @@ class HookAdminOrder extends AbstractHook
 
             return;
         }
-        
+
         $idOrderWithdraw = false !== getenv('_PS_OS_REFUND_') ? _PS_OS_REFUND_ : (int) Configuration::get('_PS_OS_REFUND_');
 
         if ((int) $idOrderWithdraw === (int) $orderStatus->id) {
