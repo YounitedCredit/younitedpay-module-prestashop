@@ -101,17 +101,17 @@ class HookAdminOrder extends AbstractHook
             return;
         }
 
-        $idOrderCanceled = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : Configuration::get('PS_OS_CANCELED');
+        $idOrderCanceled = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
 
-        if ((int) $idOrderCanceled === $orderStatus->id) {
+        if ((int) $idOrderCanceled === (int) $orderStatus->id) {
             $orderservice->cancelContract($order->id, '');
 
             return;
         }
 
-        $idOrderWithdraw = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+        $idOrderWithdraw = false !== getenv('_PS_OS_REFUND_') ? _PS_OS_REFUND_ : (int) Configuration::get('PS_OS_REFUND');
 
-        if ((int) $idOrderWithdraw === $orderStatus->id) {
+        if ((int) $idOrderWithdraw === (int) $orderStatus->id) {
             /** @var YounitedPayContract $younitedContract */
             $younitedContract = $orderservice->getYounitedContract($order->id, 'order');
             $amountWithdrawn = $order->getTotalPaid() - $younitedContract->withdrawn_amount;

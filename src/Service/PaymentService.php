@@ -473,7 +473,7 @@ class PaymentService
             '{shop_domain}' => Configuration::get('PS_SHOP_DOMAIN'),
         ];
 
-        $defaultDelivered = null !== _PS_OS_PAYMENT_ ? _PS_OS_PAYMENT_ : Configuration::getGlobalValue('PS_OS_PAYMENT');
+        $defaultDelivered = false !== getenv('_PS_OS_PAYMENT_') ? _PS_OS_PAYMENT_ : Configuration::getGlobalValue('PS_OS_PAYMENT');
 
         if (\Validate::isLoadedObject($customer) === false) {
             $customer = new Customer($cart->id_customer);
@@ -485,7 +485,7 @@ class PaymentService
                 $cart->id,
                 (int) $defaultDelivered,
                 (float) $total,
-                $this->l('Payment via Younited Pay', []),
+                $this->l('Payment via Younited Pay'),
                 null,
                 $extra_vars,
                 (int) $currency->id,

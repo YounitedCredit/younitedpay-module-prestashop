@@ -28,8 +28,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PrestaShopLogger;
 use Younitedpay;
+use YounitedPaySDK\Model\Error as Errorv1;
 use YounitedPaySDK\Model\NewAPI\Error;
-use YounitedPaySDK\Response\NewAPI\GetOffersResponse;
 
 class ApiLogger
 {
@@ -96,7 +96,7 @@ class ApiLogger
                 if (is_dir($logDir)) {
                     $this->stream = fopen($logDir . '/' . $this->logname, 'a+');
                     $this->logger = new Logger($this->module->name, [new StreamHandler($this->stream)]);
-                    $this->logger->addInfo('Error while deleting old logs ' . $ex->getMessage());
+                    $this->logger->info('Error while deleting old logs ' . $ex->getMessage());
                 }
             }
         }
@@ -157,18 +157,18 @@ class ApiLogger
         if (substr($type, 0, 8) === 'Response') {
             $response = $data->getModel();
             if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
-                if ($response instanceof Error && $response instanceof GetOffersResponse === false) {
-                    $this->logger->addInfo($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
+                if ($response instanceof Error || $response instanceof Errorv1) {
+                    $this->logger->info($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
                 } else {
                     try {
                         $count = count(json_decode(json_encode($response), true));
                     } catch (Exception $ex) {
                         $count = 'Error count';
                     }
-                    $this->logger->addInfo($this->getClass($object) . ' - Response BestPrice count: ' . $count);
+                    $this->logger->info($this->getClass($object) . ' - Response BestPrice count: ' . $count);
                 }
             } else {
-                $this->logger->addInfo($this->getClass($object) . ' - Response Data: ' . json_encode($response));
+                $this->logger->info($this->getClass($object) . ' - Response Data: ' . json_encode($response));
             }
             $headers = $data->getHeaders() ?? [];
             $logData = \json_encode([
@@ -182,7 +182,7 @@ class ApiLogger
             /** @var \YounitedPaySDK\Request\AbstractRequest $data */
             $logData = 'Request ' . ($data->getMethod() ?? 'GET') . ' to ' . $data->getUri();
         }
-        $this->logger->addInfo($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);
+        $this->logger->info($this->getClass($object) . ' - ' . $type . ' - Data: ' . $logData);
     }
 
     /**

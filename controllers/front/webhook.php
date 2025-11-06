@@ -64,7 +64,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
 
         $idCart = (int) Tools::getValue('id_cart');
 
-        if ($idCart === false) {
+        if ((bool) $idCart === false) {
             $this->endResponse('Error, no Cart Id Provided');
         }
 
@@ -112,7 +112,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         $order = new Order($younitedContract->id_order);
 
         if ($typeUpdate === 'cancel') {
-            $newIdState = null !== _PS_OS_CANCELED_ ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
+            $newIdState = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
             if ($newIdState === $order->current_state) {
                 $this->endResponse('Already canceled (Order ' . $order->id . ' - ' . $order->reference . ')');
             }
@@ -125,7 +125,7 @@ class YounitedpayWebhookModuleFrontController extends ModuleFrontController
         }
 
         if ($typeUpdate === 'withdrawn') {
-            $newIdState = null !== _PS_OS_REFUND_ ? _PS_OS_REFUND_ : Configuration::get('PS_OS_REFUND');
+            $newIdState = false !== getenv('_PS_OS_REFUND_') ? _PS_OS_REFUND_ : (int) Configuration::get('PS_OS_CANCELED');
             if ($orderservice->setWithdrawnOnYounitedContract($idCart) !== true) {
                 $this->endResponse('Error on contract Withdrawn (Cart ID ' . $idCart . ')');
             }
