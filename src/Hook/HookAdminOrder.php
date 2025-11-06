@@ -101,7 +101,7 @@ class HookAdminOrder extends AbstractHook
             return;
         }
 
-        $idOrderCanceled = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('_PS_OS_CANCELED_');
+        $idOrderCanceled = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
 
         if ((int) $idOrderCanceled === (int) $orderStatus->id) {
             $orderservice->cancelContract($order->id, '');
@@ -109,7 +109,7 @@ class HookAdminOrder extends AbstractHook
             return;
         }
 
-        $idOrderWithdraw = false !== getenv('_PS_OS_REFUND_') ? _PS_OS_REFUND_ : (int) Configuration::get('_PS_OS_REFUND_');
+        $idOrderWithdraw = false !== getenv('_PS_OS_REFUND_') ? _PS_OS_REFUND_ : (int) Configuration::get('PS_OS_REFUND');
 
         if ((int) $idOrderWithdraw === (int) $orderStatus->id) {
             /** @var YounitedPayContract $younitedContract */
