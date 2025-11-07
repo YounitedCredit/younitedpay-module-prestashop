@@ -64,7 +64,7 @@ class PaymentRepository
         $query = new DbQuery();
         $query->select('id_younitedpay_contract')
             ->from(YounitedPayContract::$definition['table'])
-            ->where('id_order = ' . (int) pSQL($idOrder));
+            ->where('id_order = ' . (int) $idOrder);
 
         $result = Db::getInstance()->getRow($query);
 

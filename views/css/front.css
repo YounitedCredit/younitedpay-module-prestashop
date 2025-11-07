@@ -42,7 +42,7 @@
     width:52px;
 }
 
-#younited_popupzone .maturity_installment9999 :first-child, .payment-options .maturity_installment9999 :first-child {
+#younited_popupzone .maturity_installment9999 :first-child, #checkout .maturity_installment9999 :first-child {
     width:auto;
 }
 
@@ -202,7 +202,8 @@
 .younitedpay-widget-root :after,
 .younitedpay-widget-root :before {
     box-sizing: border-box;
-    border: 0 solid #e2e8f0
+    border: 0 solid #e2e8f0;
+    white-space: normal;
 }
 
 .younitedpay-widget-root hr {

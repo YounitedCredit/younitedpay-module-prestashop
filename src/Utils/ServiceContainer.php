@@ -23,7 +23,17 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer as Container;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use YounitedpayAddon\Repository\ConfigRepository;
+use YounitedpayAddon\Repository\PaymentRepository;
+use YounitedpayAddon\Service\ConfigService;
+use YounitedpayAddon\Service\LoggerService;
+use YounitedpayAddon\Service\OrderService;
+use YounitedpayAddon\Service\PaymentService;
+use YounitedpayAddon\Service\ProductService;
+use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 class ServiceContainer
 {
@@ -33,10 +43,26 @@ class ServiceContainer
 
     final protected function __construct()
     {
-        $this->container = new Container(
-            'younitedpay',
-            _PS_MODULE_DIR_ . 'younitedpay/'
-        );
+        $controller = isset(\Context::getContext()->controller) ? \Context::getContext()->controller : null;
+        if (empty($controller) === false && $controller instanceof \FrontController) {
+            $container = new ContainerBuilder();
+            $loader = new YamlFileLoader(
+                $container,
+                new FileLocator(_PS_MODULE_DIR_ . 'younitedpay/config/front/')
+            );
+            $loader->load('services.yml');
+            $container->compile();
+            $this->container = $container;
+        } else {
+            $container = new ContainerBuilder();
+            $loader = new YamlFileLoader(
+                $container,
+                new FileLocator(_PS_MODULE_DIR_ . 'younitedpay/config/admin/')
+            );
+            $loader->load('services.yml');
+            $container->compile();
+            $this->container = $container;
+        }
     }
 
     protected function __clone()
@@ -59,7 +85,43 @@ class ServiceContainer
 
     public function get($serviceName)
     {
-        return $this->container->getService($serviceName);
+        /** @var \Younitedpay|bool $module */
+        $module = \Module::getInstanceByName('younitedpay');
+        if ($module === false) {
+            return;
+        }
+        switch ($serviceName) {
+            case ConfigService::class:
+                return new ConfigService(
+                    new ProcessLoggerHandler(),
+                    new ConfigRepository(),
+                    $module
+                );
+            case PaymentService::class:
+                return new PaymentService(
+                    new LoggerService(new ProcessLoggerHandler()),
+                    new PaymentRepository(),
+                    $module
+                );
+            case ProductService::class:
+                return new ProductService(
+                    new LoggerService(new ProcessLoggerHandler()),
+                    new ConfigService(
+                        new ProcessLoggerHandler(),
+                        new ConfigRepository(),
+                        $module
+                    ),
+                    $module
+                );
+            case OrderService::class:
+                return new OrderService(
+                    new LoggerService(new ProcessLoggerHandler()),
+                    new PaymentRepository(),
+                    $module
+                );
+        }
+
+        return $this->container->get($serviceName);
     }
 
     public function getContainer()

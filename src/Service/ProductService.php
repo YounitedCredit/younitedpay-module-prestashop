@@ -27,6 +27,7 @@ use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
+use YounitedpayAddon\Utils\ToolsYounited;
 use YounitedPaySDK\Model\NewAPI\GetOffers;
 use YounitedPaySDK\Model\OfferItem;
 use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
@@ -127,7 +128,7 @@ class ProductService
                 return $this->noOffers();
             }
 
-            $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount($productPrice);
+            $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount((string) $productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
             } elseif (isset($configMaturities['Range'])) {
@@ -315,22 +316,18 @@ class ProductService
     {
         $data = [
             'maturity' => (int) $offer->getMaturityInMonths(),
-            'installment_amount' => number_format(round($offer->getMonthlyInstallmentAmount(), 2), 2, '.', ''),
-            'initial_amount' => number_format(round($offer->getRequestedAmount(), 2), 2, '.', ''),
-            'down_payment_amount' => number_format(round($offer->getDownPaymentAmount(), 2), 2, '.', ''),
-            'total_amount' => number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', ''),
-            'interest_total' => number_format(round($offer->getInterestsTotalAmount(), 2), 2, '.', ''),
-            'taeg' => number_format(round($offer->getAnnualPercentageRate(), 2), 2, '.', ''),
-            'tdf' => number_format(round($offer->getAnnualDebitRate(), 2), 2, '.', ''),
+            'installment_amount' => ToolsYounited::formatPrice($offer->getMonthlyInstallmentAmount()),
+            'initial_amount' => ToolsYounited::formatPrice($offer->getRequestedAmount()),
+            'down_payment_amount' => ToolsYounited::formatPrice($offer->getDownPaymentAmount()),
+            'total_amount' => ToolsYounited::formatPrice($offer->getCreditTotalAmount()),
+            'interest_total' => ToolsYounited::formatPrice($offer->getInterestsTotalAmount()),
+            'taeg' => ToolsYounited::formatPrice($offer->getAnnualPercentageRate()),
+            'tdf' => ToolsYounited::formatPrice($offer->getAnnualDebitRate()),
         ];
         if ($data['maturity'] < 6) {
             ++$data['maturity'];
             $data['total_amount'] = $data['initial_amount'];
-            $data['initial_amount'] = number_format(round($offer->getCreditTotalAmount(), 2), 2, '.', '');
-        }
-
-        foreach ($data as $key => &$value) {
-            $value = str_replace('.00', '', $value);
+            $data['initial_amount'] = ToolsYounited::formatPrice($offer->getCreditTotalAmount());
         }
 
         return $data;

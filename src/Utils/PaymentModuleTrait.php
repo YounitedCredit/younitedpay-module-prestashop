@@ -126,7 +126,7 @@ trait PaymentModuleTrait
     {
         $installer = new ModuleInstaller($this);
 
-        return $installer->reset($this);
+        return $installer->reset($this); // @phpstan-ignore-line
     }
 
     /**
@@ -211,7 +211,7 @@ trait PaymentModuleTrait
             if ($extensionClass != $action) {
                 continue;
             }
-            $extension->setModule($this);
+            $extension->setModule($this); // @phpstan-ignore-line
             if (is_callable([$extension, $method])) {
                 return $extension->{$method}($hookName, $configuration);
             }

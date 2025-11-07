@@ -142,7 +142,8 @@ class YounitedPayContract extends ObjectModel
             ],
             'withdrawn_amount' => [
                 'type' => self::TYPE_FLOAT,
-                'copy_post' => false,
+                'size' => 10,
+                'scale' => 2,
             ],
             'api_version' => [
                 'type' => self::TYPE_STRING,

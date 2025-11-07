@@ -28,6 +28,7 @@ use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
+use YounitedpayAddon\Utils\ToolsYounited;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Model\NewAPI\GetPaymentId;
 use YounitedPaySDK\Model\NewAPI\Request\CancelPayment;
@@ -359,7 +360,7 @@ class OrderService
                 'date' => $younitedContract->date_add,
                 'date_state' => $dateState,
                 'status' => $state,
-                'withdrawn_amount' => \Tools::ps_round($withdrawnAmount, 2),
+                'withdrawn_amount' => ToolsYounited::formatPrice($withdrawnAmount),
                 'is_withdrawn_confirmed' => $stateWithdrawn,
             ],
             'shop_url' => __PS_BASE_URI__,
