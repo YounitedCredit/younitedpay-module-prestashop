@@ -79,25 +79,44 @@
          {assign var=price_at_bottom value=true}
       {/if}
 
-      </div>
-      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
-         <a href="#younited_popupzone" id="yp-kml">
-            <p>{l s='Click to learn more' mod='younitedpay'}</p>
-         </a>
-      </div>
-   </div>
-   <p class="yp-pol-purpledark yp-weight600 yp-mt-4">
-      {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
-      {l s='obligation of repayment.' mod='younitedpay'}
-      {if $iso_code == 'fr'}
-         {l s='Verify your ability' mod='younitedpay'}
-         {l s='to repay the loan' mod='younitedpay'}
+      {if $iso_code === 'it'}
+         {if $price_at_bottom == true}
+         </div>
+         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
+            <hr class="yp-border-prple yp-opacity-50">
+         {/if}        
+            <span class="yp-justify-start yp-flex-row yp-space-x-1 yp-mx-2 yp-mb-1{if $price_at_bottom == true} yp-price-block{else} yp-pl-3{/if}">
+               <span class="yp-h-7 yp-flex yp-items-center"{if $price_at_bottom == true} style="padding-right:2rem!important;"{/if}>
+                  <span class="younitedpay_infoinstallment yp-install-amount">
+                     {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €
+                  </span>&nbsp;
+                  <span>/</span>&nbsp;
+                  <span>{l s='months' mod='younitedpay'}</span>
+            </span>
+         </div>
       {else}
-         {l s='Verify your ability' mod='younitedpay'}
-         {l s='to repay the loan' mod='younitedpay'}
+         </div>
+         <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap yp-text-xs yp-p-2 yp-pb-0">
+            <a href="#younited_popupzone" id="yp-kml">
+               <p>{l s='Click to learn more' mod='younitedpay'}</p>
+            </a>
+         </div>
       {/if}
-      {l s='before committing.' mod='younitedpay'}
-   </p>
+   </div>
+   {if $iso_code !== 'it'}
+      <p class="yp-pol-purpledark yp-weight600 yp-mt-4">
+         {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
+         {l s='obligation of repayment.' mod='younitedpay'}
+         {if $iso_code == 'fr'}
+            {l s='Verify your ability' mod='younitedpay'}
+            {l s='to repay the loan' mod='younitedpay'}
+         {else}
+            {l s='Verify your ability' mod='younitedpay'}
+            {l s='to repay the loan' mod='younitedpay'}
+         {/if}
+         {l s='before committing.' mod='younitedpay'}
+      </p>
+   {/if}
    <div id="younited_popupzone"
       class="yp-inset-0 yp-flex yp-fixed yp-justify-center yp-items-center yp-z-100 yp-bg-black yp-bg-opacity-50" style="display:none!important;">
       <div
