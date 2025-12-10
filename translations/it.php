@@ -267,7 +267,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_cf1a13db4892dc497407a6568
 $_MODULE['<{younitedpay}prestashop>credit_propositions_fa6829ab4ab765e39c905d9c92d7c095'] = 'Clicca per saperne di più';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'Non disponibile in questa valuta (Solo EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'No disponible para este país (solo Francia para la dirección de facturación).';
-$_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'] = 'Paga a plazos con';
+$_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'] = 'Pagate man mano con';
 $_MODULE['<{younitedpay}prestashop>hookadminorder_058a58bd36aafd429ee100a354dd4a9d'] = 'Rimborso su YounitedPay';
 $_MODULE['<{younitedpay}prestashop>commonhook_afb5a47d1504231a95cfca9e52a217f4'] = 'Per effettuare un rimborso con Younited Pay è necessario selezionare “Genera una nota di credito”.';
 $_MODULE['<{younitedpay}prestashop>commonhook_f473fb6d1cd3a547bad7d0bdecbf6656'] = 'Rimborso con Younited Pay';
