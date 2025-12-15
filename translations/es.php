@@ -72,7 +72,7 @@ $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_3073ef21c0b32693
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_434ef5977d28afa36e430439de18cbad'] = 'Si está deshabilitado, los registros se borrarán automáticamente después de la demora';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_1607c94671fd5baf4ac06f554b118b2a'] = 'Retraso de borrado automático (en días)';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_71c3e06323cd5a59436ec53afca80c57'] = 'Elija la cantidad de días que desea mantener los registros en la base de datos';
-$_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_c9cc8cce247e49bae79f15173ce97354'] = 'Ahorrar';
+$_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_dcc459e0cef1e36a18a356fbc5789b16'] = 'Borrar todo';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_729a51874fe901b092899e9e8b31c97a'] = '¿Estas seguro?';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_f51c7af7c02cd3a846d87d97bfaf6b58'] = 'Todos los registros han sido borrados';
@@ -105,12 +105,12 @@ $_MODULE['<{younitedpay}prestashop>maturities_baabebfcf84c5ae2acaa090069338d5b']
 $_MODULE['<{younitedpay}prestashop>maturities_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturities_b10e24496ff8fec66189548a92a67045'] = 'Infinito';
 $_MODULE['<{younitedpay}prestashop>maturities_9fb417db7db6e29f83d6941793bb2468'] = 'Plazos seleccionados';
-$_MODULE['<{younitedpay}prestashop>maturities_d1875797aa9d4608395828edfc1d4ce1'] = 'Plazos destacados ';
+$_MODULE['<{younitedpay}prestashop>maturities_d1875797aa9d4608395828edfc1d4ce1'] = 'Plazos destacados';
 $_MODULE['<{younitedpay}prestashop>maturities_b2a4f24474488720f32ed4f37e895e37'] = 'Añadir un plazo';
 $_MODULE['<{younitedpay}prestashop>maturities_8416035e654de5fbd5fd0dacb42d51de'] = 'Para una mejor experiencia, aconsejamos seleccionar un máximo de 3 plazos.';
 $_MODULE['<{younitedpay}prestashop>appearence_c72410a3369eea4fcd133d03bbaa65a9'] = '3. Mostrar';
 $_MODULE['<{younitedpay}prestashop>appearence_f121b80d200a27c7d2f0c17daf9b6b3b'] = 'Mostrar las cuotas mensuales';
-$_MODULE['<{younitedpay}prestashop>appearence_b9f5c797ebbf55adccdd8539a65a0241'] = 'Desactivado';
+$_MODULE['<{younitedpay}prestashop>appearence_b9f5c797ebbf55adccdd8539a65a0241'] = 'Desactivada';
 $_MODULE['<{younitedpay}prestashop>appearence_9ee62667bae48d7df974901c465db9c0'] = 'Sólo página de producto';
 $_MODULE['<{younitedpay}prestashop>appearence_9771fa28ddf673318336253e89f39af5'] = 'Sólo página de carrito';
 $_MODULE['<{younitedpay}prestashop>appearence_c52b97f29541f4896054910486f1d8a9'] = 'Página del producto y de carrito';
@@ -127,7 +127,7 @@ $_MODULE['<{younitedpay}prestashop>appearence_2f4d1732fbcfd5b2d9cbedc8056658bd']
 $_MODULE['<{younitedpay}prestashop>appearence_722493c68ebd3b431bd3e1a39fd582d6'] = 'Mostrar con bordes';
 $_MODULE['<{younitedpay}prestashop>appearence_c2c0eda8007343fb1cda03418677025d'] = 'Añada bordes negros al widget de la página de producto.';
 $_MODULE['<{younitedpay}prestashop>appearence_ff607dc50ef1a10323c7ce715d9f3795'] = 'Widget cuotas mensuales';
-$_MODULE['<{younitedpay}prestashop>appearence_b7634b6f99cd212164f5c9ead6aebb9a'] = 'Contenido copiado al portapapeles';
+$_MODULE['<{younitedpay}prestashop>appearence_b7634b6f99cd212164f5c9ead6aebb9a'] = 'Contenido de Widget copiado al portapapeles';
 $_MODULE['<{younitedpay}prestashop>appearence_a612782072a3b8f151c5e2120ef20efd'] = 'Copiar al portapapeles';
 $_MODULE['<{younitedpay}prestashop>appearence_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{younitedpay}prestashop>maturity_ba5376b5ba3216a7a51eabb18265d921'] = 'Cuotas';
