@@ -90,13 +90,16 @@ function YpchangeInstallment(key, maturity = 0)
     $('.yp-custom-range').val(currentMaturity);
     $('.yp-install-maturity-lite').text(currentMaturity);
 
-    ypUpdatePaymentURL(currentMaturity);
+    ypUpdatePaymentURL(currentMaturity, parseInt(downPaymentAmount) > 0);
 }
 
-function ypUpdatePaymentURL(maturity)
+function ypUpdatePaymentURL(maturity, withDownPayment = false)
 {
     if (typeof younitedpay.url_payment !== 'undefined') {
         var link = younitedpay.url_payment + '&maturity=' + maturity;
+        if (withDownPayment === true) {
+            link += '&down_payment=1';
+        }
         $('form').each((index, form) => {
             var action = $(form).attr('action');
             if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {

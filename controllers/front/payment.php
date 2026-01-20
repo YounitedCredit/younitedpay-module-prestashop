@@ -34,7 +34,7 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
 
         $maturity = (int) Tools::getValue('maturity');
-        if ($maturity < 6) {
+        if (Tools::getValue('down_payment') !== false) {
             $maturity = (int) Tools::getValue('maturity') - 1;
         }
         $totalAmount = (float) Tools::getValue('amount');

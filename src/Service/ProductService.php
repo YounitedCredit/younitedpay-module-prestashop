@@ -267,7 +267,7 @@ class ProductService
             if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
                 continue;
             }
-            if ($maturityIn < 6) {
+            if ($offer->getDownPaymentAmount() > 0) {
                 ++$maturityIn;
             }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
@@ -324,7 +324,7 @@ class ProductService
             'taeg' => ToolsYounited::formatPrice($offer->getAnnualPercentageRate()),
             'tdf' => ToolsYounited::formatPrice($offer->getAnnualDebitRate()),
         ];
-        if ($data['maturity'] < 6) {
+        if ($offer->getDownPaymentAmount() > 0) {
             ++$data['maturity'];
             $data['total_amount'] = $data['initial_amount'];
             $data['initial_amount'] = ToolsYounited::formatPrice($offer->getCreditTotalAmount());
