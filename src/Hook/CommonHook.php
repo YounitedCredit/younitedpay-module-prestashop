@@ -78,6 +78,7 @@ class CommonHook extends AbstractHook
             case $controller instanceof \OrderController:
             case $controller instanceof \CartController:
             case $controller instanceof \TheCheckoutModuleFrontController:
+            case $controller instanceof \StEasyCheckoutDefaultModuleFrontController:
             case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $frontModuleLink = Context::getContext()->link->getModuleLink(
                     $this->module->name,
