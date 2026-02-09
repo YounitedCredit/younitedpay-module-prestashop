@@ -70,7 +70,7 @@ class ProductService
             return $this->noOffers();
         }
 
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
         if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false || $client->shopCode === '') {
             return $this->noOffers();
         }

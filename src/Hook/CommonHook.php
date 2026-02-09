@@ -55,7 +55,7 @@ class CommonHook extends AbstractHook
 
         foreach (Shop::getShops() as $oneShop) {
             $idShop = $oneShop['id_shop'];
-            $client = new YounitedClient($idShop);
+            $client = new YounitedClient($idShop, Context::getContext()->language->id);
             $isProductionMode = (bool) Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
             $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $idShop);
             $shopCodeProduction = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $idShop);

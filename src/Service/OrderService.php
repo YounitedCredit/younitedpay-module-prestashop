@@ -75,7 +75,7 @@ class OrderService
      */
     protected function buildClient()
     {
-        $this->client = new YounitedClient($this->context->shop->id);
+        $this->client = new YounitedClient($this->context->shop->id, $this->context->language->id);
         if ($this->client->isCrendentialsSet() === false) {
             return [
                 'success' => false,

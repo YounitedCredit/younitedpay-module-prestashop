@@ -113,7 +113,7 @@ class ConfigService
      */
     public function isApiConnected()
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
 
         if ($client->isCrendentialsSet() === false) {
             return [
@@ -321,7 +321,7 @@ class ConfigService
      */
     public function getShopCodes()
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
 
         if ($client->isCrendentialsSet() === false) {
             return [];
@@ -352,7 +352,7 @@ class ConfigService
 
     public function testWebhook()
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
 
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return false;

@@ -101,7 +101,7 @@ class PaymentService
             ];
         }
 
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,
@@ -357,7 +357,7 @@ class PaymentService
      */
     public function getApiPaymentById($paymentId)
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
         if ($client->isCrendentialsSet() === false) {
             return false;
         }
@@ -387,7 +387,7 @@ class PaymentService
     {
         $merchantReference = $order->reference . '-' . $order->id;
         $idShop = $order->id_shop ?? ($this->context->shop->id > 0 ? $this->context->shop->id : 1);
-        $client = new YounitedClient($idShop);
+        $client = new YounitedClient($idShop, $this->context->language->id);
         if ($client->isCrendentialsSet() === false) {
             $this->loggerservice->addLogAPI('No credentials set for this shop :' . $idShop, 'Info', $this);
 
@@ -425,7 +425,7 @@ class PaymentService
      */
     public function getCreditRequestedAmount($cart)
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
         if ($client->isCrendentialsSet() === false) {
             return false;
         }
