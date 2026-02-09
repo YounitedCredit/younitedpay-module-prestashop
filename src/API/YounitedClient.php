@@ -63,7 +63,7 @@ class YounitedClient
     /** @var bool */
     public $isTestUnit = false;
 
-    public function __construct($idShop, $testCredentials = [])
+    public function __construct($idShop, $idLang = '', $testCredentials = [])
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
 
@@ -73,7 +73,7 @@ class YounitedClient
             $this->isTestUnit = true;
         } else {
             $this->apiLogger = ApiLogger::getInstance();
-            $this->setApiCredentials($idShop);
+            $this->setApiCredentials($idShop, $idLang);
         }
     }
 
@@ -174,10 +174,10 @@ class YounitedClient
         /** @var CacheYounited $cacheStorage */
         $cacheStorage = new CacheYounited();
 
-        $cacheExists = $cacheStorage->exist('token_api');
+        $cacheExists = $cacheStorage->exist('token_api_' . $this->clientId);
 
         if ($cacheExists === true) {
-            $cacheInformations = $cacheStorage->get('token_api');
+            $cacheInformations = $cacheStorage->get('token_api_' . $this->clientId);
             $token = $cacheInformations['content']['token'];
             $tokenLog = substr($token, 0, 5) . '*****' . substr($token, -5, 5);
             $this->apiLogger->log($this, 'token exists in cache: ' . $tokenLog, 'Info');
@@ -202,7 +202,7 @@ class YounitedClient
         /** @var RegistryItem $cacheTokenItem */
         $cacheTokenItem = $cache->getItem('token');
 
-        $cacheStorage->set('token_api', [
+        $cacheStorage->set('token_api_' . $this->clientId, [
             'token' => $cacheTokenItem->get(),
             'expiresat' => $cacheTokenItem->getExpiredDate(),
         ]);
@@ -231,16 +231,18 @@ class YounitedClient
         ];
     }
 
-    private function setApiCredentials($idShop)
+    private function setApiCredentials($idShop, $idLang)
     {
+        $isoCodeSuffix = empty($idLang) ? '' : '_' .strtoupper((new \Language((int) $idLang))->getIsoCode());
+
         $this->isProductionMode = (bool) Configuration::get(
-            Younitedpay::PRODUCTION_MODE,
+            Younitedpay::PRODUCTION_MODE .  $isoCodeSuffix,
             null,
             null,
             $idShop,
             false
         );
-        $suffix = $this->isProductionMode === true ? '_PRODUCTION' : '';
+        $suffix = $this->isProductionMode === true ? '_PRODUCTION' . $isoCodeSuffix : $isoCodeSuffix;
         $this->clientId = Configuration::get(
             Younitedpay::CLIENT_ID . $suffix,
             null,

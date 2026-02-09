@@ -20,6 +20,11 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\API\YounitedClient;
+use YounitedpayAddon\Utils\CacheYounited;
+use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
+
+
 /**
  * @param YounitedPay $module
  *
@@ -31,48 +36,42 @@ function upgrade_module_2_2_0($module)
 {
     $result = true;
 
+    $cacheStorage = new CacheYounited();
+    $cacheStorage->remove('token_api');
+
     $shopIds = Shop::getShops(true, null, true);
     foreach ($shopIds as $shopId) {
-        $clientID = getValue(Younitedpay::CLIENT_ID, $shopId, 'client_id', '');
-        $clientIDProd = getValue(Younitedpay::CLIENT_ID_PRODUCTION, $shopId, 'client_id', '');
-        $clientSecret = getValue(Younitedpay::CLIENT_SECRET, $shopId, 'client_secret', '');
-        $clientSecretProd = getValue(Younitedpay::CLIENT_SECRET_PRODUCTION, $shopId, 'client_secret', '');
-        $shopCode = getValue(Younitedpay::SHOP_CODE, $shopId, 'shop_code', '');
-        $shopCodeProd = getValue(Younitedpay::SHOP_CODE_PRODUCTION, $shopId, 'shop_code_production', '');
-        $webHookSecret = getValue(Younitedpay::WEBHOOK_SECRET, $shopId, 'webhook_secret', '');
-        $webHookSecretProd = getValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION, $shopId, 'webhook_secret', '');
-        $isProduction = getValue(Younitedpay::PRODUCTION_MODE, $shopId, 'production_mode', false);
+        $clientID = Configuration::get(Younitedpay::CLIENT_ID, null, null, $shopId, 'client_id', '');
+        $clientIDProd = Configuration::get(Younitedpay::CLIENT_ID_PRODUCTION, null, null, $shopId, 'client_id', '');
+        $clientSecret = Configuration::get(Younitedpay::CLIENT_SECRET, null, null, $shopId, 'client_secret', '');
+        $clientSecretProd = Configuration::get(Younitedpay::CLIENT_SECRET_PRODUCTION, null, null, $shopId, 'client_secret', '');
+        $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $shopId, 'shop_code', '');
+        $shopCodeProd = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $shopId, 'shop_code_production', '');
+        $webHookSecret = Configuration::get(Younitedpay::WEBHOOK_SECRET, null, null, $shopId, 'webhook_secret', '');
+        $webHookSecretProd = Configuration::get(Younitedpay::WEBHOOK_SECRET_PRODUCTION, null, null, $shopId, 'webhook_secret', '');
+        $isProduction = Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $shopId, 'production_mode', false);
 
-        $result
-            &= Configuration::updateValue(Younitedpay::CLIENT_ID . '_FR', $clientID, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION . '_FR', $clientIDProd, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::CLIENT_SECRET . '_FR', $clientSecret, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION . '_FR', $clientSecretProd, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::SHOP_CODE . '_FR', $shopCode, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION . '_FR', $shopCodeProd, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::WEBHOOK_SECRET . '_FR', $webHookSecret, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_FR', $webHookSecretProd, false, null, $shopId)
-            && Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_FR', $isProduction, false, null, $shopId);
+        $client = new YounitedClient($shopId);
+        $request = new GetMerchantRequest();
+        $response = $client->sendRequest('', $request);
+
+        foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
+            if (empty($response) === true || $response['success'] === false || $availableCountry !== $response['response']['countryLabel']) {
+                continue;
+            }
+
+            $result
+                &= Configuration::updateValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $clientID, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION . '_' . $availableCountry, $clientIDProd, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $clientSecret, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION . '_' . $availableCountry, $clientSecretProd, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $shopCode, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $shopCodeProd, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $webHookSecret, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $webHookSecretProd, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $shopId);
+        }
     }
 
     return $result;
-}
-
-/**
- * @param string $key Configuration key to get
- * @param int $shopId Id Shop concerned
- * @param string $param Param return in form while saving
- * @param mixed $defValue Default value if nothing's found
- *
- * @return string|bool Value get by Configuration
- */
-protected function getValue($key, $shopId, $param, $defValue)
-{
-    return Configuration::get(
-        $key,
-        null,
-        null,
-        $shopId,
-        Tools::getValue($param, $defValue)
-    );
 }
