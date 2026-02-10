@@ -48,10 +48,10 @@
                             <div class="col-lg-4 align-item-center">
                                     <span class="ps-switch ps-switch-lg" id="younitedpay_prod_switch_{$available_country}">
                                         <input type="radio" name="production_mode_{$available_country}" id="production_mode_off_{$available_country}"
-                                               value="0"{if $configuration[$available_country].production_mode === false} checked{/if}/>
+                                               value="0"{if $configuration.production_mode[$available_country] === false} checked{/if}/>
                                         <label for="production_mode_off_{$available_country}">{l s='Test' mod='younitedpay'}</label>
                                         <input type="radio" name="production_mode_{$available_country}" id="production_mode_on_{$available_country}"
-                                               value="1"{if $configuration[$available_country].production_mode === true} checked{/if}/>
+                                               value="1"{if $configuration.production_mode[$available_country] === true} checked{/if}/>
                                         <label for="production_mode_on_{$available_country}">{l s='Production' mod='younitedpay'}</label>
                                         <span class="slide-button"></span>
                                     </span>
@@ -61,44 +61,44 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_{$available_country}">
                                 {l s='Client ID' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
                                 <input type="text" class="form-control"
                                        placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id_{$available_country}"
-                                       name="client_id_{$available_country}" value="{$configuration[$available_country].client_id|escape:'htmlall':'UTF-8'}" />
+                                       name="client_id_{$available_country}" value="{$configuration.client_id[$available_country]|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
                                     {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_{$available_country}">
                                 {l s='Client Secret' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
                                 <input type="text" class="form-control"
                                        placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_{$available_country}"
-                                       name="client_secret_{$available_country}" value="{$configuration[$available_country].client_secret|escape:'htmlall':'UTF-8'}" />
+                                       name="client_secret_{$available_country}" value="{$configuration.client_secret[$available_country]|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
                                     {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_{$available_country}">
                                 {l s='Shop Code' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-start">
-                                {if false === empty($configuration[$available_country].shop_codes_list)}
+                                {if false === empty($configuration.shop_codes_list[$available_country])}
                                     <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
                                             name="shop_code_{$available_country}" id="shop_code_{$available_country}">
-                                        {foreach from=$configuration[$available_country].shop_codes_list item='shop_code_name'}
+                                        {foreach from=$configuration.shop_codes_list[$available_country] item='shop_code_name'}
                                             {if empty($shop_code_name.code) === false}
                                                 <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
-                                                        {if $shop_code_name.code == $configuration[$available_country].shop_code} selected{/if}>
+                                                        {if $shop_code_name.code == $configuration.shop_code[$available_country]} selected{/if}>
                                                     {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
                                                 </option>
                                             {/if}
@@ -111,57 +111,57 @@
                                 {/if}
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_{$available_country}">
                                 {l s='WebHook Secret' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
                                 <input type="text" class="form-control"
                                        placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret_{$available_country}"
-                                       name="webhook_secret_{$available_country}" value="{$configuration[$available_country].webhook_secret|escape:'htmlall':'UTF-8'}" />
+                                       name="webhook_secret_{$available_country}" value="{$configuration.webhook_secret[$available_country]|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
                                     {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_production_{$available_country}">
                                 {l s='Client ID' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
                                 <input type="text" class="form-control"
                                        placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id_production_{$available_country}"
-                                       name="client_id_production_{$available_country}" value="{$configuration[$available_country].client_id_production|escape:'htmlall':'UTF-8'}" />
+                                       name="client_id_production_{$available_country}" value="{$configuration.client_id_production[$available_country]|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
                                     {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_production_{$available_country}">
                                 {l s='Client Secret' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
                                 <input type="text" class="form-control"
                                        placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production_{$available_country}"
-                                       name="client_secret_production_{$available_country}" value="{$configuration[$available_country].client_secret_production|escape:'htmlall':'UTF-8'}" />
+                                       name="client_secret_production_{$available_country}" value="{$configuration.client_secret_production[$available_country]|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
                                     {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production_{$available_country}">
                                 {l s='Shop Code' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-start">
-                                {if false === empty($configuration[$available_country].shop_codes_list)}
+                                {if false === empty($configuration.shop_codes_list[$available_country])}
                                     <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
                                             id="shop_code_production_{$available_country}" name="shop_code_production_{$available_country}">
-                                        {foreach from=$configuration[$available_country].shop_codes_list item='shop_code_name'}
+                                        {foreach from=$configuration.shop_codes_list[$available_country] item='shop_code_name'}
                                             {if empty($shop_code_name.code) === false}
                                                 <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
-                                                        {if $shop_code_name.code == $configuration[$available_country].shop_code_production} selected{/if}>
+                                                        {if $shop_code_name.code == $configuration.shop_code_production[$available_country]} selected{/if}>
                                                     {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
                                                 </option>
                                             {/if}
@@ -174,14 +174,14 @@
                                 {/if}
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration[$available_country].production_mode === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_production_{$available_country}">
                                 {l s='WebHook Secret' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
                                 <input type="text" class="form-control"
                                        placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret_production_{$available_country}"
-                                       name="webhook_secret_production_{$available_country}" value="{$configuration[$available_country].webhook_secret_production|escape:'htmlall':'UTF-8'}" />
+                                       name="webhook_secret_production_{$available_country}" value="{$configuration.webhook_secret_production[$available_country]|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
                                     {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>

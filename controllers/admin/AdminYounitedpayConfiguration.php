@@ -182,25 +182,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         $this->availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
         foreach ($this->availableCountries as $availableCountry) {
-            $this->clientID[$availableCountry] = $this->getValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $idShop, 'client_id', '');
-            $this->clientIDProduction[$availableCountry] = $this->getValue(Younitedpay::CLIENT_ID_PRODUCTION . '_' . $availableCountry, $idShop, 'client_id', '');
-            $this->clientSecret[$availableCountry] = $this->getValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $idShop, 'client_secret', '');
-            $this->clientSecretProduction[$availableCountry] = $this->getValue(
-                Younitedpay::CLIENT_SECRET_PRODUCTION,
-                $idShop,
-                'client_secret',
-                ''
-            );
-            $this->shopCode[$availableCountry] = $this->getValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $idShop, 'shop_code', '');
-            $this->shopCodeProduction[$availableCountry] = $this->getValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $idShop, 'shop_code_production', '');
-            $this->webHookSecret[$availableCountry] = $this->getValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $idShop, 'webhook_secret', '');
-            $this->webHookSecretProduction[$availableCountry] = $this->getValue(
-                Younitedpay::WEBHOOK_SECRET_PRODUCTION,
-                $idShop,
-                'webhook_secret',
-                ''
-            );
-            $this->isProductionMode[$availableCountry] = (bool) $this->getValue($productionMode . '_' . $availableCountry, $idShop, 'production_mode', false);
+            $isoCode = strtolower($availableCountry);
+            $this->clientID[$isoCode] = $this->getValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $idShop, 'client_id_' . $isoCode, '');
+            $this->clientIDProduction[$isoCode] = $this->getValue(Younitedpay::CLIENT_ID_PRODUCTION . '_' . $availableCountry, $idShop, 'client_id_production_' . $isoCode, '');
+            $this->clientSecret[$isoCode] = $this->getValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $idShop, 'client_secret' . $isoCode, '');
+            $this->clientSecretProduction[$isoCode] = $this->getValue(Younitedpay::CLIENT_SECRET_PRODUCTION . '_' . $availableCountry, $idShop, 'client_secret_production_' . $isoCode, '');
+            $this->shopCode[$isoCode] = $this->getValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $idShop, 'shop_code_' . $isoCode, '');
+            $this->shopCodeProduction[$isoCode] = $this->getValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $idShop, 'shop_code_production_' . $isoCode, '');
+            $this->webHookSecret[$isoCode] = $this->getValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $idShop, 'webhook_secret_' . $isoCode, '');
+            $this->webHookSecretProduction[$isoCode] = $this->getValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $idShop, 'webhook_secret_production_' . $isoCode, '');
+            $this->isProductionMode[$isoCode] = (bool) $this->getValue($productionMode . '_' . $availableCountry, $idShop, 'production_mode_' . $isoCode, false);
         }
 
         $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
