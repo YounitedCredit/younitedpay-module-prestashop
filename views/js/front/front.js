@@ -74,7 +74,7 @@ function YpchangeInstallment(key, maturity = 0)
         $('#yp_buy_now').css('visibility', 'hidden');
     }
     var infoInstallmentMaturity = currentMaturity + 'x';
-    
+
     $('.maturity_installment').removeClass('yp-bg-black-btn');
     $('.maturity_installment' + key).addClass('yp-bg-black-btn');
 
@@ -131,13 +131,16 @@ function updateCreditZone(event)
         type: younitedpay.type,
         qty: event.quantity_wanted,
     };
+    if (typeof younitedpay.id_lang !== 'undefined') {
+        ajaxData.id_lang = younitedpay.id_lang;
+    }
     $.ajax({
         url: younitedpay.url_product,
         type: 'POST',
         dataType: 'JSON',
         data: ajaxData,
         success(response) {
-            if ('content' in response) {            
+            if ('content' in response) {
                 $('.younitedpay_product_info').html(response.content);
                 if (younitedpay.hook_product === 'displayAfterProductThumbs') {
                     var younitedProductZone = $('.younitedpay_product_info');
@@ -185,7 +188,7 @@ function bindEventsYounitedPay()
         });
     }
     $('.maturity_installment').on("click", YpClickOnMaturity);
-    
+
     $('body').off('click', '.yp-custom-range');
     $('body').on('click', '.yp-custom-range', function (e) {
         e.preventDefault();

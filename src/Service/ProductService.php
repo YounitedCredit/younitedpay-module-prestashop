@@ -63,14 +63,14 @@ class ProductService
         $this->configService = $configService;
     }
 
-    public function getBestPrice($product_price, $selectedHook = 'widget')
+    public function getBestPrice($product_price, $selectedHook = 'widget', $idLang = null)
     {
         $this->selectedHook = $selectedHook;
         if (\Tools::getValue('action') === 'refresh') {
             return $this->noOffers();
         }
 
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
+        $client = new YounitedClient($this->context->shop->id, $idLang ?? $this->context->language->id);
         if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false || $client->shopCode === '') {
             return $this->noOffers();
         }
@@ -96,7 +96,7 @@ class ProductService
 
         $offers = [];
         $rangeOffers = [];
-        if ($cacheExists === true && $cachestorage->isExpired((string) $productPrice) === false) {
+        if ($cacheExists === true && $cachestorage->isExpired((string) $this->context->language->id . '_' . $productPrice) === false) {
             $cacheInformations = $cachestorage->get((string) $productPrice);
             $offers = $cacheInformations['content']['offers'];
             $rangeOffers = $cacheInformations['content']['ranges'];
@@ -169,7 +169,7 @@ class ProductService
                 $offers[] = $rangeOffers[count($rangeOffers) - 1];
             }
 
-            $cachestorage->set((string) $productPrice, [
+            $cachestorage->set((string) $this->context->language->id . '_' . $productPrice, [
                 'offers' => $offers,
                 'ranges' => $rangeOffers,
             ]);

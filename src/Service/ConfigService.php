@@ -113,75 +113,87 @@ class ConfigService
      */
     public function isApiConnected()
     {
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
+        $message = [];
+        $shopCodeList = [];
+        $maturityList = self::DEF_MATURITIES;
+        $status = [];
+        foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
+            $countryCode = strtolower($availableCountry);
+            $langId = (int) \Language::getIdByIso($countryCode);
 
-        if ($client->isCrendentialsSet() === false) {
+            $client = new YounitedClient($this->context->shop->id, $langId);
+            $status[$countryCode] = [];
+
+            if ($client->isCrendentialsSet() === false) {
+                $message[$countryCode][] = $this->l('No credential saved');
+                $status[$countryCode][] = 'no_credentials';
+                continue;
+            }
+
+            if (empty($client->shopCode) === true) {
+                $message[$countryCode][] = $this->l('No Shop Code saved');
+                $status[$countryCode][] = 'no_shop_code';
+            }
+
+            $shopCodeList[$countryCode] = $this->getShopCodes();
+            if (empty($shopCodeList[$countryCode]) === true) {
+                $message[$countryCode][] = 'Shop codes: ' . $this->l('Response error');
+                $status[$countryCode][] = 'api_error';
+                $client->shopCode = '';
+            }
+
+            $body = (new GetOffers())->setShopCode($client->shopCode)
+                ->setAmount('1500')
+                ->setMaturityRangeStep(1)
+                ->setMaturityRangeMin(1)
+                ->setMaturityRangeMax(84);
+
+            $request = new GetOffersRequest();
+
+            if (empty($client->shopCode) === false) {
+                /** @var mixed $response */
+                $response = $client->sendRequest($body, $request);
+
+                if (empty($response) === true || $response['success'] === false) {
+                    $message[$countryCode][] = $this->l('Offers response error');
+                    $status[$countryCode][] = 'maturities_error';
+                }
+                if (empty($status) === false) {
+                    continue;
+                }
+                foreach ($response['response'] as $oneOffer) {
+                    $maturity = (int)$oneOffer->getMaturityInMonths();
+                    if ($maturity < 5) {
+                        ++$maturity;
+                    }
+                    if (in_array($maturity, $maturityList) === false) {
+                        $maturityList[] = $maturity;
+                    }
+                }
+            }
+        }
+
+        if (empty($shopCodeList)) {
             return [
-                'message' => $this->l('No credential saved'),
-                'maturityList' => self::DEF_MATURITIES,
-                'shopCodeList' => [],
-                'status' => ['no_credentials'],
+                'message' => $message,
+                'maturityList' => array_unique($maturityList),
+                'shopCodeList' => $shopCodeList,
+                'status' => $status,
             ];
         }
 
-        $message = '';
-        $errorStatus = [];
-        if (empty($client->shopCode) === true) {
-            $message = $this->l('No Shop Code saved');
-            $errorStatus[] = 'no_shop_code';
-        }
-
-        $shopCodeList = $this->getShopCodes();
-        if (empty($shopCodeList) === true) {
-            $message .= ($message === '') ? '' : ' - ';
-            $message .= 'Shop codes: ' . $this->l('Response error');
-            $errorStatus[] = 'api_error';
-            $client->shopCode = '';
-        }
-
-        $body = (new GetOffers())->setShopCode($client->shopCode)
-            ->setAmount('1500')
-            ->setMaturityRangeStep(1)
-            ->setMaturityRangeMin(1)
-            ->setMaturityRangeMax(84);
-
-        $request = new GetOffersRequest();
-        $maturityList = self::DEF_MATURITIES;
-
-        if (empty($client->shopCode) === false) {
-            /** @var mixed $response */
-            $response = $client->sendRequest($body, $request);
-
-            if (empty($response) === true || $response['success'] === false) {
-                $message .= ($message === '') ? '' : ' - ';
-                $message .= $this->l('Offers response error');
-                $errorStatus[] = 'maturities_error';
-            }
-            if (empty($errorStatus) === false) {
-                return [
-                    'message' => $message,
-                    'maturityList' => $maturityList,
-                    'shopCodeList' => $shopCodeList,
-                    'status' => $errorStatus,
-                ];
-            }
-            $maturityList = [];
-            foreach ($response['response'] as $oneOffer) {
-                $maturity = (int) $oneOffer->getMaturityInMonths();
-                if ($maturity < 5) {
-                    ++$maturity;
-                }
-                if (in_array($maturity, $maturityList) === false) {
-                    $maturityList[] = $maturity;
-                }
+        foreach ($status as $countryCode => $statusDetail) {
+            if (empty($statusDetail)) {
+                $status[$countryCode] = ['ok'];
+                $message[$countryCode] = [$this->l('Connexion Ok')];
             }
         }
 
         return [
-            'message' => empty($errorStatus) ? $this->l('Connexion Ok') : $message,
-            'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
+            'message' => $message,
+            'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : $maturityList,
             'shopCodeList' => $shopCodeList,
-            'status' => empty($errorStatus) ? ['ok'] : $errorStatus,
+            'status' => $status,
         ];
     }
 
@@ -224,10 +236,20 @@ class ConfigService
 
         $isApiConnected = $this->isApiConnected();
 
+        $isApiConnectedStatus = false;
+        foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
+            $countryCode = strtolower($availableCountry);
+            $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
+            $isApiConnectedMsg = implode(' - ', $isApiConnected['message'][$countryCode]);
+            if ($isApiConnectedStatus) {
+                break;
+            }
+        }
+
         return [
             'maturityList' => $isApiConnected['maturityList'],
             'shopCodeList' => $isApiConnected['shopCodeList'],
-            'connected' => in_array('ok', $isApiConnected['status']),
+            'connected' => $isApiConnectedStatus,
             'status' => $isApiConnected['status'],
             'specs' => [
                 [
@@ -247,8 +269,8 @@ class ConfigService
                 ],
                 [
                     'name' => $this->l('Connected to API'),
-                    'info' => $isApiConnected['message'],
-                    'ok' => in_array('ok', $isApiConnected['status']),
+                    'info' => $isApiConnectedMsg,
+                    'ok' => $isApiConnectedStatus,
                 ],
                 [
                     'name' => $this->l('Production environment'),
@@ -366,7 +388,7 @@ class ConfigService
             $statutResponse = (int) substr($response['response']['responseBody'], 0, 3);
             $responseWebHook = [
                 'status' => $statutResponse,
-                'success' => $statutResponse === 200 ? true : false,
+                'success' => $statutResponse === 200,
                 'response' => $response['response']['responseBody'],
             ];
         }

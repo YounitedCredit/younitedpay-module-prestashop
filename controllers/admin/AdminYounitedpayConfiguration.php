@@ -473,6 +473,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function postAccountSubmit($idShop)
     {
+        $this->availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
         foreach ($this->availableCountries as $availableCountry) {
             $countryCode = strtolower($availableCountry);
 

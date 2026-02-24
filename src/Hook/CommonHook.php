@@ -75,10 +75,7 @@ class CommonHook extends AbstractHook
         $this->registerMedia($controller);
         switch (true) {
             case $controller instanceof \ProductController:
-            case $controller instanceof \OrderController:
             case $controller instanceof \CartController:
-            case $controller instanceof \TheCheckoutModuleFrontController:
-            case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $frontModuleLink = Context::getContext()->link->getModuleLink(
                     $this->module->name,
                     'product'
@@ -89,6 +86,25 @@ class CommonHook extends AbstractHook
                         'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
                         'type' => $controller instanceof \CartController ? 'cart' : 'product',
                         'id_product' => (int) \Tools::getValue('id_product'),
+                    ],
+                ]);
+            case $controller instanceof \OrderController:
+            case $controller instanceof \TheCheckoutModuleFrontController:
+            case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
+                $invoiceAddress = new \Address(Context::getContext()->cart->id_address_invoice);
+                $countryIsoCode = (new \Country($invoiceAddress->id_country))->iso_code;
+                $langId = \Language::getIdByIso(strtolower($countryIsoCode)) ?: Context::getContext()->language->id;
+                $frontModuleLink = Context::getContext()->link->getModuleLink(
+                    $this->module->name,
+                    'product'
+                );
+                \Media::addJsDef([
+                    'younitedpay' => [
+                        'url_product' => $frontModuleLink,
+                        'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
+                        'type' => $controller instanceof \CartController ? 'cart' : 'product',
+                        'id_product' => (int) \Tools::getValue('id_product'),
+                        'id_lang' => $langId,
                     ],
                 ]);
         }
