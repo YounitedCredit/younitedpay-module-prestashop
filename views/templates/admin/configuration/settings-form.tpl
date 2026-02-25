@@ -33,7 +33,8 @@
                             <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
                                     name="country_code" id="country_code">
                                 {foreach from=$configuration.available_countries item='available_country'}
-                                    <option value="{$available_country|escape:'htmlall':'UTF-8'}">
+                                    <option value="{$available_country|escape:'htmlall':'UTF-8'}"
+                                            {if $available_country == $configuration.country_code} selected{/if}>
                                         {strtoupper($available_country)|escape:'htmlall':'UTF-8'}
                                     </option>
                                 {/foreach}

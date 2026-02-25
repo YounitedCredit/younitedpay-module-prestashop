@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -108,6 +109,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $maturitylist;
 
     /** @var array */
+    public $countryCode;
+
+    /** @var array */
     public $availableCountries;
 
     const ALLOWED_FRONT_PRODUCT_HOOKS = [
@@ -194,6 +198,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $this->isProductionMode[$isoCode] = (bool) $this->getValue($productionMode . '_' . $availableCountry, $idShop, 'production_mode_' . $isoCode, false);
         }
 
+        $this->countryCode = $this->getValue(Younitedpay::COUNTRY_CODE, $idShop, 'country_code', 'FR');
         $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
         $this->isShownMonthly = (int) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
@@ -475,15 +480,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     {
         $this->availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
         foreach ($this->availableCountries as $availableCountry) {
-            $countryCode = strtolower($availableCountry);
+            $availableCountryCode = strtolower($availableCountry);
 
-            $clientID = Tools::getValue('client_id_' . $countryCode);
-            $clientSecret = Tools::getValue('client_secret_' . $countryCode);
-            $shopCode = Tools::getValue('shop_code_' . $countryCode);
-            $webHookSecret = Tools::getValue('webhook_secret_' . $countryCode);
-            $clientIDProd = Tools::getValue('client_id_production_' . $countryCode);
-            $clientSecretProd = Tools::getValue('client_secret_production_' . $countryCode);
-            $shopCodeProd = Tools::getValue('shop_code_production_' . $countryCode);
+            $clientID = Tools::getValue('client_id_' . $availableCountryCode);
+            $clientSecret = Tools::getValue('client_secret_' . $availableCountryCode);
+            $shopCode = Tools::getValue('shop_code_' . $availableCountryCode);
+            $webHookSecret = Tools::getValue('webhook_secret_' . $availableCountryCode);
+            $clientIDProd = Tools::getValue('client_id_production_' . $availableCountryCode);
+            $clientSecretProd = Tools::getValue('client_secret_production_' . $availableCountryCode);
+            $shopCodeProd = Tools::getValue('shop_code_production_' . $availableCountryCode);
             $webHookSecretProd = Tools::getValue('webhook_secret_production_' . $countryCode);
 
             Configuration::updateValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $clientID, false, null, $idShop);
@@ -510,11 +515,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $webHookSecretProd, false, null, $idShop);
         }
 
+        $countryCode = Tools::getValue('country_code');
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
         $isProduction = Tools::getValue('production_mode');
         $webHookOrders = Tools::getValue('webhook_orders');
 
+        Configuration::updateValue(Younitedpay::COUNTRY_CODE, $countryCode, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
         Configuration::updateValue(Younitedpay::PRODUCTION_MODE, $isProduction, false, null, $idShop);
@@ -620,6 +627,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         return [
             'url_form_config' => $urlFormConfig,
             'use_new_api' => (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true),
+            'country_code' => $this->countryCode,
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
