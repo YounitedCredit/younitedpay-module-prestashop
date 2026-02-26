@@ -24,6 +24,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use Configuration;
+use Language;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Logger\ApiLogger;
@@ -135,7 +136,7 @@ class ConfigService
                 $status[$countryCode][] = 'no_shop_code';
             }
 
-            $shopCodeList[$countryCode] = $this->getShopCodes();
+            $shopCodeList[$countryCode] = $this->getShopCodes($countryCode);
             if (empty($shopCodeList[$countryCode]) === true) {
                 $message[$countryCode][] = 'Shop codes: ' . $this->l('Response error');
                 $status[$countryCode][] = 'api_error';
@@ -341,9 +342,10 @@ class ConfigService
     /**
      * Return Shop Codes list from API
      */
-    public function getShopCodes()
+    public function getShopCodes($countryCode = null)
     {
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
+        $langId = Language::getIdByIso($countryCode);
+        $client = new YounitedClient($this->context->shop->id, $langId ?: $this->context->language->id);
 
         if ($client->isCrendentialsSet() === false) {
             return [];

@@ -93,7 +93,7 @@
                                 {l s='Shop Code' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-start">
-                                {if false === empty($configuration.shop_codes_list[$available_country])}
+                                {if $configuration.production_mode[$available_country] !== true && false === empty($configuration.shop_codes_list[$available_country])}
                                     <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
                                             name="shop_code_{$available_country}" id="shop_code_{$available_country}">
                                         {foreach from=$configuration.shop_codes_list[$available_country] item='shop_code_name'}
@@ -156,7 +156,7 @@
                                 {l s='Shop Code' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-start">
-                                {if false === empty($configuration.shop_codes_list[$available_country])}
+                                {if $configuration.production_mode[$available_country] === true && false === empty($configuration.shop_codes_list[$available_country])}
                                     <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
                                             id="shop_code_production_{$available_country}" name="shop_code_production_{$available_country}">
                                         {foreach from=$configuration.shop_codes_list[$available_country] item='shop_code_name'}

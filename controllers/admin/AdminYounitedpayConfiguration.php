@@ -478,6 +478,16 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function postAccountSubmit($idShop)
     {
+        /** @var CacheYounited $cachestorage */
+        $cachestorage = new CacheYounited();
+        $cacheExists = $cachestorage->exist('shopCodeList');
+        if ($cacheExists === true && $cachestorage->isExpired('shopCodeList') === false) {
+            $cacheInformations = $cachestorage->get('shopCodeList');
+            $this->shopCodeList = json_decode($cacheInformations['content'], true);
+        } else {
+            $this->shopCodeList = [];
+        }
+
         $this->availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
         foreach ($this->availableCountries as $availableCountry) {
             $availableCountryCode = strtolower($availableCountry);
@@ -489,20 +499,12 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $clientIDProd = Tools::getValue('client_id_production_' . $availableCountryCode);
             $clientSecretProd = Tools::getValue('client_secret_production_' . $availableCountryCode);
             $shopCodeProd = Tools::getValue('shop_code_production_' . $availableCountryCode);
-            $webHookSecretProd = Tools::getValue('webhook_secret_production_' . $countryCode);
+            $webHookSecretProd = Tools::getValue('webhook_secret_production_' . $availableCountryCode);
+            $isProduction = Tools::getValue('production_mode_' . $availableCountryCode);
 
             Configuration::updateValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $clientID, false, null, $idShop);
             Configuration::updateValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $clientSecret, false, null, $idShop);
-            /** @var CacheYounited $cachestorage */
-            $cachestorage = new CacheYounited();
-            $cacheExists = $cachestorage->exist('shopCodeList' . $availableCountry);
 
-            if ($cacheExists === true && $cachestorage->isExpired('shopCodeList' . $availableCountry) === false) {
-                $cacheInformations = $cachestorage->get('shopCodeList' . $availableCountry);
-                $this->shopCodeList = json_decode($cacheInformations['content'], true);
-            } else {
-                $this->shopCodeList = [];
-            }
             if ($shopCode !== false && $this->verifyShopCode($shopCode) !== false) {
                 Configuration::updateValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $shopCode, false, null, $idShop);
             }
@@ -513,18 +515,17 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION . '_' . $availableCountry, $clientIDProd, false, null, $idShop);
             Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION . '_' . $availableCountry, $clientSecretProd, false, null, $idShop);
             Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $webHookSecretProd, false, null, $idShop);
+            Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $idShop);
         }
 
         $countryCode = Tools::getValue('country_code');
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
-        $isProduction = Tools::getValue('production_mode');
         $webHookOrders = Tools::getValue('webhook_orders');
 
         Configuration::updateValue(Younitedpay::COUNTRY_CODE, $countryCode, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::PRODUCTION_MODE, $isProduction, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_ORDERS, $webHookOrders, false, null, $idShop);
     }
 
