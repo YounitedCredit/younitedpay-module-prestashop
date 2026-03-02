@@ -487,7 +487,7 @@ class PaymentService
                 $cart->id,
                 (int) $defaultDelivered,
                 (float) $total,
-                $this->l('Payment via Younited Pay'),
+                $this->l('Payment via Younited Pay') . ' (' . $younitedContract->country_code . ')',
                 null,
                 $extra_vars,
                 (int) $currency->id,
