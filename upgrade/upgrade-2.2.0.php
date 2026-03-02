@@ -21,7 +21,9 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use YounitedpayAddon\API\YounitedClient;
+use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Utils\CacheYounited;
+use YounitedpayClasslib\Install\ModuleInstaller;
 use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
 
 
@@ -72,6 +74,9 @@ function upgrade_module_2_2_0($module)
                 && Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $shopId);
         }
     }
+
+    $installer = new ModuleInstaller($module);
+    $result = $installer->installObjectModel(YounitedPayContract::class);
 
     return $result;
 }

@@ -116,7 +116,7 @@ class ConfigService
     {
         $message = [];
         $shopCodeList = [];
-        $maturityList = self::DEF_MATURITIES;
+        $maturityList = [];
         $status = [];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
@@ -159,7 +159,7 @@ class ConfigService
                     $message[$countryCode][] = $this->l('Offers response error');
                     $status[$countryCode][] = 'maturities_error';
                 }
-                if (empty($status) === false) {
+                if (empty($status[$countryCode]) === false) {
                     continue;
                 }
                 foreach ($response['response'] as $oneOffer) {
@@ -177,7 +177,7 @@ class ConfigService
         if (empty($shopCodeList)) {
             return [
                 'message' => $message,
-                'maturityList' => array_unique($maturityList),
+                'maturityList' => self::DEF_MATURITIES,
                 'shopCodeList' => $shopCodeList,
                 'status' => $status,
             ];

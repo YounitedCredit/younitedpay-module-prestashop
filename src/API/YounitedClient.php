@@ -206,6 +206,10 @@ class YounitedClient
             'token' => $cacheTokenItem->get(),
             'expiresat' => $cacheTokenItem->getExpiredDate(),
         ]);
+
+        $cache = Registry::getInstance();
+        /** @var RegistryItem $cacheTokenItem */
+        $cacheTokenItem = $cache->clear();
     }
 
     private function setErrorMessage($e, $classRequest)

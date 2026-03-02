@@ -345,6 +345,8 @@ class PaymentService
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
         $contractYounited->api_version = $apiVersion;
+        $contractYounited->client_id = substr($this->client->clientId, 0, 4) . '****' . substr($this->client->clientId, -4, 4);
+        $contractYounited->country_code = $this->context->country->iso_code;
         $contractYounited->save();
     }
 

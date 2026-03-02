@@ -21,14 +21,14 @@
 {/if}
 <div class="tab-pane" id="younitedpay">
     <p>
-        <b>{l s='Payment ID' mod='younitedpay'}</b><br />        
+        <b>{l s='Payment ID' mod='younitedpay'}</b><br />
         <span title="{l s='Payment ID' mod='younitedpay'} - {$payment.id|escape:'html':'UTF-8'} - API v.{$payment.api_version|escape:'html':'UTF-8'}">
             {$payment.reference|escape:'html':'UTF-8'}
         </span>
     </p>
 
     <p>
-        <b>{l s='Payment Date' mod='younitedpay'}</b><br />        
+        <b>{l s='Payment Date' mod='younitedpay'}</b><br />
         {$payment.date|date_format:$date_formating|escape:'htmlall':'UTF-8'}
     </p>
 
@@ -45,6 +45,10 @@
         <p>
             <b>{l s='Cart ID' mod='younitedpay'}</b><br />
             {$younitedcontract->id_cart|escape:'htmlall':'UTF-8'}
+        </p>
+        <p>
+            <b>{l s='Country Code' mod='younitedpay'}</b><br />
+            {$younitedcontract->country_code|escape:'htmlall':'UTF-8'}
         </p>
     {/if}
 

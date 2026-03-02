@@ -505,10 +505,10 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             Configuration::updateValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $clientID, false, null, $idShop);
             Configuration::updateValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $clientSecret, false, null, $idShop);
 
-            if ($shopCode !== false && $this->verifyShopCode($shopCode) !== false) {
+            if ($shopCode !== false && $this->verifyShopCode($shopCode, $availableCountryCode) !== false) {
                 Configuration::updateValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $shopCode, false, null, $idShop);
             }
-            if ($shopCodeProd !== false && $this->verifyShopCode($shopCodeProd) !== false) {
+            if ($shopCodeProd !== false && $this->verifyShopCode($shopCodeProd, $availableCountryCode) !== false) {
                 Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $shopCodeProd, false, null, $idShop);
             }
             Configuration::updateValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $webHookSecret, false, null, $idShop);
@@ -666,9 +666,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         ];
     }
 
-    private function verifyShopCode($shopCode)
+    private function verifyShopCode($shopCode, $countryCode)
     {
-        foreach ($this->shopCodeList as $oneCodeLine) {
+        foreach ($this->shopCodeList[$countryCode] as $oneCodeLine) {
             if ($oneCodeLine['code'] === $shopCode) {
                 return true;
             }
