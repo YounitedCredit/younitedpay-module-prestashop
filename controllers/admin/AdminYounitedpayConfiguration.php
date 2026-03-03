@@ -68,7 +68,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $webHookSecretProduction;
 
-    /** @var array */
+    /** @var bool */
     public $isProductionMode;
 
     /** @var string */
@@ -107,7 +107,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $maturitylist;
 
-    /** @var array */
+    /** @var string */
     public $countryCode;
 
     /** @var array */

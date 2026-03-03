@@ -103,7 +103,7 @@ class CommonHook extends AbstractHook
                     'younitedpay' => [
                         'url_product' => $frontModuleLink,
                         'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
-                        'type' => $controller instanceof \CartController ? 'cart' : 'product',
+                        'type' => 'cart',
                         'id_product' => (int) \Tools::getValue('id_product'),
                         'id_lang' => $langId,
                     ],
