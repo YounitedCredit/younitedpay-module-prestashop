@@ -26,7 +26,6 @@ use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayClasslib\Install\ModuleInstaller;
 use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
 
-
 /**
  * @param YounitedPay $module
  *

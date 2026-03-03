@@ -88,6 +88,7 @@ class CommonHook extends AbstractHook
                         'id_product' => (int) \Tools::getValue('id_product'),
                     ],
                 ]);
+                break;
             case $controller instanceof \OrderController:
             case $controller instanceof \TheCheckoutModuleFrontController:
             case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:

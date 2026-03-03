@@ -20,7 +20,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -662,7 +661,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'webhook_url' => \Context::getContext()->link->getModuleLink('younitedpay', 'notification', [
                 'id_cart' => 'test_webhook',
             ]),
-            'available_countries' => array_map( 'strtolower', $this->availableCountries),
+            'available_countries' => array_map('strtolower', $this->availableCountries),
         ];
     }
 

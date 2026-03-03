@@ -32,7 +32,7 @@ abstract class YounitedTests extends TestCase
     /** @var ProcessLoggerHandler */
     protected $processHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->processHandler = Mockery::mock(ProcessLoggerHandler::class);
         $this->processHandler->shouldReceive('openLogger')->andReturn(true);
