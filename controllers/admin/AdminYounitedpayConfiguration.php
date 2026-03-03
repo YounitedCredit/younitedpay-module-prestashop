@@ -68,7 +68,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $webHookSecretProduction;
 
-    /** @var bool */
+    /** @var array */
     public $isProductionMode;
 
     /** @var string */
@@ -619,9 +619,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         $noConfig = empty($this->clientID) || empty($this->clientSecret);
         $noShopCode = empty($this->shopCode);
-        if ($this->isProductionMode === true) {
-            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction);
-            $noShopCode = empty($this->shopCodeProduction);
+        if (isset($this->isProductionMode[$this->countryCode]) && $this->isProductionMode[$this->countryCode] === true) {
+            $noConfig = empty($this->clientIDProduction[$this->countryCode]) || empty($this->clientSecretProduction[$this->countryCode]);
+            $noShopCode = empty($this->shopCodeProduction[$this->countryCode]);
         }
 
         return [

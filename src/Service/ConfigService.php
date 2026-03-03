@@ -276,7 +276,7 @@ class ConfigService
                 [
                     'name' => $this->l('Production environment'),
                     'info' => '',
-                    'ok' => (bool) $isProductionMode,
+                    'ok' => (bool) $this->isProductionModeAllcountries($isProductionMode),
                 ],
             ],
         ];
@@ -405,5 +405,20 @@ class ConfigService
         });
 
         return $validOffers;
+    }
+    /**
+     * Check if at least one country is not in Production mode
+     * @param mixed $isProductionMode
+     * @return bool
+     */
+    public function isProductionModeAllcountries($isProductionMode)
+    {
+        foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
+            if ($isProductionMode[$availableCountry] === false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
