@@ -406,9 +406,12 @@ class ConfigService
 
         return $validOffers;
     }
+
     /**
      * Check if at least one country is not in Production mode
+     *
      * @param mixed $isProductionMode
+     *
      * @return bool
      */
     public function isProductionModeAllcountries($isProductionMode)
