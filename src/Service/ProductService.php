@@ -29,8 +29,8 @@ use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ToolsYounited;
 use YounitedPaySDK\Model\NewAPI\GetOffers;
-use YounitedPaySDK\Model\OfferItem;
-use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
+use YounitedPaySDK\Model\NewAPI\PaymentOptionItem;
+use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 
 class ProductService
 {
@@ -138,7 +138,7 @@ class ProductService
                     ->setMaturityRangeMax($configMaturities['Range']['Max']);
             }
 
-            $request = new GetOffersRequest();
+            $request = new GetPaymentOptionsRequest();
 
             try {
                 $response = $client->sendRequest($body, $request);
@@ -262,7 +262,7 @@ class ProductService
         $validOffers = [];
         $maturitiesIn = [];
         foreach ($offers as $offer) {
-            /** @var OfferItem $offer */
+            /** @var PaymentOptionItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
                 continue;
@@ -312,7 +312,7 @@ class ProductService
     /**
      * Return offer for templates
      */
-    protected function returnOffer(OfferItem $offer)
+    protected function returnOffer(PaymentOptionItem $offer)
     {
         $data = [
             'maturity' => (int) $offer->getMaturityInMonths(),
