@@ -90,6 +90,8 @@ class PaymentService
     public function createContract($maturity, $totalAmount)
     {
         $customerAddress = new \Address($this->context->cart->id_address_delivery);
+        $country = new \Country($customerAddress->id_country);
+        $langId = (int) \Language::getIdByIso($country->iso_code);
 
         $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
@@ -101,7 +103,7 @@ class PaymentService
             ];
         }
 
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
+        $client = new YounitedClient($this->context->shop->id, $langId);
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,

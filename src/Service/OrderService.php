@@ -360,6 +360,7 @@ class OrderService
                 'date' => $younitedContract->date_add,
                 'date_state' => $dateState,
                 'status' => $state,
+                'country_code' => $younitedContract->country_code,
                 'withdrawn_amount' => ToolsYounited::formatPrice($withdrawnAmount),
                 'is_withdrawn_confirmed' => $stateWithdrawn,
             ],

@@ -50,7 +50,11 @@ class HookPayment extends AbstractHook
 
     public function paymentOptions($params)
     {
-        $client = new YounitedClient(Context::getContext()->shop->id, Context::getContext()->language->id);
+        $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
+        $country = new \Country($customerAdressInvoice->id_country);
+        $langId = (int) \Language::getIdByIso($country->iso_code);
+
+        $client = new YounitedClient(Context::getContext()->shop->id, $langId);
         if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [];
         }
@@ -74,12 +78,6 @@ class HookPayment extends AbstractHook
             return [];
         }
 
-        $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
-        $country = new \Country($customerAdressInvoice->id_country);
-        if ($country->iso_code !== 'FR') {
-            // $errorMessage[] = $this->l('Not available for this country (Only France for invoice address).');
-        }
-
         if ($paymentservice->isInternationalPhone($customerAdressInvoice) === false) {
             $errorMessage[] = $paymentservice->errorMessage;
         }
@@ -89,7 +87,7 @@ class HookPayment extends AbstractHook
 
         $this->cartPrice = $cart->getOrderTotal();
 
-        $templateCredit = $productservice->getBestPrice($this->cartPrice);
+        $templateCredit = $productservice->getBestPrice($this->cartPrice, 'payment', $langId);
 
         $totalOffers = $templateCredit['offers'];
         $selectedOffer = isset($templateCredit['selectedOffer']) ? (int) $templateCredit['selectedOffer'] : 0;

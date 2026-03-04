@@ -33,8 +33,12 @@
     </p>
 
     {if isset($younitedcontract) === false}
-        <p><b>
-            {l s='Payment Method' mod='younitedpay'}</b><br />
+        <p>
+            <b>{l s='Country Code' mod='younitedpay'}</b><br />
+            {$payment.country_code|escape:'htmlall':'UTF-8'}
+        </p>
+        <p>
+            <b>{l s='Payment Method' mod='younitedpay'}</b><br />
             <img style="height:45px;" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" />
         </p>
     {else}
