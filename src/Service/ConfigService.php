@@ -126,19 +126,19 @@ class ConfigService
             $status[$countryCode] = [];
 
             if ($client->isCrendentialsSet() === false) {
-                $message[$countryCode][] = $this->l('No credential saved');
+                $message[$countryCode][] = '[' . $availableCountry . '] ' . $this->l('No credential saved');
                 $status[$countryCode][] = 'no_credentials';
                 continue;
             }
 
             if (empty($client->shopCode) === true) {
-                $message[$countryCode][] = $this->l('No Shop Code saved');
+                $message[$countryCode][] = '[' . $availableCountry . '] ' . $this->l('No Shop Code saved');
                 $status[$countryCode][] = 'no_shop_code';
             }
 
             $shopCodeList[$countryCode] = $this->getShopCodes($countryCode);
             if (empty($shopCodeList[$countryCode]) === true) {
-                $message[$countryCode][] = 'Shop codes: ' . $this->l('Response error');
+                $message[$countryCode][] = '[' . $availableCountry . '] Shop codes: ' . $this->l('Response error');
                 $status[$countryCode][] = 'api_error';
                 $client->shopCode = '';
             }
@@ -156,7 +156,7 @@ class ConfigService
                 $response = $client->sendRequest($body, $request);
 
                 if (empty($response) === true || $response['success'] === false) {
-                    $message[$countryCode][] = $this->l('Offers response error');
+                    $message[$countryCode][] = '[' . $availableCountry . '] ' . $this->l('Offers response error');
                     $status[$countryCode][] = 'maturities_error';
                 }
                 if (empty($status[$countryCode]) === false) {
@@ -186,7 +186,7 @@ class ConfigService
         foreach ($status as $countryCode => $statusDetail) {
             if (empty($statusDetail)) {
                 $status[$countryCode] = ['ok'];
-                $message[$countryCode] = [$this->l('Connexion Ok')];
+                $message[$countryCode] = ['[' . $availableCountry . '] ' . $this->l('Connexion Ok')];
             }
         }
 
@@ -237,14 +237,14 @@ class ConfigService
 
         $isApiConnected = $this->isApiConnected();
 
-        $isApiConnectedStatus = false;
+        $isApiConnectedStatus = true;
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
-            $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
-            $isApiConnectedMsg = implode(' - ', $isApiConnected['message'][$countryCode]);
-            if ($isApiConnectedStatus) {
-                break;
+            $isApiConnectedMsg .= ' | ' . implode(' - ', $isApiConnected['message'][$countryCode]);
+            if (in_array('no_credentials', $isApiConnected['status'][$countryCode])) {
+                continue;
             }
+            $isApiConnectedStatus = $isApiConnectedStatus && in_array('ok', $isApiConnected['status'][$countryCode]);
         }
 
         return [

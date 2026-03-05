@@ -20,9 +20,11 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
+use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
 
 class AdminYounitedpayConfigurationController extends ModuleAdminController
 {
@@ -107,11 +109,11 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $maturitylist;
 
-    /** @var string */
+    /** @var array */
     public $countryCode;
 
     /** @var array */
-    public $availableCountries;
+    public $availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
 
     const ALLOWED_FRONT_PRODUCT_HOOKS = [
         'disabled',
@@ -183,7 +185,6 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $productionMode = Younitedpay::PRODUCTION_MODE;
         $ipWhiteList = Younitedpay::IP_WHITELIST_ENABLED;
 
-        $this->availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
         foreach ($this->availableCountries as $availableCountry) {
             $isoCode = strtolower($availableCountry);
             $this->clientID[$isoCode] = $this->getValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $idShop, 'client_id_' . $isoCode, '');
@@ -197,7 +198,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $this->isProductionMode[$isoCode] = (bool) $this->getValue($productionMode . '_' . $availableCountry, $idShop, 'production_mode_' . $isoCode, false);
         }
 
-        $this->countryCode = $this->getValue(Younitedpay::COUNTRY_CODE, $idShop, 'country_code', 'FR');
+        $this->countryCode = $this->getValue(Younitedpay::COUNTRY_CODE, $idShop, 'country_code', 'fr');
         $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
         $this->isShownMonthly = (int) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
@@ -274,10 +275,29 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'AdminYounitedpayConfiguration'
             );
 
+            $badCountryConfig = $this->module->l(
+                'Error with your credentials, please check the country of the environment (actually %s)',
+                'AdminYounitedpayConfiguration'
+            );
+
             $configurationVariables = $this->getConfigurationVariables();
-            if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
-                if (in_array('api_error', $specsVariables['status']) === true) {
-                    $this->context->controller->errors[] = $badConfig;
+            foreach ($this->availableCountries as $availableCountry) {
+                $isoCode = strtolower($availableCountry);
+                if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
+                    if (in_array('api_error', $specsVariables['status'][$isoCode]) === true) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . $badConfig;
+                    }
+                    if (in_array('no_shop_code', $specsVariables['status'][$isoCode]) === true) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . $nokeysTextShopCode;
+                    }
+                } elseif ($specsVariables['connected'] === true) {
+                    $langId = (int) \Language::getIdByIso($isoCode);
+                    $client = new YounitedClient($this->context->shop->id, $langId);
+                    $request = new GetMerchantRequest();
+                    $response = $client->sendRequest('', $request);
+                    if ($response['success'] === true && $availableCountry !== $response['response']['countryLabel']) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . sprintf($badCountryConfig, $response['response']['countryLabel']);
+                    }
                 }
             }
 
@@ -487,7 +507,6 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $this->shopCodeList = [];
         }
 
-        $this->availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
         foreach ($this->availableCountries as $availableCountry) {
             $availableCountryCode = strtolower($availableCountry);
 

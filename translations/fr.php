@@ -35,6 +35,7 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_90f0ccbffc10d1a
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Merci d\'entrer vos identifiants avant de faire la configuration du module.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_7beeeb3e3e0ca1dfdcb32eb7b220d0c9'] = 'Identifiant API enregistrés. Merci de sélectionner votre Shop Code avant de faire la configuration.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ecc204e478d0835c58a'] = 'Erreur avec vos identifiants, veuillez vérifier les clés et l\'environnement (production ou test).';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1e88dad2d24be56066c38823a9ec5e93'] = 'Erreur avec vos identifiants, veuillez vérifier le pays de  l\'environnement (actuellement %s).';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'URL du WebHook envoyée dans le presse-papier';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_244eebed5c7b75b8930db17d82a4efdd'] = 'Shop code invalide';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_d3b206d196cd6be3a2764c1fb90b200f'] = 'Supprimer la sélection';

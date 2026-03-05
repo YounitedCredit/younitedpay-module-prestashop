@@ -25,6 +25,7 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_244eebed5c7b75b
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Inserisci le tue credenziali API prima di modificare le impostazioni del modulo';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_7beeeb3e3e0ca1dfdcb32eb7b220d0c9'] = 'Credenziali API salvate. Seleziona il tuo Codice Negozio prima di modificare le impostazioni del modulo';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ecc204e478d0835c58a'] = 'Errore nelle tue credenziali, controlla le chiavi di accesso e l’ambiente (produzione o test).';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1e88dad2d24be56066c38823a9ec5e93'] = 'Errore con i tuoi identificatori, per favore verifica il paese dell\'ambiente (attualmente %s).';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'WebHook URL copiato negli appunti';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_505a83f220c02df2f85c3810cd9ceb38'] = 'Operazione riuscita';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_0eaadb4fcb48a0a0ed7bc9868be9fbaa'] = 'Attenzione';
