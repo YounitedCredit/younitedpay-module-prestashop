@@ -186,7 +186,7 @@ class ConfigService
         foreach ($status as $countryCode => $statusDetail) {
             if (empty($statusDetail)) {
                 $status[$countryCode] = ['ok'];
-                $message[$countryCode] = ['[' . $availableCountry . '] ' . $this->l('Connexion Ok')];
+                $message[$countryCode] = ['[' . strtoupper($countryCode) . '] ' . $this->l('Connexion Ok')];
             }
         }
 
@@ -238,6 +238,7 @@ class ConfigService
         $isApiConnected = $this->isApiConnected();
 
         $isApiConnectedStatus = true;
+        $isApiConnectedMsg = '';
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
             $isApiConnectedMsg .= ' | ' . implode(' - ', $isApiConnected['message'][$countryCode]);
@@ -246,6 +247,7 @@ class ConfigService
             }
             $isApiConnectedStatus = $isApiConnectedStatus && in_array('ok', $isApiConnected['status'][$countryCode]);
         }
+        $isApiConnectedMsg .= ' |';
 
         return [
             'maturityList' => $isApiConnected['maturityList'],
@@ -417,7 +419,8 @@ class ConfigService
     public function isProductionModeAllcountries($isProductionMode)
     {
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
-            if ($isProductionMode[$availableCountry] === false) {
+            $countryCode = strtolower($availableCountry);
+            if ($isProductionMode[$countryCode] === false) {
                 return false;
             }
         }

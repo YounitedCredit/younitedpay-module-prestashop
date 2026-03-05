@@ -109,7 +109,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $maturitylist;
 
-    /** @var array */
+    /** @var string */
     public $countryCode;
 
     /** @var array */
