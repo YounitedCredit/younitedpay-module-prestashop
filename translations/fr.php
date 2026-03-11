@@ -35,7 +35,7 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_90f0ccbffc10d1a
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Merci d\'entrer vos identifiants avant de faire la configuration du module.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_7beeeb3e3e0ca1dfdcb32eb7b220d0c9'] = 'Identifiant API enregistrés. Merci de sélectionner votre Shop Code avant de faire la configuration.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ecc204e478d0835c58a'] = 'Erreur avec vos identifiants, veuillez vérifier les clés et l\'environnement (production ou test).';
-$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1e88dad2d24be56066c38823a9ec5e93'] = 'Erreur avec vos identifiants, veuillez vérifier le pays de  l\'environnement (actuellement %s).';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1e88dad2d24be56066c38823a9ec5e93'] = 'Erreur avec vos identifiants, ces clés API correspondent au pays %s.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'URL du WebHook envoyée dans le presse-papier';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_244eebed5c7b75b8930db17d82a4efdd'] = 'Shop code invalide';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_d3b206d196cd6be3a2764c1fb90b200f'] = 'Supprimer la sélection';
@@ -72,6 +72,8 @@ $_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'
 $_MODULE['<{younitedpay}prestashop>configservice_ef4268001fa5b6b196363e2f9e1629ef'] = 'Appel TLS échoué';
 $_MODULE['<{younitedpay}prestashop>configservice_7ed48b0f1b989a32e7bbd1961e88cc10'] = 'Aucun identifiant enregistré';
 $_MODULE['<{younitedpay}prestashop>configservice_5681daf80a3bfec671975486f42ee7dd'] = 'Erreur dans la réponse';
+$_MODULE['<{younitedpay}prestashop>configservice_7f0b781d84bf6ded3a67b6bd2fef8c18'] = 'Erreur avec les identifiants';
+$_MODULE['<{younitedpay}prestashop>configservice_929544476b6f8e38c732a1831d2924a4'] = 'Aucun Shop Code sauvegardé';
 $_MODULE['<{younitedpay}prestashop>configservice_e1b50e45abc33ad877da83d265955f92'] = 'Connexion Ok';
 $_MODULE['<{younitedpay}prestashop>configservice_9c24fccda76f5aca40768a0c1acc88ae'] = 'SSL activé';
 $_MODULE['<{younitedpay}prestashop>configservice_a37316e268aed8e8976eebb0bd1f277f'] = 'SSL non activé sur toute la boutique';

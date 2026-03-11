@@ -21,7 +21,7 @@
       <div class="row justify-content-center">
         <div class="col-sm-4 d-flex">
             <div class="card col-sm-12 pl-2 pr-2 d-flex flex-wrap flex-row">
-              <div class="card-block justify-content-start align-items-start pb-2 d-flex flex-wrap">  
+              <div class="card-block justify-content-start align-items-start pb-2 d-flex flex-wrap">
                 <h3 class="row col-xl-12 justify-content-center mt-3">
                   {if $connected == false}
                     {l s='Create your account' mod='younitedpay'}
@@ -32,7 +32,7 @@
                 {if $connected == false}
                   <p class="row col-xl-12">
                     {l s='Create your account in order to have access to your YounitedPay Back Office, connect with our sales team and start setting up the offer displayed to your customers.' mod='younitedpay'}<br />
-                    </p>                    
+                    </p>
                 {/if}
                 <p class="row col-xl-12">
                     {l s='Have a question about' mod='younitedpay'}&nbsp;
@@ -76,22 +76,39 @@
             <div class="card-block justify-content-start align-items-start">
               {foreach from=$specifications item=spec}
                 <div class="row col-xl-12 ml-2 mb-1">
-                  {if $spec.ok == true}
+                  {if is_array($spec.ok) == true}
+                  {elseif $spec.ok == true}
                       <i class="material-icons mt-1" style="color:green;">check</i>
                   {else}
                       <i class="material-icons mt-1" style="color:red;">close</i>
                   {/if}
                   <span class="pt-1 inline"
                   {if empty($spec.title) != true}
-                    title="{foreach from=$spec.title item=bank}{$bank|escape:'htmlall':'UTF-8'}{/foreach}" 
+                    title="{foreach from=$spec.title item=bank}{$bank|escape:'htmlall':'UTF-8'}{/foreach}"
                   {/if}
-                  >{$spec.name|escape:'htmlall':'UTF-8'}{if $spec.info != ''} - {/if}{$spec.info|escape:'htmlall':'UTF-8'}</span>
+                  >{$spec.name|escape:'htmlall':'UTF-8'}{if $spec.info != '' && is_array($spec.info) == false} - {$spec.info|escape:'htmlall':'UTF-8'}{/if}</span>
                 </div>
+                {if is_array($spec.info) == true}
+                  <div class="col-xl-12 ml-4 mb-1"></div>
+                    {foreach from=$spec.info item=msg key=key}
+                      <div class="row col-xl-12 ml-2 mb-1">
+                        {if $spec.ok[$key] == 'ok'}
+                          <i class="material-icons mt-1" style="color:green;">check</i>
+                        {elseif $spec.ok[$key] == 'no_credentials'}
+                          <i class="material-icons mt-1" style="color:orange;">warning</i>
+                        {else}
+                          <i class="material-icons mt-1" style="color:red;">close</i>
+                        {/if}
+                        <span class="pt-1 inline">{$msg|escape:'htmlall':'UTF-8'} (<b>{$spec.env[$key]|escape:'htmlall':'UTF-8'}</b>)</span>
+                      </div>
+                    {/foreach}
+                  </div>
+                {/if}
               {/foreach}
             </div> {* card-block *}
           </div> {* card *}
         </div> {* col-sm4 *}
       </div> {* row-justif *}
     </div> {* sm-12 *}
-  </div> {* row *}  
-</div>      
+  </div> {* row *}
+</div>

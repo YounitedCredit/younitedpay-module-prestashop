@@ -138,7 +138,7 @@ class ConfigService
 
             $shopCodeList[$countryCode] = $this->getShopCodes($countryCode);
             if (empty($shopCodeList[$countryCode]) === true) {
-                $message[$countryCode][] = '[' . $availableCountry . '] Shop codes: ' . $this->l('Response error');
+                $message[$countryCode][] = '[' . $availableCountry . '] ' . $this->l('Credentials error');
                 $status[$countryCode][] = 'api_error';
                 $client->shopCode = '';
             }
@@ -238,16 +238,19 @@ class ConfigService
         $isApiConnected = $this->isApiConnected();
 
         $isApiConnectedStatus = true;
-        $isApiConnectedMsg = '';
+        $isApiConnectedMsg = [];
+        $isApiConnectedSts = [];
+        $isApiConnectedEnv = [];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
-            $isApiConnectedMsg .= ' | ' . implode(' - ', $isApiConnected['message'][$countryCode]);
+            $isApiConnectedMsg[] = implode(' - ', $isApiConnected['message'][$countryCode]);
+            $isApiConnectedSts[] = implode(' - ', $isApiConnected['status'][$countryCode]);
+            $isApiConnectedEnv[] = ($isProductionMode[$countryCode] ? 'PROD' : 'TEST');
             if (in_array('no_credentials', $isApiConnected['status'][$countryCode])) {
                 continue;
             }
             $isApiConnectedStatus = $isApiConnectedStatus && in_array('ok', $isApiConnected['status'][$countryCode]);
         }
-        $isApiConnectedMsg .= ' |';
 
         return [
             'maturityList' => $isApiConnected['maturityList'],
@@ -273,12 +276,8 @@ class ConfigService
                 [
                     'name' => $this->l('Connected to API'),
                     'info' => $isApiConnectedMsg,
-                    'ok' => $isApiConnectedStatus,
-                ],
-                [
-                    'name' => $this->l('Production environment'),
-                    'info' => '',
-                    'ok' => (bool) $this->isProductionModeAllcountries($isProductionMode),
+                    'ok' => $isApiConnectedSts,
+                    'env' => $isApiConnectedEnv,
                 ],
             ],
         ];
