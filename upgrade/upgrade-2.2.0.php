@@ -57,7 +57,7 @@ function upgrade_module_2_2_0($module)
         $response = $client->sendRequest('', $request);
 
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
-            if (empty($response) === true || $response['success'] === false || $availableCountry !== $response['response']['countryLabel']) {
+            if (empty($response) === true || $response['success'] === false || $availableCountry !== $response['response']['countryCode']) {
                 continue;
             }
 

@@ -237,7 +237,7 @@ class ConfigService
 
         $isApiConnected = $this->isApiConnected();
 
-        $isApiConnectedStatus = true;
+        $isApiConnectedStatus = false;
         $isApiConnectedMsg = [];
         $isApiConnectedSts = [];
         $isApiConnectedEnv = [];
@@ -246,10 +246,10 @@ class ConfigService
             $isApiConnectedMsg[] = implode(' - ', $isApiConnected['message'][$countryCode]);
             $isApiConnectedSts[] = implode(' - ', $isApiConnected['status'][$countryCode]);
             $isApiConnectedEnv[] = ($isProductionMode[$countryCode] ? 'PROD' : 'TEST');
-            if (in_array('no_credentials', $isApiConnected['status'][$countryCode])) {
+            if (in_array('no_credentials', $isApiConnected['status'][$countryCode]) || $isApiConnectedStatus) {
                 continue;
             }
-            $isApiConnectedStatus = $isApiConnectedStatus && in_array('ok', $isApiConnected['status'][$countryCode]);
+            $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
         }
 
         return [

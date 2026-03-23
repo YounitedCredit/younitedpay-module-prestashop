@@ -295,8 +295,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                     $client = new YounitedClient($this->context->shop->id, $langId);
                     $request = new GetMerchantRequest();
                     $response = $client->sendRequest('', $request);
-                    if ($response['success'] === true && $availableCountry !== $response['response']['countryLabel']) {
-                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . sprintf($badCountryConfig, $response['response']['countryLabel']);
+                    if ($response['success'] === true && $availableCountry !== $response['response']['countryCode']) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . sprintf($badCountryConfig, $response['response']['countryCode']);
                     }
                 }
             }
@@ -636,8 +636,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             ],
         ]);
 
-        $noConfig = empty($this->clientID) || empty($this->clientSecret);
-        $noShopCode = empty($this->shopCode);
+        $noConfig = empty($this->clientID[$this->countryCode]) || empty($this->clientSecret[$this->countryCode]);
+        $noShopCode = empty($this->shopCode[$this->countryCode]);
         if (isset($this->isProductionMode[$this->countryCode]) && $this->isProductionMode[$this->countryCode] === true) {
             $noConfig = empty($this->clientIDProduction[$this->countryCode]) || empty($this->clientSecretProduction[$this->countryCode]);
             $noShopCode = empty($this->shopCodeProduction[$this->countryCode]);
