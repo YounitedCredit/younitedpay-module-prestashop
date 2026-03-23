@@ -249,7 +249,9 @@ class ConfigService
             if (in_array('no_credentials', $isApiConnected['status'][$countryCode]) || $isApiConnectedStatus) {
                 continue;
             }
-            $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
+            if (!$isApiConnectedStatus) {
+                $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
+            }
         }
 
         return [

@@ -89,7 +89,7 @@
                   >{$spec.name|escape:'htmlall':'UTF-8'}{if $spec.info != '' && is_array($spec.info) == false} - {$spec.info|escape:'htmlall':'UTF-8'}{/if}</span>
                 </div>
                 {if is_array($spec.info) == true}
-                  <div class="col-xl-12 ml-4 mb-1"></div>
+                  <div class="col-xl-12 ml-4 mb-1">
                     {foreach from=$spec.info item=msg key=key}
                       <div class="row col-xl-12 ml-2 mb-1">
                         {if $spec.ok[$key] == 'ok'}

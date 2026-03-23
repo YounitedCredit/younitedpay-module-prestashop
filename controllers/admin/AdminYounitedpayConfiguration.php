@@ -283,14 +283,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $configurationVariables = $this->getConfigurationVariables();
             foreach ($this->availableCountries as $availableCountry) {
                 $isoCode = strtolower($availableCountry);
-                if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
+                if ($specsVariables['connected'] === false || $configurationVariables['no_config'] === false) {
                     if (in_array('api_error', $specsVariables['status'][$isoCode]) === true) {
                         $this->context->controller->errors[] = '[' . $availableCountry . '] ' . $badConfig;
                     }
                     if (in_array('no_shop_code', $specsVariables['status'][$isoCode]) === true) {
                         $this->context->controller->errors[] = '[' . $availableCountry . '] ' . $nokeysTextShopCode;
                     }
-                } elseif ($specsVariables['connected'] === true) {
+                }
+                if ($specsVariables['connected'] === true) {
                     $langId = (int) \Language::getIdByIso($isoCode);
                     $client = new YounitedClient($this->context->shop->id, $langId);
                     $request = new GetMerchantRequest();
