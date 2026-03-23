@@ -30,7 +30,7 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Adapter\CreatePaymentAdapter;
+use YounitedPaySDK\Adapter\PostPaymentAdapter;
 use YounitedPaySDK\Model\Address;
 use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
@@ -45,6 +45,7 @@ use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
 use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
+use YounitedPaySDK\Request\NewAPI\PostPaymentsRequest;
 use YounitedPaySDK\Request\NewAPI\UpdateMerchantReferenceRequest;
 
 class PaymentService
@@ -73,6 +74,15 @@ class PaymentService
     /** @var string */
     public $errorMessage;
 
+    /** @var float */
+    public $totalAmount;
+
+    /** @var float */
+    public $type;
+
+    /** @var float */
+    public $maturity;
+
     public function __construct(
         LoggerService $loggerservice,
         PaymentRepository $paymentrepository,
@@ -87,9 +97,12 @@ class PaymentService
     /**
      * Create contract payment with maturity choosed
      */
-    public function createContract($maturity, $totalAmount)
+    public function createContract($maturity, $totalAmount, $type = 'split')
     {
         $customerAddress = new \Address($this->context->cart->id_address_delivery);
+        $this->type = $type;
+        $this->totalAmount = (float) $totalAmount;
+        $this->maturity = (int) $maturity;
 
         $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
@@ -111,7 +124,7 @@ class PaymentService
         }
 
         try {
-            $response = $this->sendContractRequest($maturity, $totalAmount, $customerAddress, $client);
+            $response = $this->sendContractRequest($maturity, $totalAmount, $customerAddress, $client, $type);
         } catch (\PrestaShopDatabaseException $e) {
             $this->logError($e->getMessage(), 'sendContractRequest PrestaShopDatabaseException');
             $this->logError($e->getTraceAsString(), 'sendContractRequest PrestaShopDatabaseException');
@@ -155,7 +168,7 @@ class PaymentService
      * @throws \PrestaShopException
      * @throws \Exception
      */
-    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, YounitedClient $client)
+    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, YounitedClient $client, $type = 'PersonalLoan')
     {
         $customer = $this->context->customer;
         $country = new \Country($customerAddress->id_country);
@@ -239,6 +252,7 @@ class PaymentService
 
         $webhookUrl = $this->getLink('notification', ['id_cart' => $this->context->cart->id]);
         $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
+        /** @var PostPaymentAdapter $request */
         $request = $this->convertOldRequest($request->setModel($body), $client->shopCode, $webhookUrl, $redirectUrl);
 
         return $client->sendRequest($body, $request);
@@ -247,17 +261,19 @@ class PaymentService
     /**
      * @throws \Exception
      */
-    private function convertOldRequest($oldRequest, $shopCode, $webhookUrl, $redirectUrl, $apiVersion = '2025-01-01')
+    private function convertOldRequest($oldRequest, $shopCode, $webhookUrl, $redirectUrl)
     {
-        $technicalInformation = (new TechnicalInformation())
-            ->setWebhookNotificationUrl($webhookUrl)
-            ->setApiVersion($apiVersion);
+        $technicalInformation = (new TechnicalInformation())->setWebhookNotificationUrl($webhookUrl);
 
         $customExperience = (new CustomExperience())
             ->setCustomerRedirectUrl($redirectUrl);
 
-        $adapter = (new CreatePaymentAdapter())
+        /** @var PostPaymentsRequest $adapter */
+        $adapter = (new PostPaymentAdapter())
             ->setShopCode($shopCode)
+            ->setType($this->type)
+            ->setInstallmentCount($this->maturity)
+            ->setPurchaseAmount($this->totalAmount)
             ->setTechnicalInformation($technicalInformation)
             ->setCustomExperience($customExperience)
             ->convertInitializeContract($oldRequest);

@@ -38,9 +38,10 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
             $maturity = (int) Tools::getValue('maturity') - 1;
         }
         $totalAmount = (float) Tools::getValue('amount');
+        $type = Tools::getValue('type', 'PersonalLoan');
 
         try {
-            $response = $paymentService->createContract($maturity, $totalAmount);
+            $response = $paymentService->createContract($maturity, $totalAmount, $type);
         } catch (\Exception $ex) {
             $response = [
                 'response' => $ex->getMessage(),

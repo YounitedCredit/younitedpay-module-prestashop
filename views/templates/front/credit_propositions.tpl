@@ -35,6 +35,7 @@
                   data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}" 
                   data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
                   data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
+                  data-type="{$offer.type|escape:'htmlall':'UTF-8'}" 
                   data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
                <span class="yp-inline-block yp-h-10">
                   <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10 
@@ -57,6 +58,7 @@
                   data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}" 
                   data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}" 
                   data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}" 
+                  data-type="{$offer.type|escape:'htmlall':'UTF-8'}" 
                   data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
                   title="{l s='Customise' mod='younitedpay'}">
                <span class="yp-inline-block yp-h-10">

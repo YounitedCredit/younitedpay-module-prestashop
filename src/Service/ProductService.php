@@ -131,7 +131,8 @@ class ProductService
             $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount((string) $productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
-            } elseif (isset($configMaturities['Range'])) {
+            }
+            if (isset($configMaturities['Range'])) {
                 $body
                     ->setMaturityRangeStep($configMaturities['Range']['Step'])
                     ->setMaturityRangeMin($configMaturities['Range']['Min'])
@@ -323,6 +324,7 @@ class ProductService
             'interest_total' => ToolsYounited::formatPrice($offer->getInterestsTotalAmount()),
             'taeg' => ToolsYounited::formatPrice($offer->getAnnualPercentageRate()),
             'tdf' => ToolsYounited::formatPrice($offer->getAnnualDebitRate()),
+            'type' => $offer->getType(),
         ];
         if ($offer->getDownPaymentAmount() > 0) {
             ++$data['maturity'];
