@@ -31,6 +31,7 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_505a83f220c02df
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_0eaadb4fcb48a0a0ed7bc9868be9fbaa'] = 'Advertencia';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_90b7906b595aafe07dde2b0af0ca55b4'] = 'Respuesta WebHook Ok';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_ce8623d959aad56a56e2172e5a2f8766'] = 'Error de respuesta del WebHook. Consulte el título para más información';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_206312e5fad18346ee135d5c2a047619'] = 'Tras la actualización del módulo, le recomendamos que vacíe la caché de Prestashop';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayprocesslogger_457957e588c4840756c638211e20b875'] = 'Activar Log files';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayprocesslogger_d02cf6db7c047e2dd9415598c88ad8e4'] = 'Añadir todas las solicitudes a los Log files';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayprocesslogger_5988c28d05527a0d0ce8ae3da1134352'] = 'Parámetros Log actualizados con éxito';

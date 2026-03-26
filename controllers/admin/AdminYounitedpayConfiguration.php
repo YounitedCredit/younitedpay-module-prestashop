@@ -302,6 +302,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 }
             }
 
+            /** @var CacheYounited $cachestorage */
+            $cachestorage = new CacheYounited();
+            if ($cachestorage->exist('need_clear_cache')) {
+                $this->context->controller->warnings[] = $this->module->l(
+                    'Following the module update, we recommend that you clear your Prestashop cache',
+                    'AdminYounitedpayConfiguration'
+                );
+            }
+
             $tplVars = [
                 'configuration' => $configurationVariables,
                 'connected' => $specsVariables['connected'],

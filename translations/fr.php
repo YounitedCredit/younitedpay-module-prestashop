@@ -38,6 +38,7 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ec
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1e88dad2d24be56066c38823a9ec5e93'] = 'Erreur avec vos identifiants, ces clés API correspondent au pays %s.';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'URL du WebHook envoyée dans le presse-papier';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_244eebed5c7b75b8930db17d82a4efdd'] = 'Shop code invalide';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_206312e5fad18346ee135d5c2a047619'] = 'Suite à la mise à jour du module nous vous conseillons de vider votre cache Prestashop';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_d3b206d196cd6be3a2764c1fb90b200f'] = 'Supprimer la sélection';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_53c6a96a3df980c3270d6ed82b6f174b'] = 'Voulez vous supprimer les éléments sélectionnés';
 $_MODULE['<{younitedpay}prestashop>adminprocessloggercontroller_b718adec73e04ce3ec720dd11a06a308'] = 'N°';

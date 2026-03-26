@@ -27,6 +27,7 @@ use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Hook\HookDispatcher;
 use YounitedpayAddon\Service\ProductService;
+use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ModuleInitialiser;
 use YounitedpayAddon\Utils\PaymentModuleTrait;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -330,6 +331,24 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         ];
 
         return $this->pmUninstall();
+    }
+
+    /**
+     * Run the upgrade for a given module name and version.
+     *
+     * @return array
+     */
+    public function runUpgradeModule()
+    {
+        $upgrade = parent::runUpgradeModule();
+
+        if (isset($upgrade['success']) && $upgrade['success'] == true) {
+            /** @var CacheYounited $cachestorage */
+            $cachestorage = new CacheYounited();
+            $cachestorage->set('need_clear_cache', true);
+        }
+
+        return $upgrade;
     }
 
     public function renderWidget($hookName, array $configuration)
