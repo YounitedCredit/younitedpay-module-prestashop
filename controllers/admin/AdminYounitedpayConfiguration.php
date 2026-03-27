@@ -112,6 +112,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var string */
     public $countryCode;
 
+    /** @var string */
+    public $defaultCountryCode;
+
     /** @var array */
     public $availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
 
@@ -198,6 +201,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $this->isProductionMode[$isoCode] = (bool) $this->getValue($productionMode . '_' . $availableCountry, $idShop, 'production_mode_' . $isoCode, false);
         }
 
+        $this->defaultCountryCode = $this->getValue(Younitedpay::DEFAULT_COUNTRY_CODE, $idShop, 'default_country_code', 'fr');
         $this->countryCode = $this->getValue(Younitedpay::COUNTRY_CODE, $idShop, 'country_code', 'fr');
         $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
@@ -546,11 +550,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $idShop);
         }
 
+        $defaultCountryCode = Tools::getValue('default_country_code');
         $countryCode = Tools::getValue('country_code');
         $ipWhiteList = Tools::getValue('whitelist_ip');
         $isWhiteListOn = Tools::getValue('whitelist_on');
         $webHookOrders = Tools::getValue('webhook_orders');
 
+        Configuration::updateValue(Younitedpay::DEFAULT_COUNTRY_CODE, $defaultCountryCode, false, null, $idShop);
         Configuration::updateValue(Younitedpay::COUNTRY_CODE, $countryCode, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
@@ -656,6 +662,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         return [
             'url_form_config' => $urlFormConfig,
             'use_new_api' => (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true),
+            'default_country_code' => $this->defaultCountryCode,
             'country_code' => $this->countryCode,
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,

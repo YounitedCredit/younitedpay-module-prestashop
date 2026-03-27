@@ -54,6 +54,10 @@ class HookPayment extends AbstractHook
         $country = new \Country($customerAdressInvoice->id_country);
         $langId = (int) \Language::getIdByIso($country->iso_code);
 
+        if (false === in_array(strtoupper($country->iso_code), Younitedpay::AVAILABLE_COUNTRIES)) {
+            return [];
+        }
+
         $client = new YounitedClient(Context::getContext()->shop->id, $langId);
         if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [];

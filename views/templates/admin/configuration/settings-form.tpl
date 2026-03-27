@@ -25,7 +25,25 @@
                     <div class="col-sm-11">{l s='1. Setting up' mod='younitedpay'}</div>
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12">
-                    <div class="form-group mt-4 row{if $configuration.production_mode === true} hidden{/if}">
+                    <div class="form-group mt-3 pb-3 border-bottom row{if $configuration.production_mode === true} hidden{/if}">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="country_code">
+                            {l s='Country Code' mod='younitedpay'}
+                        </label>
+                        <div class="col-lg-4 d-flex align-items-center justify-content-around">
+                            {foreach from=$configuration.available_countries item='available_country'}
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="default_country_code"
+                                        id="defaultCountryCode{$available_country|escape:'htmlall':'UTF-8'}"
+                                        value="{$available_country|escape:'htmlall':'UTF-8'}"
+                                        {if $available_country == $configuration.default_country_code} checked{/if}>
+                                    <label class="form-check-label" for="defaultCountryCode{$available_country|escape:'htmlall':'UTF-8'}">
+                                        {strtoupper($available_country)|escape:'htmlall':'UTF-8'}
+                                    </label>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}">
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="country_code">
                             {l s='Country Code' mod='younitedpay'}
                         </label>
@@ -42,7 +60,7 @@
                         </div>
                     </div>
                     {foreach from=$configuration.available_countries item='available_country'}
-                        <div class="form-group mt-2 row" data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country} hidden{/if}" data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="younitedpay_prod_switch_{$available_country}">
                                 {l s='Environment' mod='younitedpay'}
                             </label>
@@ -62,7 +80,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_{$available_country}">
                                 {l s='Client ID' mod='younitedpay'}
                             </label>
@@ -75,7 +93,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_{$available_country}">
                                 {l s='Client Secret' mod='younitedpay'}
                             </label>
@@ -88,7 +106,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_{$available_country}">
                                 {l s='Shop Code' mod='younitedpay'}
                             </label>
@@ -112,7 +130,7 @@
                                 {/if}
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_{$available_country}">
                                 {l s='WebHook Secret' mod='younitedpay'}
                             </label>
@@ -125,7 +143,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_production_{$available_country}">
                                 {l s='Client ID' mod='younitedpay'}
                             </label>
@@ -138,7 +156,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_production_{$available_country}">
                                 {l s='Client Secret' mod='younitedpay'}
                             </label>
@@ -151,7 +169,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production_{$available_country}">
                                 {l s='Shop Code' mod='younitedpay'}
                             </label>
@@ -175,7 +193,7 @@
                                 {/if}
                             </div>
                         </div>
-                        <div class="form-group mt-2 row{if $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country} data-country-zone-{$available_country}>
                             <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_production_{$available_country}">
                                 {l s='WebHook Secret' mod='younitedpay'}
                             </label>

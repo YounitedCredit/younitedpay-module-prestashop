@@ -107,7 +107,6 @@ document.onreadystatechange = function() {
 
 function addCountryEvent(countries)
 {
-    updateShowCountryConfig(countries);
     $('#country_code').on('change', () => updateShowCountryConfig(countries));
 }
 

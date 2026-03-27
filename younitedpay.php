@@ -229,6 +229,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     /* GENERAL CONFIG */
 
+    const DEFAULT_COUNTRY_CODE = 'YOUNITEDPAY_COUNTRY_CODE';
+
     const COUNTRY_CODE = 'YOUNITEDPAY_COUNTRY_CODE';
 
     const FRONT_HOOK = 'YOUNITEDPAY_FRONT_HOOK';

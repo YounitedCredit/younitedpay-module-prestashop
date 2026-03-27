@@ -237,7 +237,17 @@ class YounitedClient
 
     private function setApiCredentials($idShop, $idLang)
     {
-        $isoCodeSuffix = empty($idLang) ? '' : '_' . strtoupper((new \Language((int) $idLang))->getIsoCode());
+        $isoCode = strtoupper((new \Language((int) $idLang))->getIsoCode());
+        if (false === in_array($isoCode, Younitedpay::AVAILABLE_COUNTRIES)) {
+            $isoCode = Configuration::get(
+                Younitedpay::DEFAULT_COUNTRY_CODE,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+        }
+        $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
 
         $this->isProductionMode = (bool) Configuration::get(
             Younitedpay::PRODUCTION_MODE . $isoCodeSuffix,

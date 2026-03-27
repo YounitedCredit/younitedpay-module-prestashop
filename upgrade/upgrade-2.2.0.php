@@ -37,27 +37,24 @@ function upgrade_module_2_2_0($module)
 {
     $result = true;
 
-    $cacheStorage = new CacheYounited();
-    $cacheStorage->remove('token_api');
-
     $shopIds = Shop::getShops(true, null, true);
     foreach ($shopIds as $shopId) {
-        $clientID = Configuration::get(Younitedpay::CLIENT_ID, null, null, $shopId, 'client_id', '');
-        $clientIDProd = Configuration::get(Younitedpay::CLIENT_ID_PRODUCTION, null, null, $shopId, 'client_id', '');
-        $clientSecret = Configuration::get(Younitedpay::CLIENT_SECRET, null, null, $shopId, 'client_secret', '');
-        $clientSecretProd = Configuration::get(Younitedpay::CLIENT_SECRET_PRODUCTION, null, null, $shopId, 'client_secret', '');
-        $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $shopId, 'shop_code', '');
-        $shopCodeProd = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $shopId, 'shop_code_production', '');
+        $clientID = Configuration::get(Younitedpay::CLIENT_ID, null, null, $shopId, '');
+        $clientIDProd = Configuration::get(Younitedpay::CLIENT_ID_PRODUCTION, null, null, $shopId, '');
+        $clientSecret = Configuration::get(Younitedpay::CLIENT_SECRET, null, null, $shopId, '');
+        $clientSecretProd = Configuration::get(Younitedpay::CLIENT_SECRET_PRODUCTION, null, null, $shopId, '');
+        $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $shopId, '');
+        $shopCodeProd = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $shopId, '');
         $webHookSecret = Configuration::get(Younitedpay::WEBHOOK_SECRET, null, null, $shopId, 'webhook_secret', '');
-        $webHookSecretProd = Configuration::get(Younitedpay::WEBHOOK_SECRET_PRODUCTION, null, null, $shopId, 'webhook_secret', '');
-        $isProduction = Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $shopId, 'production_mode', false);
+        $webHookSecretProd = Configuration::get(Younitedpay::WEBHOOK_SECRET_PRODUCTION, null, null, $shopId, '');
+        $isProduction = Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $shopId, false);
 
         $client = new YounitedClient($shopId);
         $request = new GetMerchantRequest();
         $response = $client->sendRequest('', $request);
 
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
-            if (empty($response) === true || $response['success'] === false || $availableCountry !== $response['response']['countryCode']) {
+            if (empty($response) === true || $response['success'] === false || empty($response['response']['countryCode']) || $availableCountry !== $response['response']['countryCode']) {
                 continue;
             }
 
@@ -70,12 +67,16 @@ function upgrade_module_2_2_0($module)
                 && Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $shopCodeProd, false, null, $shopId)
                 && Configuration::updateValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $webHookSecret, false, null, $shopId)
                 && Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $webHookSecretProd, false, null, $shopId)
-                && Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $shopId);
+                && Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::DEFAULT_COUNTRY_CODE, strtolower($availableCountry), false, null, $shopId)
+                && Configuration::updateValue(Younitedpay::COUNTRY_CODE, strtolower($availableCountry), false, null, $shopId);
         }
     }
 
-    $installer = new ModuleInstaller($module);
-    $result = $installer->installObjectModel(YounitedPayContract::class);
+    $cacheStorage = new CacheYounited();
+    $cacheStorage->remove('token_api');
 
-    return $result;
+    $installer = new ModuleInstaller($module);
+
+    return $result && $installer->installObjectModel(YounitedPayContract::class);
 }
