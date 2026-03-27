@@ -27,7 +27,7 @@
                 <div class="form-wrapper justify-content-center col-xl-12">
                     <div class="form-group mt-3 pb-3 border-bottom row{if $configuration.production_mode === true} hidden{/if}">
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="country_code">
-                            {l s='Country Code' mod='younitedpay'}
+                            {l s='Default Country Code' mod='younitedpay'}
                         </label>
                         <div class="col-lg-4 d-flex align-items-center justify-content-around">
                             {foreach from=$configuration.available_countries item='available_country'}

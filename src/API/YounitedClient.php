@@ -238,15 +238,6 @@ class YounitedClient
     private function setApiCredentials($idShop, $idLang)
     {
         $isoCode = strtoupper((new \Language((int) $idLang))->getIsoCode());
-        if (false === in_array($isoCode, Younitedpay::AVAILABLE_COUNTRIES)) {
-            $isoCode = Configuration::get(
-                Younitedpay::DEFAULT_COUNTRY_CODE,
-                null,
-                null,
-                $idShop,
-                ''
-            );
-        }
         $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
 
         $this->isProductionMode = (bool) Configuration::get(
@@ -285,5 +276,54 @@ class YounitedClient
             $idShop,
             ''
         );
+
+        // Set default country configuration if no credentials found
+        if (empty($this->clientId) || empty($this->clientSecret)) {
+            $isoCode = strtoupper(Configuration::get(
+                Younitedpay::DEFAULT_COUNTRY_CODE,
+                null,
+                null,
+                $idShop,
+                ''
+            ));
+            $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
+
+            $this->isProductionMode = (bool) Configuration::get(
+                Younitedpay::PRODUCTION_MODE . $isoCodeSuffix,
+                null,
+                null,
+                $idShop,
+                false
+            );
+            $suffix = $this->isProductionMode === true ? '_PRODUCTION' . $isoCodeSuffix : $isoCodeSuffix;
+            $this->clientId = Configuration::get(
+                Younitedpay::CLIENT_ID . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+            $this->clientSecret = Configuration::get(
+                Younitedpay::CLIENT_SECRET . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+            $this->shopCode = Configuration::get(
+                Younitedpay::SHOP_CODE . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+            $this->webHookSecret = Configuration::get(
+                Younitedpay::WEBHOOK_SECRET . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+        }
     }
 }
