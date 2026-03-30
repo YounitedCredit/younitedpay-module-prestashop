@@ -63,6 +63,9 @@ class YounitedClient
     /** @var bool */
     public $isTestUnit = false;
 
+    /** @var bool */
+    public $isTestConfig = false;
+
     public function __construct($idShop, $idLang = '', $testCredentials = [])
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
@@ -278,7 +281,7 @@ class YounitedClient
         );
 
         // Set default country configuration if no credentials found
-        if (empty($this->clientId) || empty($this->clientSecret)) {
+        if ($this->isTestConfig === false && (empty($this->clientId) || empty($this->clientSecret))) {
             $isoCode = strtoupper(Configuration::get(
                 Younitedpay::DEFAULT_COUNTRY_CODE,
                 null,
@@ -325,5 +328,11 @@ class YounitedClient
                 ''
             );
         }
+    }
+
+    public function setTestConfig($idShop, $idLang)
+    {
+        $this->isTestConfig = true;
+        $this->setApiCredentials($idShop, $idLang);
     }
 }

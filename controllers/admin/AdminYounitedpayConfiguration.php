@@ -296,12 +296,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                     }
                 }
                 if ($specsVariables['connected'] === true) {
-                    $langId = (int) \Language::getIdByIso($isoCode);
-                    $client = new YounitedClient($this->context->shop->id, $langId);
-                    $request = new GetMerchantRequest();
-                    $response = $client->sendRequest('', $request);
-                    if ($response['success'] === true && $availableCountry !== $response['response']['countryCode']) {
-                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . sprintf($badCountryConfig, $response['response']['countryCode']);
+                    if (in_array('country_code_error', $specsVariables['status'][$isoCode]) === true) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . sprintf($badCountryConfig, $specsVariables['merchantCountryCode'][$isoCode]);
                     }
                 }
             }

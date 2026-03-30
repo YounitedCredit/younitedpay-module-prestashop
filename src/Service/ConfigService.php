@@ -33,6 +33,7 @@ use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Model\NewAPI\GetOffers;
 use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
+use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
 use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
 use YounitedPaySDK\Request\NewAPI\ShopsRequest;
 use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
@@ -118,11 +119,13 @@ class ConfigService
         $shopCodeList = [];
         $maturityList = [];
         $status = [];
+        $merchantCountryCode = [];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
             $langId = (int) \Language::getIdByIso($countryCode);
 
             $client = new YounitedClient($this->context->shop->id, $langId);
+            $client->setTestConfig($this->context->shop->id, $langId);
             $status[$countryCode] = [];
 
             if ($client->isCrendentialsSet() === false) {
@@ -136,11 +139,18 @@ class ConfigService
                 $status[$countryCode][] = 'no_shop_code';
             }
 
-            $shopCodeList[$countryCode] = $this->getShopCodes($countryCode);
+            $shopCodeList[$countryCode] = $this->getShopCodes($client);
             if (empty($shopCodeList[$countryCode]) === true) {
                 $message[$countryCode][] = '[' . $availableCountry . '] ' . $this->l('Credentials error');
                 $status[$countryCode][] = 'api_error';
                 $client->shopCode = '';
+            }
+
+            $merchant[$countryCode] = $this->getMerchant($client);
+            if (!empty($merchant[$countryCode]['countryCode']) && $countryCode !== strtolower($merchant[$countryCode]['countryCode'])) {
+                $message[$countryCode][] = '[' . $availableCountry . '] ' . $this->l('Country Code error');
+                $status[$countryCode][] = 'country_code_error';
+                $merchantCountryCode[$countryCode] = $merchant[$countryCode]['countryCode'];
             }
 
             $body = (new GetOffers())->setShopCode($client->shopCode)
@@ -180,6 +190,7 @@ class ConfigService
                 'maturityList' => self::DEF_MATURITIES,
                 'shopCodeList' => $shopCodeList,
                 'status' => $status,
+                'merchantCountryCode' => $merchantCountryCode,
             ];
         }
 
@@ -195,6 +206,7 @@ class ConfigService
             'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : $maturityList,
             'shopCodeList' => $shopCodeList,
             'status' => $status,
+            'merchantCountryCode' => $merchantCountryCode,
         ];
     }
 
@@ -257,6 +269,7 @@ class ConfigService
         return [
             'maturityList' => $isApiConnected['maturityList'],
             'shopCodeList' => $isApiConnected['shopCodeList'],
+            'merchantCountryCode' => $isApiConnected['merchantCountryCode'],
             'connected' => $isApiConnectedStatus,
             'status' => $isApiConnected['status'],
             'specs' => [
@@ -344,12 +357,11 @@ class ConfigService
 
     /**
      * Return Shop Codes list from API
+     *
+     * @param YounitedClient $client
      */
-    public function getShopCodes($countryCode = null)
+    public function getShopCodes($client)
     {
-        $langId = Language::getIdByIso($countryCode);
-        $client = new YounitedClient($this->context->shop->id, $langId ?: $this->context->language->id);
-
         if ($client->isCrendentialsSet() === false) {
             return [];
         }
@@ -375,6 +387,29 @@ class ConfigService
         }
 
         return $shopCodesNames;
+    }
+
+    /**
+     * Return Merchant informations from API
+     *
+     * @param YounitedClient $client
+     */
+    public function getMerchant($client)
+    {
+        if ($client->isCrendentialsSet() === false) {
+            return [];
+        }
+
+        $request = new GetMerchantRequest();
+
+        /** @var mixed $response */
+        $response = $client->sendRequest(null, $request);
+
+        if (empty($response) === true || $response['success'] === false) {
+            return [];
+        }
+
+        return $response['response'];
     }
 
     public function testWebhook()
