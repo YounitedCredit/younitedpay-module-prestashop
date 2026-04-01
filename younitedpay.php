@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2022 Younited Credit
  *
@@ -53,8 +54,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
      *
      * @var array
      */
-    public $controllers = [
-    ];
+    public $controllers = [];
 
     /**
      * List of objectModel used in this Module
@@ -344,10 +344,22 @@ class Younitedpay extends PaymentModule implements WidgetInterface
     {
         $upgrade = parent::runUpgradeModule();
 
-        if (isset($upgrade['success']) && $upgrade['success'] == true) {
+        $success = false;
+        if ($upgrade === true) {
+            $success = true;
+        } elseif (is_array($upgrade) && isset($upgrade['success']) && $upgrade['success'] == true) {
+            $success = true;
+        }
+
+        if ($success) {
             /** @var CacheYounited $cachestorage */
             $cachestorage = new CacheYounited();
-            $cachestorage->set('need_clear_cache', true);
+            $cachestorage->setExpiry(null);
+            $cachestorage->set('need_clear_cache', [
+                'value' => true,
+                'from_version' => $this->version,
+                'time' => date('c'),
+            ]);
         }
 
         return $upgrade;
@@ -392,9 +404,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         return $templateCredit['template'];
     }
 
-    public function getWidgetVariables($hookName, array $configuration)
-    {
-    }
+    public function getWidgetVariables($hookName, array $configuration) {}
 
     public function addRadioCurrencyRestrictionsForModule(array $shops = [])
     {
@@ -417,9 +427,10 @@ class Younitedpay extends PaymentModule implements WidgetInterface
      */
     public function __call($name, $arguments)
     {
-        if ($result = $this->handleExtensionsHook($name,
-            !empty($arguments[0]) ? $arguments[0] : [])
-        ) {
+        if ($result = $this->handleExtensionsHook(
+            $name,
+            !empty($arguments[0]) ? $arguments[0] : []
+        )) {
             if (false === empty($result)) {
                 return $result;
             }
