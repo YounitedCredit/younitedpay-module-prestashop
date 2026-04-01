@@ -75,10 +75,8 @@ function upgrade_module_2_2_0($module)
 
     $cacheStorage = new CacheYounited();
     $cacheStorage->remove('token_api');
-
-    /** @var CacheYounited $cachestorage */
-    $cachestorage->setExpiry(null);
-    $cachestorage->set('need_clear_cache', [
+    $cacheStorage->setExpiry(null);
+    $cacheStorage->set('need_clear_cache', [
         'value' => true,
         'from_version' => $module->version,
         'time' => date('c'),
