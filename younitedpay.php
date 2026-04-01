@@ -335,36 +335,6 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         return $this->pmUninstall();
     }
 
-    /**
-     * Run the upgrade for a given module name and version.
-     *
-     * @return array
-     */
-    public function runUpgradeModule()
-    {
-        $upgrade = parent::runUpgradeModule();
-
-        $success = false;
-        if ($upgrade === true) {
-            $success = true;
-        } elseif (is_array($upgrade) && isset($upgrade['success']) && $upgrade['success'] == true) {
-            $success = true;
-        }
-
-        if ($success) {
-            /** @var CacheYounited $cachestorage */
-            $cachestorage = new CacheYounited();
-            $cachestorage->setExpiry(null);
-            $cachestorage->set('need_clear_cache', [
-                'value' => true,
-                'from_version' => $this->version,
-                'time' => date('c'),
-            ]);
-        }
-
-        return $upgrade;
-    }
-
     public function renderWidget($hookName, array $configuration)
     {
         $price = isset($configuration['amount']) ? (float) $configuration['amount'] : 0;
