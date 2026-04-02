@@ -75,12 +75,8 @@ function upgrade_module_2_2_0($module)
 
     $cacheStorage = new CacheYounited();
     $cacheStorage->remove('token_api');
-    $cacheStorage->setExpiry(null);
-    $cacheStorage->set('need_clear_cache', [
-        'value' => true,
-        'from_version' => $module->version,
-        'time' => date('c'),
-    ]);
+
+    Configuration::updateValue(Younitedpay::NEED_TO_CLEAR_CACHE, true);
 
     $installer = new ModuleInstaller($module);
 

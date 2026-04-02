@@ -151,6 +151,17 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     public function initContent()
     {
+        if (Configuration::get(Younitedpay::NEED_TO_CLEAR_CACHE, null, null, null, false)) {
+            $cacheStorage = new CacheYounited();
+            $cacheStorage->setExpiry(null);
+            $cacheStorage->set('need_clear_cache', [
+                'value' => true,
+                'from_version' => $module->version,
+                'time' => date('c'),
+            ]);
+            Configuration::updateValue(Younitedpay::NEED_TO_CLEAR_CACHE, false);
+        }
+
         $langParameter = Tools::getValue('lang', null);
         $prevLanguage = $this->context->language;
         if ($langParameter !== null) {

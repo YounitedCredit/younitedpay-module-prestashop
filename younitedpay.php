@@ -263,6 +263,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const USE_NEW_API = 'YOUNITEDPAY_USE_NEW_API';
 
+    const NEED_TO_CLEAR_CACHE = 'YOUNITEDPAY_NEED_TO_CLEAR_CACHE';
+
     const AVAILABLE_CURRENCIES = [
         'EUR',
     ];
