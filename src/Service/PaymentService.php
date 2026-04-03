@@ -89,7 +89,7 @@ class PaymentService
      */
     public function createContract($maturity, $totalAmount)
     {
-        $customerAddress = new \Address($this->context->cart->id_address_delivery);
+        $customerAddress = new \Address($this->context->cart->id_address_invoice);
         $country = new \Country($customerAddress->id_country);
         $langId = (int) \Language::getIdByIso($country->iso_code);
 
