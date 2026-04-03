@@ -122,7 +122,7 @@ class ConfigService
         $merchantCountryCode = [];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
-            $langId = (int) \Language::getIdByIso($countryCode);
+            $langId = (int) Language::getIdByIso($countryCode);
 
             $client = new YounitedClient($this->context->shop->id, $langId);
             $client->setTestConfig($this->context->shop->id, $langId);
@@ -261,9 +261,7 @@ class ConfigService
             if (in_array('no_credentials', $isApiConnected['status'][$countryCode]) || $isApiConnectedStatus) {
                 continue;
             }
-            if (!$isApiConnectedStatus) {
-                $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
-            }
+            $isApiConnectedStatus = in_array('ok', $isApiConnected['status'][$countryCode]);
         }
 
         return [

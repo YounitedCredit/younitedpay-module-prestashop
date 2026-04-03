@@ -28,7 +28,6 @@ use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Hook\HookDispatcher;
 use YounitedpayAddon\Service\ProductService;
-use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ModuleInitialiser;
 use YounitedpayAddon\Utils\PaymentModuleTrait;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -376,7 +375,9 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         return $templateCredit['template'];
     }
 
-    public function getWidgetVariables($hookName, array $configuration) {}
+    public function getWidgetVariables($hookName, array $configuration)
+    {
+    }
 
     public function addRadioCurrencyRestrictionsForModule(array $shops = [])
     {

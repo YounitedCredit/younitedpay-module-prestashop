@@ -20,11 +20,9 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
-use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
 
 class AdminYounitedpayConfigurationController extends ModuleAdminController
 {
@@ -156,7 +154,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $cacheStorage->setExpiry(null);
             $cacheStorage->set('need_clear_cache', [
                 'value' => true,
-                'from_version' => $module->version,
+                'from_version' => $this->module->version,
                 'time' => date('c'),
             ]);
             Configuration::updateValue(Younitedpay::NEED_TO_CLEAR_CACHE, false);
