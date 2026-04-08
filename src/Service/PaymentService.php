@@ -348,7 +348,8 @@ class PaymentService
         $contractYounited->canceled_date = '';
         $contractYounited->api_version = $apiVersion;
         $contractYounited->client_id = substr($this->client->clientId, 0, 4) . '****' . substr($this->client->clientId, -4, 4);
-        $contractYounited->country_code = $this->context->country->iso_code;
+        $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
+        $contractYounited->country_code = (new \Country($invoiceAddress->id_country))->iso_code;
         $contractYounited->save();
     }
 
