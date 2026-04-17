@@ -360,9 +360,11 @@ class PaymentService
      *
      * @return bool|mixed False if nothing requested on the api payment id or error | Api Payment of id requested
      */
-    public function getApiPaymentById($paymentId)
+    public function getApiPaymentById($paymentId, $idCart = 0)
     {
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
+        $idCart = $idCart > 0 ? $idCart : $this->context->cart->id;
+        $younitedContract = $this->getContractByCart($idCart);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $younitedContract->country_code);
         if ($client->isCrendentialsSet() === false) {
             return false;
         }
@@ -430,17 +432,17 @@ class PaymentService
      */
     public function getCreditRequestedAmount($cart)
     {
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
-        if ($client->isCrendentialsSet() === false) {
-            return false;
-        }
-
         $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
 
-        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $younitedContract->country_code);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id, $cart->id);
 
         if (false === empty($getPaymentResponse) && $getPaymentResponse['amount'] && $getPaymentResponse['status']) {
             $statusOrderDone = [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED];

@@ -66,7 +66,7 @@ class YounitedClient
     /** @var bool */
     public $isTestConfig = false;
 
-    public function __construct($idShop, $idLang = '', $testCredentials = [])
+    public function __construct($idShop, $idLang = '', $testCredentials = [], $countryCode = '')
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
 
@@ -76,7 +76,7 @@ class YounitedClient
             $this->isTestUnit = true;
         } else {
             $this->apiLogger = ApiLogger::getInstance();
-            $this->setApiCredentials($idShop, $idLang);
+            $this->setApiCredentials($idShop, $idLang, $countryCode);
         }
     }
 
@@ -238,10 +238,14 @@ class YounitedClient
         ];
     }
 
-    private function setApiCredentials($idShop, $idLang)
+    private function setApiCredentials($idShop, $idLang, $countryCode = '')
     {
-        $isoCode = strtoupper((new \Language((int) $idLang))->getIsoCode());
-        $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
+        if (empty($countryCode) === false) {
+            $isoCodeSuffix = '_' . strtoupper($countryCode);
+        } else {
+            $isoCode = strtoupper((new \Language((int) $idLang))->getIsoCode());
+            $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
+        }
 
         $this->isProductionMode = (bool) Configuration::get(
             Younitedpay::PRODUCTION_MODE . $isoCodeSuffix,
@@ -290,6 +294,9 @@ class YounitedClient
                 ''
             ));
             $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
+            if (empty($countryCode) === false) {
+                $isoCodeSuffix = '_' . strtoupper($countryCode);
+            }
 
             $this->isProductionMode = (bool) Configuration::get(
                 Younitedpay::PRODUCTION_MODE . $isoCodeSuffix,
