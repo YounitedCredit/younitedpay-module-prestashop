@@ -106,7 +106,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
             }
         }
 
-        $api = $paymentService->getApiPaymentById($younitedContract->payment_id);
+        $api = $paymentService->getApiPaymentById($younitedContract->payment_id, $younitedContract->id_cart);
 
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);

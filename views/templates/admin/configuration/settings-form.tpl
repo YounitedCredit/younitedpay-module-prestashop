@@ -42,6 +42,10 @@
                                 </div>
                             {/foreach}
                         </div>
+                        <small class="col-lg-9 offset-lg-3 form-text">
+                            {l s='This option defines the language used by the module widget when the client selects a language for which no API key has been configured.' mod='younitedpay'}
+                            {l s='However, at the purchase funnel, the Younited method will not be offered if the Billing Country is not configured or does not correspond to an Authorized Country.' mod='younitedpay'}
+                        </small>
                     </div>
                     <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}">
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="country_code">

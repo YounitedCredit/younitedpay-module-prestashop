@@ -174,6 +174,8 @@ $_MODULE['<{younitedpay}prestashop>settings-form_edc0e46e649858c5c9f91fe5f7fca9d
 $_MODULE['<{younitedpay}prestashop>settings-form_0ba29c6a1afacf586b03a26162c72274'] = 'Environnement';
 $_MODULE['<{younitedpay}prestashop>settings-form_0cbc6611f5540bd0809a388dc95a615b'] = 'Test';
 $_MODULE['<{younitedpay}prestashop>settings-form_756d97bb256b8580d4d71ee0c547804e'] = 'Production';
+$_MODULE['<{younitedpay}prestashop>settings-form_e2944f8059daa3518a7301b2a2d9031b'] = 'Cette option définit la langue utilisée par le widget du module lorsque le client sélectionne une langue pour laquelle aucune clé API n\'a été configurée.';
+$_MODULE['<{younitedpay}prestashop>settings-form_39710eb42bdbd73bae2e954a1b609ceb'] = 'Cependant, au niveau du tunnel d\'achat, la méthode Younited ne sera pas proposée si le pays de facturation n\'est pas configuré ou ne correspond pas à un pays autorisé.';
 $_MODULE['<{younitedpay}prestashop>settings-form_f4676de06d53dc78782446dfce5c24c5'] = 'Cette option définit dans quel environnement votre module est configuré.';
 $_MODULE['<{younitedpay}prestashop>settings-form_76525f0f34b48475e5ca33f71d296f3b'] = 'ID Client';
 $_MODULE['<{younitedpay}prestashop>settings-form_14c43997438131eebd56da809fea48a5'] = 'Saisissez votre ID Client';
