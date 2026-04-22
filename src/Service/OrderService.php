@@ -119,7 +119,6 @@ class OrderService
 
     public function cancelContract($idOrder, $refContract)
     {
-
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
         if ($refContract === '') {

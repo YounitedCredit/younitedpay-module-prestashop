@@ -81,10 +81,10 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         /* @var LoggerService */
         $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
-        /** @var PaymentService $this->paymentService */
+        /* @var PaymentService $this->paymentService */
         $this->paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
 
-        /** @var YounitedPayContract $this->younitedContract */
+        /* @var YounitedPayContract $this->younitedContract */
         $this->younitedContract = $this->paymentService->getContractByCart($idCart);
 
         if ((int) $this->younitedContract->id_order <= 0) {
@@ -98,7 +98,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         $isProduction = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE . $isoCodeSuffix, null, null, $idShop);
         $suffix = $isProduction === true ? '_PRODUCTION' : '';
         $suffix .= $isoCodeSuffix;
-        
+
         $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
         $webhook = new Webhook($webHookSecret);
 
@@ -106,7 +106,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
             $this->endResponse($webhook->getErrorResponse());
         }
 
-        /** @var YounitedPaySDK\Model\Webhook\EventNotification */
+        /** @var YounitedPaySDK\Model\Webhook\EventNotification $webhookNotification */
         $webhookNotification = $webhook->getEventNotification();
 
         if (empty($webhookNotification)) {
@@ -189,7 +189,7 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         /** @var OrderService $orderService */
         $orderService = ServiceContainer::getInstance()->get(OrderService::class);
 
-        /** @var PaymentService $this->paymentService */
+        /* @var PaymentService $this->paymentService */
         $this->paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
 
         if ((int) $this->younitedContract->id_order <= 0) {
