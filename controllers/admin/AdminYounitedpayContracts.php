@@ -99,7 +99,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
         if (Tools::getValue('paymentId') !== false) {
             $order = new Order((int) $younitedContract->id_order);
             if (Validate::isLoadedObject($order) === true) {
-                $paymentService->updateMerchantReference($younitedContract->payment_id, $order);
+                $paymentService->updateMerchantReference($younitedContract, $order);
                 \Context::getContext()->controller->confirmations[] = $this->l('Order reference updated on Younited Pay Dashboard.');
             } else {
                 \Context::getContext()->controller->warnings[] = $this->l('Error: Order linked to this contract not found.');

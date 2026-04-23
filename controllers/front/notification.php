@@ -70,16 +70,30 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
+        /* @var LoggerService */
+        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
         $idCart = (int) Tools::getValue('id_cart');
 
         $cart = new Cart($idCart);
 
         if (Tools::getValue('id_cart') === 'test_webhook') {
+            $countryCode = Tools::getValue('country_code', 'FR');
+            $isoCodeSuffix = '_' . strtoupper($countryCode);
+            $idShop = $this->context->shop->id;
+            $isProduction = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE . $isoCodeSuffix, null, null, $idShop);
+            $suffix = $isProduction === true ? '_PRODUCTION' : '';
+            $suffix .= $isoCodeSuffix;
+
+            $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
+            $webhook = new Webhook($webHookSecret);
+
+            if ($webhook->getErrorResponse() !== false) {
+                $this->endResponse($webhook->getErrorResponse());
+            }
+
             $this->endResponse('200 - Test complete ! Well done!');
         }
-
-        /* @var LoggerService */
-        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
 
         /* @var PaymentService $this->paymentService */
         $this->paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
