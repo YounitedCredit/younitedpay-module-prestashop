@@ -99,6 +99,8 @@ document.onreadystatechange = function() {
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);
     $('#show_ranges_switch').click(updateShowHideRanges);
+    $('#show_split_payment_switch').click(updateShowHideSplitPayment);
+    $('#show_loan_payment_switch').click(updateShowHideLoanPayment);
     countries.forEach(function (country) {
         $('#younitedpay_prod_switch_' + country).click(() => YounitedhideZoneTest(country));
     });
@@ -140,6 +142,24 @@ function updateShowHideRanges() {
     } else {
         $('.ranges_min_max').addClass('hidden');
         $('.ranges_not_min_max').removeClass('hidden');
+    }
+}
+
+function updateShowHideSplitPayment() {
+    var splitPaymentEnabled = $('#show_split_payment_off').not(':checked').length > 0;
+    if (splitPaymentEnabled === true) {
+        $('.split-payment-panel').removeClass('hidden');
+    } else {
+        $('.split-payment-panel').addClass('hidden');
+    }
+}
+
+function updateShowHideLoanPayment() {
+    var loanPaymentEnabled = $('#show_loan_payment_off').not(':checked').length > 0;
+    if (loanPaymentEnabled === true) {
+        $('.loan-payment-panel').removeClass('hidden');
+    } else {
+        $('.loan-payment-panel').addClass('hidden');
     }
 }
 

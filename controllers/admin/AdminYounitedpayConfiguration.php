@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -84,10 +85,19 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $showRangeOffers;
 
     /** @var bool */
+    public $showSplitPayment;
+
+    /** @var bool */
+    public $showLoanPayment;
+
+    /** @var bool */
     public $widgetBorders;
 
     /** @var bool */
     public $webHookOrders;
+
+    /** @var int */
+    public $intervalRangeOffers;
 
     /** @var int */
     public $minRangeOffers;
@@ -216,6 +226,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
         $this->isShownMonthly = (int) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
         $this->showRangeOffers = (bool) $this->getValue(Younitedpay::SHOW_RANGE_OFFERS, $idShop, 'show_ranges', false);
+        $this->showSplitPayment = (bool) $this->getValue(Younitedpay::SHOW_SPLIT_PAYMENT, $idShop, 'show_split_payment', false);
+        $this->showLoanPayment = (bool) $this->getValue(Younitedpay::SHOW_LOAN_PAYMENT, $idShop, 'show_loan_payment', false);
+        $this->intervalRangeOffers = (int) $this->getValue(Younitedpay::INTERVAL_RANGE_OFFERS, $idShop, 'interval_range', 1);
         $this->minRangeOffers = (int) $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', 0);
         $this->maxRangeOffers = (int) $this->getValue(Younitedpay::MAX_RANGE_OFFERS, $idShop, 'max_ranges', 0);
         $defMinRange = false === empty($this->maturitylist) ? $this->maturitylist[0] : 10;
@@ -370,11 +383,42 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $this->context->shop->id,
+                'maturity' => 2,
+                'minimum' => 0,
+                'maximum' => 3000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 3,
+                'minimum' => 0,
+                'maximum' => 3000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 4,
+                'minimum' => 0,
+                'maximum' => 3000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
                 'maturity' => 10,
                 'minimum' => 100,
                 'maximum' => 10000,
                 'deleted' => 0,
                 'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_LOAN_PAYMENT,
             ],
             [
                 'id_younitedpay_configuration' => 0,
@@ -384,6 +428,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maximum' => 12000,
                 'deleted' => 0,
                 'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_LOAN_PAYMENT,
             ],
             [
                 'id_younitedpay_configuration' => 0,
@@ -393,6 +438,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maximum' => 0,
                 'deleted' => 0,
                 'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_LOAN_PAYMENT,
             ],
         ];
         $this->configService->saveAllMaturities($defaultMaturities, (int) $this->context->shop->id);
@@ -481,6 +527,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'key' => Tools::getValue('younitedpay_maturities', 0),
             'configuration' => [
                 'show_ranges' => $this->showRangeOffers,
+                'show_split_payment' => $this->showSplitPayment,
+                'show_loan_payment' => $this->showLoanPayment,
             ],
             'maturitylist' => $this->maturitylist,
             'maturity' => [
@@ -585,9 +633,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         );
 
         $showRanges = (int) Tools::getValue('show_ranges');
+        $showSplitPayment = (int) Tools::getValue('show_split_payment');
+        $showLoanPayment = (int) Tools::getValue('show_loan_payment');
         $minInstall = (int) Tools::getValue('min_installment');
         $maxInstall = (int) Tools::getValue('max_installment');
         Configuration::updateValue(Younitedpay::SHOW_RANGE_OFFERS, $showRanges, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOW_SPLIT_PAYMENT, $showSplitPayment, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOW_LOAN_PAYMENT, $showLoanPayment, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::INTERVAL_RANGE_OFFERS, (int) Tools::getValue('interval_range'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_OFFERS, (int) Tools::getValue('min_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MAX_RANGE_OFFERS, (int) Tools::getValue('max_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_INSTALMENT, $minInstall, false, null, $idShop);
@@ -693,6 +746,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'maturities' => $allMaturities,
             'maturitylist' => $this->maturitylist,
             'show_ranges' => $this->showRangeOffers,
+            'show_split_payment' => $this->showSplitPayment,
+            'show_loan_payment' => $this->showLoanPayment,
+            'interval_range' => $this->intervalRangeOffers,
             'min_ranges' => $this->minRangeOffers,
             'max_ranges' => $this->maxRangeOffers > 0 ? $this->maxRangeOffers : '',
             'min_installment' => $this->minRangeInstall,

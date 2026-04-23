@@ -19,15 +19,15 @@
     action="{$configuration.url_form_config|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data">
     {if $configuration.no_config === false}
         <input type="hidden" name="states_submit" value="1" />
-    {/if} 
+    {/if}
     <div class="row justify-content-center">
         <div class="col-xl-12 pr-5 pl-5">
             <div class="card">
                 <div class="card-header">
                     <div class="col-sm-11">{l s='2. Configuration' mod='younitedpay'}</div>
                 </div>
-                <div class="form-wrapper justify-content-center col-xl-12 
-                    {if $configuration.no_config === true || $configuration.no_shop_code || $connected === false}
+                <div class="form-wrapper justify-content-center col-xl-12
+                    {if !($configuration.no_config === true || $configuration.no_shop_code || $connected === false)}
                         backimg" style="background: url('{$shop_img_url|escape:'htmlall':'UTF-8'}/behaviour-no-config.png');min-height:600px;">
                         <div class="infotext" style="margin-top:250px;">
                             {if $configuration.no_config === true}
@@ -85,7 +85,7 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-lg btn-primary" type="submit"
-                        {if $configuration.no_config === true} disabled title="{$no_keys_text|escape:'htmlall':'UTF-8'}"{/if}>                            
+                        {if $configuration.no_config === true} disabled title="{$no_keys_text|escape:'htmlall':'UTF-8'}"{/if}>
                             {l s='Save' d='Admin.Actions' mod='younitedpay'}
                         </button>
                     </div>
