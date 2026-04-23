@@ -27,7 +27,7 @@
                     <div class="col-sm-11">{l s='2. Configuration' mod='younitedpay'}</div>
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12
-                    {if !($configuration.no_config === true || $configuration.no_shop_code || $connected === false)}
+                    {if $configuration.no_config === true || $configuration.no_shop_code || $connected === false}
                         backimg" style="background: url('{$shop_img_url|escape:'htmlall':'UTF-8'}/behaviour-no-config.png');min-height:600px;">
                         <div class="infotext" style="margin-top:250px;">
                             {if $configuration.no_config === true}
