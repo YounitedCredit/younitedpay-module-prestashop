@@ -161,9 +161,12 @@ $_MODULE['<{younitedpay}prestashop>states-form_3fc72139e4ef5cc908edececa027427a'
 $_MODULE['<{younitedpay}prestashop>states-form_ab0cf104f39708eabd07b8cb67e149ba'] = 'Cache';
 $_MODULE['<{younitedpay}prestashop>states-form_a38a0c6bfda70b981213804c8d9a7efe'] = 'Supprimer le cache';
 $_MODULE['<{younitedpay}prestashop>states-form_d1daa0c1b06fe16439c9cc5f81cbb346'] = 'Si vous avez un problème ou si les informations contenues dans le module ne sont pas à jour, vous pouvez vider le cache, les nouvelles données seront récupérées automatiquement.';
+$_MODULE['<{younitedpay}prestashop>maturities_e2d8ca39625f15fff61bd1b1712bb2ec'] = 'Afficher le paiement de 2x à 4x';
+$_MODULE['<{younitedpay}prestashop>maturities_a978affac46bb510faaad47968050058'] = 'Afficher le financement de 6x à 84x';
 $_MODULE['<{younitedpay}prestashop>maturities_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Afficher la réglette des maturités';
 $_MODULE['<{younitedpay}prestashop>maturities_f687884e668b470bc99c21e4c1d70223'] = 'Mensualités à partir de';
 $_MODULE['<{younitedpay}prestashop>maturities_3501c7e67e0150900b3671b71c9e567e'] = ' à ';
+$_MODULE['<{younitedpay}prestashop>maturities_d16dd01adf735ed9b87eebff5fc39ce5'] = 'Intervalle';
 $_MODULE['<{younitedpay}prestashop>maturities_baabebfcf84c5ae2acaa090069338d5b'] = 'Montant min (ttc)';
 $_MODULE['<{younitedpay}prestashop>maturities_4aa18d44fa952449a50dbaaa9b82441b'] = 'Montant max (ttc)';
 $_MODULE['<{younitedpay}prestashop>maturities_9fb417db7db6e29f83d6941793bb2468'] = 'Maturités sélectionnées ';

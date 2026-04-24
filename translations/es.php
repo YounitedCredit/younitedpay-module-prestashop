@@ -101,8 +101,11 @@ $_MODULE['<{younitedpay}prestashop>status-and-headers_7d5a27f1b53dc519eac7bb288f
 $_MODULE['<{younitedpay}prestashop>status-and-headers_b94a2d033c4622182e9d15e22e9b2db2'] = 'Requisitos del módulo';
 $_MODULE['<{younitedpay}prestashop>status-and-headers_8a7935c8f82f4e8d0d85653cdc4dbaa4'] = 'Para asegurar el correcto funcionamiento del módulo, por favor, revise los siguientes requisitos técnicos ';
 $_MODULE['<{younitedpay}prestashop>maturities_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Mostrar la barra de cuotas mensuales';
+$_MODULE['<{younitedpay}prestashop>maturities_e2d8ca39625f15fff61bd1b1712bb2ec'] = 'Mostrar las opciones de pago de 2x a 4x';
+$_MODULE['<{younitedpay}prestashop>maturities_a978affac46bb510faaad47968050058'] = 'Mostrar las opciones de financiación de 6x a 84x';
 $_MODULE['<{younitedpay}prestashop>maturities_f687884e668b470bc99c21e4c1d70223'] = 'Cuotas desde';
 $_MODULE['<{younitedpay}prestashop>maturities_3501c7e67e0150900b3671b71c9e567e'] = ' a ';
+$_MODULE['<{younitedpay}prestashop>maturities_d16dd01adf735ed9b87eebff5fc39ce5'] = 'Intervalo';
 $_MODULE['<{younitedpay}prestashop>maturities_baabebfcf84c5ae2acaa090069338d5b'] = 'Importe mínimo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturities_4aa18d44fa952449a50dbaaa9b82441b'] = 'Importe máximo (con impuestos)';
 $_MODULE['<{younitedpay}prestashop>maturities_b10e24496ff8fec66189548a92a67045'] = 'Infinito';
