@@ -174,9 +174,6 @@ class ConfigService
                 }
                 foreach ($response['response'] as $oneOffer) {
                     $maturity = (int) $oneOffer->getMaturityInMonths();
-                    if ($maturity < 5) {
-                        ++$maturity;
-                    }
                     if (in_array($maturity, $maturityList) === false) {
                         $maturityList[] = $maturity;
                     }

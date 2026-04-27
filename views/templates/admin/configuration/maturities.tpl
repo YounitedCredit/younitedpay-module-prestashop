@@ -42,6 +42,7 @@
         </label>
         <div class="col-lg-7 ml-3 align-item-center" id="younitedpay_maturities">
             {foreach from=$configuration.maturities item=maturity key=key}
+                {if $maturity.type == 'L'}{continue}{/if}
                 {include file="./maturity.tpl" maturity=$maturity maturitylist=$configuration.maturitylist maturityType='SplitPayment' key=$key}
             {/foreach}
         </div>
@@ -153,6 +154,7 @@
         </label>
         <div class="col-lg-7 ml-3 align-item-center" id="younitedpay_maturities">
             {foreach from=$configuration.maturities item=maturity key=key}
+                {if $maturity.type == 'S'}{continue}{/if}
                 {include file="./maturity.tpl" maturity=$maturity maturitylist=$configuration.maturitylist maturityType='LoanPayment' key=$key}
             {/foreach}
         </div>
