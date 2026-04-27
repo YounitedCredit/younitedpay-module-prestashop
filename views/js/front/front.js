@@ -66,20 +66,36 @@ function YpchangeInstallment(key, maturity = 0)
     var totalAmount = maturityZone.attr('data-totalamount');
     var interestTotal = maturityZone.attr('data-interesttotal');
     var downPaymentAmount = maturityZone.attr('data-downpayment');
-    if (parseInt(downPaymentAmount) <= 0) {
-        $('#yp_buy_now').css('visibility', 'visible');
-        $('.yp-down-amount').parent().parent().addClass('hidden');
-    } else {
-        $('.yp-down-amount').parent().parent().removeClass('hidden');
-        $('#yp_buy_now').css('visibility', 'hidden');
-    }
     var infoInstallmentMaturity = currentMaturity + 'x';
+
+    if (younitedpay.type === 'LoanPayment') {
+        if (parseInt(downPaymentAmount) <= 0) {
+            $('.yp-down-amount-parent').addClass('hidden');
+            $('.yp-not-down-amount-parent').removeClass('hidden');
+        } else {
+            $('.yp-down-amount-parent').removeClass('hidden');
+            $('.yp-not-down-amount-parent').addClass('hidden');
+        }
+    }
+
+    if (younitedpay.type === 'SplitPayment') {
+        if (parseFloat(interestTotal) > 0) {
+            $('.yp-down-amount-parent').addClass('hidden');
+            $('.yp-not-down-amount-parent').removeClass('hidden');
+            $('.yp-fees-text').addClass('hidden');
+        } else {
+            $('.yp-down-amount-parent').removeClass('hidden');
+            $('.yp-not-down-amount-parent').addClass('hidden');
+            $('.yp-fees-text').removeClass('hidden');
+        }
+    }
 
     $('.maturity_installment').removeClass('yp-bg-black-btn');
     $('.maturity_installment' + key).addClass('yp-bg-black-btn');
 
     $('.yp-install-amount').text(infoInstallmentAmount + " €");
     $('.yp-install-maturity').text(infoInstallmentMaturity);
+    $('.yp-maturity').text(currentMaturity);
     $('.yp-tdf').text(tdf);
     $('.yp-taeg').text(taeg);
     $('.yp-total').text(totalAmount);

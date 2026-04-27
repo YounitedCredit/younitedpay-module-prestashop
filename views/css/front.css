@@ -28,8 +28,7 @@
    font-style: normal;
    font-weight: 700;
    line-height: 150%; /* 21px */
-   border-radius: 999px;
-   background: #DEE2E6;
+   border-radius: 8px;
    cursor:pointer;
 }
 
@@ -173,7 +172,7 @@
     outline: 5px auto -webkit-focus-ring-color
 }
 
-.yp-right .younited_btnhide {    
+.yp-right .younited_btnhide {
     padding: 10px 12px !important;
     border-radius: 4px;
     border: 1px solid #1C1C1C;
@@ -194,7 +193,7 @@
     padding: 0
 }
 
-.younitedpay-widget-root html {    
+.younitedpay-widget-root html {
     line-height: 1.5
 }
 
@@ -436,6 +435,11 @@
   border-color: black!important;
 }
 
+.yp-low-grey-text {
+    color: rgb(102, 102, 102) !important;
+    font-size: 0.8rem !important;
+}
+
 .yp-pol-white {
   color: white!important;
 }
@@ -482,6 +486,10 @@
 
 .yp-rounded-bg {
     border-radius: 8px !important
+}
+
+.yp-rounded-xxl {
+    border-radius: 24px !important
 }
 
 .yp-border {
@@ -1165,10 +1173,10 @@
 }
 
 .yp-linumber {
-    background-color: #c5a1fe;
-    color: #564c5d;
+    color: black !important;
     padding: 8px 14px!important;
     margin-right: 12px!important;
+    font-weight: 600 !important;
 }
 
 .plan-pill-multiplier {
@@ -1242,7 +1250,7 @@
     .md\:yp-h-580 {
         height: auto !important
     }
-    
+
     .yp-mobile {
         display:none!important;
     }
@@ -1335,7 +1343,7 @@
     border: 1px solid #1C1C1C;
 }
 
-.yp-plus, .yp-minus {    
+.yp-plus, .yp-minus {
     border-radius: 16px;
     background: #C5A1FE !important;
     color: white !important;
@@ -1381,7 +1389,7 @@ input[type=range].yp-custom-range::-ms-thumb {
 
 input[type=range].yp-custom-range::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none; 
+    appearance: none;
     width: 24px;
     height: 24px;
     border: none;
@@ -1397,7 +1405,7 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
     .yp-font-normal {
         font-size: 14px;
     }
-    .yp-right .younited_btnhide {    
+    .yp-right .younited_btnhide {
         width:100%;
     }
     .yp-popup-logo img {
@@ -1411,7 +1419,7 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
         width: 32px;
         height: 32px;
     }
-    
+
     input[type=range].yp-custom-range::-webkit-slider-thumb {
         width: 32px;
         height: 32px;
