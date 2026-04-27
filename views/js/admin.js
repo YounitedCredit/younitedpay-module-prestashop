@@ -53,8 +53,10 @@ document.onreadystatechange = function() {
             return;
         }
         webHookTestLaunched = true;
+        const countryCode = $(this).attr('data-test-country');
         var formData = new FormData();
-        formData.append('testWebHookURL', $('[data-test-url]').attr('data-test-url'));
+        formData.append('testWebHookURL', $(this).attr('data-test-url'));
+        formData.append('country', countryCode);
 
         $.ajax({
             type: "POST",
@@ -86,10 +88,10 @@ document.onreadystatechange = function() {
                         location: 'br'
                     });
                 }
-                $('[data-test-webhook-result] i').css('color', color);
-                $('[data-test-webhook-result] i').text(success);
-                $('[data-test-webhook-result] i').attr('title', `Status: ${response.status} - Message: ${response.response}`);
-                $('[data-test-webhook-result]').show();
+                $(this).find('i').css('color', color);
+                $(this).find('i').text(success);
+                $(this).find('i').attr('title', `Status: ${response.status} - Message: ${response.response}`);
+                $(this).show();
                 console.log(response);
                 console.log(response.success);
                 console.log(response.status);

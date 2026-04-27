@@ -168,7 +168,7 @@ class OrderService
         $body = (new RefundPayment())
                 ->setPaymentId($younitedContract->payment_id)
                 ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
-                ->setIdempotencyKey($refContract);
+                ->setIdempotencyKey($younitedContract->id_cart . '-' . $refContract . '-' . date('Ymdhi'));
 
         $request = new RefundPaymentRequest();
 

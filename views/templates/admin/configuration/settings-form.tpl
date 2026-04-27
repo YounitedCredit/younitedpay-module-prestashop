@@ -260,17 +260,13 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group mt-2 row">
+                    {foreach from=$configuration.available_countries item='available_country'}
+                    <div class="form-group mt-2 row{if $configuration.country_code != $available_country} hidden{/if}" data-country-zone-{$available_country}>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="widget_info">
                             {l s='Test Webhook Integration' mod='younitedpay'}
                         </label>
                         <div class="col-lg-6 align-item-center input-group">
                             <input type="text" disabled class="form-control
-                                {if $configuration.show_monthly === 0}
-                                    widget_disabled
-                                {else}
-                                    widget_enabled
-                                {/if}"
                                    style="border-right:none;font-weight:bold;" data-month id="widget_input"
                                    value="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
                                    title="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}" />
@@ -285,7 +281,8 @@
                             </div>
                             <div class="input-group-append">
                                 <span class="input-group-text"
-                                      data-test-url="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
+                                      data-test-url="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}&country_code={$available_country|escape:'htmlall':'UTF-8'}"
+                                      data-test-country="{$available_country|escape:'htmlall':'UTF-8'}"
                                       data-test-webhook style="border-left:none;"
                                       title="{l s='Test the notification' mod='younitedpay'}">
                                     <i class="material-icons input-group-text btn"
@@ -299,6 +296,7 @@
                             </div>
                         </div>
                     </div>
+                    {/foreach}
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

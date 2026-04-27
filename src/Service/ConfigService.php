@@ -410,7 +410,8 @@ class ConfigService
 
     public function testWebhook()
     {
-        $client = new YounitedClient($this->context->shop->id, $this->context->language->id);
+        $country = \Tools::getValue('country');
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $country);
 
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return false;

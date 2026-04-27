@@ -168,7 +168,7 @@ class HookAdminOrder extends AbstractHook
 
         /** @var PaymentService $paymentService */
         $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
-        $paymentService->updateMerchantReference($younitedContract->payment_id, $order);
+        $paymentService->updateMerchantReference($younitedContract, $order);
 
         $loggerService->addLogAPI(
             sprintf(

@@ -50,16 +50,21 @@ class HookPayment extends AbstractHook
 
     public function paymentOptions($params)
     {
+        /** @var LoggerService $loggerservice */
+        $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
+
         $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
         $country = new \Country($customerAdressInvoice->id_country);
         $langId = (int) \Language::getIdByIso($country->iso_code);
 
         if (false === in_array(strtoupper($country->iso_code), Younitedpay::AVAILABLE_COUNTRIES)) {
+            $loggerservice->addLogAPI('Country not available: ' . strtoupper($country->iso_code), 'Info', $this);
             return [];
         }
 
-        $client = new YounitedClient(Context::getContext()->shop->id, $langId);
+        $client = new YounitedClient(Context::getContext()->shop->id, $langId, [], strtoupper($country->iso_code));
         if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
+            $loggerservice->addLogAPI('Credentials not set or shopcode empty', 'Info', $this);
             return [];
         }
 
@@ -68,9 +73,6 @@ class HookPayment extends AbstractHook
 
         /** @var PaymentService $paymentservice */
         $paymentservice = ServiceContainer::getInstance()->get(PaymentService::class);
-
-        /** @var LoggerService $loggerservice */
-        $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
 
         $errorMessage = [];
 
