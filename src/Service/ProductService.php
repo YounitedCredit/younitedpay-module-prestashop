@@ -29,8 +29,8 @@ use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ToolsYounited;
 use YounitedPaySDK\Model\NewAPI\GetOffers;
-use YounitedPaySDK\Model\OfferItem;
-use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
+use YounitedPaySDK\Model\NewAPI\PaymentOptionItem;
+use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 
 class ProductService
 {
@@ -131,14 +131,15 @@ class ProductService
             $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount((string) $productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
-            } elseif (isset($configMaturities['Range'])) {
+            }
+            if (isset($configMaturities['Range'])) {
                 $body
                     ->setMaturityRangeStep($configMaturities['Range']['Step'])
                     ->setMaturityRangeMin($configMaturities['Range']['Min'])
                     ->setMaturityRangeMax($configMaturities['Range']['Max']);
             }
 
-            $request = new GetOffersRequest();
+            $request = new GetPaymentOptionsRequest();
 
             try {
                 $response = $client->sendRequest($body, $request);
@@ -262,12 +263,12 @@ class ProductService
         $validOffers = [];
         $maturitiesIn = [];
         foreach ($offers as $offer) {
-            /** @var OfferItem $offer */
+            /** @var PaymentOptionItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
             if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
                 continue;
             }
-            if ($maturityIn < 6) {
+            if ($offer->getDownPaymentAmount() > 0) {
                 ++$maturityIn;
             }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
@@ -312,7 +313,7 @@ class ProductService
     /**
      * Return offer for templates
      */
-    protected function returnOffer(OfferItem $offer)
+    protected function returnOffer(PaymentOptionItem $offer)
     {
         $data = [
             'maturity' => (int) $offer->getMaturityInMonths(),
@@ -323,8 +324,9 @@ class ProductService
             'interest_total' => ToolsYounited::formatPrice($offer->getInterestsTotalAmount()),
             'taeg' => ToolsYounited::formatPrice($offer->getAnnualPercentageRate()),
             'tdf' => ToolsYounited::formatPrice($offer->getAnnualDebitRate()),
+            'type' => $offer->getType(),
         ];
-        if ($data['maturity'] < 6) {
+        if ($offer->getDownPaymentAmount() > 0) {
             ++$data['maturity'];
             $data['total_amount'] = $data['initial_amount'];
             $data['initial_amount'] = ToolsYounited::formatPrice($offer->getCreditTotalAmount());

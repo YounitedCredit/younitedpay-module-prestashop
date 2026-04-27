@@ -60,6 +60,7 @@ function YpchangeInstallment(key, maturity = 0)
     var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
     var infoInstallmentAmount = maturityZone.attr('data-amount');
     var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
+    var type = maturityZone.attr('data-type');
     var initialAmount = maturityZone.attr('data-initamount');
     var taeg = maturityZone.attr('data-taeg');
     var tdf = maturityZone.attr('data-tdf');
@@ -106,13 +107,16 @@ function YpchangeInstallment(key, maturity = 0)
     $('.yp-custom-range').val(currentMaturity);
     $('.yp-install-maturity-lite').text(currentMaturity);
 
-    ypUpdatePaymentURL(currentMaturity);
+    ypUpdatePaymentURL(currentMaturity, parseInt(downPaymentAmount) > 0, type);
 }
 
-function ypUpdatePaymentURL(maturity)
+function ypUpdatePaymentURL(maturity, withDownPayment = false, type = 'PersonalLoan')
 {
     if (typeof younitedpay.url_payment !== 'undefined') {
-        var link = younitedpay.url_payment + '&maturity=' + maturity;
+        var link = younitedpay.url_payment + '&maturity=' + maturity + '&type=' + type;
+        if (withDownPayment === true) {
+            link += '&down_payment=1';
+        }
         $('form').each((index, form) => {
             var action = $(form).attr('action');
             if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {

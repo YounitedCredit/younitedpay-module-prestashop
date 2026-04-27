@@ -34,7 +34,7 @@ use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Model\NewAPI\GetOffers;
 use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
 use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
-use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
+use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 use YounitedPaySDK\Request\NewAPI\ShopsRequest;
 use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
 
@@ -159,7 +159,8 @@ class ConfigService
                 ->setMaturityRangeMin(1)
                 ->setMaturityRangeMax(84);
 
-            $request = new GetOffersRequest();
+        $request = new GetPaymentOptionsRequest();
+        $maturityList = self::DEF_MATURITIES;
 
             if (empty($client->shopCode) === false) {
                 /** @var mixed $response */
