@@ -27,6 +27,9 @@ use ObjectModel;
 
 class YounitedPayAvailability extends ObjectModel
 {
+    const TYPE_LOAN_PAYMENT = 'L';
+    const TYPE_SPLIT_PAYMENT = 'S';
+
     /** @var int */
     public $id_younitedpay_configuration;
 
@@ -44,6 +47,9 @@ class YounitedPayAvailability extends ObjectModel
 
     /** @var string */
     public $currency;
+
+    /** @var string */
+    public $type;
 
     /**
      * @see ObjectModel::$definition
@@ -76,6 +82,11 @@ class YounitedPayAvailability extends ObjectModel
             'currency' => [
                 'type' => self::TYPE_STRING,
                 'required' => true,
+            ],
+            'type' => [
+                'type' => self::TYPE_STRING,
+                'required' => true,
+                'default' => self::TYPE_LOAN_PAYMENT,
             ],
         ],
     ];

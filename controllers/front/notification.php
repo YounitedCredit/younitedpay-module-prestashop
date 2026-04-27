@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\LoggerService;
 use YounitedpayAddon\Service\OrderService;
 use YounitedpayAddon\Service\PaymentService;
@@ -40,6 +41,12 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
     /** @var LoggerService */
     public $loggerService;
+
+    /** @var PaymentService */
+    public $paymentService;
+
+    /** @var YounitedPayContract */
+    public $younitedContract;
 
     /** @var string */
     private $paymentId;
@@ -63,27 +70,6 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
-        /* @var LoggerService */
-        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
-
-        $idShop = $this->context->shop->id;
-        $isProduction = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
-        $suffix = $isProduction === true ? '_PRODUCTION' : '';
-        $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
-        $webhook = new Webhook($webHookSecret);
-        if ($webhook->getErrorResponse() !== false) {
-            $this->endResponse($webhook->getErrorResponse());
-        }
-
-        /** @var YounitedPaySDK\Model\Webhook\EventNotification */
-        $webhookNotification = $webhook->getEventNotification();
-
-        if (empty($webhookNotification)) {
-            $this->endResponse('400 - No parameter caught on webhook', false);
-        }
-
-        $this->loggerService->addLogAPI(json_encode($webhookNotification->jsonSerialize()), 'Info', $this);
-
         $idCart = (int) Tools::getValue('id_cart');
 
         $cart = new Cart($idCart);
@@ -91,6 +77,43 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         if (Tools::getValue('id_cart') === 'test_webhook') {
             $this->endResponse('200 - Test complete ! Well done!');
         }
+
+        /* @var LoggerService */
+        $this->loggerService = ServiceContainer::getInstance()->get(LoggerService::class);
+
+        /* @var PaymentService $this->paymentService */
+        $this->paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
+
+        /* @var YounitedPayContract $this->younitedContract */
+        $this->younitedContract = $this->paymentService->getContractByCart($idCart);
+
+        if ((int) $this->younitedContract->id_order <= 0) {
+            $this->endResponse('Error on contract activation, no order found with this cart (ID ' . $idCart . ')');
+        }
+
+        $this->younitedContract = $this->paymentService->getContractByCart($idCart);
+        $isoCodeSuffix = '_' . strtoupper($this->younitedContract->country_code);
+
+        $idShop = $this->context->shop->id;
+        $isProduction = (bool) \Configuration::get(Younitedpay::PRODUCTION_MODE . $isoCodeSuffix, null, null, $idShop);
+        $suffix = $isProduction === true ? '_PRODUCTION' : '';
+        $suffix .= $isoCodeSuffix;
+
+        $webHookSecret = \Configuration::get(Younitedpay::WEBHOOK_SECRET . $suffix, null, null, $idShop);
+        $webhook = new Webhook($webHookSecret);
+
+        if ($webhook->getErrorResponse() !== false) {
+            $this->endResponse($webhook->getErrorResponse());
+        }
+
+        /** @var YounitedPaySDK\Model\Webhook\EventNotification $webhookNotification */
+        $webhookNotification = $webhook->getEventNotification();
+
+        if (empty($webhookNotification)) {
+            $this->endResponse('400 - No parameter caught on webhook', false);
+        }
+
+        $this->loggerService->addLogAPI(json_encode($webhookNotification->jsonSerialize()), 'Info', $this);
 
         if (Validate::isLoadedObject($cart) === false
             || $this->module->active == 0
@@ -166,25 +189,23 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
         /** @var OrderService $orderService */
         $orderService = ServiceContainer::getInstance()->get(OrderService::class);
 
-        /** @var PaymentService $paymentService */
-        $paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
+        /* @var PaymentService $this->paymentService */
+        $this->paymentService = ServiceContainer::getInstance()->get(PaymentService::class);
 
-        $younitedContract = $paymentService->getContractByCart($idCart);
-
-        if ((int) $younitedContract->id_order <= 0) {
+        if ((int) $this->younitedContract->id_order <= 0) {
             $this->endResponse('200 - Error on contract activation, no order found with this cart (ID ' . $idCart . ')');
         }
 
-        if ($younitedContract->payment_id !== $this->paymentId) {
+        if ($this->younitedContract->payment_id !== $this->paymentId) {
             $this->endResponse(sprintf(
                 '200 - PaymentId is not anymore on this Cart - IdCart: %s - paymentId: %s - cart paymentId: %s',
                 $idCart,
                 $this->paymentId,
-                $younitedContract->payment_id
+                $this->younitedContract->payment_id
             ));
         }
 
-        $order = new Order($younitedContract->id_order);
+        $order = new Order($this->younitedContract->id_order);
 
         if ($updateType === 'cancel') {
             $newIdState = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');

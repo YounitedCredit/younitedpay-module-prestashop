@@ -73,6 +73,12 @@ class YounitedPayContract extends ObjectModel
     public $api_version;
 
     /** @var string */
+    public $client_id;
+
+    /** @var string */
+    public $country_code;
+
+    /** @var string */
     public $date_add;
 
     /** @var string */
@@ -146,6 +152,14 @@ class YounitedPayContract extends ObjectModel
                 'scale' => 2,
             ],
             'api_version' => [
+                'type' => self::TYPE_STRING,
+                'required' => false,
+            ],
+            'client_id' => [
+                'type' => self::TYPE_STRING,
+                'required' => false,
+            ],
+            'country_code' => [
                 'type' => self::TYPE_STRING,
                 'required' => false,
             ],

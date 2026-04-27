@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2022 Younited Credit
  *
@@ -52,8 +53,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
      *
      * @var array
      */
-    public $controllers = [
-    ];
+    public $controllers = [];
 
     /**
      * List of objectModel used in this Module
@@ -130,6 +130,8 @@ class Younitedpay extends PaymentModule implements WidgetInterface
         ],
     ];
 
+    /* DEFAULT CONFIG */
+
     const CLIENT_SECRET = 'YOUNITEDPAY_CLIENT_SECRET';
 
     const CLIENT_ID = 'YOUNITEDPAY_CLIENT_ID';
@@ -152,6 +154,84 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const WEBHOOK_SECRET_PRODUCTION = 'YOUNITEDPAY_WEBHOOK_SECRET_PRODUCTION';
 
+    /* FR CONFIG */
+
+    const CLIENT_SECRET_FR = 'YOUNITEDPAY_CLIENT_SECRET_FR';
+
+    const CLIENT_ID_FR = 'YOUNITEDPAY_CLIENT_ID_FR';
+
+    const SHOP_CODE_FR = 'YOUNITEDPAY_SHOP_CODE_FR';
+
+    const CLIENT_SECRET_PRODUCTION_FR = 'YOUNITEDPAY_CLIENT_SECRET_PRODUCTION_FR';
+
+    const CLIENT_ID_PRODUCTION_FR = 'YOUNITEDPAY_CLIENT_ID_PRODUCTION_FR';
+
+    const SHOP_CODE_PRODUCTION_FR = 'YOUNITEDPAY_SHOP_CODE_PRODUCTION_FR';
+
+    const PRODUCTION_MODE_FR = 'YOUNITEDPAY_PRODUCTION_MODE_FR';
+
+    const OAUTH_TOKEN_FR = 'YOUNITEDPAY_OAUTH_TOKEN_FR';
+
+    const ORDER_STATE_DELIVERED_FR = 'YOUNITEDPAY_ORDER_STATE_DELIVERED_FR';
+
+    const WEBHOOK_SECRET_FR = 'YOUNITEDPAY_WEBHOOK_SECRET_FR';
+
+    const WEBHOOK_SECRET_PRODUCTION_FR = 'YOUNITEDPAY_WEBHOOK_SECRET_PRODUCTION_FR';
+
+    /* IT CONFIG */
+
+    const CLIENT_SECRET_IT = 'YOUNITEDPAY_CLIENT_SECRET_IT';
+
+    const CLIENT_ID_IT = 'YOUNITEDPAY_CLIENT_ID_IT';
+
+    const SHOP_CODE_IT = 'YOUNITEDPAY_SHOP_CODE_IT';
+
+    const CLIENT_SECRET_PRODUCTION_IT = 'YOUNITEDPAY_CLIENT_SECRET_PRODUCTION_IT';
+
+    const CLIENT_ID_PRODUCTION_IT = 'YOUNITEDPAY_CLIENT_ID_PRODUCTION_IT';
+
+    const SHOP_CODE_PRODUCTION_IT = 'YOUNITEDPAY_SHOP_CODE_PRODUCTION_IT';
+
+    const PRODUCTION_MODE_IT = 'YOUNITEDPAY_PRODUCTION_MODE_IT';
+
+    const OAUTH_TOKEN_IT = 'YOUNITEDPAY_OAUTH_TOKEN_IT';
+
+    const ORDER_STATE_DELIVERED_IT = 'YOUNITEDPAY_ORDER_STATE_DELIVERED_IT';
+
+    const WEBHOOK_SECRET_IT = 'YOUNITEDPAY_WEBHOOK_SECRET_IT';
+
+    const WEBHOOK_SECRET_PRODUCTION_IT = 'YOUNITEDPAY_WEBHOOK_SECRET_PRODUCTION_IT';
+
+    /* ES CONFIG */
+
+    const CLIENT_SECRET_ES = 'YOUNITEDPAY_CLIENT_SECRET_ES';
+
+    const CLIENT_ID_ES = 'YOUNITEDPAY_CLIENT_ID_ES';
+
+    const SHOP_CODE_ES = 'YOUNITEDPAY_SHOP_CODE_ES';
+
+    const CLIENT_SECRET_PRODUCTION_ES = 'YOUNITEDPAY_CLIENT_SECRET_PRODUCTION_ES';
+
+    const CLIENT_ID_PRODUCTION_ES = 'YOUNITEDPAY_CLIENT_ID_PRODUCTION_ES';
+
+    const SHOP_CODE_PRODUCTION_ES = 'YOUNITEDPAY_SHOP_CODE_PRODUCTION_ES';
+
+    const PRODUCTION_MODE_ES = 'YOUNITEDPAY_PRODUCTION_MODE_ES';
+
+    const OAUTH_TOKEN_ES = 'YOUNITEDPAY_OAUTH_TOKEN_ES';
+
+    const ORDER_STATE_DELIVERED_ES = 'YOUNITEDPAY_ORDER_STATE_DELIVERED_ES';
+
+    const WEBHOOK_SECRET_ES = 'YOUNITEDPAY_WEBHOOK_SECRET_ES';
+
+    const WEBHOOK_SECRET_PRODUCTION_ES = 'YOUNITEDPAY_WEBHOOK_SECRET_PRODUCTION_ES';
+
+    /* GENERAL CONFIG */
+
+    const DEFAULT_COUNTRY_CODE = 'YOUNITEDPAY_DEFAULT_COUNTRY_CODE';
+
+    const COUNTRY_CODE = 'YOUNITEDPAY_COUNTRY_CODE';
+
     const FRONT_HOOK = 'YOUNITEDPAY_FRONT_HOOK';
 
     const FRONT_HOOK_CART = 'YOUNITEDPAY_FRONT_HOOK_CART';
@@ -165,6 +245,12 @@ class Younitedpay extends PaymentModule implements WidgetInterface
     const IS_FILE_LOGGER_ACTIVE = 'YOUNITEDPAY_IS_FILE_LOGGER_ACTIVE';
 
     const SHOW_RANGE_OFFERS = 'YOUNITEDPAY_SHOW_RANGE_OFFERS';
+
+    const SHOW_SPLIT_PAYMENT = 'YOUNITEDPAY_SHOW_SPLIT_PAYMENT';
+
+    const SHOW_LOAN_PAYMENT = 'YOUNITEDPAY_SHOW_LOAN_PAYMENT';
+
+    const INTERVAL_RANGE_OFFERS = 'YOUNITEDPAY_INTERVAL_RANGE_OFFERS';
 
     const SHOW_WIDGET_BORDERS = 'YOUNITEDPAY_SHOW_WIDGET_BORDERS';
 
@@ -182,8 +268,16 @@ class Younitedpay extends PaymentModule implements WidgetInterface
 
     const USE_NEW_API = 'YOUNITEDPAY_USE_NEW_API';
 
+    const NEED_TO_CLEAR_CACHE = 'YOUNITEDPAY_NEED_TO_CLEAR_CACHE';
+
     const AVAILABLE_CURRENCIES = [
         'EUR',
+    ];
+
+    const AVAILABLE_COUNTRIES = [
+        'FR',
+        'IT',
+        'ES',
     ];
 
     public function __construct()
@@ -312,9 +406,10 @@ class Younitedpay extends PaymentModule implements WidgetInterface
      */
     public function __call($name, $arguments)
     {
-        if ($result = $this->handleExtensionsHook($name,
-            !empty($arguments[0]) ? $arguments[0] : [])
-        ) {
+        if ($result = $this->handleExtensionsHook(
+            $name,
+            !empty($arguments[0]) ? $arguments[0] : []
+        )) {
             if (false === empty($result)) {
                 return $result;
             }

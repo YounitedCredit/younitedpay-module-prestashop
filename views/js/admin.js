@@ -30,8 +30,15 @@ document.onreadystatechange = function() {
         // If we are on the configuration of help admin controller - not on orders
         $('#content').removeClass('bootstrap').addClass('nobootstrap');
     }
+
+    var countries = [];
+    $("#country_code option").each(function () {
+        countries.push($(this).val().toLowerCase());
+    });
+
     addEventsMaturity();
-    addDoubleListEvent();    
+    addDoubleListEvent();
+    addCountryEvent(countries);
     $('#younitedpay_maturitybtn').click(function(e) {
         addMaturity(e);
     });
@@ -87,14 +94,45 @@ document.onreadystatechange = function() {
                 console.log(response.success);
                 console.log(response.status);
             }
-        });      
+        });
     });
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);
-    $('#younitedpay_prod_switch').click(YounitedhideZoneTest);
     $('#show_ranges_switch').click(updateShowHideRanges);
+    $('#show_split_payment_switch').click(updateShowHideSplitPayment);
+    $('#show_loan_payment_switch').click(updateShowHideLoanPayment);
+    countries.forEach(function (country) {
+        $('#younitedpay_prod_switch_' + country).click(() => YounitedhideZoneTest(country));
+    });
     younitedEvents = true;
 };
+
+function addCountryEvent(countries)
+{
+    $('#country_code').on('change', () => updateShowCountryConfig(countries));
+}
+
+function updateShowCountryConfig(countries) {
+    let countrySelected = $('#country_code').val().toLowerCase();
+    let zoneToShow = [], zoneToHide = [];
+    countries.forEach(function (country) {
+        if (countrySelected === country) {
+            zoneToShow.push('data-country-zone-' + country);
+        } else {
+            zoneToHide.push('data-country-zone-' + country);
+        }
+    });
+
+    zoneToShow.forEach(function (zone) {
+        $('div [' + zone + ']').removeClass('hidden');
+    });
+
+    zoneToHide.forEach(function (zone) {
+        $('div [' + zone + ']').addClass('hidden');
+    });
+
+    YounitedhideZoneTest(countrySelected);
+}
 
 function updateShowHideRanges() {
     var rangesEnabled = $('#show_ranges_off').not(':checked').length > 0;
@@ -104,6 +142,24 @@ function updateShowHideRanges() {
     } else {
         $('.ranges_min_max').addClass('hidden');
         $('.ranges_not_min_max').removeClass('hidden');
+    }
+}
+
+function updateShowHideSplitPayment() {
+    var splitPaymentEnabled = $('#show_split_payment_off').not(':checked').length > 0;
+    if (splitPaymentEnabled === true) {
+        $('.split-payment-panel').removeClass('hidden');
+    } else {
+        $('.split-payment-panel').addClass('hidden');
+    }
+}
+
+function updateShowHideLoanPayment() {
+    var loanPaymentEnabled = $('#show_loan_payment_off').not(':checked').length > 0;
+    if (loanPaymentEnabled === true) {
+        $('.loan-payment-panel').removeClass('hidden');
+    } else {
+        $('.loan-payment-panel').addClass('hidden');
     }
 }
 
@@ -119,7 +175,7 @@ function ShowRequirements()
     $('#younitedpay_status_min').hide();
 }
 
-function refundYounitedPayEvent() {    
+function refundYounitedPayEvent() {
     var checked = $('#doPartialRefundYounitedPay').is(':checked');
     var errorDisplay = false;
     if (checked === true) {
@@ -141,7 +197,7 @@ function refundYounitedPayEvent() {
     }
 }
 
-function toggleDisabledZone(event) 
+function toggleDisabledZone(event)
 {
     var clickedZone = event.currentTarget;
     var zoneToToggle = $(clickedZone).attr('data-toggle');
@@ -187,7 +243,7 @@ function deleteZoneMaturity()
 }
 
 function addEventsMaturity()
-{    
+{
     $('.younitedpay_delmaturity').off('click');
     $('.younitedpay_delmaturity').click(deleteZoneMaturity);
 
@@ -197,9 +253,9 @@ function addEventsMaturity()
 }
 
 function addMaturity(event)
-{    
+{
   event.preventDefault();
-  
+
   var formData = new FormData();
   formData.append('younitedpay_maturities', younitedpay.maturities);
   formData.append('younitedpay_add_maturity', true);
@@ -216,9 +272,9 @@ function addMaturity(event)
         $("#younitedpay_maturities").append( response );
         addEventsMaturity();
         updateShowHideRanges();
-        younitedpay.maturities += 1;  
+        younitedpay.maturities += 1;
     }
-  });      
+  });
 }
 
 function UpdateMaturity()
@@ -226,9 +282,9 @@ function UpdateMaturity()
     try {
         var targetObject = $(this)[0];
         var key = parseInt(targetObject.getAttribute('data-id'));
-        
+
         var maturity = parseInt($('#maturity' + key).val());
-        
+
         var minAmountVal = $('#min_amount_input_' + key).val();
         $('#min_amount_' + key).html((minAmountVal / maturity).toFixed(2));
 
@@ -320,13 +376,14 @@ function statutorder_doubleListUpdate(doubleList)
     });
 }
 
-function YounitedhideZoneTest() {
-    var valTest = $('#production_mode_on').not(':checked').length > 0;
-    var zoneToShow = 'data-test-zone';
-    var zoneToHide = 'data-prod-zone';
+function YounitedhideZoneTest(country)
+{
+    var valTest = $('#production_mode_on_' + country).not(':checked').length > 0;
+    var zoneToShow = 'data-test-zone-' + country;
+    var zoneToHide = 'data-prod-zone-' + country;
     if (valTest === false) {
-        zoneToShow = 'data-prod-zone';
-        zoneToHide = 'data-test-zone';
+        zoneToShow = 'data-prod-zone-' + country;
+        zoneToHide = 'data-test-zone-' + country;
     }
     $('div [' + zoneToShow + ']').removeClass('hidden');
     $('div [' + zoneToHide + ']').addClass('hidden');

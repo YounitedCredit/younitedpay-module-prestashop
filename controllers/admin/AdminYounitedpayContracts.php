@@ -68,6 +68,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
             'withdrawn_date' => ['title' => $this->l('Withdrawn date')],
             'withdrawn_amount' => ['title' => $this->l('Withdrawn amount')],
             'api_version' => ['title' => $this->l('API Version')],
+            'country_code' => ['title' => $this->l('Country code')],
         ];
     }
 
@@ -105,7 +106,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
             }
         }
 
-        $api = $paymentService->getApiPaymentById($younitedContract->payment_id);
+        $api = $paymentService->getApiPaymentById($younitedContract->payment_id, $younitedContract->id_cart);
 
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);

@@ -20,6 +20,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -41,34 +42,34 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var bool Is bootstrap enabled */
     public $bootstrap = false;
 
-    /** @var string */
+    /** @var array */
     public $clientID;
 
-    /** @var string */
+    /** @var array */
     public $clientSecret;
 
-    /** @var mixed */
+    /** @var array */
     public $shopCodeList;
 
-    /** @var string */
+    /** @var array */
     public $shopCode;
 
-    /** @var string */
+    /** @var array */
     public $clientIDProduction;
 
-    /** @var string */
+    /** @var array */
     public $clientSecretProduction;
 
-    /** @var string */
+    /** @var array */
     public $shopCodeProduction;
 
-    /** @var string */
+    /** @var array */
     public $webHookSecret;
 
-    /** @var string */
+    /** @var array */
     public $webHookSecretProduction;
 
-    /** @var bool */
+    /** @var array */
     public $isProductionMode;
 
     /** @var string */
@@ -84,10 +85,19 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     public $showRangeOffers;
 
     /** @var bool */
+    public $showSplitPayment;
+
+    /** @var bool */
+    public $showLoanPayment;
+
+    /** @var bool */
     public $widgetBorders;
 
     /** @var bool */
     public $webHookOrders;
+
+    /** @var int */
+    public $intervalRangeOffers;
 
     /** @var int */
     public $minRangeOffers;
@@ -106,6 +116,15 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     /** @var array */
     public $maturitylist;
+
+    /** @var string */
+    public $countryCode;
+
+    /** @var string */
+    public $defaultCountryCode;
+
+    /** @var array */
+    public $availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
 
     const ALLOWED_FRONT_PRODUCT_HOOKS = [
         'disabled',
@@ -140,6 +159,17 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     public function initContent()
     {
+        if (Configuration::get(Younitedpay::NEED_TO_CLEAR_CACHE, null, null, null, false)) {
+            $cacheStorage = new CacheYounited();
+            $cacheStorage->setExpiry(null);
+            $cacheStorage->set('need_clear_cache', [
+                'value' => true,
+                'from_version' => $this->module->version,
+                'time' => date('c'),
+            ]);
+            Configuration::updateValue(Younitedpay::NEED_TO_CLEAR_CACHE, false);
+        }
+
         $langParameter = Tools::getValue('lang', null);
         $prevLanguage = $this->context->language;
         if ($langParameter !== null) {
@@ -177,29 +207,28 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         $productionMode = Younitedpay::PRODUCTION_MODE;
         $ipWhiteList = Younitedpay::IP_WHITELIST_ENABLED;
 
-        $this->clientID = $this->getValue(Younitedpay::CLIENT_ID, $idShop, 'client_id', '');
-        $this->clientIDProduction = $this->getValue(Younitedpay::CLIENT_ID_PRODUCTION, $idShop, 'client_id', '');
-        $this->clientSecret = $this->getValue(Younitedpay::CLIENT_SECRET, $idShop, 'client_secret', '');
-        $this->clientSecretProduction = $this->getValue(
-            Younitedpay::CLIENT_SECRET_PRODUCTION,
-            $idShop,
-            'client_secret',
-            ''
-        );
-        $this->shopCode = $this->getValue(Younitedpay::SHOP_CODE, $idShop, 'shop_code', '');
-        $this->shopCodeProduction = $this->getValue(Younitedpay::SHOP_CODE_PRODUCTION, $idShop, 'shop_code_production', '');
-        $this->webHookSecret = $this->getValue(Younitedpay::WEBHOOK_SECRET, $idShop, 'webhook_secret', '');
-        $this->webHookSecretProduction = $this->getValue(
-            Younitedpay::WEBHOOK_SECRET_PRODUCTION,
-            $idShop,
-            'webhook_secret',
-            ''
-        );
+        foreach ($this->availableCountries as $availableCountry) {
+            $isoCode = strtolower($availableCountry);
+            $this->clientID[$isoCode] = $this->getValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $idShop, 'client_id_' . $isoCode, '');
+            $this->clientIDProduction[$isoCode] = $this->getValue(Younitedpay::CLIENT_ID_PRODUCTION . '_' . $availableCountry, $idShop, 'client_id_production_' . $isoCode, '');
+            $this->clientSecret[$isoCode] = $this->getValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $idShop, 'client_secret' . $isoCode, '');
+            $this->clientSecretProduction[$isoCode] = $this->getValue(Younitedpay::CLIENT_SECRET_PRODUCTION . '_' . $availableCountry, $idShop, 'client_secret_production_' . $isoCode, '');
+            $this->shopCode[$isoCode] = $this->getValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $idShop, 'shop_code_' . $isoCode, '');
+            $this->shopCodeProduction[$isoCode] = $this->getValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $idShop, 'shop_code_production_' . $isoCode, '');
+            $this->webHookSecret[$isoCode] = $this->getValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $idShop, 'webhook_secret_' . $isoCode, '');
+            $this->webHookSecretProduction[$isoCode] = $this->getValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $idShop, 'webhook_secret_production_' . $isoCode, '');
+            $this->isProductionMode[$isoCode] = (bool) $this->getValue($productionMode . '_' . $availableCountry, $idShop, 'production_mode_' . $isoCode, false);
+        }
+
+        $this->defaultCountryCode = $this->getValue(Younitedpay::DEFAULT_COUNTRY_CODE, $idShop, 'default_country_code', 'fr');
+        $this->countryCode = $this->getValue(Younitedpay::COUNTRY_CODE, $idShop, 'country_code', 'fr');
         $this->whitelistIP = $this->getValue(Younitedpay::IP_WHITELIST_CONTENT, $idShop, 'whitelist_ip', '');
-        $this->isProductionMode = (bool) $this->getValue($productionMode, $idShop, 'production_mode', false);
         $this->isWhiteListOn = (bool) $this->getValue($ipWhiteList, $idShop, 'whitelist_on', false);
         $this->isShownMonthly = (int) $this->getValue(Younitedpay::SHOW_MONTHLY, $idShop, 'show_monthly', false);
         $this->showRangeOffers = (bool) $this->getValue(Younitedpay::SHOW_RANGE_OFFERS, $idShop, 'show_ranges', false);
+        $this->showSplitPayment = (bool) $this->getValue(Younitedpay::SHOW_SPLIT_PAYMENT, $idShop, 'show_split_payment', false);
+        $this->showLoanPayment = (bool) $this->getValue(Younitedpay::SHOW_LOAN_PAYMENT, $idShop, 'show_loan_payment', false);
+        $this->intervalRangeOffers = (int) $this->getValue(Younitedpay::INTERVAL_RANGE_OFFERS, $idShop, 'interval_range', 1);
         $this->minRangeOffers = (int) $this->getValue(Younitedpay::MIN_RANGE_OFFERS, $idShop, 'min_ranges', 0);
         $this->maxRangeOffers = (int) $this->getValue(Younitedpay::MAX_RANGE_OFFERS, $idShop, 'max_ranges', 0);
         $defMinRange = false === empty($this->maturitylist) ? $this->maturitylist[0] : 10;
@@ -272,11 +301,36 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'AdminYounitedpayConfiguration'
             );
 
+            $badCountryConfig = $this->module->l(
+                'Error with your credentials, please check the country of the environment (actually %s)',
+                'AdminYounitedpayConfiguration'
+            );
+
             $configurationVariables = $this->getConfigurationVariables();
-            if ($specsVariables['connected'] === false && $configurationVariables['no_config'] === false) {
-                if (in_array('api_error', $specsVariables['status']) === true) {
-                    $this->context->controller->errors[] = $badConfig;
+            foreach ($this->availableCountries as $availableCountry) {
+                $isoCode = strtolower($availableCountry);
+                if ($specsVariables['connected'] === false || $configurationVariables['no_config'] === false) {
+                    if (in_array('api_error', $specsVariables['status'][$isoCode]) === true) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . $badConfig;
+                    }
+                    if (in_array('no_shop_code', $specsVariables['status'][$isoCode]) === true) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . $nokeysTextShopCode;
+                    }
                 }
+                if ($specsVariables['connected'] === true) {
+                    if (in_array('country_code_error', $specsVariables['status'][$isoCode]) === true) {
+                        $this->context->controller->errors[] = '[' . $availableCountry . '] ' . sprintf($badCountryConfig, $specsVariables['merchantCountryCode'][$isoCode]);
+                    }
+                }
+            }
+
+            /** @var CacheYounited $cachestorage */
+            $cachestorage = new CacheYounited();
+            if ($cachestorage->exist('need_clear_cache')) {
+                $this->context->controller->warnings[] = $this->module->l(
+                    'Following the module update, we recommend that you clear your Prestashop cache',
+                    'AdminYounitedpayConfiguration'
+                );
             }
 
             $tplVars = [
@@ -329,11 +383,42 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $this->context->shop->id,
+                'maturity' => 2,
+                'minimum' => 0,
+                'maximum' => 3000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 3,
+                'minimum' => 0,
+                'maximum' => 3000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
+                'maturity' => 4,
+                'minimum' => 0,
+                'maximum' => 3000,
+                'deleted' => 0,
+                'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
+            ],
+            [
+                'id_younitedpay_configuration' => 0,
+                'id_shop' => $this->context->shop->id,
                 'maturity' => 10,
                 'minimum' => 100,
                 'maximum' => 10000,
                 'deleted' => 0,
                 'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_LOAN_PAYMENT,
             ],
             [
                 'id_younitedpay_configuration' => 0,
@@ -343,6 +428,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maximum' => 12000,
                 'deleted' => 0,
                 'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_LOAN_PAYMENT,
             ],
             [
                 'id_younitedpay_configuration' => 0,
@@ -352,6 +438,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'maximum' => 0,
                 'deleted' => 0,
                 'currency' => 'EUR',
+                'type' => YounitedPayAvailability::TYPE_LOAN_PAYMENT,
             ],
         ];
         $this->configService->saveAllMaturities($defaultMaturities, (int) $this->context->shop->id);
@@ -440,6 +527,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'key' => Tools::getValue('younitedpay_maturities', 0),
             'configuration' => [
                 'show_ranges' => $this->showRangeOffers,
+                'show_split_payment' => $this->showSplitPayment,
+                'show_loan_payment' => $this->showLoanPayment,
             ],
             'maturitylist' => $this->maturitylist,
             'maturity' => [
@@ -475,43 +564,55 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
     protected function postAccountSubmit($idShop)
     {
-        $clientID = Tools::getValue('client_id');
-        $clientSecret = Tools::getValue('client_secret');
-        $shopCode = Tools::getValue('shop_code');
-        $webHookSecret = Tools::getValue('webhook_secret');
-        $clientIDProd = Tools::getValue('client_id_production');
-        $clientSecretProd = Tools::getValue('client_secret_production');
-        $shopCodeProd = Tools::getValue('shop_code_production');
-        $webHookSecretProd = Tools::getValue('webhook_secret_production');
-        $ipWhiteList = Tools::getValue('whitelist_ip');
-        $isWhiteListOn = Tools::getValue('whitelist_on');
-        $isProduction = Tools::getValue('production_mode');
-        $webHookOrders = Tools::getValue('webhook_orders');
-        Configuration::updateValue(Younitedpay::CLIENT_ID, $clientID, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::CLIENT_SECRET, $clientSecret, false, null, $idShop);
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
         $cacheExists = $cachestorage->exist('shopCodeList');
-
         if ($cacheExists === true && $cachestorage->isExpired('shopCodeList') === false) {
             $cacheInformations = $cachestorage->get('shopCodeList');
             $this->shopCodeList = json_decode($cacheInformations['content'], true);
         } else {
             $this->shopCodeList = [];
         }
-        if ($shopCode !== false && $this->verifyShopCode($shopCode) !== false) {
-            Configuration::updateValue(Younitedpay::SHOP_CODE, $shopCode, false, null, $idShop);
+
+        foreach ($this->availableCountries as $availableCountry) {
+            $availableCountryCode = strtolower($availableCountry);
+
+            $clientID = Tools::getValue('client_id_' . $availableCountryCode);
+            $clientSecret = Tools::getValue('client_secret_' . $availableCountryCode);
+            $shopCode = Tools::getValue('shop_code_' . $availableCountryCode);
+            $webHookSecret = Tools::getValue('webhook_secret_' . $availableCountryCode);
+            $clientIDProd = Tools::getValue('client_id_production_' . $availableCountryCode);
+            $clientSecretProd = Tools::getValue('client_secret_production_' . $availableCountryCode);
+            $shopCodeProd = Tools::getValue('shop_code_production_' . $availableCountryCode);
+            $webHookSecretProd = Tools::getValue('webhook_secret_production_' . $availableCountryCode);
+            $isProduction = Tools::getValue('production_mode_' . $availableCountryCode);
+
+            Configuration::updateValue(Younitedpay::CLIENT_ID . '_' . $availableCountry, $clientID, false, null, $idShop);
+            Configuration::updateValue(Younitedpay::CLIENT_SECRET . '_' . $availableCountry, $clientSecret, false, null, $idShop);
+
+            if ($shopCode !== false && $this->verifyShopCode($shopCode, $availableCountryCode) !== false) {
+                Configuration::updateValue(Younitedpay::SHOP_CODE . '_' . $availableCountry, $shopCode, false, null, $idShop);
+            }
+            if ($shopCodeProd !== false && $this->verifyShopCode($shopCodeProd, $availableCountryCode) !== false) {
+                Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $availableCountry, $shopCodeProd, false, null, $idShop);
+            }
+            Configuration::updateValue(Younitedpay::WEBHOOK_SECRET . '_' . $availableCountry, $webHookSecret, false, null, $idShop);
+            Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION . '_' . $availableCountry, $clientIDProd, false, null, $idShop);
+            Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION . '_' . $availableCountry, $clientSecretProd, false, null, $idShop);
+            Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION . '_' . $availableCountry, $webHookSecretProd, false, null, $idShop);
+            Configuration::updateValue(Younitedpay::PRODUCTION_MODE . '_' . $availableCountry, $isProduction, false, null, $idShop);
         }
-        if ($shopCodeProd !== false && $this->verifyShopCode($shopCodeProd) !== false) {
-            Configuration::updateValue(Younitedpay::SHOP_CODE_PRODUCTION, $shopCodeProd, false, null, $idShop);
-        }
-        Configuration::updateValue(Younitedpay::WEBHOOK_SECRET, $webHookSecret, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::CLIENT_ID_PRODUCTION, $clientIDProd, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::CLIENT_SECRET_PRODUCTION, $clientSecretProd, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::WEBHOOK_SECRET_PRODUCTION, $webHookSecretProd, false, null, $idShop);
+
+        $defaultCountryCode = Tools::getValue('default_country_code');
+        $countryCode = Tools::getValue('country_code');
+        $ipWhiteList = Tools::getValue('whitelist_ip');
+        $isWhiteListOn = Tools::getValue('whitelist_on');
+        $webHookOrders = Tools::getValue('webhook_orders');
+
+        Configuration::updateValue(Younitedpay::DEFAULT_COUNTRY_CODE, $defaultCountryCode, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::COUNTRY_CODE, $countryCode, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_CONTENT, $ipWhiteList, false, null, $idShop);
         Configuration::updateValue(Younitedpay::IP_WHITELIST_ENABLED, $isWhiteListOn, false, null, $idShop);
-        Configuration::updateValue(Younitedpay::PRODUCTION_MODE, $isProduction, false, null, $idShop);
         Configuration::updateValue(Younitedpay::WEBHOOK_ORDERS, $webHookOrders, false, null, $idShop);
     }
 
@@ -532,9 +633,14 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
         );
 
         $showRanges = (int) Tools::getValue('show_ranges');
+        $showSplitPayment = (int) Tools::getValue('show_split_payment');
+        $showLoanPayment = (int) Tools::getValue('show_loan_payment');
         $minInstall = (int) Tools::getValue('min_installment');
         $maxInstall = (int) Tools::getValue('max_installment');
         Configuration::updateValue(Younitedpay::SHOW_RANGE_OFFERS, $showRanges, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOW_SPLIT_PAYMENT, $showSplitPayment, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::SHOW_LOAN_PAYMENT, $showLoanPayment, false, null, $idShop);
+        Configuration::updateValue(Younitedpay::INTERVAL_RANGE_OFFERS, (int) Tools::getValue('interval_range'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_OFFERS, (int) Tools::getValue('min_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MAX_RANGE_OFFERS, (int) Tools::getValue('max_ranges'), false, null, $idShop);
         Configuration::updateValue(Younitedpay::MIN_RANGE_INSTALMENT, $minInstall, false, null, $idShop);
@@ -604,16 +710,18 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             ],
         ]);
 
-        $noConfig = empty($this->clientID) || empty($this->clientSecret);
-        $noShopCode = empty($this->shopCode);
-        if ($this->isProductionMode === true) {
-            $noConfig = empty($this->clientIDProduction) || empty($this->clientSecretProduction);
-            $noShopCode = empty($this->shopCodeProduction);
+        $noConfig = empty($this->clientID[$this->countryCode]) || empty($this->clientSecret[$this->countryCode]);
+        $noShopCode = empty($this->shopCode[$this->countryCode]);
+        if (isset($this->isProductionMode[$this->countryCode]) && $this->isProductionMode[$this->countryCode] === true) {
+            $noConfig = empty($this->clientIDProduction[$this->countryCode]) || empty($this->clientSecretProduction[$this->countryCode]);
+            $noShopCode = empty($this->shopCodeProduction[$this->countryCode]);
         }
 
         return [
             'url_form_config' => $urlFormConfig,
             'use_new_api' => (bool) Configuration::get(Younitedpay::USE_NEW_API, null, null, null, true),
+            'default_country_code' => $this->defaultCountryCode,
+            'country_code' => $this->countryCode,
             'production_mode' => $this->isProductionMode,
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
@@ -638,6 +746,9 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'maturities' => $allMaturities,
             'maturitylist' => $this->maturitylist,
             'show_ranges' => $this->showRangeOffers,
+            'show_split_payment' => $this->showSplitPayment,
+            'show_loan_payment' => $this->showLoanPayment,
+            'interval_range' => $this->intervalRangeOffers,
             'min_ranges' => $this->minRangeOffers,
             'max_ranges' => $this->maxRangeOffers > 0 ? $this->maxRangeOffers : '',
             'min_installment' => $this->minRangeInstall,
@@ -647,12 +758,13 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             'webhook_url' => \Context::getContext()->link->getModuleLink('younitedpay', 'notification', [
                 'id_cart' => 'test_webhook',
             ]),
+            'available_countries' => array_map('strtolower', $this->availableCountries),
         ];
     }
 
-    private function verifyShopCode($shopCode)
+    private function verifyShopCode($shopCode, $countryCode)
     {
-        foreach ($this->shopCodeList as $oneCodeLine) {
+        foreach ($this->shopCodeList[$countryCode] as $oneCodeLine) {
             if ($oneCodeLine['code'] === $shopCode) {
                 return true;
             }

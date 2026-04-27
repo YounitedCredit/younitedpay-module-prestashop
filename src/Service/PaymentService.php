@@ -89,7 +89,9 @@ class PaymentService
      */
     public function createContract($maturity, $totalAmount)
     {
-        $customerAddress = new \Address($this->context->cart->id_address_delivery);
+        $customerAddress = new \Address($this->context->cart->id_address_invoice);
+        $country = new \Country($customerAddress->id_country);
+        $langId = (int) \Language::getIdByIso($country->iso_code);
 
         $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
@@ -101,7 +103,7 @@ class PaymentService
             ];
         }
 
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $langId);
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,
@@ -345,6 +347,9 @@ class PaymentService
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
         $contractYounited->api_version = $apiVersion;
+        $contractYounited->client_id = substr($this->client->clientId, 0, 4) . '****' . substr($this->client->clientId, -4, 4);
+        $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
+        $contractYounited->country_code = (new \Country($invoiceAddress->id_country))->iso_code;
         $contractYounited->save();
     }
 
@@ -355,9 +360,11 @@ class PaymentService
      *
      * @return bool|mixed False if nothing requested on the api payment id or error | Api Payment of id requested
      */
-    public function getApiPaymentById($paymentId)
+    public function getApiPaymentById($paymentId, $idCart = 0)
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $idCart = $idCart > 0 ? $idCart : $this->context->cart->id;
+        $younitedContract = $this->getContractByCart($idCart);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $younitedContract->country_code);
         if ($client->isCrendentialsSet() === false) {
             return false;
         }
@@ -387,7 +394,7 @@ class PaymentService
     {
         $merchantReference = $order->reference . '-' . $order->id;
         $idShop = $order->id_shop ?? ($this->context->shop->id > 0 ? $this->context->shop->id : 1);
-        $client = new YounitedClient($idShop);
+        $client = new YounitedClient($idShop, $this->context->language->id);
         if ($client->isCrendentialsSet() === false) {
             $this->loggerservice->addLogAPI('No credentials set for this shop :' . $idShop, 'Info', $this);
 
@@ -425,17 +432,17 @@ class PaymentService
      */
     public function getCreditRequestedAmount($cart)
     {
-        $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false) {
-            return false;
-        }
-
         $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
 
-        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $younitedContract->country_code);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id, $cart->id);
 
         if (false === empty($getPaymentResponse) && $getPaymentResponse['amount'] && $getPaymentResponse['status']) {
             $statusOrderDone = [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED];
@@ -485,7 +492,7 @@ class PaymentService
                 $cart->id,
                 (int) $defaultDelivered,
                 (float) $total,
-                $this->l('Payment via Younited Pay'),
+                $this->l('Payment via Younited Pay') . ' (' . $younitedContract->country_code . ')',
                 null,
                 $extra_vars,
                 (int) $currency->id,
