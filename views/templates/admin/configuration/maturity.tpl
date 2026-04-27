@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div class="ranges_not_min_max{if $configuration.show_ranges === true} hidden{/if}">
+    <div {if $maturityType == 'LoanPayment'}class="ranges_not_min_max{if $configuration.show_ranges === true} hidden{/if}"{/if}>
     <hr />
     <div class="row mt-1">
         <div class="col-xl-6 form-group d-flex align-items-center">
