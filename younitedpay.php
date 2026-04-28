@@ -271,7 +271,6 @@ class Younitedpay extends PaymentModule implements WidgetInterface
     const AVAILABLE_COUNTRIES = [
         'FR',
         'IT',
-        'ES',
     ];
 
     public function __construct()
