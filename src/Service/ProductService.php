@@ -28,7 +28,7 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ToolsYounited;
-use YounitedPaySDK\Model\NewAPI\GetOffers;
+use YounitedPaySDK\Model\NewAPI\Request\GetOffers;
 use YounitedPaySDK\Model\NewAPI\PaymentOptionItem;
 use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 
@@ -113,7 +113,7 @@ class ProductService
             if ($isRangeEnabled) {
                 $configMaturities = [
                     'Range' => [
-                        'Min' => $minInstall < 6 ? $minInstall - 1 : $minInstall,
+                        'Min' => $minInstall,
                         'Max' => $maxInstall,
                         'Step' => 1,
                     ],
@@ -322,10 +322,30 @@ class ProductService
             'down_payment_amount' => ToolsYounited::formatPrice($offer->getDownPaymentAmount()),
             'total_amount' => ToolsYounited::formatPrice($offer->getCreditTotalAmount()),
             'interest_total' => ToolsYounited::formatPrice($offer->getInterestsTotalAmount()),
+            'fee_total' => ToolsYounited::formatPrice(0),
             'taeg' => ToolsYounited::formatPrice($offer->getAnnualPercentageRate()),
             'tdf' => ToolsYounited::formatPrice($offer->getAnnualDebitRate()),
             'type' => $offer->getType(),
+            'installment' => [],
         ];
+
+        $feeTotal = 0;
+        if (is_array($offer->getInstallmentDetails()) === true) {
+            foreach ($offer->getInstallmentDetails() as $installmentDetails) {
+                $data['installment'][] = [
+                    'installmentNumber' => (int) $installmentDetails->getInstallmentNumber(),
+                    'dueDate' => $installmentDetails->getDueDate(),
+                    'loanAmount' => ToolsYounited::formatPrice($installmentDetails->getLoanAmount()),
+                    'feeAmount' => ToolsYounited::formatPrice($installmentDetails->getFeeAmount()),
+                    'totalAmount' => ToolsYounited::formatPrice($installmentDetails->getTotalAmount()),
+                ];
+                if ($installmentDetails->getFeeAmount() > 0) {
+                    $feeTotal += $installmentDetails->getFeeAmount();
+                }
+            }
+            $data['fee_total'] = ToolsYounited::formatPrice($feeTotal);
+        }
+
         if ($offer->getDownPaymentAmount() > 0) {
             ++$data['maturity'];
             $data['total_amount'] = $data['initial_amount'];
@@ -357,7 +377,7 @@ class ProductService
         }
         $config = [];
         foreach ($maturities as $oneMaturity) {
-            $maturity = (int) $oneMaturity['maturity'] < 6 ? $oneMaturity['maturity'] - 1 : $oneMaturity['maturity'];
+            $maturity = (int) $oneMaturity['maturity'];
             $config[] = $maturity;
         }
 

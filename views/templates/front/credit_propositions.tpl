@@ -31,20 +31,14 @@
                   data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}"
                   data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}"
                   data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}"
-                  data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}"
-                  data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}"
-                  data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}"
-                  data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}"
-                  data-key="{$key|escape:'htmlall':'UTF-8'}"
-                  data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}"
-                  data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}"
-                  data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}"
+                  data-feetotal="{$offer.fee_total|escape:'htmlall':'UTF-8'}"
                   data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}"
                   data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}"
                   data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}"
                   data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}"
                   data-type="{$offer.type|escape:'htmlall':'UTF-8'}"
-                  data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
+                  data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+                  data-installment="{json_encode($offer.installment)|escape:'htmlall':'UTF-8'}">
                <span class="yp-inline-block yp-h-10">
                   <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10
                      blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
@@ -63,19 +57,13 @@
                   data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}"
                   data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}"
                   data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}"
-                  data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}"
-                  data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}"
-                  data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}"
-                  data-key="9999"
-                  data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}"
-                  data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}"
-                  data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}"
-                  data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}"
+                  data-feetotal="{$offer.fee_total|escape:'htmlall':'UTF-8'}"
                   data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}"
                   data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}"
                   data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}"
                   data-type="{$offer.type|escape:'htmlall':'UTF-8'}"
                   data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+                  data-installment="{json_encode($offer.installment)|escape:'htmlall':'UTF-8'}"
                   title="{l s='Customise' mod='younitedpay'}">
                <span class="yp-inline-block yp-h-10">
                   <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10
@@ -144,7 +132,7 @@
                <path d="M8.4 7L13.7 1.7C14.1 1.3 14.1 0.7 13.7 0.3C13.3 -0.1 12.7 -0.1 12.3 0.3L7 5.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L5.6 7L0.3 12.3C-0.1 12.7 -0.1 13.3 0.3 13.7C0.5 13.9 0.7 14 1 14C1.3 14 1.5 13.9 1.7 13.7L7 8.4L12.3 13.7C12.5 13.9 12.8 14 13 14C13.2 14 13.5 13.9 13.7 13.7C14.1 13.3 14.1 12.7 13.7 12.3L8.4 7Z" />
             </svg>
          </button>
-         <div class="yp-h-full yp-w-full md:yp-w-2/5 yp-border-lprple yp-bg-purple-light yp-rounded-bg">
+         <div class="yp-w-full yp-px-6 yp-py-8 md:yp-w-2/5 yp-border-lprple yp-bg-purple-light yp-rounded-bg">
             <div class="yp-left-title-text yp-font-family-rg yp-text-center">
                <span class="yp-h3">{l s='Buy now and pay as you go' mod='younitedpay'}</span>
             </div>
@@ -183,7 +171,7 @@
                </noscript>
             </span>
          </div>
-         <div class="yp-right yp-p-6 yp-h-full yp-w-full md:yp-w-3/5 yp-pb-24 md:yp-pb-8 md:yp-pt-8 yp-flex yp-flex-col yp-align-center yp-bg-beige">
+         <div class="yp-right yp-h-full yp-w-full md:yp-w-3/5 yp-pb-24 md:yp-pb-8 md:yp-pt-8 yp-flex yp-flex-col yp-align-center yp-bg-beige">
             <div class="yp-flex-grow">
 
                {include file="module:younitedpay/views/templates/front/credit_informations.tpl"}

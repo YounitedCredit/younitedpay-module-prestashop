@@ -58,18 +58,26 @@ function YpchangeInstallment(key, maturity = 0)
     }
     var actualOffer = parseInt(key);
     var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
-    var infoInstallmentAmount = maturityZone.attr('data-amount');
+    var infoInstallmentAmount = parseFloat(maturityZone.attr('data-amount')).toFixed(2).replace('.', ',');
     var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
+    var initialAmount = parseFloat(maturityZone.attr('data-initamount')).toFixed(2).replace('.', ',');
+    var taeg = parseFloat(maturityZone.attr('data-taeg')).toFixed(2).replace('.', ',');
+    var tdf = parseFloat(maturityZone.attr('data-tdf')).toFixed(2).replace('.', ',');
+    var totalAmount = parseFloat(maturityZone.attr('data-totalamount')).toFixed(2).replace('.', ',');
+    var feeTotal = parseFloat(maturityZone.attr('data-feetotal')).toFixed(2).replace('.', ',');
+    var interestTotal = parseFloat(maturityZone.attr('data-interesttotal')).toFixed(2).replace('.', ',');
+    var downPaymentAmount = parseFloat(maturityZone.attr('data-downpayment')).toFixed(2).replace('.', ',');
     var type = maturityZone.attr('data-type');
-    var initialAmount = maturityZone.attr('data-initamount');
-    var taeg = maturityZone.attr('data-taeg');
-    var tdf = maturityZone.attr('data-tdf');
-    var totalAmount = maturityZone.attr('data-totalamount');
-    var interestTotal = maturityZone.attr('data-interesttotal');
-    var downPaymentAmount = maturityZone.attr('data-downpayment');
     var infoInstallmentMaturity = currentMaturity + 'x';
+    var installment = maturityZone.attr('data-installment');
 
-    if (younitedpay.type === 'LoanPayment') {
+    if (type === 'PersonalLoan') {
+        $('.yp-split-payment-info').addClass('hidden');
+        $('.yp-without-fee-text').addClass('hidden');
+        $('.yp-with-fee-text').removeClass('hidden');
+        $('.yp-interest-text').removeClass('hidden');
+        $('.yp-fees-text').addClass('hidden');
+
         if (parseInt(downPaymentAmount) <= 0) {
             $('.yp-down-amount-parent').addClass('hidden');
             $('.yp-not-down-amount-parent').removeClass('hidden');
@@ -79,15 +87,51 @@ function YpchangeInstallment(key, maturity = 0)
         }
     }
 
-    if (younitedpay.type === 'SplitPayment') {
-        if (parseFloat(interestTotal) > 0) {
-            $('.yp-down-amount-parent').addClass('hidden');
-            $('.yp-not-down-amount-parent').removeClass('hidden');
-            $('.yp-fees-text').addClass('hidden');
+    if (type === 'SplitPayment') {
+        $('.yp-split-payment-info').removeClass('hidden');
+        $('.yp-down-amount-parent').addClass('hidden');
+        $('.yp-not-down-amount-parent').removeClass('hidden');
+        $('.yp-fees-text').removeClass('hidden');
+        $('.yp-interest-text').addClass('hidden');
+
+        if (parseFloat(feeTotal) > 0) {
+            $('.yp-without-fee-text').addClass('hidden');
+            $('.yp-with-fee-text').removeClass('hidden');
         } else {
-            $('.yp-down-amount-parent').removeClass('hidden');
-            $('.yp-not-down-amount-parent').addClass('hidden');
-            $('.yp-fees-text').removeClass('hidden');
+            $('.yp-without-fee-text').removeClass('hidden');
+            $('.yp-with-fee-text').addClass('hidden');
+        }
+
+        let splitPaymentInstallment = document.querySelectorAll('.yp-split-payment-installment');
+        splitPaymentInstallment.forEach(element => {
+            let splitPaymentMaturity = parseInt(element.dataset.splitpaymentmaturity);
+            if (splitPaymentMaturity > currentMaturity) {
+                element.classList.add('hidden');
+            } else {
+                element.classList.remove('hidden');
+            }
+        });
+
+        let splitPaymentTimeline = document.querySelectorAll('.yp-timeline__item');
+        splitPaymentTimeline.forEach(element => {
+            let splitPaymentMaturity = parseInt(element.dataset.splitpaymentmaturity);
+            if (splitPaymentMaturity > currentMaturity) {
+                element.classList.add('hidden');
+            } else {
+                element.classList.remove('hidden');
+            }
+        });
+
+        if (installment !== null && typeof installment !== 'undefined' && installment !== '') {
+            var installmentData = JSON.parse(installment);
+            if (installmentData !== null && typeof installmentData !== 'undefined' && installmentData.length) {
+                for (let i = 0; i < installmentData.length; i++) {
+                    let installmentTotalAmount = parseFloat(installmentData[i].totalAmount).toFixed(2).replace('.', ',');
+                    let installmentDueDate = new Date(installmentData[i].dueDate).toLocaleDateString('fr-FR');;
+                    $('.yp-install-' + i).text(installmentTotalAmount + " €");
+                    $('.yp-due-date-' + i).text(installmentDueDate);
+                }
+            }
         }
     }
 
@@ -101,6 +145,7 @@ function YpchangeInstallment(key, maturity = 0)
     $('.yp-taeg').text(taeg);
     $('.yp-total').text(totalAmount);
     $('.yp-interest').text(interestTotal);
+    $('.yp-fee').text(feeTotal);
     $('.yp-amount').text(initialAmount);
     $('.yp-down-amount').text(downPaymentAmount);
 

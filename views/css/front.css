@@ -707,6 +707,18 @@
     margin-bottom: 12px !important
 }
 
+.yp-mb-4 {
+    margin-bottom: 16px !important
+}
+
+.yp-mb-5 {
+    margin-bottom: 20px !important
+}
+
+.yp-mb-6 {
+    margin-bottom: 24px !important
+}
+
 .yp-mr-2 {
     margin-right: 6px !important
 }
@@ -717,10 +729,6 @@
 
 .yp-left-title-text {
     margin-top:54px !important;
-}
-
-.yp-mb-5 {
-    margin-bottom: 20px !important
 }
 
 .yp-mt-3 {
@@ -909,6 +917,11 @@
 
 .yp-pl-8 {
     padding-left: 32px !important
+}
+
+.yp-py-8 {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important
 }
 
 .yp-pb-24 {
@@ -1428,4 +1441,51 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
 
 #yp-kml {
     text-decoration: underline!important;
+}
+
+.yp-timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 60px;
+    margin-top: 3px !important;
+}
+
+.yp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: #2d2230;
+}
+
+.yp-timeline__item {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 22px !important;
+}
+
+.yp-timeline__circle {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    border: 2px solid #2d2230;
+    background: white;
+    z-index: 1;
+}
+
+.yp-timeline__circle--active {
+    background: #2d2230;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yp-timeline__circle--active::after {
+    content: "✔";
+    color: white;
+    font-size: 18px;
 }

@@ -36,12 +36,14 @@
          data-amount="{$offer.installment_amount|escape:'htmlall':'UTF-8'}"
          data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}"
          data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}"
+         data-feetotal="{$offer.fee_total|escape:'htmlall':'UTF-8'}"
          data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}"
          data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}"
          data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}"
          data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}"
          data-type="{$offer.type|escape:'htmlall':'UTF-8'}"
-         data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}">
+         data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+         data-installment="{json_encode($offer.installment)|escape:'htmlall':'UTF-8'}">
       <span class="yp-inline-block yp-h-10">
          <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10
             blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
@@ -60,11 +62,13 @@
          data-totalamount="{$offer.total_amount|escape:'htmlall':'UTF-8'}"
          data-initamount="{$offer.initial_amount|escape:'htmlall':'UTF-8'}"
          data-interesttotal="{$offer.interest_total|escape:'htmlall':'UTF-8'}"
+         data-feetotal="{$offer.fee_total|escape:'htmlall':'UTF-8'}"
          data-downpayment="{$offer.down_payment_amount|escape:'htmlall':'UTF-8'}"
          data-taeg="{$offer.taeg|escape:'htmlall':'UTF-8'}"
          data-tdf="{$offer.tdf|escape:'htmlall':'UTF-8'}"
          data-type="{$offer.type|escape:'htmlall':'UTF-8'}"
          data-maturity="{$offer.maturity|escape:'htmlall':'UTF-8'}"
+         data-installment="{json_encode($offer.installment)|escape:'htmlall':'UTF-8'}"
          title="{l s='Customise' mod='younitedpay'}">
       <span class="yp-inline-block yp-h-10" style="width:auto;">
          <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10
@@ -89,7 +93,7 @@
 {/if}
 </div>
 
-<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-justify-between yp-items-center yp-not-down-amount-parent">
+<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-not-down-amount-parent">
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed">
       <span>{l s='Your purchase in' mod='younitedpay'}</span>
       <span class="yp-maturity">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span>
@@ -100,7 +104,7 @@
    </p>
 </div>
 
-<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-justify-between yp-items-center yp-down-amount-parent">
+<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-down-amount-parent">
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed">
       <b><span class="yp-down-amount">{{ $offers[$selected_offer].down_payment_amount }}</span>&nbsp;€</b>
       <b>{l s='today,' mod='younitedpay'}</b>
@@ -112,8 +116,43 @@
    </p>
 </div>
 
+<div class="yp-flex yp-border-black yp-pol-purpledark yp-pl-4 yp-split-payment-info {if $offers[$selected_offer].type !== 'SplitPayment'}hidden{/if}">
+   <div class="yp-logo-step yp-timeline">
+      <div class="yp-timeline__item" data-splitpaymentmaturity="1">
+         <div class="yp-timeline__circle yp-timeline__circle--active"></div>
+      </div>
+      <div class="yp-timeline__item" data-splitpaymentmaturity="2">
+         <div class="yp-timeline__circle"></div>
+      </div>
+      <div class="yp-timeline__item" data-splitpaymentmaturity="3">
+         <div class="yp-timeline__circle"></div>
+      </div>
+      <div class="yp-timeline__item" data-splitpaymentmaturity="4">
+         <div class="yp-timeline__circle"></div>
+      </div>
+   </div>
+   <div class="yp-flex yp-flex-col yp-flex-grow yp-text-md">
+      <div class="yp-flex yp-font-family-rg yp-weight600 yp-pl-4 yp-p-1 yp-mb-4 yp-justify-between yp-split-payment-installment" data-splitpaymentmaturity="1">
+         <span class="yp-due-date-0"></span>
+         <span class="yp-mw85 yp-text-right yp-install-0 yp-pr-4"></span>
+      </div>
+      <div class="yp-flex yp-font-family-rg yp-pl-4 yp-p-1 yp-mb-4 yp-justify-between yp-split-payment-installment" data-splitpaymentmaturity="2">
+         <span class="yp-due-date-1"></span>
+         <span class="yp-mw85 yp-text-right yp-install-1 yp-pr-4"></span>
+      </div>
+      <div class="yp-flex yp-font-family-rg yp-pl-4 yp-p-1 yp-mb-4 yp-justify-between yp-split-payment-installment" data-splitpaymentmaturity="3">
+         <span class="yp-due-date-2"></span>
+         <span class="yp-mw85 yp-text-right yp-install-2 yp-pr-4"></span>
+      </div>
+      <div class="yp-flex yp-font-family-rg yp-pl-4 yp-p-1 yp-justify-between yp-split-payment-installment" data-splitpaymentmaturity="4">
+         <span class="yp-due-date-3"></span>
+         <span class="yp-mw85 yp-text-right yp-install-3 yp-pr-4"></span>
+      </div>
+   </div>
+</div>
+
 {assign var="offer" value=$offers[$selected_offer]}
-<div class="yp-border-black yp-border yp-bg-purple-light yp-p-3 yp-rounded-bg yp-mt-6">
+<div class="yp-border-black yp-border yp-bg-purple-light yp-p-3 yp-rounded-bg">
    <div class="yp-mb-5 yp-text-lg yp-pol-purpledark">
       <div class="yp-flex yp-flex-row yp-justify-between yp-weight600 yp-pol-purpledark yp-mb-2 yp-text-20">
          <span><b>{l s='Total' mod='younitedpay'}</b></span>
@@ -124,7 +163,7 @@
       <div class="yp-flex yp-flex-row yp-justify-between yp-pol-purpledark yp-mb-2 yp-text-sm yp-fees-text">
          <span>{l s='Including fees' mod='younitedpay'}</span>
          <span class="yp-mw85 yp-text-right">
-            <span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
+            <span class="yp-fee">{$offer.fee_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
          </span>
       </div>
    </div>
@@ -133,10 +172,11 @@
          <span>{l s='For a credit amount of' mod='younitedpay'}</span>
          <b class="yp-text-lg"><span class="yp-amount">{$offer.initial_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
          <span>{l s=', to which are added' mod='younitedpay'}</span>
-         <b class="yp-text-lg"><span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
-         <b class="yp-text-lg">{l s='financing fees,' mod='younitedpay'}</b>
-         <b class="yp-text-lg">{l s='interest,' mod='younitedpay'}</b>
-         <span>{l s='soit un' mod='younitedpay'}</span>
+         <b class="yp-text-lg yp-interest-text"><span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
+         <b class="yp-text-lg yp-fees-text"><span class="yp-fee">{$offer.fee_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
+         <b class="yp-text-lg yp-fees-text">{l s='financing fees,' mod='younitedpay'}</b>
+         <b class="yp-text-lg yp-interest-text">{l s='interest,' mod='younitedpay'}</b>
+         <span>{l s='either a' mod='younitedpay'}</span>
          <b class="yp-text-lg">{l s='total amount due of' mod='younitedpay'}</b>
          <b class="yp-text-lg"><span class="yp-total">{$offer.total_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>.
          <span>{l s='The' mod='younitedpay'}</span>

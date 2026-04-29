@@ -31,7 +31,7 @@ use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Model\NewAPI\GetOffers;
+use YounitedPaySDK\Model\NewAPI\Request\GetOffers;
 use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
 use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
 use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
