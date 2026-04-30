@@ -59,12 +59,14 @@ class HookPayment extends AbstractHook
 
         if (false === in_array(strtoupper($country->iso_code), Younitedpay::AVAILABLE_COUNTRIES)) {
             $loggerservice->addLogAPI('Country not available: ' . strtoupper($country->iso_code), 'Info', $this);
+
             return [];
         }
 
         $client = new YounitedClient(Context::getContext()->shop->id, $langId, [], strtoupper($country->iso_code));
         if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
             $loggerservice->addLogAPI('Credentials not set or shopcode empty', 'Info', $this);
+
             return [];
         }
 
