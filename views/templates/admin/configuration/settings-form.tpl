@@ -85,7 +85,7 @@
                             </div>
                         </div>
                         <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
-                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_{$available_country}">
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_{$available_country|escape:'htmlall':'UTF-8'}">
                                 {l s='Client ID' mod='younitedpay'}
                             </label>
                             <div class="col-lg-4 align-item-center">
@@ -261,7 +261,7 @@
                         </div>
                     </div>
                     {foreach from=$configuration.available_countries item='available_country'}
-                    <div class="form-group mt-2 row{if $configuration.country_code != $available_country} hidden{/if}" data-country-zone-{$available_country}>
+                    <div class="form-group mt-2 row{if $configuration.country_code != $available_country} hidden{/if}" data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="widget_info">
                             {l s='Test Webhook Integration' mod='younitedpay'}
                         </label>
