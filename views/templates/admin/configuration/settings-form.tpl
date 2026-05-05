@@ -16,7 +16,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
 <form id="configuration_form" method="POST" class="defaultForm form-horizontal"
-    action="{$configuration.url_form_config|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data">
+      action="{$configuration.url_form_config|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="account_submit" value="1" />
     <div class="row justify-content-center">
         <div class="col-xl-12 pr-5 pl-5">
@@ -25,161 +25,204 @@
                     <div class="col-sm-11">{l s='1. Setting up' mod='younitedpay'}</div>
                 </div>
                 <div class="form-wrapper justify-content-center col-xl-12">
-                    <div class="form-group mt-4 row">
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="bridge_mode">
-                            {l s='Environment' mod='younitedpay'}
+                    <div class="form-group mt-3 pb-3 border-bottom row{if $configuration.production_mode === true} hidden{/if}">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="country_code">
+                            {l s='Default Country Code' mod='younitedpay'}
                         </label>
-                        <div class="col-lg-4 align-item-center">                        
-                            <span class="ps-switch ps-switch-lg" id="younitedpay_prod_switch">
-                                <input type="radio" name="production_mode" id="production_mode_off" 
-                                    value="0"{if $configuration.production_mode === false} checked{/if}/>
-                                <label for="production_mode_off">{l s='Test' mod='younitedpay'}</label>
-                                <input type="radio" name="production_mode" id="production_mode_on" 
-                                    value="1"{if $configuration.production_mode === true} checked{/if}/>
-                                <label for="production_mode_on">{l s='Production' mod='younitedpay'}</label>
-                                <span class="slide-button"></span>
-                            </span>
-                            <small class="form-text">
-                                {l s='This option defines in whitch environment your module is configured'
-                                mod='younitedpay'}
-                            </small>
+                        <div class="col-lg-4 d-flex align-items-center justify-content-around">
+                            {foreach from=$configuration.available_countries item='available_country'}
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="default_country_code"
+                                        id="defaultCountryCode{$available_country|escape:'htmlall':'UTF-8'}"
+                                        value="{$available_country|escape:'htmlall':'UTF-8'}"
+                                        {if $available_country == $configuration.default_country_code} checked{/if}>
+                                    <label class="form-check-label" for="defaultCountryCode{$available_country|escape:'htmlall':'UTF-8'}">
+                                        {strtoupper($available_country)|escape:'htmlall':'UTF-8'}
+                                    </label>
+                                </div>
+                            {/foreach}
                         </div>
+                        <small class="col-lg-9 offset-lg-3 form-text">
+                            {l s='This option defines the language used by the module widget when the client selects a language for which no API key has been configured.' mod='younitedpay'}
+                            {l s='However, at the purchase funnel, the Younited method will not be offered if the Billing Country is not configured or does not correspond to an Authorized Country.' mod='younitedpay'}
+                        </small>
                     </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id">
-                            {l s='Client ID' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id"
-                                name="client_id" value="{$configuration.client_id|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
-                        </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret">
-                            {l s='Client Secret' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret"
-                                name="client_secret" value="{$configuration.client_secret|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
-                        </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code">
-                            {l s='Shop Code' mod='younitedpay'}
+                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}">
+                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="country_code">
+                            {l s='Country Code' mod='younitedpay'}
                         </label>
                         <div class="col-lg-4 align-item-start">
-                            {if $configuration.production_mode !== true}
-                                <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
-                                    name="shop_code" id="shop_code">
-                                    {foreach from=$configuration.shop_codes_list item='shop_code_name'}
-                                        {if empty($shop_code_name.code) === false}
-                                            <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
-                                                {if $shop_code_name.code == $configuration.shop_code} selected{/if}>
-                                                {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
-                                            </option>
-                                        {/if}
-                                    {/foreach}
-                                </select>
-                            {else}
+                            <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
+                                    name="country_code" id="country_code">
+                                {foreach from=$configuration.available_countries item='available_country'}
+                                    <option value="{$available_country|escape:'htmlall':'UTF-8'}"
+                                            {if $available_country == $configuration.country_code} selected{/if}>
+                                        {strtoupper($available_country)|escape:'htmlall':'UTF-8'}
+                                    </option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    {foreach from=$configuration.available_countries item='available_country'}
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country} hidden{/if}" data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="younitedpay_prod_switch_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Environment' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                    <span class="ps-switch ps-switch-lg" id="younitedpay_prod_switch_{$available_country|escape:'htmlall':'UTF-8'}">
+                                        <input type="radio" name="production_mode_{$available_country|escape:'htmlall':'UTF-8'}" id="production_mode_off_{$available_country|escape:'htmlall':'UTF-8'}"
+                                               value="0"{if $configuration.production_mode[$available_country] === false} checked{/if}/>
+                                        <label for="production_mode_off_{$available_country|escape:'htmlall':'UTF-8'}">{l s='Test' mod='younitedpay'}</label>
+                                        <input type="radio" name="production_mode_{$available_country|escape:'htmlall':'UTF-8'}" id="production_mode_on_{$available_country|escape:'htmlall':'UTF-8'}"
+                                               value="1"{if $configuration.production_mode[$available_country] === true} checked{/if}/>
+                                        <label for="production_mode_on_{$available_country|escape:'htmlall':'UTF-8'}">{l s='Production' mod='younitedpay'}</label>
+                                        <span class="slide-button"></span>
+                                    </span>
                                 <small class="form-text">
-                                    {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                    {l s='This option defines in whitch environment your module is configured'
+                                    mod='younitedpay'}
                                 </small>
-                            {/if}
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === true} hidden{/if}" data-test-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret">
-                            {l s='WebHook Secret' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret"
-                                name="webhook_secret" value="{$configuration.webhook_secret|escape:'htmlall':'UTF-8'}" />
-                        </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_production">
-                            {l s='Client ID' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id_production"
-                                name="client_id_production" value="{$configuration.client_id_production|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
-                        </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_production">
-                            {l s='Client Secret' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production"
-                                name="client_secret_production" value="{$configuration.client_secret_production|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
-                        </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production">
-                            {l s='Shop Code' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-start">
-                            {if $configuration.production_mode === true}
-                                <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}" 
-                                    id="shop_code_production" name="shop_code_production">
-                                    {foreach from=$configuration.shop_codes_list item='shop_code_name'}
-                                        {if empty($shop_code_name.code) === false}
-                                            <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
-                                                {if $shop_code_name.code == $configuration.shop_code_production} selected{/if}>
-                                                {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
-                                            </option>
-                                        {/if}
-                                    {/foreach}
-                                </select>
-                            {else}
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Client ID' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                <input type="text" class="form-control"
+                                       placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id_{$available_country|escape:'htmlall':'UTF-8'}"
+                                       name="client_id_{$available_country|escape:'htmlall':'UTF-8'}" value="{$configuration.client_id[$available_country|escape:'htmlall':'UTF-8']|escape:'htmlall':'UTF-8'}" />
                                 <small class="form-text">
-                                    {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                    {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
                                 </small>
-                            {/if}
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group mt-2 row{if $configuration.production_mode === false} hidden{/if}" data-prod-zone>
-                        <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_production">
-                            {l s='WebHook Secret' mod='younitedpay'}
-                        </label>
-                        <div class="col-lg-4 align-item-center">
-                            <input type="text" class="form-control"
-                                placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret_production"
-                                name="webhook_secret_production" value="{$configuration.webhook_secret_production|escape:'htmlall':'UTF-8'}" />
-                            <small class="form-text">
-                                {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
-                            </small>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Client Secret' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                <input type="text" class="form-control"
+                                       placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_{$available_country|escape:'htmlall':'UTF-8'}"
+                                       name="client_secret_{$available_country|escape:'htmlall':'UTF-8'}" value="{$configuration.client_secret[$available_country|escape:'htmlall':'UTF-8']|escape:'htmlall':'UTF-8'}" />
+                                <small class="form-text">
+                                    {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                                </small>
+                            </div>
                         </div>
-                    </div>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Shop Code' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-start">
+                                {if $configuration.production_mode[$available_country] !== true && false === empty($configuration.shop_codes_list[$available_country])}
+                                    <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
+                                            name="shop_code_{$available_country|escape:'htmlall':'UTF-8'}" id="shop_code_{$available_country|escape:'htmlall':'UTF-8'}">
+                                        {foreach from=$configuration.shop_codes_list[$available_country] item='shop_code_name'}
+                                            {if empty($shop_code_name.code) === false}
+                                                <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                                        {if $shop_code_name.code == $configuration.shop_code[$available_country]} selected{/if}>
+                                                    {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                                </option>
+                                            {/if}
+                                        {/foreach}
+                                    </select>
+                                {else}
+                                    <small class="form-text">
+                                        {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                    </small>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === true} hidden{/if}" data-test-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='WebHook Secret' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                <input type="text" class="form-control"
+                                       placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret_{$available_country|escape:'htmlall':'UTF-8'}"
+                                       name="webhook_secret_{$available_country|escape:'htmlall':'UTF-8'}" value="{$configuration.webhook_secret[$available_country|escape:'htmlall':'UTF-8']|escape:'htmlall':'UTF-8'}" />
+                                <small class="form-text">
+                                    {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_id_production_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Client ID' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                <input type="text" class="form-control"
+                                       placeholder="{l s='Fill in your Client ID' mod='younitedpay'}" id="client_id_production_{$available_country|escape:'htmlall':'UTF-8'}"
+                                       name="client_id_production_{$available_country|escape:'htmlall':'UTF-8'}" value="{$configuration.client_id_production[$available_country|escape:'htmlall':'UTF-8']|escape:'htmlall':'UTF-8'}" />
+                                <small class="form-text">
+                                    {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="client_secret_production_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Client Secret' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                <input type="text" class="form-control"
+                                       placeholder="{l s='Fill in your Client secret' mod='younitedpay'}" id="client_secret_production_{$available_country|escape:'htmlall':'UTF-8'}"
+                                       name="client_secret_production_{$available_country|escape:'htmlall':'UTF-8'}" value="{$configuration.client_secret_production[$available_country|escape:'htmlall':'UTF-8']|escape:'htmlall':'UTF-8'}" />
+                                <small class="form-text">
+                                    {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="shop_code_production_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='Shop Code' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-start">
+                                {if $configuration.production_mode[$available_country] === true && false === empty($configuration.shop_codes_list[$available_country])}
+                                    <select class="form-control" placeholder="{l s='Fill in your Shop Code' mod='younitedpay'}"
+                                            id="shop_code_production_{$available_country|escape:'htmlall':'UTF-8'}" name="shop_code_production_{$available_country|escape:'htmlall':'UTF-8'}">
+                                        {foreach from=$configuration.shop_codes_list[$available_country] item='shop_code_name'}
+                                            {if empty($shop_code_name.code) === false}
+                                                <option value="{$shop_code_name.code|escape:'htmlall':'UTF-8'}"
+                                                        {if $shop_code_name.code == $configuration.shop_code_production[$available_country]} selected{/if}>
+                                                    {$shop_code_name.name|escape:'htmlall':'UTF-8'} ({$shop_code_name.code|escape:'htmlall':'UTF-8'})
+                                                </option>
+                                            {/if}
+                                        {/foreach}
+                                    </select>
+                                {else}
+                                    <small class="form-text">
+                                        {l s='Please save your configuration to update this section.' mod='younitedpay'}
+                                    </small>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="form-group mt-2 row{if $configuration.country_code != $available_country || $configuration.production_mode[$available_country] === false} hidden{/if}" data-prod-zone-{$available_country|escape:'htmlall':'UTF-8'} data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
+                            <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_secret_production_{$available_country|escape:'htmlall':'UTF-8'}">
+                                {l s='WebHook Secret' mod='younitedpay'}
+                            </label>
+                            <div class="col-lg-4 align-item-center">
+                                <input type="text" class="form-control"
+                                       placeholder="{l s='Fill in your WebHook Secret' mod='younitedpay'}" id="webhook_secret_production_{$available_country|escape:'htmlall':'UTF-8'}"
+                                       name="webhook_secret_production_{$available_country|escape:'htmlall':'UTF-8'}" value="{$configuration.webhook_secret_production[$available_country]|escape:'htmlall':'UTF-8'}" />
+                                <small class="form-text">
+                                    {l s='This information is located in your dashboard: \'Settings\' > \'General settings\'' mod='younitedpay'}
+                                </small>
+                            </div>
+                        </div>
+                    {/foreach}
                     <div class="form-group mt-2 row">
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="whitelist_on">
                             {l s='Enable IP Whitelist' mod='younitedpay'}
                         </label>
-                        <div class="col-lg-4 align-item-center">                        
-                            <span class="ps-switch ps-switch-lg disable_on_change" data-input="whitelist_on_on" 
-                                data-toggle="ipwebhook">
-                                <input type="radio" name="whitelist_on" id="whitelist_on_off" 
-                                    value="0"{if $configuration.whitelist_on === false} checked{/if}/>
+                        <div class="col-lg-4 align-item-center">
+                            <span class="ps-switch ps-switch-lg disable_on_change" data-input="whitelist_on_on"
+                                  data-toggle="ipwebhook">
+                                <input type="radio" name="whitelist_on" id="whitelist_on_off"
+                                       value="0"{if $configuration.whitelist_on === false} checked{/if}/>
                                 <label for="whitelist_on_off">{l s='Disabled' mod='younitedpay'}</label>
-                                <input type="radio" name="whitelist_on" id="whitelist_on_on" 
-                                    value="1"{if $configuration.whitelist_on === true} checked{/if}/>
+                                <input type="radio" name="whitelist_on" id="whitelist_on_on"
+                                       value="1"{if $configuration.whitelist_on === true} checked{/if}/>
                                 <label for="whitelist_on_on">{l s='Enabled' mod='younitedpay'}</label>
                                 <span class="slide-button"></span>
                             </span>
@@ -191,8 +234,8 @@
                         </label>
                         <div class="col-lg-4 align-item-center">
                             <input type="text" {if $configuration.whitelist_on === false} disabled{/if}
-                                class="form-control" data-ipwebhook id="whitelist_ip" name="whitelist_ip" 
-                                value="{$configuration.whitelist_ip|escape:'htmlall':'UTF-8'}" />
+                                   class="form-control" data-ipwebhook id="whitelist_ip" name="whitelist_ip"
+                                   value="{$configuration.whitelist_ip|escape:'htmlall':'UTF-8'}" />
                             <small class="form-text">
                                 {l s='When enabled, only the listed IPs will see the module’s components on the site' mod='younitedpay'}
                             </small>
@@ -202,13 +245,13 @@
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="webhook_orders">
                             {l s='Webhook create orders' mod='younitedpay'}
                         </label>
-                        <div class="col-lg-4 align-item-center">                        
+                        <div class="col-lg-4 align-item-center">
                             <span class="ps-switch ps-switch-lg">
-                                <input type="radio" name="webhook_orders" id="webhook_orders_off" 
-                                    value="0"{if $configuration.webhook_orders === false} checked{/if}/>
+                                <input type="radio" name="webhook_orders" id="webhook_orders_off"
+                                       value="0"{if $configuration.webhook_orders === false} checked{/if}/>
                                 <label for="webhook_orders_off">{l s='Disabled' mod='younitedpay'}</label>
-                                <input type="radio" name="webhook_orders" id="webhook_orders_on" 
-                                    value="1"{if $configuration.webhook_orders === true} checked{/if}/>
+                                <input type="radio" name="webhook_orders" id="webhook_orders_on"
+                                       value="1"{if $configuration.webhook_orders === true} checked{/if}/>
                                 <label for="webhook_orders_on">{l s='Enabled' mod='younitedpay'}</label>
                                 <span class="slide-button"></span>
                             </span>
@@ -217,45 +260,43 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group mt-2 row">
+                    {foreach from=$configuration.available_countries item='available_country'}
+                    <div class="form-group mt-2 row{if $configuration.country_code != $available_country} hidden{/if}" data-country-zone-{$available_country|escape:'htmlall':'UTF-8'}>
                         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="widget_info">
-                        {l s='Test Webhook Integration' mod='younitedpay'}
+                            {l s='Test Webhook Integration' mod='younitedpay'}
                         </label>
                         <div class="col-lg-6 align-item-center input-group">
-                            <input type="text" disabled class="form-control 
-                                {if $configuration.show_monthly === 0}
-                                    widget_disabled
-                                {else}
-                                    widget_enabled
-                                {/if}" 
-                                style="border-right:none;font-weight:bold;" data-month id="widget_input"
-                                value="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
-                                title="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}" />
-                            <div class="input-group-append copy-clipboard" 
-                                data-message="{l s='Widget content copied to clipboard' mod='younitedpay'}" 
-                                data-clipboard-copy="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}">
-                                <span class="input-group-text" style="border-left:none;" 
-                                    title="{l s='Copy to clipboard' mod='younitedpay'}">
-                                    <i class="material-icons input-group-text btn" 
-                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">content_paste</i>
+                            <input type="text" disabled class="form-control
+                                   style="border-right:none;font-weight:bold;" data-month id="widget_input"
+                                   value="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
+                                   title="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}" />
+                            <div class="input-group-append copy-clipboard"
+                                 data-message="{l s='Widget content copied to clipboard' mod='younitedpay'}"
+                                 data-clipboard-copy="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}">
+                                <span class="input-group-text" style="border-left:none;"
+                                      title="{l s='Copy to clipboard' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn"
+                                       style="font-size:20px!important;color:#25B9D7!important;border:none;">content_paste</i>
                                 </span>
                             </div>
                             <div class="input-group-append">
-                                <span class="input-group-text" 
-                                        data-test-url="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}"
-                                        data-test-webhook style="border-left:none;" 
-                                    title="{l s='Test the notification' mod='younitedpay'}">
-                                    <i class="material-icons input-group-text btn" 
-                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">webhook</i>
+                                <span class="input-group-text"
+                                      data-test-url="{$configuration.webhook_url|escape:'htmlall':'UTF-8'}&country_code={$available_country|escape:'htmlall':'UTF-8'}"
+                                      data-test-country="{$available_country|escape:'htmlall':'UTF-8'}"
+                                      data-test-webhook style="border-left:none;"
+                                      title="{l s='Test the notification' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn"
+                                       style="font-size:20px!important;color:#25B9D7!important;border:none;">webhook</i>
                                 </span>
-                                <span class="input-group-text" data-test-webhook-result style="border-left:none;display:none;" 
-                                    title="{l s='Test the notification' mod='younitedpay'}">
-                                    <i class="material-icons input-group-text btn" 
-                                        style="font-size:20px!important;color:#25B9D7!important;border:none;">error</i>
+                                <span class="input-group-text" data-test-webhook-result style="border-left:none;display:none;"
+                                      title="{l s='Test the notification' mod='younitedpay'}">
+                                    <i class="material-icons input-group-text btn"
+                                       style="font-size:20px!important;color:#25B9D7!important;border:none;">error</i>
                                 </span>
                             </div>
                         </div>
                     </div>
+                    {/foreach}
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

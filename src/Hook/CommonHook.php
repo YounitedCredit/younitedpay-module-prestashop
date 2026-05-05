@@ -55,7 +55,7 @@ class CommonHook extends AbstractHook
 
         foreach (Shop::getShops() as $oneShop) {
             $idShop = $oneShop['id_shop'];
-            $client = new YounitedClient($idShop);
+            $client = new YounitedClient($idShop, Context::getContext()->language->id);
             $isProductionMode = (bool) Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
             $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $idShop);
             $shopCodeProduction = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $idShop);
@@ -75,10 +75,7 @@ class CommonHook extends AbstractHook
         $this->registerMedia($controller);
         switch (true) {
             case $controller instanceof \ProductController:
-            case $controller instanceof \OrderController:
             case $controller instanceof \CartController:
-            case $controller instanceof \TheCheckoutModuleFrontController:
-            case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $frontModuleLink = Context::getContext()->link->getModuleLink(
                     $this->module->name,
                     'product'
@@ -89,6 +86,26 @@ class CommonHook extends AbstractHook
                         'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
                         'type' => $controller instanceof \CartController ? 'cart' : 'product',
                         'id_product' => (int) \Tools::getValue('id_product'),
+                    ],
+                ]);
+                break;
+            case $controller instanceof \OrderController:
+            case $controller instanceof \TheCheckoutModuleFrontController:
+            case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
+                $invoiceAddress = new \Address(Context::getContext()->cart->id_address_invoice);
+                $countryIsoCode = (new \Country($invoiceAddress->id_country))->iso_code;
+                $langId = \Language::getIdByIso(strtolower($countryIsoCode)) ?: Context::getContext()->language->id;
+                $frontModuleLink = Context::getContext()->link->getModuleLink(
+                    $this->module->name,
+                    'product'
+                );
+                \Media::addJsDef([
+                    'younitedpay' => [
+                        'url_product' => $frontModuleLink,
+                        'hook_product' => \Configuration::get(Younitedpay::FRONT_HOOK),
+                        'type' => 'cart',
+                        'id_product' => (int) \Tools::getValue('id_product'),
+                        'id_lang' => $langId,
                     ],
                 ]);
         }

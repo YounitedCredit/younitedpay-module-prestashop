@@ -66,7 +66,7 @@ class YounitedpayValidationModuleFrontController extends ModuleFrontController
 
         $younitedContract = $paymentService->getContractByCart($idCartYounited);
 
-        $younitedPayment = $paymentService->getApiPaymentById($younitedContract->payment_id);
+        $younitedPayment = $paymentService->getApiPaymentById($younitedContract->payment_id, $idCartYounited);
 
         $younitedPaymentStatus = $younitedPayment['status'] ?? '';
         $processType = 'Order created with success';

@@ -25,11 +25,13 @@ $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_244eebed5c7b75b
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_14071353ecf7a58acf353761a0557946'] = 'Inserisci le tue credenziali API prima di modificare le impostazioni del modulo';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_7beeeb3e3e0ca1dfdcb32eb7b220d0c9'] = 'Credenziali API salvate. Seleziona il tuo Codice Negozio prima di modificare le impostazioni del modulo';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1974f9fa81c62ecc204e478d0835c58a'] = 'Errore nelle tue credenziali, controlla le chiavi di accesso e l’ambiente (produzione o test).';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_1e88dad2d24be56066c38823a9ec5e93'] = 'Errore con i tuoi identificatori, per favore verifica il paese dell\'ambiente (attualmente %s).';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_d46d3990f3fd4cfcbd21facbe976a4e1'] = 'WebHook URL copiato negli appunti';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_505a83f220c02df2f85c3810cd9ceb38'] = 'Operazione riuscita';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_0eaadb4fcb48a0a0ed7bc9868be9fbaa'] = 'Attenzione';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_90b7906b595aafe07dde2b0af0ca55b4'] = 'Risposta del WebHook ricevuta correttamente!';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_ce8623d959aad56a56e2172e5a2f8766'] = 'Errore nella risposta del WebHook -:( - Controlla il titolo per ulteriori informazioni';
+$_MODULE['<{younitedpay}prestashop>adminyounitedpayconfiguration_206312e5fad18346ee135d5c2a047619'] = 'A seguito dell\'aggiornamento del modulo, vi consigliamo di svuotare la cache di Prestashop';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayprocesslogger_457957e588c4840756c638211e20b875'] = 'Attiva i file dei Log';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayprocesslogger_d02cf6db7c047e2dd9415598c88ad8e4'] = 'Aggiungi tutte le richieste ai file dei Log';
 $_MODULE['<{younitedpay}prestashop>adminyounitedpayprocesslogger_5988c28d05527a0d0ce8ae3da1134352'] = 'I parametri dei Log sono stati aggiornati correttamente!';
@@ -147,6 +149,8 @@ $_MODULE['<{younitedpay}prestashop>settings-form_edc0e46e649858c5c9f91fe5f7fca9d
 $_MODULE['<{younitedpay}prestashop>settings-form_0ba29c6a1afacf586b03a26162c72274'] = 'Ambiente';
 $_MODULE['<{younitedpay}prestashop>settings-form_0cbc6611f5540bd0809a388dc95a615b'] = 'Test';
 $_MODULE['<{younitedpay}prestashop>settings-form_756d97bb256b8580d4d71ee0c547804e'] = 'Produzione';
+$_MODULE['<{younitedpay}prestashop>settings-form_e2944f8059daa3518a7301b2a2d9031b'] = 'Questa opzione definisce la lingua utilizzata dal widget del modulo quando il cliente seleziona una lingua per cui non è stata configurata alcuna chiave API.';
+$_MODULE['<{younitedpay}prestashop>settings-form_39710eb42bdbd73bae2e954a1b609ceb'] = 'Tuttavia, a livello del tunnel di acquisto, il metodo Younited non sarà proposto se il paese di fatturazione non è configurato o non corrisponde a un paese autorizzato.';
 $_MODULE['<{younitedpay}prestashop>settings-form_f4676de06d53dc78782446dfce5c24c5'] = 'Questa opzione definisce in quale ambiente è configurato il tuo modulo';
 $_MODULE['<{younitedpay}prestashop>settings-form_76525f0f34b48475e5ca33f71d296f3b'] = 'ID cliente';
 $_MODULE['<{younitedpay}prestashop>settings-form_14c43997438131eebd56da809fea48a5'] = 'Inserisci il tuo ID cliente';

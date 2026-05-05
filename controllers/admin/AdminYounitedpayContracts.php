@@ -68,6 +68,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
             'withdrawn_date' => ['title' => $this->l('Withdrawn date')],
             'withdrawn_amount' => ['title' => $this->l('Withdrawn amount')],
             'api_version' => ['title' => $this->l('API Version')],
+            'country_code' => ['title' => $this->l('Country code')],
         ];
     }
 
@@ -98,14 +99,14 @@ class AdminYounitedpayContractsController extends ModuleAdminController
         if (Tools::getValue('paymentId') !== false) {
             $order = new Order((int) $younitedContract->id_order);
             if (Validate::isLoadedObject($order) === true) {
-                $paymentService->updateMerchantReference($younitedContract->payment_id, $order);
+                $paymentService->updateMerchantReference($younitedContract, $order);
                 \Context::getContext()->controller->confirmations[] = $this->l('Order reference updated on Younited Pay Dashboard.');
             } else {
                 \Context::getContext()->controller->warnings[] = $this->l('Error: Order linked to this contract not found.');
             }
         }
 
-        $api = $paymentService->getApiPaymentById($younitedContract->payment_id);
+        $api = $paymentService->getApiPaymentById($younitedContract->payment_id, $younitedContract->id_cart);
 
         /** @var OrderService $orderservice */
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);

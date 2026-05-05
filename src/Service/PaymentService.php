@@ -73,6 +73,9 @@ class PaymentService
     /** @var string */
     public $errorMessage;
 
+    /** @var string */
+    public $countryCode;
+
     public function __construct(
         LoggerService $loggerservice,
         PaymentRepository $paymentrepository,
@@ -89,7 +92,10 @@ class PaymentService
      */
     public function createContract($maturity, $totalAmount)
     {
-        $customerAddress = new \Address($this->context->cart->id_address_delivery);
+        $customerAddress = new \Address($this->context->cart->id_address_invoice);
+        $country = new \Country($customerAddress->id_country);
+        $this->countryCode = strtoupper($country->iso_code);
+        $langId = (int) \Language::getIdByIso($country->iso_code);
 
         $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
@@ -101,7 +107,7 @@ class PaymentService
             ];
         }
 
-        $client = new YounitedClient($this->context->shop->id);
+        $client = new YounitedClient($this->context->shop->id, $langId, [], $this->countryCode);
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,
@@ -281,7 +287,7 @@ class PaymentService
             $urlPayment = $responseObject['paymentLink'];
             $paymentId = $responseObject['paymentId'];
 
-            $getPaymentResponse = $this->getApiPaymentById($paymentId);
+            $getPaymentResponse = $this->getApiPaymentById($paymentId, 0, $this->countryCode);
 
             if ($getPaymentResponse !== false) {
                 $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
@@ -345,6 +351,9 @@ class PaymentService
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
         $contractYounited->api_version = $apiVersion;
+        $contractYounited->client_id = substr($this->client->clientId, 0, 4) . '****' . substr($this->client->clientId, -4, 4);
+        $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
+        $contractYounited->country_code = (new \Country($invoiceAddress->id_country))->iso_code;
         $contractYounited->save();
     }
 
@@ -355,9 +364,12 @@ class PaymentService
      *
      * @return bool|mixed False if nothing requested on the api payment id or error | Api Payment of id requested
      */
-    public function getApiPaymentById($paymentId)
+    public function getApiPaymentById($paymentId, $idCart = 0, $countryCode = '')
     {
-        $client = new YounitedClient($this->context->shop->id);
+        $idCart = $idCart > 0 ? $idCart : $this->context->cart->id;
+        $younitedContract = $this->getContractByCart($idCart);
+        $countryCode = $countryCode !== '' ? $countryCode : $younitedContract->country_code;
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $countryCode);
         if ($client->isCrendentialsSet() === false) {
             return false;
         }
@@ -378,16 +390,17 @@ class PaymentService
     /**
      * Update Merchant Reference
      *
-     * @param string $paymentId
+     * @param YounitedPayContract $younitedContract
      * @param \Order $order
      *
      * @return bool False if nothing requested on the api payment id or error | True if operation succeeded
      */
-    public function updateMerchantReference($paymentId, $order)
+    public function updateMerchantReference($younitedContract, $order)
     {
+        $paymentId = $younitedContract->payment_id;
         $merchantReference = $order->reference . '-' . $order->id;
         $idShop = $order->id_shop ?? ($this->context->shop->id > 0 ? $this->context->shop->id : 1);
-        $client = new YounitedClient($idShop);
+        $client = new YounitedClient($idShop, $this->context->language->id, [], $younitedContract->country_code);
         if ($client->isCrendentialsSet() === false) {
             $this->loggerservice->addLogAPI('No credentials set for this shop :' . $idShop, 'Info', $this);
 
@@ -425,17 +438,17 @@ class PaymentService
      */
     public function getCreditRequestedAmount($cart)
     {
-        $client = new YounitedClient($this->context->shop->id);
-        if ($client->isCrendentialsSet() === false) {
-            return false;
-        }
-
         $younitedContract = $this->getContractByCart($cart->id);
         if (empty($younitedContract->id_cart) === true || $younitedContract->id_cart === 0) {
             return false;
         }
 
-        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id);
+        $client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $younitedContract->country_code);
+        if ($client->isCrendentialsSet() === false) {
+            return false;
+        }
+
+        $getPaymentResponse = $this->getApiPaymentById($younitedContract->payment_id, $cart->id, $younitedContract->country_code);
 
         if (false === empty($getPaymentResponse) && $getPaymentResponse['amount'] && $getPaymentResponse['status']) {
             $statusOrderDone = [self::PAYMENT_STATUS_ACCEPTED, self::PAYMENT_STATUS_EXECUTED];
@@ -485,7 +498,7 @@ class PaymentService
                 $cart->id,
                 (int) $defaultDelivered,
                 (float) $total,
-                $this->l('Payment via Younited Pay'),
+                $this->l('Payment via Younited Pay') . ' (' . $younitedContract->country_code . ')',
                 null,
                 $extra_vars,
                 (int) $currency->id,

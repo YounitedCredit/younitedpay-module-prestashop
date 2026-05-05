@@ -50,8 +50,23 @@ class HookPayment extends AbstractHook
 
     public function paymentOptions($params)
     {
-        $client = new YounitedClient(Context::getContext()->shop->id);
+        /** @var LoggerService $loggerservice */
+        $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
+
+        $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
+        $country = new \Country($customerAdressInvoice->id_country);
+        $langId = (int) \Language::getIdByIso($country->iso_code);
+
+        if (false === in_array(strtoupper($country->iso_code), Younitedpay::AVAILABLE_COUNTRIES)) {
+            $loggerservice->addLogAPI('Country not available: ' . strtoupper($country->iso_code), 'Info', $this);
+
+            return [];
+        }
+
+        $client = new YounitedClient(Context::getContext()->shop->id, $langId, [], strtoupper($country->iso_code));
         if (!$this->module->active || $client->isCrendentialsSet() === false || $client->shopCode === '') {
+            $loggerservice->addLogAPI('Credentials not set or shopcode empty', 'Info', $this);
+
             return [];
         }
 
@@ -60,9 +75,6 @@ class HookPayment extends AbstractHook
 
         /** @var PaymentService $paymentservice */
         $paymentservice = ServiceContainer::getInstance()->get(PaymentService::class);
-
-        /** @var LoggerService $loggerservice */
-        $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
 
         $errorMessage = [];
 
@@ -74,12 +86,6 @@ class HookPayment extends AbstractHook
             return [];
         }
 
-        $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
-        $country = new \Country($customerAdressInvoice->id_country);
-        if ($country->iso_code !== 'FR') {
-            // $errorMessage[] = $this->l('Not available for this country (Only France for invoice address).');
-        }
-
         if ($paymentservice->isInternationalPhone($customerAdressInvoice) === false) {
             $errorMessage[] = $paymentservice->errorMessage;
         }
@@ -89,7 +95,7 @@ class HookPayment extends AbstractHook
 
         $this->cartPrice = $cart->getOrderTotal();
 
-        $templateCredit = $productservice->getBestPrice($this->cartPrice);
+        $templateCredit = $productservice->getBestPrice($this->cartPrice, 'payment', $langId);
 
         $totalOffers = $templateCredit['offers'];
         $selectedOffer = isset($templateCredit['selectedOffer']) ? (int) $templateCredit['selectedOffer'] : 0;

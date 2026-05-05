@@ -73,9 +73,14 @@ class OrderService
      *
      * @return array bool success | int status | string response
      */
-    protected function buildClient()
+    protected function buildClient($isoCode = '')
     {
-        $this->client = new YounitedClient($this->context->shop->id);
+        if (isset($this->context->cart->id_address_invoice) !== false && empty($isoCode) === true) {
+            // If we have one invoice address, we get the country code from it to be sure to trigger the right API call
+            $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
+            $isoCode = (new \Country($invoiceAddress->id_country))->iso_code;
+        }
+        $this->client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $isoCode);
         if ($this->client->isCrendentialsSet() === false) {
             return [
                 'success' => false,
@@ -114,15 +119,15 @@ class OrderService
 
     public function cancelContract($idOrder, $refContract)
     {
-        $clientBuildReturn = $this->buildClient();
-        if ($clientBuildReturn['success'] !== true) {
-            return true;
-        }
-
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
         if ($refContract === '') {
             $refContract = $younitedContract->id_external_younitedpay_contract;
+        }
+
+        $clientBuildReturn = $this->buildClient($younitedContract->country_code);
+        if ($clientBuildReturn['success'] !== true) {
+            return true;
         }
 
         if ($younitedContract->is_canceled === true) {
@@ -142,15 +147,15 @@ class OrderService
 
     public function withdrawnContract($idOrder, $refContract, $amountWithdraw)
     {
-        $clientBuildReturn = $this->buildClient();
-        if ($clientBuildReturn['success'] !== true) {
-            return true;
-        }
-
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
         if ($refContract === '') {
             $refContract = $younitedContract->id_external_younitedpay_contract;
+        }
+
+        $clientBuildReturn = $this->buildClient($younitedContract->country_code);
+        if ($clientBuildReturn['success'] !== true) {
+            return true;
         }
 
         if ($younitedContract->is_withdrawn === true) {
@@ -163,7 +168,7 @@ class OrderService
         $body = (new RefundPayment())
                 ->setPaymentId($younitedContract->payment_id)
                 ->setAmount((float) \Tools::ps_round($amountWithdraw, 2))
-                ->setIdempotencyKey($refContract);
+                ->setIdempotencyKey($younitedContract->id_cart . '-' . $refContract . '-' . date('Ymdhi'));
 
         $request = new RefundPaymentRequest();
 
@@ -271,7 +276,7 @@ class OrderService
             return true;
         }
 
-        $clientBuildReturn = $this->buildClient();
+        $clientBuildReturn = $this->buildClient($younitedContract->country_code);
         if ($clientBuildReturn['success'] !== true) {
             return true;
         }
@@ -343,7 +348,7 @@ class OrderService
         }
 
         if (empty($younitedContract->payment_id) || is_null($younitedContract->payment_id)) {
-            $clientBuildReturn = $this->buildClient();
+            $clientBuildReturn = $this->buildClient($younitedContract->country_code);
             if ($clientBuildReturn['success'] === true) {
                 $this->getPaymentIdFromLegacy($younitedContract);
             } else {
@@ -360,6 +365,7 @@ class OrderService
                 'date' => $younitedContract->date_add,
                 'date_state' => $dateState,
                 'status' => $state,
+                'country_code' => $younitedContract->country_code,
                 'withdrawn_amount' => ToolsYounited::formatPrice($withdrawnAmount),
                 'is_withdrawn_confirmed' => $stateWithdrawn,
             ],

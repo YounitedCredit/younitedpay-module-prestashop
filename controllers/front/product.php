@@ -32,6 +32,7 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
     {
         $context = \Context::getContext();
 
+        $idLang = (int) Tools::getValue('id_lang', null);
         $idProduct = (int) Tools::getValue('id_product');
         $idAttribute = (int) Tools::getValue('id_attribute', null);
         $idAttribute = $idAttribute > 0 ? $idAttribute : null;
@@ -47,7 +48,7 @@ class YounitedpayProductModuleFrontController extends ModuleFrontController
         /** @var ProductService $productservice */
         $productservice = ServiceContainer::getInstance()->get(ProductService::class);
 
-        $templateCredit = $productservice->getBestPrice($price);
+        $templateCredit = $productservice->getBestPrice($price, 'widget', $idLang);
 
         $frontModuleLink = $context->link->getModuleLink(
             $this->module->name,
