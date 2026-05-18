@@ -14,3 +14,4 @@ logs
 # Vendors (keep 202 !)
 /vendor/*
 !/vendor/totpsclasslib
+index.php

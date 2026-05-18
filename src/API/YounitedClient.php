@@ -63,7 +63,10 @@ class YounitedClient
     /** @var bool */
     public $isTestUnit = false;
 
-    public function __construct($idShop, $testCredentials = [])
+    /** @var bool */
+    public $isTestConfig = false;
+
+    public function __construct($idShop, $idLang = '', $testCredentials = [], $countryCode = '')
     {
         $this->logger = ServiceContainer::getInstance()->get(ProcessLoggerHandler::class);
 
@@ -73,7 +76,7 @@ class YounitedClient
             $this->isTestUnit = true;
         } else {
             $this->apiLogger = ApiLogger::getInstance();
-            $this->setApiCredentials($idShop);
+            $this->setApiCredentials($idShop, $idLang, $countryCode);
         }
     }
 
@@ -174,10 +177,10 @@ class YounitedClient
         /** @var CacheYounited $cacheStorage */
         $cacheStorage = new CacheYounited();
 
-        $cacheExists = $cacheStorage->exist('token_api');
+        $cacheExists = $cacheStorage->exist('token_api_' . $this->clientId);
 
         if ($cacheExists === true) {
-            $cacheInformations = $cacheStorage->get('token_api');
+            $cacheInformations = $cacheStorage->get('token_api_' . $this->clientId);
             $token = $cacheInformations['content']['token'];
             $tokenLog = substr($token, 0, 5) . '*****' . substr($token, -5, 5);
             $this->apiLogger->log($this, 'token exists in cache: ' . $tokenLog, 'Info');
@@ -202,10 +205,14 @@ class YounitedClient
         /** @var RegistryItem $cacheTokenItem */
         $cacheTokenItem = $cache->getItem('token');
 
-        $cacheStorage->set('token_api', [
+        $cacheStorage->set('token_api_' . $this->clientId, [
             'token' => $cacheTokenItem->get(),
             'expiresat' => $cacheTokenItem->getExpiredDate(),
         ]);
+
+        $cache = Registry::getInstance();
+        /** @var RegistryItem $cacheTokenItem */
+        $cacheTokenItem = $cache->clear();
     }
 
     private function setErrorMessage($e, $classRequest)
@@ -231,16 +238,23 @@ class YounitedClient
         ];
     }
 
-    private function setApiCredentials($idShop)
+    private function setApiCredentials($idShop, $idLang, $countryCode = '')
     {
+        if (empty($countryCode) === false) {
+            $isoCodeSuffix = '_' . strtoupper($countryCode);
+        } else {
+            $isoCode = strtoupper((new \Language((int) $idLang))->getIsoCode());
+            $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
+        }
+
         $this->isProductionMode = (bool) Configuration::get(
-            Younitedpay::PRODUCTION_MODE,
+            Younitedpay::PRODUCTION_MODE . $isoCodeSuffix,
             null,
             null,
             $idShop,
             false
         );
-        $suffix = $this->isProductionMode === true ? '_PRODUCTION' : '';
+        $suffix = $this->isProductionMode === true ? '_PRODUCTION' . $isoCodeSuffix : $isoCodeSuffix;
         $this->clientId = Configuration::get(
             Younitedpay::CLIENT_ID . $suffix,
             null,
@@ -269,5 +283,63 @@ class YounitedClient
             $idShop,
             ''
         );
+
+        // Set default country configuration if no credentials found
+        if ($this->isTestConfig === false && (empty($this->clientId) || empty($this->clientSecret))) {
+            $isoCode = strtoupper(Configuration::get(
+                Younitedpay::DEFAULT_COUNTRY_CODE,
+                null,
+                null,
+                $idShop,
+                ''
+            ));
+            $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
+            if (empty($countryCode) === false) {
+                $isoCodeSuffix = '_' . strtoupper($countryCode);
+            }
+
+            $this->isProductionMode = (bool) Configuration::get(
+                Younitedpay::PRODUCTION_MODE . $isoCodeSuffix,
+                null,
+                null,
+                $idShop,
+                false
+            );
+            $suffix = $this->isProductionMode === true ? '_PRODUCTION' . $isoCodeSuffix : $isoCodeSuffix;
+            $this->clientId = Configuration::get(
+                Younitedpay::CLIENT_ID . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+            $this->clientSecret = Configuration::get(
+                Younitedpay::CLIENT_SECRET . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+            $this->shopCode = Configuration::get(
+                Younitedpay::SHOP_CODE . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+            $this->webHookSecret = Configuration::get(
+                Younitedpay::WEBHOOK_SECRET . $suffix,
+                null,
+                null,
+                $idShop,
+                ''
+            );
+        }
+    }
+
+    public function setTestConfig($idShop, $idLang)
+    {
+        $this->isTestConfig = true;
+        $this->setApiCredentials($idShop, $idLang);
     }
 }

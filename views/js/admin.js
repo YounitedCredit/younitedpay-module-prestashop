@@ -30,8 +30,15 @@ document.onreadystatechange = function() {
         // If we are on the configuration of help admin controller - not on orders
         $('#content').removeClass('bootstrap').addClass('nobootstrap');
     }
+
+    var countries = [];
+    $("#country_code option").each(function () {
+        countries.push($(this).val().toLowerCase());
+    });
+
     addEventsMaturity();
-    addDoubleListEvent();    
+    addDoubleListEvent();
+    addCountryEvent(countries);
     $('#younitedpay_maturitybtn').click(function(e) {
         addMaturity(e);
     });
@@ -46,8 +53,10 @@ document.onreadystatechange = function() {
             return;
         }
         webHookTestLaunched = true;
+        const countryCode = $(this).attr('data-test-country');
         var formData = new FormData();
-        formData.append('testWebHookURL', $('[data-test-url]').attr('data-test-url'));
+        formData.append('testWebHookURL', $(this).attr('data-test-url'));
+        formData.append('country', countryCode);
 
         $.ajax({
             type: "POST",
@@ -79,22 +88,51 @@ document.onreadystatechange = function() {
                         location: 'br'
                     });
                 }
-                $('[data-test-webhook-result] i').css('color', color);
-                $('[data-test-webhook-result] i').text(success);
-                $('[data-test-webhook-result] i').attr('title', `Status: ${response.status} - Message: ${response.response}`);
-                $('[data-test-webhook-result]').show();
+                $(this).find('i').css('color', color);
+                $(this).find('i').text(success);
+                $(this).find('i').attr('title', `Status: ${response.status} - Message: ${response.response}`);
+                $(this).show();
                 console.log(response);
                 console.log(response.success);
                 console.log(response.status);
             }
-        });      
+        });
     });
     $('#hide_requirements').click(HideRequirements);
     $('#younitedpay_status_min').click(ShowRequirements);
-    $('#younitedpay_prod_switch').click(YounitedhideZoneTest);
     $('#show_ranges_switch').click(updateShowHideRanges);
+    countries.forEach(function (country) {
+        $('#younitedpay_prod_switch_' + country).click(() => YounitedhideZoneTest(country));
+    });
     younitedEvents = true;
 };
+
+function addCountryEvent(countries)
+{
+    $('#country_code').on('change', () => updateShowCountryConfig(countries));
+}
+
+function updateShowCountryConfig(countries) {
+    let countrySelected = $('#country_code').val().toLowerCase();
+    let zoneToShow = [], zoneToHide = [];
+    countries.forEach(function (country) {
+        if (countrySelected === country) {
+            zoneToShow.push('data-country-zone-' + country);
+        } else {
+            zoneToHide.push('data-country-zone-' + country);
+        }
+    });
+
+    zoneToShow.forEach(function (zone) {
+        $('div [' + zone + ']').removeClass('hidden');
+    });
+
+    zoneToHide.forEach(function (zone) {
+        $('div [' + zone + ']').addClass('hidden');
+    });
+
+    YounitedhideZoneTest(countrySelected);
+}
 
 function updateShowHideRanges() {
     var rangesEnabled = $('#show_ranges_off').not(':checked').length > 0;
@@ -119,7 +157,7 @@ function ShowRequirements()
     $('#younitedpay_status_min').hide();
 }
 
-function refundYounitedPayEvent() {    
+function refundYounitedPayEvent() {
     var checked = $('#doPartialRefundYounitedPay').is(':checked');
     var errorDisplay = false;
     if (checked === true) {
@@ -141,7 +179,7 @@ function refundYounitedPayEvent() {
     }
 }
 
-function toggleDisabledZone(event) 
+function toggleDisabledZone(event)
 {
     var clickedZone = event.currentTarget;
     var zoneToToggle = $(clickedZone).attr('data-toggle');
@@ -187,7 +225,7 @@ function deleteZoneMaturity()
 }
 
 function addEventsMaturity()
-{    
+{
     $('.younitedpay_delmaturity').off('click');
     $('.younitedpay_delmaturity').click(deleteZoneMaturity);
 
@@ -197,9 +235,9 @@ function addEventsMaturity()
 }
 
 function addMaturity(event)
-{    
+{
   event.preventDefault();
-  
+
   var formData = new FormData();
   formData.append('younitedpay_maturities', younitedpay.maturities);
   formData.append('younitedpay_add_maturity', true);
@@ -216,9 +254,9 @@ function addMaturity(event)
         $("#younitedpay_maturities").append( response );
         addEventsMaturity();
         updateShowHideRanges();
-        younitedpay.maturities += 1;  
+        younitedpay.maturities += 1;
     }
-  });      
+  });
 }
 
 function UpdateMaturity()
@@ -226,9 +264,9 @@ function UpdateMaturity()
     try {
         var targetObject = $(this)[0];
         var key = parseInt(targetObject.getAttribute('data-id'));
-        
+
         var maturity = parseInt($('#maturity' + key).val());
-        
+
         var minAmountVal = $('#min_amount_input_' + key).val();
         $('#min_amount_' + key).html((minAmountVal / maturity).toFixed(2));
 
@@ -320,13 +358,14 @@ function statutorder_doubleListUpdate(doubleList)
     });
 }
 
-function YounitedhideZoneTest() {
-    var valTest = $('#production_mode_on').not(':checked').length > 0;
-    var zoneToShow = 'data-test-zone';
-    var zoneToHide = 'data-prod-zone';
+function YounitedhideZoneTest(country)
+{
+    var valTest = $('#production_mode_on_' + country).not(':checked').length > 0;
+    var zoneToShow = 'data-test-zone-' + country;
+    var zoneToHide = 'data-prod-zone-' + country;
     if (valTest === false) {
-        zoneToShow = 'data-prod-zone';
-        zoneToHide = 'data-test-zone';
+        zoneToShow = 'data-prod-zone-' + country;
+        zoneToHide = 'data-test-zone-' + country;
     }
     $('div [' + zoneToShow + ']').removeClass('hidden');
     $('div [' + zoneToHide + ']').addClass('hidden');

@@ -32,7 +32,7 @@ use YounitedpayAddon\Entity\YounitedPayContract;
 function upgrade_module_2_1_0($module)
 {
     try {
-        $query = 'ALTER TABLE `' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']);
+        $query = 'ALTER TABLE ' . bqSQL(_DB_PREFIX_ . YounitedPayContract::$definition['table']);
         $query .= '` CHANGE `withdrawn_amount` `withdrawn_amount` DECIMAL(10,2) NOT NULL;';
         $result = Db::getInstance()->execute($query);
     } catch (Exception $e) {
