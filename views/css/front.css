@@ -1356,9 +1356,13 @@
     border: 1px solid #1C1C1C;
 }
 
+.yp-logo-range {
+    max-width: 24px !important;
+}
+
 .yp-plus, .yp-minus {
     border-radius: 16px;
-    background: #C5A1FE !important;
+    background: #1B1221 !important;
     color: white !important;
     font-size: 26px !important;
     width: 32px;
@@ -1373,8 +1377,8 @@ input[type=range].yp-custom-range {
     font: inherit;
     outline: none;
     height: 8px;
-    color: #C5A1FE;
-    background: #C5A1FE;
+    color: #1B1221;
+    background: #1B1221;
     cursor: pointer;
     box-sizing: border-box;
     border-radius: 8px;
@@ -1386,7 +1390,7 @@ input[type=range].yp-custom-range::-moz-range-thumb {
     width: 24px;
     height: 24px;
     border: none;
-    background-color: #C5A1FE;
+    background-color: #1B1221;
     transition: .2s ease-in-out;
     border-radius: 50%;
 }
@@ -1395,7 +1399,7 @@ input[type=range].yp-custom-range::-ms-thumb {
     width: 24px;
     height: 24px;
     border: none;
-    background-color: #C5A1FE;
+    background-color: #1B1221;
     transition: .2s ease-in-out;
     border-radius: 50%;
 }
@@ -1406,7 +1410,7 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
     width: 24px;
     height: 24px;
     border: none;
-    background-color: #C5A1FE;
+    background-color: #1B1221;
     transition: .2s ease-in-out;
     border-radius: 50%;
 }

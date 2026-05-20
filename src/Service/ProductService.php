@@ -108,6 +108,10 @@ class ProductService
 
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
+            if (count($maturities) >= 5 && $isRangeEnabled === false) {
+                $minInstall = (int) $maturities[0]['maturity'];
+                $isRangeEnabled = true;
+            }
 
             $configMaturities = ['List' => '24,36'];
             if ($isRangeEnabled) {
@@ -208,6 +212,8 @@ class ProductService
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
+            'logo_younitedpay_black_url' => 'modules/younitedpay/views/img/logo-younited-white-black.png',
+            'logo_slider_black_url' => 'modules/younitedpay/views/img/range_slider_black.svg',
             'hook_younited' => $selectedHook,
             'offers' => $offers,
             'range_offers' => $rangeOffers,
@@ -240,6 +246,8 @@ class ProductService
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
+            'logo_younitedpay_black_url' => 'modules/younitedpay/views/img/logo-younited-white-black.png',
+            'logo_slider_black_url' => 'modules/younitedpay/views/img/range_slider_black.svg',
             'hook_younited' => $this->selectedHook,
             'offers' => [],
             'range_offers' => [],

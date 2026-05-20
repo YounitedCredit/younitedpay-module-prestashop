@@ -40,130 +40,209 @@ function mouseOutMaturity()
 
 function YpchangeInstallment(key, maturity = 0)
 {
-    if (maturity > 0) {
-        younitedpay.rangeOffers.forEach(offer => {
-            if (parseInt(offer.maturity) === parseInt(maturity)) {
-                var zoneCustom = $('.maturity_installment9999');
-                zoneCustom.attr('data-amount', offer.installment_amount);
-                zoneCustom.attr('data-maturity', offer.maturity);
-                zoneCustom.attr('data-initamount', offer.initial_amount);
-                zoneCustom.attr('data-taeg', offer.taeg);
-                zoneCustom.attr('data-tdf', offer.tdf);
-                zoneCustom.attr('data-totalamount', offer.total_amount);
-                zoneCustom.attr('data-interesttotal', offer.interest_total);
-                zoneCustom.attr('data-downpayment', offer.down_payment_amount);
-                key = "9999";
-            }
-        });
-    }
-    var actualOffer = parseInt(key);
-    var maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
-    var infoInstallmentAmount = parseFloat(maturityZone.attr('data-amount')).toFixed(2).replace('.', ',');
-    var currentMaturity = parseInt(maturityZone.attr('data-maturity'));
-    var initialAmount = parseFloat(maturityZone.attr('data-initamount')).toFixed(2).replace('.', ',');
-    var taeg = parseFloat(maturityZone.attr('data-taeg')).toFixed(2).replace('.', ',');
-    var tdf = parseFloat(maturityZone.attr('data-tdf')).toFixed(2).replace('.', ',');
-    var totalAmount = parseFloat(maturityZone.attr('data-totalamount')).toFixed(2).replace('.', ',');
-    var feeTotal = parseFloat(maturityZone.attr('data-feetotal')).toFixed(2).replace('.', ',');
-    var interestTotal = parseFloat(maturityZone.attr('data-interesttotal')).toFixed(2).replace('.', ',');
-    var downPaymentAmount = parseFloat(maturityZone.attr('data-downpayment')).toFixed(2).replace('.', ',');
-    var type = maturityZone.attr('data-type');
-    var infoInstallmentMaturity = currentMaturity + 'x';
-    var installment = maturityZone.attr('data-installment');
+    key = resolveOfferFromMaturity(maturity, key);
 
-    if (type === 'PersonalLoan') {
-        $('.yp-split-payment-info').addClass('hidden');
-        $('.yp-without-fee-text').addClass('hidden');
-        $('.yp-with-fee-text').removeClass('hidden');
-        $('.yp-interest-text').removeClass('hidden');
-        $('.yp-fees-text').addClass('hidden');
+    let actualOffer = parseInt(key);
+    let dataset = mapOfferDataset(actualOffer);
 
-        if (parseInt(downPaymentAmount) <= 0) {
-            $('.yp-down-amount-parent').addClass('hidden');
-            $('.yp-not-down-amount-parent').removeClass('hidden');
-        } else {
-            $('.yp-down-amount-parent').removeClass('hidden');
-            $('.yp-not-down-amount-parent').addClass('hidden');
+    updateGlobalUI(dataset);
+
+    handlePersonalLoanUI(dataset);
+
+    handleSplitPaymentUI(dataset);
+
+    handleButtonUI(key);
+
+    ypUpdatePaymentURL(dataset);
+}
+
+function resolveOfferFromMaturity(maturity, key)
+{
+    if (maturity <= 0) return key;
+
+    younitedpay.rangeOffers.forEach(offer => {
+        if (parseInt(offer.maturity) === parseInt(maturity)) {
+            let zoneCustom = $('.maturity_installment9999');
+            zoneCustom.attr('data-amount', offer.installment_amount);
+            zoneCustom.attr('data-maturity', offer.maturity);
+            zoneCustom.attr('data-initamount', offer.initial_amount);
+            zoneCustom.attr('data-taeg', offer.taeg);
+            zoneCustom.attr('data-tdf', offer.tdf);
+            zoneCustom.attr('data-type', offer.type);
+            zoneCustom.attr('data-totalamount', offer.total_amount);
+            zoneCustom.attr('data-interesttotal', offer.interest_total);
+            zoneCustom.attr('data-feetotal', offer.fee_total);
+            zoneCustom.attr('data-downpayment', offer.down_payment_amount);
+            zoneCustom.attr('data-installment', new DOMParser().parseFromString(offer.installment, "text/html").documentElement.textContent);
         }
-    }
+    });
 
-    if (type === 'SplitPayment') {
-        $('.yp-split-payment-info').removeClass('hidden');
-        $('.yp-down-amount-parent').addClass('hidden');
-        $('.yp-not-down-amount-parent').removeClass('hidden');
-        $('.yp-fees-text').removeClass('hidden');
-        $('.yp-interest-text').addClass('hidden');
+    return "9999";
+}
 
-        if (parseFloat(feeTotal) > 0) {
-            $('.yp-without-fee-text').addClass('hidden');
-            $('.yp-with-fee-text').removeClass('hidden');
-        } else {
-            $('.yp-without-fee-text').removeClass('hidden');
-            $('.yp-with-fee-text').addClass('hidden');
-        }
+function mapOfferDataset(actualOffer)
+{
+    let maturityZone = $($.find('.maturity_installment' + actualOffer.toString()));
 
-        let splitPaymentInstallment = document.querySelectorAll('.yp-split-payment-installment');
-        splitPaymentInstallment.forEach(element => {
-            let splitPaymentMaturity = parseInt(element.dataset.splitpaymentmaturity);
-            if (splitPaymentMaturity > currentMaturity) {
-                element.classList.add('hidden');
-            } else {
-                element.classList.remove('hidden');
-            }
-        });
+    let data = {
+        amount: parseFloat(maturityZone.attr('data-amount')),
+        maturity: parseInt(maturityZone.attr('data-maturity')),
+        initial_amount: parseFloat(maturityZone.attr('data-initamount')),
+        taeg: parseFloat(maturityZone.attr('data-taeg')),
+        tdf: parseFloat(maturityZone.attr('data-tdf')),
+        total_amount: parseFloat(maturityZone.attr('data-totalamount')),
+        fee_total: parseFloat(maturityZone.attr('data-feetotal')),
+        interest_total: parseFloat(maturityZone.attr('data-interesttotal')),
+        down_payment_amount: parseFloat(maturityZone.attr('data-downpayment')),
+        type: maturityZone.attr('data-type'),
+        installment: maturityZone.attr('data-installment'),
+    };
 
-        let splitPaymentTimeline = document.querySelectorAll('.yp-timeline__item');
-        splitPaymentTimeline.forEach(element => {
-            let splitPaymentMaturity = parseInt(element.dataset.splitpaymentmaturity);
-            if (splitPaymentMaturity > currentMaturity) {
-                element.classList.add('hidden');
-            } else {
-                element.classList.remove('hidden');
-            }
-        });
+    return data;
 
-        if (installment !== null && typeof installment !== 'undefined' && installment !== '') {
-            var installmentData = JSON.parse(installment);
-            if (installmentData !== null && typeof installmentData !== 'undefined' && installmentData.length) {
-                for (let i = 0; i < installmentData.length; i++) {
-                    let installmentTotalAmount = parseFloat(installmentData[i].totalAmount).toFixed(2).replace('.', ',');
-                    let installmentDueDate = new Date(installmentData[i].dueDate).toLocaleDateString('fr-FR');;
-                    $('.yp-install-' + i).text(installmentTotalAmount + " €");
-                    $('.yp-due-date-' + i).text(installmentDueDate);
-                }
-            }
-        }
-    }
+}
 
-    $('.maturity_installment').removeClass('yp-bg-black-btn');
-    $('.maturity_installment' + key).addClass('yp-bg-black-btn');
+function updateGlobalUI(dataset)
+{
+    let infoInstallmentAmount = dataset.amount.toFixed(2).replace('.', ',');
+    let currentMaturity = dataset.maturity;
+    let initialAmount = dataset.initial_amount.toFixed(2).replace('.', ',');
+    let taeg = dataset.taeg.toFixed(2).replace('.', ',');
+    let tdf = dataset.tdf.toFixed(2).replace('.', ',');
+    let totalAmount = dataset.total_amount.toFixed(2).replace('.', ',');
+    let feeTotal = dataset.fee_total.toFixed(2).replace('.', ',');
+    let interestTotal = dataset.interest_total.toFixed(2).replace('.', ',');
+    let downPaymentAmount = dataset.down_payment_amount.toFixed(2).replace('.', ',');
+    let type = dataset.type;
+    let infoInstallmentMaturity = currentMaturity + 'x';
+    let installment = dataset.installment;
 
     $('.yp-install-amount').text(infoInstallmentAmount + " €");
+    $('.yp-install-maturity-split').text(currentMaturity + " x");
     $('.yp-install-maturity').text(infoInstallmentMaturity);
     $('.yp-maturity').text(currentMaturity);
     $('.yp-tdf').text(tdf);
     $('.yp-taeg').text(taeg);
     $('.yp-total').text(totalAmount);
     $('.yp-interest').text(interestTotal);
-    $('.yp-fee').text(feeTotal);
+    $('.yp-fee').text(feeTotal + " €");
     $('.yp-amount').text(initialAmount);
     $('.yp-down-amount').text(downPaymentAmount);
-
     $('.yp-custom-range').val(currentMaturity);
     $('.yp-install-maturity-lite').text(currentMaturity);
-
-    ypUpdatePaymentURL(currentMaturity, parseInt(downPaymentAmount) > 0, type);
 }
 
-function ypUpdatePaymentURL(maturity, withDownPayment = false, type = 'PersonalLoan')
+function handleSplitPaymentUI(dataset)
 {
+    if (dataset.type !== 'SplitPayment') return;
+
+    $('.yp-offer-zone').removeClass('hidden');
+    $('.yp-more-details-zone').addClass('hidden');
+    $('.yp-split-payment-info').removeClass('hidden');
+    $('.yp-down-amount-parent').addClass('hidden');
+    $('.yp-not-down-amount-parent').removeClass('hidden');
+    $('.yp-fees-text').removeClass('hidden');
+    $('.yp-interest-text').addClass('hidden');
+
+    if (dataset.fee_total > 0) {
+        $('.yp-without-fee-text').addClass('hidden');
+        $('.yp-with-fee-text').removeClass('hidden');
+        $('.yp-without-fee').addClass('hidden');
+        $('.yp-with-fee').removeClass('hidden');
+    } else {
+        $('.yp-without-fee-text').removeClass('hidden');
+        $('.yp-with-fee-text').addClass('hidden');
+        $('.yp-without-fee').removeClass('hidden');
+        $('.yp-with-fee').addClass('hidden');
+    }
+
+    let splitPaymentInstallment = document.querySelectorAll('.yp-split-payment-installment');
+
+    splitPaymentInstallment.forEach(element => {
+        let splitPaymentMaturity = parseInt(element.dataset.splitpaymentmaturity);
+        if (splitPaymentMaturity > dataset.maturity) {
+            element.classList.add('hidden');
+        } else {
+            element.classList.remove('hidden');
+        }
+    });
+
+    let splitPaymentTimeline = document.querySelectorAll('.yp-timeline__item');
+
+    splitPaymentTimeline.forEach(element => {
+        let splitPaymentMaturity = parseInt(element.dataset.splitpaymentmaturity);
+        if (splitPaymentMaturity > dataset.maturity) {
+            element.classList.add('hidden');
+        } else {
+            element.classList.remove('hidden');
+        }
+    });
+
+    if (dataset.installment !== null && typeof dataset.installment !== 'undefined' && dataset.installment !== '') {
+        let installmentData = JSON.parse(dataset.installment);
+
+        if (installmentData !== null && typeof installmentData !== 'undefined' && installmentData.length) {
+            for (let i = 0; i < installmentData.length; i++) {
+                let installmentTotalAmount = parseFloat(installmentData[i].totalAmount).toFixed(2).replace('.', ',');
+                let installmentDueDate = new Date(installmentData[i].dueDate).toLocaleDateString('fr-FR');;
+                $('.yp-install-' + i).text(installmentTotalAmount + " €");
+                $('.yp-due-date-' + i).text(installmentDueDate);
+            }
+        }
+    }
+}
+
+function handlePersonalLoanUI(dataset)
+{
+    if (dataset.type !== 'PersonalLoan') return;
+
+    $('.yp-offer-zone').addClass('hidden');
+    $('.yp-more-details-zone').removeClass('hidden');
+    $('.yp-split-payment-info').addClass('hidden');
+    $('.yp-without-fee-text').addClass('hidden');
+    $('.yp-with-fee-text').removeClass('hidden');
+    $('.yp-interest-text').removeClass('hidden');
+    $('.yp-fees-text').addClass('hidden');
+
+    if (dataset.down_payment_amount <= 0) {
+        $('.yp-down-amount-parent').addClass('hidden');
+        $('.yp-not-down-amount-parent').removeClass('hidden');
+    } else {
+        $('.yp-down-amount-parent').removeClass('hidden');
+        $('.yp-not-down-amount-parent').addClass('hidden');
+    }
+}
+
+function handleButtonUI(key)
+{
+    $('.maturity_installment').removeClass('yp-bg-black-btn');
+    $('.maturity_installment' + key).addClass('yp-bg-black-btn');
+
+    let $sliderSvg = $('.maturity_installment9999 img');
+    let sliderSvgSrc = $sliderSvg.attr('src') || '';
+    if ($('.maturity_installment' + key).hasClass('maturity_installment9999')) {
+        if (sliderSvgSrc.indexOf('black') !== -1) {
+            let newSliderSvgSrc = sliderSvgSrc.replace('black', 'white');
+            $sliderSvg.attr('src', newSliderSvgSrc);
+        }
+    } else {
+        if (sliderSvgSrc.indexOf('white') !== -1) {
+            let newSliderSvgSrc = sliderSvgSrc.replace('white', 'black');
+            $sliderSvg.attr('src', newSliderSvgSrc);
+        }
+    }
+}
+
+function ypUpdatePaymentURL(dataset)
+{
+    let withDownPayment = dataset.down_payment_amount > 0;
     if (typeof younitedpay.url_payment !== 'undefined') {
-        var link = younitedpay.url_payment + '&maturity=' + maturity + '&type=' + type;
+        let link = younitedpay.url_payment + '&maturity=' + dataset.maturity + '&type=' + dataset.type;
         if (withDownPayment === true) {
             link += '&down_payment=1';
         }
         $('form').each((index, form) => {
-            var action = $(form).attr('action');
+            let action = $(form).attr('action');
             if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
                 $(form).attr('action', link);
             }
@@ -295,6 +374,16 @@ function bindEventsYounitedPay()
     $('.yp-minus').on('click', function() {
         younitedpay.selected_maturity = parseInt($('.yp-custom-range').val()) - 1;
         YpsetRangeValue();
+    });
+
+    $('.maturity_installment9999').on('mouseover', (e) => {
+        $('.yp-range-text').removeClass('hidden');
+        $('.yp-range-slider').removeClass('hidden');
+    });
+
+    $('.maturity_installment:not(.maturity_installment9999)').on('mouseover', (e) => {
+        $('.yp-range-text').addClass('hidden');
+        $('.yp-range-slider').addClass('hidden');
     });
 }
 

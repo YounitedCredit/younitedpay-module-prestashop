@@ -27,6 +27,7 @@
 </div>
 <div class="yp-flex yp-justify-between yp-mt-6">
 {foreach from=$offers item=offer key=key}
+   {if $key >= 5}{break}{/if}
    {assign var="background_block" value=''}
    {if (int) $key === (int) $selected_offer}
       {assign var="background_block" value='yp-bg-black-btn'}
@@ -74,14 +75,16 @@
          <span class="yp-inline-block yp-transition-all yp-border-opacity-100 yp-h-10
             blocks_maturity block_maturity{$key|escape:'htmlall':'UTF-8'} yp-flex flexmiddle ">
             <span class="yp-flex flexmiddle yp-p-2 yp-rounded-sm yp-transition-colors
-               yp-duration-500 yp-select-none">{l s='Customise' mod='younitedpay'}</span>
+               yp-duration-500 yp-select-none">
+               <img class="yp-logo-range" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_slider_black_url|escape:'htmlall':'UTF-8'}" alt="Slider icon"/>
+            </span>
          </span>
       </span>
    </span>
 {/if}
 </div>
 
-<div>
+<div class="yp-range-slider yp-mt-6">
 {if (bool) $show_ranges === true && empty($range_offers) === false}
    <div class="yp-flex yp-items-center">
       <button class="yp-mobile yp-minus yp-mr-3">-</button>
@@ -198,6 +201,8 @@
                "interest_total" : "{$range_offer['interest_total']|escape:'htmlall':'UTF-8'}",
                "taeg" : "{$range_offer['taeg']|escape:'htmlall':'UTF-8'}",
                "tdf" : "{$range_offer['tdf']|escape:'htmlall':'UTF-8'}",
+               "type" : "{$range_offer['type']|escape:'htmlall':'UTF-8'}",
+               "installment" : "{json_encode($range_offer['installment'])|escape:'htmlall':'UTF-8'}",
             }{if $key < count($range_offers) - 1},{/if}
          {/foreach}
       ];

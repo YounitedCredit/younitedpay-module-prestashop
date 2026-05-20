@@ -286,6 +286,10 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_565629aab091cf074ee823997
 $_MODULE['<{younitedpay}prestashop>credit_propositions_43303bb45cf16dc537d2c174bc1a111d'] = 'Recibe tu respuesta';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_ee982d11cab241f90070d6255ffe0d7e'] = 'in pochi secondi';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_d3d2e617335f08df83599665eef8a418'] = 'Chiudi';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_7b7813f00f42b7e5366e7065aaa798c6'] = 'di cui';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_a1ff09453cc85d1a8cc7fb1f4911f8e4'] = 'di commissioni di finanziamento';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_3728af837fe70019577ddb0ed7125ee5'] = 'Fino a';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_d851a9b545796e02deeef998c66789c0'] = 'pagamenti mensili';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_489d5355c8ebf85ad59500645d7a5b6e'] = 'Contrarre un prestito è un impegno con un';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_25ff5aab384673e670be53f2ba39ce82'] = 'obbligo di rimborso.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6cef5f56a4'] = 'Verifica la tua capacità';

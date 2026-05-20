@@ -102,6 +102,7 @@
         <div class="col-lg-6 form-group d-flex align-items-center" id="range-installment-selects">
             <select class="form-control col-lg-1" id="min_installment" name="min_installment">
                 {foreach $configuration.maturitylist item=maturityitem}
+                    {if $maturityitem <= 4} {continue} {/if}
                     <option name="{$maturityitem|escape:'htmlall':'UTF-8'}" value="{$maturityitem|escape:'htmlall':'UTF-8'}"
                         {if (int) $configuration.min_installment == (int) $maturityitem} selected{/if}>
                             {$maturityitem|escape:'htmlall':'UTF-8'}x
@@ -111,6 +112,7 @@
             <span>{l s=' to ' mod='younitedpay'}</span>
             <select class="form-control col-lg-1" id="max_installment" name="max_installment">
                 {foreach $configuration.maturitylist item=maturityitem}
+                    {if $maturityitem <= 4} {continue} {/if}
                     <option name="{$maturityitem|escape:'htmlall':'UTF-8'}" value="{$maturityitem|escape:'htmlall':'UTF-8'}"
                         {if (int) $configuration.max_installment == (int) $maturityitem} selected{/if}>
                             {$maturityitem|escape:'htmlall':'UTF-8'}x
