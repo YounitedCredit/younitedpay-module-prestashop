@@ -235,7 +235,7 @@ class ConfigService
     public function checkSpecifications($isProductionMode)
     {
         $curlInfos = curl_version();
-        $versionOpenSSL = false !== getenv('OPENSSL_VERSION_NUMBER') ? OPENSSL_VERSION_NUMBER : -1;
+        $versionOpenSSL = defined('OPENSSL_VERSION_NUMBER') ? OPENSSL_VERSION_NUMBER : -1;
         $versionSSLCURL = $curlInfos !== false ? $curlInfos['version'] . ' ' . $curlInfos['ssl_version'] : '';
 
         $sslActivated = $this->isSslActive();
@@ -305,7 +305,7 @@ class ConfigService
         $aOrdersSel = json_decode($selectedOrders, true);
         if ($aOrdersSel == null || is_array($aOrdersSel) === false) {
             $aOrdersSel = [
-                false !== getenv('_PS_OS_DELIVERED_')
+                defined('_PS_OS_DELIVERED_')
                 ? _PS_OS_DELIVERED_
                 : Configuration::get('_PS_OS_DELIVERED_', null, null, $idShop),
             ];
