@@ -456,12 +456,16 @@ function bindMaturityEvents()
 
     $('.maturity_installment9999').on('mouseover', (e) => {
         $('.yp-range-text').removeClass('hidden');
-        $('.yp-range-slider').removeClass('hidden');
+        if (younitedpay.rangeForced === true) {
+            $('.yp-range-slider').removeClass('hidden');
+        }
     });
 
     $('.maturity_installment:not(.maturity_installment9999)').on('mouseover', (e) => {
         $('.yp-range-text').addClass('hidden');
-        $('.yp-range-slider').addClass('hidden');
+        if (younitedpay.rangeForced === true) {
+            $('.yp-range-slider').addClass('hidden');
+        }
     });
 }
 

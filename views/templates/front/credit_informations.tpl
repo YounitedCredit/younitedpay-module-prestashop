@@ -215,6 +215,7 @@
          {/foreach}
       ];
       younitedpay.rangeEnabled = {$show_ranges|escape:'htmlall':'UTF-8'};
+      younitedpay.rangeForced = {$range_forced|escape:'htmlall':'UTF-8'};
       younitedpay.minRange = {$min_range|escape:'htmlall':'UTF-8'};
       younitedpay.maxRange = {$max_range|escape:'htmlall':'UTF-8'};
       younitedpay.minInstall = {$min_install|escape:'htmlall':'UTF-8'};
