@@ -96,25 +96,25 @@
 {/if}
 </div>
 
-<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-not-down-amount-parent">
+<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-not-down-amount-parent {if $offers[$selected_offer].down_payment_amount > 0}hidden{/if}">
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed">
       <span>{l s='Your purchase in' mod='younitedpay'}</span>
       <span class="yp-maturity">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span>
-      <span class="yp-without-fee-text">{l s='times without fees, for' mod='younitedpay'}</span>
-      <span class="yp-with-fee-text">{l s='times, for' mod='younitedpay'}</span>
+      <span class="yp-without-fee-text {if $offers[$selected_offer].fee_total == 0}hidden{/if}">{l s='times without fees, for' mod='younitedpay'}</span>
+      <span class="yp-with-fee-text {if $offers[$selected_offer].fee_total > 0}hidden{/if}">{l s='times, for' mod='younitedpay'}</span>
       <b class="yp-install-amount">{$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €</b>
       <span>{l s='by month.' mod='younitedpay'}</span>
    </p>
 </div>
 
-<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-down-amount-parent">
+<div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-down-amount-parent {if $offers[$selected_offer].down_payment_amount <= 0}hidden{/if}">
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed">
-      <b><span class="yp-down-amount">{{ $offers[$selected_offer].down_payment_amount }}</span>&nbsp;€</b>
+      <b><span class="yp-down-amount">{$offers[$selected_offer].down_payment_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
       <b>{l s='today,' mod='younitedpay'}</b>
       <span>{l s='then' mod='younitedpay'}</span>
-      <span class="yp-install-maturity-lite">{{ $offers[$selected_offer].maturity }}</span>
+      <span class="yp-install-maturity-lite">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span>
       <span>{l s='payments of' mod='younitedpay'}</span>
-      <b class="yp-install-amount">{{ $offers[$selected_offer].installment_amount }} €</b>
+      <b class="yp-install-amount">{$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'} €</b>
       <span>{l s='each month.' mod='younitedpay'}</span>
    </p>
 </div>
@@ -175,10 +175,18 @@
          <span>{l s='For a credit amount of' mod='younitedpay'}</span>
          <b class="yp-text-lg"><span class="yp-amount">{$offer.initial_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
          <span>{l s=', to which are added' mod='younitedpay'}</span>
-         <b class="yp-text-lg yp-interest-text"><span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
-         <b class="yp-text-lg yp-fees-text"><span class="yp-fee">{$offer.fee_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>
-         <b class="yp-text-lg yp-fees-text">{l s='financing fees,' mod='younitedpay'}</b>
-         <b class="yp-text-lg yp-interest-text">{l s='interest,' mod='younitedpay'}</b>
+         <b class="yp-text-lg yp-interest-text {if $offer.type === 'SplitPayment'}hidden{/if}">
+            <span class="yp-interest">{$offer.interest_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
+         </b>
+         <b class="yp-text-lg yp-fees-text {if $offer.type !== 'SplitPayment'}hidden{/if}">
+            <span class="yp-fee">{$offer.fee_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
+         </b>
+         <b class="yp-text-lg yp-fees-text {if $offer.type !== 'SplitPayment'}hidden{/if}">
+            {l s='financing fees,' mod='younitedpay'}
+         </b>
+         <b class="yp-text-lg yp-interest-text {if $offer.type === 'SplitPayment'}hidden{/if}">
+            {l s='interest,' mod='younitedpay'}
+         </b>
          <span>{l s='either a' mod='younitedpay'}</span>
          <b class="yp-text-lg">{l s='total amount due of' mod='younitedpay'}</b>
          <b class="yp-text-lg"><span class="yp-total">{$offer.total_amount|escape:'htmlall':'UTF-8'}</span>&nbsp;€</b>.
@@ -219,7 +227,7 @@
 
 <div class="yp-text-responsabilities{if isset($yperror)} yp-my-4{else} yp-mt-6{/if}">
 {if $iso_code == 'fr'}
-   <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed">
+   <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed yp-text-lg yp-font-bold">
       {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
       {l s='obligation of repayment.' mod='younitedpay'}
       {if $iso_code == 'fr'}
