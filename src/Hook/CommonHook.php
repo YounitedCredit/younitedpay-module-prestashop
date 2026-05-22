@@ -94,8 +94,11 @@ class CommonHook extends AbstractHook
             case $controller instanceof \StEasyCheckoutDefaultModuleFrontController:
             case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $invoiceAddress = new \Address(Context::getContext()->cart->id_address_invoice);
-                $countryIsoCode = (new \Country($invoiceAddress->id_country))->iso_code;
-                $langId = \Language::getIdByIso(strtolower($countryIsoCode)) ?: Context::getContext()->language->id;
+                $langId = Context::getContext()->language->id;
+                if (\Validate::isLoadedObject($invoiceAddress) === true) {
+                    $countryIsoCode = (new \Country($invoiceAddress->id_country))->iso_code;
+                    $langId = \Language::getIdByIso(strtolower($countryIsoCode));
+                }
                 $frontModuleLink = Context::getContext()->link->getModuleLink(
                     $this->module->name,
                     'product'
