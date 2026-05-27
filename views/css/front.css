@@ -815,7 +815,7 @@
 }
 
 .yp-popup-logo img {
-    width: 95px;
+    width: 125px;
 }
 
 .yp-p-1 {
@@ -1176,6 +1176,7 @@
 .younitedpay-widget-root {
     --text-opacity: 1;
     color: #000000!important;
+    margin: 12px 0 !important;
 }
 
 

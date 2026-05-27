@@ -19,8 +19,9 @@
 <div class="younitedpay-widget-root yp-bg-purple-light yp-rounded-bg yp-p-2">
    {if count($offers) > 0}
    <div class="younited_block yp-pb-2 yp-pt-2 yp-my-2{if isset($widget_borders) && (bool) $widget_borders === true} widget_border{/if}">
-      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap">
+      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-justify-center yp-flex-wrap">
          <img class="yp-mb-1 yp-p-2 yp-logo lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_black_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" data-ll-status="loaded">
+         <div class="yp-flex yp-flex-row yp-justify-center yp-items-center yp-flex-wrap">
          {foreach from=$offers item=offer key=key}
          {if $key >= 5}{break}{/if}
             {assign var="background_block" value=''}
@@ -77,7 +78,7 @@
                </span>
             </span>
          {/if}
-
+         </div>
       {assign var=offer_max_line value=4}
       {if $hook_younited == 'displayAfterProductThumbs'}
          {assign var=offer_max_line value=3}

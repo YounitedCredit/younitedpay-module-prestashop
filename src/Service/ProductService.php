@@ -110,16 +110,19 @@ class ProductService
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
             $isRangeForced = false;
+
             if (count($maturities) > 5 && $isRangeEnabled === false) {
                 $minInstall = (int) $maturities[0]['maturity'];
                 $isRangeEnabled = true;
                 $isRangeForced = true;
             }
 
+            $maturitiesConfig = explode(',', $this->getMaturitiesConfiguration($maturities));
+            $maturityRange = array_map('intval', $maturitiesConfig);
+            sort($maturityRange);
+
             $configMaturities = ['List' => '24,36'];
             if ($isRangeEnabled && $isRangeForced === false) {
-                $maturityRange = array_map('intval', array_column($maturities, 'maturity'));
-                sort($maturityRange);
                 $configMaturities = [
                     'Range' => [
                         'Min' => $minInstall > $maturityRange[0] ? $maturityRange[0] : $minInstall,
@@ -175,7 +178,7 @@ class ProductService
                 $minRange,
                 $maxRange,
                 $intervalRange,
-                $maturityRange ?? []
+                $maturityRange
             );
 
             if (count($rangeOffers) === 0 && count($offers) > 0 && $isRangeEnabled) {
