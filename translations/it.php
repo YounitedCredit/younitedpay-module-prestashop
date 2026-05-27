@@ -315,7 +315,7 @@ $_MODULE['<{younitedpay}prestashop>orderservice_cb456215c3333db0551bd0788bc258c7
 $_MODULE['<{younitedpay}prestashop>orderservice_f0dc3d93bca2f1953969fb899f241021'] = 'Receduto';
 $_MODULE['<{younitedpay}prestashop>orderservice_0e22fe7d45f8e5632a4abf369b24e29c'] = 'Cancellato';
 $_MODULE['<{younitedpay}prestashop>paymentservice_30d6c29a7421ce981cfe2441d730257e'] = 'Si prega di contattare il responsabile del negozio, il pagamento non risulta possibile';
-$_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Payment via Younited Pay';
+$_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Pagamento tramite Younited Pay';
 $_MODULE['<{younitedpay}prestashop>configservice_ef4268001fa5b6b196363e2f9e1629ef'] = 'La chiamata TLS è fallita';
 $_MODULE['<{younitedpay}prestashop>configservice_7ed48b0f1b989a32e7bbd1961e88cc10'] = 'Nessuna credenziale salvata';
 $_MODULE['<{younitedpay}prestashop>configservice_929544476b6f8e38c732a1831d2924a4'] = 'Nessun Codice Negozio salvato';

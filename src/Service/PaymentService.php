@@ -306,7 +306,13 @@ class PaymentService
             $getPaymentResponse = $this->getApiPaymentById($paymentId, 0, $this->countryCode);
 
             if ($getPaymentResponse !== false) {
-                $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+                $contractRef = '';
+                if (isset($getPaymentResponse['personalLoanPaymentDetails']['loanReference'])) {
+                    $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+                }
+                if (isset($getPaymentResponse['splitPaymentDetails']['loanReference'])) {
+                    $contractRef = $getPaymentResponse['splitPaymentDetails']['loanReference'];
+                }
                 $apiVersion = $getPaymentResponse['apiVersion'];
 
                 $this->saveContractInit($contractRef, $paymentId, $apiVersion);

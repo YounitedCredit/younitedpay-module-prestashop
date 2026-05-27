@@ -88,7 +88,7 @@ $_MODULE['<{younitedpay}prestashop>orderservice_cb456215c3333db0551bd0788bc258c7
 $_MODULE['<{younitedpay}prestashop>orderservice_f0dc3d93bca2f1953969fb899f241021'] = 'Restitué';
 $_MODULE['<{younitedpay}prestashop>orderservice_0e22fe7d45f8e5632a4abf369b24e29c'] = 'Annulé';
 $_MODULE['<{younitedpay}prestashop>paymentservice_30d6c29a7421ce981cfe2441d730257e'] = 'Please contact the shop owner payment is actually not possible';
-$_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Paiment avec Younited Pay';
+$_MODULE['<{younitedpay}prestashop>paymentservice_d68c843292a8c70ccf38e76df0851a7a'] = 'Paiement avec Younited Pay';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_1e63d1811556fc2dad106dcbd4217a69'] = 'N° de paiement';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_31738cd694667ccdfa2cbc65249de5cc'] = 'Date du paiement';
 $_MODULE['<{younitedpay}prestashop>displayadminordercontentorder_707436a5aa13b82a4d777f64c717a625'] = 'Méthode de paiement';
