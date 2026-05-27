@@ -250,13 +250,22 @@ function handleButtonUI(key)
 function ypUpdatePaymentURL(dataset)
 {
     let withDownPayment = dataset.down_payment_amount > 0;
+
     if (typeof younitedpay.url_payment !== 'undefined') {
-        let link = younitedpay.url_payment + '&maturity=' + dataset.maturity + '&type=' + dataset.type;
+        const url = new URL(younitedpay.url_payment, window.location.origin);
+
+        url.searchParams.set('maturity', dataset.maturity);
+        url.searchParams.set('type', dataset.type);
+
         if (withDownPayment === true) {
-            link += '&down_payment=1';
+            url.searchParams.set('down_payment', '1');
         }
+
+        const link = url.toString();
+
         $('form').each((index, form) => {
-            let action = $(form).attr('action');
+            const action = $(form).attr('action');
+
             if (typeof action !== 'undefined' && action.includes(younitedpay.url_payment) !== false) {
                 $(form).attr('action', link);
             }
