@@ -159,8 +159,8 @@ class ConfigService
                 ->setMaturityRangeMin(1)
                 ->setMaturityRangeMax(84);
 
-        $request = new GetPaymentOptionsRequest();
-        $maturityList = self::DEF_MATURITIES;
+            $request = new GetPaymentOptionsRequest();
+            $maturityList = self::DEF_MATURITIES;
 
             if (empty($client->shopCode) === false) {
                 /** @var mixed $response */

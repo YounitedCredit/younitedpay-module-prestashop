@@ -77,13 +77,13 @@ class PaymentService
     /** @var string */
     public $countryCode;
 
-    /** @var float */
+    /** @var string */
     public $totalAmount;
 
-    /** @var float */
+    /** @var string */
     public $type;
 
-    /** @var float */
+    /** @var int */
     public $maturity;
 
     public function __construct(
@@ -107,7 +107,7 @@ class PaymentService
         $this->countryCode = strtoupper($country->iso_code);
         $langId = (int) \Language::getIdByIso($country->iso_code);
         $this->type = $type;
-        $this->totalAmount = (float) $totalAmount;
+        $this->totalAmount = $totalAmount;
         $this->maturity = (int) $maturity;
 
         $isPhoneInternational = $this->isInternationalPhone($customerAddress);

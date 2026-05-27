@@ -107,9 +107,9 @@ class ProductService
             }
         }
 
+        $isRangeForced = false;
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
-            $isRangeForced = false;
 
             if (count($maturities) > 5 && $isRangeEnabled === false) {
                 $minInstall = (int) $maturities[0]['maturity'];
@@ -407,8 +407,12 @@ class ProductService
 
         $config = [];
         foreach ($maturities as $oneMaturity) {
-            if ($splitPaymentMode === false && $oneMaturity['type'] === 'S') continue;
-            if ($loanPaymentMode === false && $oneMaturity['type'] === 'L') continue;
+            if ($splitPaymentMode === false && $oneMaturity['type'] === 'S') {
+                continue;
+            }
+            if ($loanPaymentMode === false && $oneMaturity['type'] === 'L') {
+                continue;
+            }
 
             $maturity = (int) $oneMaturity['maturity'];
             $config[] = $maturity;
