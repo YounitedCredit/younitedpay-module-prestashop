@@ -25,7 +25,7 @@
 <div class="yp-text-md yp-mt-4 yp-mb-5 yp-h4">
     <span>{l s='Choose the number of monthly payments' mod='younitedpay'}</span>
 </div>
-<div class="yp-flex yp-justify-between yp-mt-6">
+<div class="yp-flex yp-justify-around yp-mt-6">
 {foreach from=$offers item=offer key=key}
    {if $key >= 5}{break}{/if}
    {assign var="background_block" value=''}
