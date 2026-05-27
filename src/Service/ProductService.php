@@ -94,6 +94,11 @@ class ProductService
         $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
         $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
         $widgetBorder = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_WIDGET_BORDERS, false);
+        $loanPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_LOAN_PAYMENT, true);
+
+        if ($loanPaymentMode === false) {
+            $isRangeEnabled = false;
+        }
 
         $offers = [];
         $rangeOffers = [];
@@ -402,8 +407,8 @@ class ProductService
             return '36,24';
         }
 
-        $splitPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_SPLIT_PAYMENT);
-        $loanPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_LOAN_PAYMENT);
+        $splitPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_SPLIT_PAYMENT, false);
+        $loanPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_LOAN_PAYMENT, true);
 
         $config = [];
         foreach ($maturities as $oneMaturity) {
