@@ -28,8 +28,8 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ToolsYounited;
-use YounitedPaySDK\Model\NewAPI\Request\GetOffers;
 use YounitedPaySDK\Model\NewAPI\PaymentOptionItem;
+use YounitedPaySDK\Model\NewAPI\Request\GetOffers;
 use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 
 class ProductService
