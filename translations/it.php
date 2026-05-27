@@ -102,7 +102,7 @@ $_MODULE['<{younitedpay}prestashop>status-and-headers_b94a2d033c4622182e9d15e22e
 $_MODULE['<{younitedpay}prestashop>status-and-headers_8a7935c8f82f4e8d0d85653cdc4dbaa4'] = 'Para asegurar el correcto funcionamiento del módulo, por favor, revise los siguientes requisitos técnicos ';
 $_MODULE['<{younitedpay}prestashop>maturities_24c4df62a12f1e3e869ce4ab1b8a3e59'] = 'Mostra la barra con il range delle durate';
 $_MODULE['<{younitedpay}prestashop>maturities_e2d8ca39625f15fff61bd1b1712bb2ec'] = 'Mostra le opzioni di pagamento da 2x a 4x';
-$_MODULE['<{younitedpay}prestashop>maturities_a978affac46bb510faaad47968050058'] = 'Mostra le opzioni di finanza da 6x a 84x';
+$_MODULE['<{younitedpay}prestashop>maturities_a978affac46bb510faaad47968050058'] = 'Mostra le opzioni di finanza da 5x a 84x';
 $_MODULE['<{younitedpay}prestashop>maturities_f687884e668b470bc99c21e4c1d70223'] = 'Rate da';
 $_MODULE['<{younitedpay}prestashop>maturities_3501c7e67e0150900b3671b71c9e567e'] = ' a ';
 $_MODULE['<{younitedpay}prestashop>maturities_d16dd01adf735ed9b87eebff5fc39ce5'] = 'Intervallo';
