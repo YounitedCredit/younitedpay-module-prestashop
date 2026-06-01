@@ -243,7 +243,7 @@ class YounitedClient
         if (empty($countryCode) === false) {
             $isoCodeSuffix = '_' . strtoupper($countryCode);
         } else {
-            $isoCode = strtoupper((new \Language((int) $idLang))->getIsoCode());
+            $isoCode = strtoupper((new \Language((int) $idLang))->iso_code);
             $isoCodeSuffix = empty($idLang) ? '' : '_' . $isoCode;
         }
 
