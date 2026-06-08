@@ -126,6 +126,12 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     /** @var array */
     public $availableCountries = Younitedpay::AVAILABLE_COUNTRIES;
 
+    /** @var bool */
+    public $splitPaymentAvailable = false;
+
+    /** @var bool */
+    public $loanPaymentAvailable = false;
+
     const ALLOWED_FRONT_PRODUCT_HOOKS = [
         'disabled',
         'displayProductPriceBlock',
@@ -280,6 +286,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
             $specsVariables = $this->configService->checkSpecifications($this->isProductionMode);
             $this->maturitylist = $specsVariables['maturityList'];
             $this->shopCodeList = $specsVariables['shopCodeList'];
+            $this->splitPaymentAvailable = $specsVariables['splitPaymentAvailable'];
+            $this->loanPaymentAvailable = $specsVariables['loanPaymentAvailable'];
 
             /** @var CacheYounited $cachestorage */
             $cachestorage = new CacheYounited();
@@ -759,6 +767,8 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'id_cart' => 'test_webhook',
             ]),
             'available_countries' => array_map('strtolower', $this->availableCountries),
+            'split_payment_available' => $this->splitPaymentAvailable,
+            'loan_payment_available' => $this->loanPaymentAvailable,
         ];
     }
 

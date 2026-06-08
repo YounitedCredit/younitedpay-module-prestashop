@@ -39,6 +39,9 @@ function upgrade_module_2_3_0($module)
 
     $context = Context::getContext();
 
+    $installer = new ModuleInstaller($module);
+    $result &= $installer->installObjectModel(YounitedPayAvailability::class);
+
     $splitPaymentMaturities = [
         [
             'id_younitedpay_configuration' => 0,
@@ -82,7 +85,5 @@ function upgrade_module_2_3_0($module)
     Configuration::updateValue(Younitedpay::SHOW_LOAN_PAYMENT, true);
     Configuration::updateValue(Younitedpay::SHOW_SPLIT_PAYMENT, false);
 
-    $installer = new ModuleInstaller($module);
-
-    return $result && $installer->installObjectModel(YounitedPayAvailability::class);
+    return $result;
 }

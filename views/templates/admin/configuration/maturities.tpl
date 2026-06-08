@@ -16,16 +16,28 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
 
+{assign var=splitPaymentAvailable value=$configuration.split_payment_available}
+{assign var=disabledSplit value=''}
+{if $splitPaymentAvailable === false}
+    {$configuration.show_split_payment = false}
+    {assign var=disabledSplit value=' disabled'}
+{/if}
+{assign var=loanPaymentAvailable value=$configuration.loan_payment_available}
+{assign var=disabledLoan value=''}
+{if $disabledLoan === false}
+    {$configuration.show_loan_payment = false}
+    {assign var=disabledLoan value=' disabled'}
+{/if}
 <div class="form-group mt-2 row">
     <label class="form-control-label col-lg-3 justify-content-end pt-1">
         {l s='Show payment options from 2x to 4x' mod='younitedpay'}
     </label>
     <div class="col-lg-4 align-item-center">
-        <span class="ps-switch ps-switch-lg" id="show_split_payment_switch">
-            <input type="radio" name="show_split_payment" id="show_split_payment_off"
+        <span class="ps-switch ps-switch-lg" id="show_split_payment_switch"{$disabledSplit}>
+            <input type="radio" name="show_split_payment" id="show_split_payment_off" {$disabledSplit}
                 value="0"{if $configuration.show_split_payment === false} checked{/if}/>
             <label for="show_split_payment_off">Off</label>
-            <input type="radio" name="show_split_payment" id="show_split_payment_on"
+            <input type="radio" name="show_split_payment" id="show_split_payment_on" {$disabledSplit}
                 value="1"{if $configuration.show_split_payment === true} checked{/if}/>
             <label for="show_split_payment_on">On</label>
             <span class="slide-button"></span>
@@ -33,6 +45,7 @@
     </div>
 </div>
 
+{if $splitPaymentAvailable === true}
 <div class="split-payment-panel{if $configuration.show_split_payment === false} hidden{/if}">
     <div class="form-group mt-2 row">
         <label class="form-control-label col-lg-3 justify-content-end pt-1" for="maturity_zone">
@@ -47,19 +60,26 @@
             {/foreach}
         </div>
     </div>
-    <div class="form-group row">
-        <label class="form-control-label col-lg-3 justify-content-end pt-1">
-        </label>
-        <div class="col-lg-5 align-item-center">
-            <button class="btn btn-lg btn-outline-primary" id="younitedpay_maturitybtn" type="submit">
-                {l s='Add a maturity' mod='younitedpay'}
-            </button>
-        </div>
-    </div>
     <div class="divhr">
         <hr />
     </div>
 </div>
+{else}
+    <div class="form-group mt-2 row">
+        <div class="row col-lg-12 justify-content-center yp-alert-admin">
+            <div class="card d-flex flex-row">
+                <div class="col d-flex align-items-center justify-content-center alert-info">
+                    <i class="material-icons mi-settings">info_outline</i>
+                </div>
+                <div class="col-xl-12 p-1 pl-2">
+                    <p>
+                        {l s='This option is not available for your account. Contact your Younited account manager to activate it.' mod='younitedpay'}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 
 <div class="form-group mt-2 row">
     <label class="form-control-label col-lg-3 justify-content-end pt-1">
@@ -85,16 +105,17 @@
         </label>
         <div class="col-lg-4 align-item-center">
             <span class="ps-switch ps-switch-lg" id="show_ranges_switch">
-                <input type="radio" name="show_ranges" id="show_ranges_off"
+                <input type="radio" name="show_ranges" id="show_ranges_off" {$disabledLoan}
                     value="0"{if $configuration.show_ranges === false} checked{/if}/>
                 <label for="show_ranges_off">Off</label>
-                <input type="radio" name="show_ranges" id="show_ranges_on"
+                <input type="radio" name="show_ranges" id="show_ranges_on" {$disabledLoan}
                     value="1"{if $configuration.show_ranges === true} checked{/if}/>
                 <label for="show_ranges_on">On</label>
                 <span class="slide-button"></span>
             </span>
         </div>
     </div>
+    {if $loanPaymentAvailable === true}
     <div class="form-group mt-2 row ranges_min_max{if $configuration.show_ranges === false} hidden{/if}">
         <label class="form-control-label col-lg-3 justify-content-end pt-1">
             {l s='Installments from' mod='younitedpay'}
@@ -174,4 +195,20 @@
             </small>
         </div>
     </div>
+    {else}
+        <div class="form-group mt-2 row">
+            <div class="row col-lg-12 justify-content-center yp-alert-admin">
+                <div class="card d-flex flex-row">
+                    <div class="col d-flex align-items-center justify-content-center alert-info">
+                        <i class="material-icons mi-settings">info_outline</i>
+                    </div>
+                    <div class="col-xl-12 p-1 pl-2">
+                        <p>
+                            {l s='This option is not available for your account. Contact your Younited account manager to activate it.' mod='younitedpay'}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/if}
 </div>

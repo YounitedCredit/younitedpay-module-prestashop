@@ -188,6 +188,7 @@ $_MODULE['<{younitedpay}prestashop>maturities_9fb417db7db6e29f83d6941793bb2468']
 $_MODULE['<{younitedpay}prestashop>maturities_d1875797aa9d4608395828edfc1d4ce1'] = 'Maturités mises en avant ';
 $_MODULE['<{younitedpay}prestashop>maturities_b2a4f24474488720f32ed4f37e895e37'] = 'Ajouter une maturité';
 $_MODULE['<{younitedpay}prestashop>maturities_8416035e654de5fbd5fd0dacb42d51de'] = 'Pour garantir une expérience client optimale et une bonne lecture de votre site, nous vous conseillons de sélectionner un maximum de 3 maturités.';
+$_MODULE['<{younitedpay}prestashop>maturities_c39d33d6354168c3334db5a99eec8572'] = 'Cette option n’est pas disponible pour votre compte. Contactez votre chargé d’affaires Younited pour l’activer.';
 $_MODULE['<{younitedpay}prestashop>settings-form_edc0e46e649858c5c9f91fe5f7fca9de'] = '1. Installation';
 $_MODULE['<{younitedpay}prestashop>settings-form_0ba29c6a1afacf586b03a26162c72274'] = 'Environnement';
 $_MODULE['<{younitedpay}prestashop>settings-form_0cbc6611f5540bd0809a388dc95a615b'] = 'Test';

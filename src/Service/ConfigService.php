@@ -120,6 +120,10 @@ class ConfigService
         $maturityList = [];
         $status = [];
         $merchantCountryCode = [];
+        $paymentsAvailables = [
+            'loan' => false,
+            'splitPayment' => false,
+        ];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
             $langId = (int) Language::getIdByIso($countryCode);
@@ -178,6 +182,12 @@ class ConfigService
                     if (in_array($maturity, $maturityList) === false) {
                         $maturityList[] = $maturity;
                     }
+                    $type = $oneOffer->getType() ?? 'Loan';
+                    if ($type === 'SplitPayment') {
+                        $paymentsAvailables['splitPayment'] = true;
+                    } else {
+                        $paymentsAvailables['loanPayment'] = true;
+                    }
                 }
             }
         }
@@ -189,6 +199,8 @@ class ConfigService
                 'shopCodeList' => $shopCodeList,
                 'status' => $status,
                 'merchantCountryCode' => $merchantCountryCode,
+                'splitPaymentAvailable' => $paymentsAvailables['splitPayment'],
+                'loanPaymentAvailable' => $paymentsAvailables['loanPayment'],
             ];
         }
 
@@ -205,6 +217,8 @@ class ConfigService
             'shopCodeList' => $shopCodeList,
             'status' => $status,
             'merchantCountryCode' => $merchantCountryCode,
+            'splitPaymentAvailable' => $paymentsAvailables['splitPayment'],
+            'loanPaymentAvailable' => $paymentsAvailables['loanPayment'],
         ];
     }
 
@@ -265,6 +279,8 @@ class ConfigService
         return [
             'maturityList' => $isApiConnected['maturityList'],
             'shopCodeList' => $isApiConnected['shopCodeList'],
+            'splitPaymentAvailable' => $isApiConnected['splitPaymentAvailable'],
+            'loanPaymentAvailable' => $isApiConnected['loanPaymentAvailable'],
             'merchantCountryCode' => $isApiConnected['merchantCountryCode'],
             'connected' => $isApiConnectedStatus,
             'status' => $isApiConnected['status'],

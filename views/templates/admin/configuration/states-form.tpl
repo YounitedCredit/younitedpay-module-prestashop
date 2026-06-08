@@ -43,7 +43,7 @@
                         ">
                         {include file="./maturities.tpl" configuration=$configuration}
                         <div class="form-group mt-2 row">
-                            <div class="row col-lg-12 justify-content-center" id="status_informations">
+                            <div class="row col-lg-12 justify-content-center yp-alert-admin" id="status_informations">
                                 <div class="card d-flex flex-row">
                                     <div class="col d-flex align-items-center justify-content-center alert-info">
                                         <i class="material-icons mi-settings">info_outline</i>
