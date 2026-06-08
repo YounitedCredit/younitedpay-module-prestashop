@@ -54,6 +54,12 @@ class HookPayment extends AbstractHook
         $loggerservice = ServiceContainer::getInstance()->get(LoggerService::class);
 
         $customerAdressInvoice = new \Address(Context::getContext()->cart->id_address_invoice);
+        if (\Validate::isLoadedObject($customerAdressInvoice) === false) {
+            $loggerservice->addLogAPI('Invoice address not found', 'Info', $this);
+
+            return [];
+        }
+
         $country = new \Country($customerAdressInvoice->id_country);
         $langId = (int) \Language::getIdByIso($country->iso_code);
 

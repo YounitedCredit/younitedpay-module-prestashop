@@ -17351,23 +17351,23 @@ a.tags-input .tag:focus {
     right: 10px
 }
 
-#status_informations .alert-info {
+.yp-alert-admin .alert-info {
     border: none;
     color: #FAB000;
     background-color: #F9F4DC;
 }
 
-#status_informations .alert-info::before {
+.yp-alert-admin .alert-info::before {
     content: "" !important
 }
 
-#status_informations {
-    color: black !important
+.yp-alert-admin {
+    color: black !important;
 }
 
-#status_informations .card {
+.yp-alert-admin .card {
     border: 2px solid #FAB000 !important;
-    border-radius: 0 !important
+    border-radius: 0 !important;
 }
 
 .icon-lightbulb::before {

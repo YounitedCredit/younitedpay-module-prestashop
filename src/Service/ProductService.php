@@ -28,9 +28,9 @@ use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ToolsYounited;
-use YounitedPaySDK\Model\NewAPI\GetOffers;
-use YounitedPaySDK\Model\OfferItem;
-use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
+use YounitedPaySDK\Model\NewAPI\PaymentOptionItem;
+use YounitedPaySDK\Model\NewAPI\Request\GetOffers;
+use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 
 class ProductService
 {
@@ -90,9 +90,15 @@ class ProductService
         $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
         $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
         $maxRange = $this->configRepository->getConfig(Younitedpay::MAX_RANGE_OFFERS, 0);
+        $intervalRange = $this->configRepository->getConfig(Younitedpay::INTERVAL_RANGE_OFFERS, 1);
         $minInstall = (int) $this->configRepository->getConfig(Younitedpay::MIN_RANGE_INSTALMENT, 12);
         $maxInstall = (int) $this->configRepository->getConfig(Younitedpay::MAX_RANGE_INSTALMENT, 72);
         $widgetBorder = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_WIDGET_BORDERS, false);
+        $loanPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_LOAN_PAYMENT, true);
+
+        if ($loanPaymentMode === false) {
+            $isRangeEnabled = false;
+        }
 
         $offers = [];
         $rangeOffers = [];
@@ -106,14 +112,25 @@ class ProductService
             }
         }
 
+        $isRangeForced = false;
         if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
 
+            if (count($maturities) > 5 && $isRangeEnabled === false) {
+                $minInstall = (int) $maturities[0]['maturity'];
+                $isRangeEnabled = true;
+                $isRangeForced = true;
+            }
+
+            $maturitiesConfig = explode(',', $this->getMaturitiesConfiguration($maturities));
+            $maturityRange = array_map('intval', $maturitiesConfig);
+            sort($maturityRange);
+
             $configMaturities = ['List' => '24,36'];
-            if ($isRangeEnabled) {
+            if ($isRangeEnabled && $isRangeForced === false) {
                 $configMaturities = [
                     'Range' => [
-                        'Min' => $minInstall < 6 ? $minInstall - 1 : $minInstall,
+                        'Min' => $minInstall > $maturityRange[0] ? $maturityRange[0] : $minInstall,
                         'Max' => $maxInstall,
                         'Step' => 1,
                     ],
@@ -131,14 +148,15 @@ class ProductService
             $body = (new GetOffers())->setShopCode($client->shopCode)->setAmount((string) $productPrice);
             if (isset($configMaturities['List'])) {
                 $body->setMaturityList($configMaturities['List']);
-            } elseif (isset($configMaturities['Range'])) {
+            }
+            if (isset($configMaturities['Range'])) {
                 $body
                     ->setMaturityRangeStep($configMaturities['Range']['Step'])
                     ->setMaturityRangeMin($configMaturities['Range']['Min'])
                     ->setMaturityRangeMax($configMaturities['Range']['Max']);
             }
 
-            $request = new GetOffersRequest();
+            $request = new GetPaymentOptionsRequest();
 
             try {
                 $response = $client->sendRequest($body, $request);
@@ -153,11 +171,19 @@ class ProductService
             }
 
             $offers = $this->getValidOffers($response['response'], array_column($maturities, 'maturity'));
+
+            if (count($offers) <= 5 && $isRangeForced) {
+                $isRangeEnabled = false;
+                $isRangeForced = false;
+            }
+
             $rangeOffers = $isRangeEnabled === false ? [] : $this->getRangeOffers(
                 $response['response'],
                 $productPrice,
                 $minRange,
-                $maxRange
+                $maxRange,
+                $intervalRange,
+                $maturityRange
             );
 
             if (count($rangeOffers) === 0 && count($offers) > 0 && $isRangeEnabled) {
@@ -207,10 +233,13 @@ class ProductService
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
+            'logo_younitedpay_black_url' => 'modules/younitedpay/views/img/logo-younited-white-black.png',
+            'logo_slider_black_url' => 'modules/younitedpay/views/img/range_slider_black.svg',
             'hook_younited' => $selectedHook,
             'offers' => $offers,
             'range_offers' => $rangeOffers,
             'show_ranges' => (int) $isRangeEnabled,
+            'range_forced' => (int) $isRangeForced,
             'min_range' => (int) $minRange,
             'max_range' => (int) $maxRange,
             'selected_offer' => (int) $selectedOffer,
@@ -239,6 +268,8 @@ class ProductService
             'shop_url' => __PS_BASE_URI__,
             'iso_code' => \Context::getContext()->language->iso_code,
             'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
+            'logo_younitedpay_black_url' => 'modules/younitedpay/views/img/logo-younited-white-black.png',
+            'logo_slider_black_url' => 'modules/younitedpay/views/img/range_slider_black.svg',
             'hook_younited' => $this->selectedHook,
             'offers' => [],
             'range_offers' => [],
@@ -262,12 +293,12 @@ class ProductService
         $validOffers = [];
         $maturitiesIn = [];
         foreach ($offers as $offer) {
-            /** @var OfferItem $offer */
+            /** @var PaymentOptionItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
-            if ((int) $offer->getMonthlyInstallmentAmount() < 10 || ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5)) {
+            if ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5) {
                 continue;
             }
-            if ($maturityIn < 6) {
+            if ($offer->getDownPaymentAmount() > 0) {
                 ++$maturityIn;
             }
             if (in_array($maturityIn, $maturities) === true && in_array($maturityIn, $maturitiesIn) === false) {
@@ -280,7 +311,7 @@ class ProductService
         return $validOffers;
     }
 
-    protected function getRangeOffers($offers, $productPrice, $minAmount, $maxAmount)
+    protected function getRangeOffers($offers, $productPrice, $minAmount, $maxAmount, $intervalRange, $maturityRange)
     {
         if ((int) $productPrice < (int) $minAmount) {
             return [];
@@ -292,9 +323,10 @@ class ProductService
 
         $validOffers = [];
         foreach ($offers as $offer) {
-            if ((int) $offer->getMonthlyInstallmentAmount() < 10) {
+            if ((int) $offer->getMaturityInMonths() % (int) $intervalRange !== 0 && !in_array((int) $offer->getMaturityInMonths(), $maturityRange)) {
                 continue;
             }
+
             $validOffers[] = $this->returnOffer($offer);
         }
         $this->sortOffers($validOffers);
@@ -312,7 +344,7 @@ class ProductService
     /**
      * Return offer for templates
      */
-    protected function returnOffer(OfferItem $offer)
+    protected function returnOffer(PaymentOptionItem $offer)
     {
         $data = [
             'maturity' => (int) $offer->getMaturityInMonths(),
@@ -321,10 +353,31 @@ class ProductService
             'down_payment_amount' => ToolsYounited::formatPrice($offer->getDownPaymentAmount()),
             'total_amount' => ToolsYounited::formatPrice($offer->getCreditTotalAmount()),
             'interest_total' => ToolsYounited::formatPrice($offer->getInterestsTotalAmount()),
+            'fee_total' => ToolsYounited::formatPrice(0),
             'taeg' => ToolsYounited::formatPrice($offer->getAnnualPercentageRate()),
             'tdf' => ToolsYounited::formatPrice($offer->getAnnualDebitRate()),
+            'type' => $offer->getType(),
+            'installment' => [],
         ];
-        if ($data['maturity'] < 6) {
+
+        $feeTotal = 0;
+        if (is_array($offer->getInstallmentDetails()) === true) {
+            foreach ($offer->getInstallmentDetails() as $installmentDetails) {
+                $data['installment'][] = [
+                    'installmentNumber' => (int) $installmentDetails->getInstallmentNumber(),
+                    'dueDate' => $installmentDetails->getDueDate(),
+                    'loanAmount' => ToolsYounited::formatPrice($installmentDetails->getLoanAmount()),
+                    'feeAmount' => ToolsYounited::formatPrice($installmentDetails->getFeeAmount()),
+                    'totalAmount' => ToolsYounited::formatPrice($installmentDetails->getTotalAmount()),
+                ];
+                if ($installmentDetails->getFeeAmount() > 0) {
+                    $feeTotal += $installmentDetails->getFeeAmount();
+                }
+            }
+            $data['fee_total'] = ToolsYounited::formatPrice($feeTotal);
+        }
+
+        if ($offer->getDownPaymentAmount() > 0) {
             ++$data['maturity'];
             $data['total_amount'] = $data['initial_amount'];
             $data['initial_amount'] = ToolsYounited::formatPrice($offer->getCreditTotalAmount());
@@ -353,9 +406,20 @@ class ProductService
         if (empty($maturities)) {
             return '36,24';
         }
+
+        $splitPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_SPLIT_PAYMENT, false);
+        $loanPaymentMode = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_LOAN_PAYMENT, true);
+
         $config = [];
         foreach ($maturities as $oneMaturity) {
-            $maturity = (int) $oneMaturity['maturity'] < 6 ? $oneMaturity['maturity'] - 1 : $oneMaturity['maturity'];
+            if ($splitPaymentMode === false && $oneMaturity['type'] === 'S') {
+                continue;
+            }
+            if ($loanPaymentMode === false && $oneMaturity['type'] === 'L') {
+                continue;
+            }
+
+            $maturity = (int) $oneMaturity['maturity'];
             $config[] = $maturity;
         }
 
