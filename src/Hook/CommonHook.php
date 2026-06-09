@@ -55,14 +55,22 @@ class CommonHook extends AbstractHook
 
         foreach (Shop::getShops() as $oneShop) {
             $idShop = $oneShop['id_shop'];
-            $client = new YounitedClient($idShop, Context::getContext()->language->id);
-            $isProductionMode = (bool) Configuration::get(Younitedpay::PRODUCTION_MODE, null, null, $idShop);
-            $shopCode = Configuration::get(Younitedpay::SHOP_CODE, null, null, $idShop);
-            $shopCodeProduction = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION, null, null, $idShop);
-            if ($client->isCrendentialsSet() === false) {
-                continue;
+            $shopCodeNotSet = true;
+            foreach (Younitedpay::AVAILABLE_COUNTRIES as $country) {
+                $client = new YounitedClient($idShop, Context::getContext()->language->id, [], $country);
+
+                if ($client->isCrendentialsSet() === false) {
+                    continue;
+                }
+
+                $isProductionMode = (bool) Configuration::get(Younitedpay::PRODUCTION_MODE . '_' . $country, null, null, $idShop);
+                $shopCode = Configuration::get(Younitedpay::SHOP_CODE . '_' . $country, null, null, $idShop);
+                $shopCodeProduction = Configuration::get(Younitedpay::SHOP_CODE_PRODUCTION . '_' . $country, null, null, $idShop);
+
+                if ($shopCodeNotSet === true) {
+                    $shopCodeNotSet = $isProductionMode === false ? empty($shopCode) : empty($shopCodeProduction);
+                }
             }
-            $shopCodeNotSet = $isProductionMode === false ? empty($shopCode) : empty($shopCodeProduction);
             if ($shopCodeNotSet === true) {
                 $controller->warnings[] = $this->l('Younited Pay Module - Warning - No shop code selected - Please configure your Shop code for Shop N°') . $idShop;
             }
