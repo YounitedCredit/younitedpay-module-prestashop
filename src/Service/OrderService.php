@@ -73,14 +73,17 @@ class OrderService
      *
      * @return array bool success | int status | string response
      */
-    protected function buildClient($isoCode = '')
+    protected function buildClient($isoCode = '', $idShop = null)
     {
         if (isset($this->context->cart->id_address_invoice) !== false && empty($isoCode) === true) {
             // If we have one invoice address, we get the country code from it to be sure to trigger the right API call
             $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
             $isoCode = (new \Country($invoiceAddress->id_country))->iso_code;
         }
-        $this->client = new YounitedClient($this->context->shop->id, $this->context->language->id, [], $isoCode);
+        if (empty($idShop) === true) {
+            $idShop = $this->context->shop->id;
+        }
+        $this->client = new YounitedClient($idShop, $this->context->language->id, [], $isoCode);
         if ($this->client->isCrendentialsSet() === false) {
             return [
                 'success' => false,
@@ -117,7 +120,14 @@ class OrderService
         return $response;
     }
 
-    public function cancelContract($idOrder, $refContract)
+    /**
+     * Cancel the contract - Update the database and make a request to the API
+     *
+     * @param int $idOrder
+     * @param int $idShop
+     * @param string $refContract
+     */
+    public function cancelContract($idOrder, $idShop, $refContract)
     {
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
@@ -125,7 +135,7 @@ class OrderService
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
 
-        $clientBuildReturn = $this->buildClient($younitedContract->country_code);
+        $clientBuildReturn = $this->buildClient($younitedContract->country_code, $idShop);
         if ($clientBuildReturn['success'] !== true) {
             return true;
         }
@@ -145,7 +155,15 @@ class OrderService
         return true;
     }
 
-    public function withdrawnContract($idOrder, $refContract, $amountWithdraw)
+    /**
+     * Withdraw the contract - Update the database and make a request to the API
+     *
+     * @param int $idOrder
+     * @param int $idShop
+     * @param string $refContract
+     * @param float $amountWithdraw
+     */
+    public function withdrawnContract($idOrder, $idShop, $refContract, $amountWithdraw)
     {
         /** @var YounitedPayContract $younitedContract */
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
@@ -153,7 +171,7 @@ class OrderService
             $refContract = $younitedContract->id_external_younitedpay_contract;
         }
 
-        $clientBuildReturn = $this->buildClient($younitedContract->country_code);
+        $clientBuildReturn = $this->buildClient($younitedContract->country_code, $idShop);
         if ($clientBuildReturn['success'] !== true) {
             return true;
         }
@@ -266,8 +284,9 @@ class OrderService
      * Activate the contract - Update the database and make a request to the API
      *
      * @param int $idOrder
+     * @param int $idShop
      */
-    public function activateOrder($idOrder)
+    public function activateOrder($idOrder, $idShop)
     {
         /** @var YounitedPayContract younitedContract */
         $younitedContract = $this->paymentrepository->getContractByOrder($idOrder);
@@ -276,7 +295,7 @@ class OrderService
             return true;
         }
 
-        $clientBuildReturn = $this->buildClient($younitedContract->country_code);
+        $clientBuildReturn = $this->buildClient($younitedContract->country_code, $idShop);
         if ($clientBuildReturn['success'] !== true) {
             return true;
         }
@@ -348,7 +367,8 @@ class OrderService
         }
 
         if (empty($younitedContract->payment_id) || is_null($younitedContract->payment_id)) {
-            $clientBuildReturn = $this->buildClient($younitedContract->country_code);
+            $idShop = (new \Order($younitedContract->id_order))->id_shop;
+            $clientBuildReturn = $this->buildClient($younitedContract->country_code, $idShop);
             if ($clientBuildReturn['success'] === true) {
                 $this->getPaymentIdFromLegacy($younitedContract);
             } else {
