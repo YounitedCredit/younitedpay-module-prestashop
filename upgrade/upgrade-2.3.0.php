@@ -21,6 +21,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use YounitedpayAddon\Entity\YounitedPayAvailability;
+use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Service\ConfigService;
 use YounitedpayAddon\Utils\CacheYounited;
 use YounitedpayAddon\Utils\ServiceContainer;
@@ -41,6 +42,7 @@ function upgrade_module_2_3_0($module)
 
     $installer = new ModuleInstaller($module);
     $result &= $installer->installObjectModel(YounitedPayAvailability::class);
+    $result &= $installer->installObjectModel(YounitedPayContract::class);
 
     $splitPaymentMaturities = [
         [
