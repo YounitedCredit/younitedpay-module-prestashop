@@ -457,6 +457,17 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
     protected function getAllMaturities()
     {
         $allMaturities = $this->configService->getAllMaturities();
+        $splitPaymentMaturitiesSaved = false;
+        foreach ($allMaturities as $maturity) {
+            if ($maturity['type'] === YounitedPayAvailability::TYPE_SPLIT_PAYMENT) {
+                $splitPaymentMaturitiesSaved = true;
+            }
+        }
+        if ($splitPaymentMaturitiesSaved === false) {
+            require_once _PS_MODULE_DIR_ . 'younitedpay/upgrade/upgrade-2.3.0.php';
+            upgradeYounitedMaturitiesSplitPayment(\Context::getContext());
+            $allMaturities = $this->configService->getAllMaturities();
+        }
 
         return empty($allMaturities) === false ? $allMaturities : $this->getDefaultMaturities();
     }

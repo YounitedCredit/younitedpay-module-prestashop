@@ -43,7 +43,30 @@ function upgrade_module_2_3_0($module)
     $installer = new ModuleInstaller($module);
     $result &= $installer->installObjectModel(YounitedPayAvailability::class);
     $result &= $installer->installObjectModel(YounitedPayContract::class);
+    $result &= upgradeYounitedMaturitiesSplitPayment($context);
 
+    $cacheStorage = new CacheYounited();
+    $cacheStorage->remove('token_api');
+
+    Configuration::updateValue(Younitedpay::NEED_TO_CLEAR_CACHE, true);
+    Configuration::updateValue(Younitedpay::SHOW_LOAN_PAYMENT, true);
+    if (Configuration::get(Younitedpay::SHOW_SPLIT_PAYMENT, null, null, null, null) === null) {
+        Configuration::updateValue(Younitedpay::SHOW_SPLIT_PAYMENT, false);
+    }
+
+    return $result;
+}
+
+function upgradeYounitedMaturitiesSplitPayment($context)
+{
+    $result = true;
+    $existingSplitMaturities = \Db::getInstance()->executeS(
+        sprintf(
+            'SELECT * FROM ' . _DB_PREFIX_ . 'younitedpay_configuration WHERE type = "%s"',
+            YounitedPayAvailability::TYPE_SPLIT_PAYMENT
+        )
+    );
+    
     $splitPaymentMaturities = [
         [
             'id_younitedpay_configuration' => 0,
@@ -51,7 +74,6 @@ function upgrade_module_2_3_0($module)
             'maturity' => 2,
             'minimum' => 0,
             'maximum' => 3000,
-            'deleted' => 0,
             'currency' => 'EUR',
             'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
         ],
@@ -61,7 +83,6 @@ function upgrade_module_2_3_0($module)
             'maturity' => 3,
             'minimum' => 0,
             'maximum' => 3000,
-            'deleted' => 0,
             'currency' => 'EUR',
             'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
         ],
@@ -71,21 +92,23 @@ function upgrade_module_2_3_0($module)
             'maturity' => 4,
             'minimum' => 0,
             'maximum' => 3000,
-            'deleted' => 0,
             'currency' => 'EUR',
             'type' => YounitedPayAvailability::TYPE_SPLIT_PAYMENT,
         ],
     ];
 
-    $configService = ServiceContainer::getInstance()->get(ConfigService::class);
-    $configService->saveAllMaturities($splitPaymentMaturities, (int) $context->shop->id);
-
-    $cacheStorage = new CacheYounited();
-    $cacheStorage->remove('token_api');
-
-    Configuration::updateValue(Younitedpay::NEED_TO_CLEAR_CACHE, true);
-    Configuration::updateValue(Younitedpay::SHOW_LOAN_PAYMENT, true);
-    Configuration::updateValue(Younitedpay::SHOW_SPLIT_PAYMENT, false);
+    foreach ($splitPaymentMaturities as $splitPaymentMaturity) {
+        $exists = false;
+        foreach ($existingSplitMaturities as $existingSplitMaturity) {
+            if ((int) $existingSplitMaturity['maturity'] === (int) $splitPaymentMaturity['maturity']) {
+                $exists = true;
+                break;
+            }
+        }
+        if (!$exists) {
+            $result &= \Db::getInstance()->insert('younitedpay_configuration', $splitPaymentMaturity);
+        }
+    }
 
     return $result;
 }
