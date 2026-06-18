@@ -66,7 +66,7 @@ function upgradeYounitedMaturitiesSplitPayment($context)
             YounitedPayAvailability::TYPE_SPLIT_PAYMENT
         )
     );
-    
+
     $splitPaymentMaturities = [
         [
             'id_younitedpay_configuration' => 0,
