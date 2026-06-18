@@ -127,6 +127,9 @@ function updateGlobalUI(dataset)
     let feeTotal = dataset.fee_total.toFixed(2).replace('.', ',');
     let interestTotal = dataset.interest_total.toFixed(2).replace('.', ',');
     let downPaymentAmount = dataset.down_payment_amount.toFixed(2).replace('.', ',');
+    if (dataset.down_payment_amount > 0) {
+        currentMaturity = dataset.maturity - 1;
+    }
     let type = dataset.type;
     let infoInstallmentMaturity = currentMaturity + 'x';
     let installment = dataset.installment;

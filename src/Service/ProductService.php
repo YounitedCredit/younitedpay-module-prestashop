@@ -295,9 +295,6 @@ class ProductService
         foreach ($offers as $offer) {
             /** @var PaymentOptionItem $offer */
             $maturityIn = (int) \Tools::ps_round($offer->getMaturityInMonths());
-            if ($offer->getDownPaymentAmount() > 0 && $maturityIn === 5) {
-                continue;
-            }
             if ($offer->getDownPaymentAmount() > 0) {
                 ++$maturityIn;
             }

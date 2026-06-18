@@ -100,7 +100,7 @@ class PaymentService
     /**
      * Create contract payment with maturity choosed
      */
-    public function createContract($maturity, $totalAmount, $type = 'split')
+    public function createContract($maturity, $totalAmount, $type = 'SplitPayment')
     {
         $customerAddress = new \Address($this->context->cart->id_address_invoice);
         $country = new \Country($customerAddress->id_country);
@@ -372,7 +372,7 @@ class PaymentService
         $contractYounited->withdrawn_date = '';
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
-        $type = $this->type === 'split' ? YounitedPayContract::TYPE_SPLIT_PAYMENT : YounitedPayContract::TYPE_LOAN_PAYMENT;
+        $type = $this->type === 'SplitPayment' ? YounitedPayContract::TYPE_SPLIT_PAYMENT : YounitedPayContract::TYPE_LOAN_PAYMENT;
         $contractYounited->type = $this->maturity . 'x - ' . $type;
         $contractYounited->api_version = $apiVersion;
         $contractYounited->client_id = substr($this->client->clientId, 0, 4) . '****' . substr($this->client->clientId, -4, 4);
