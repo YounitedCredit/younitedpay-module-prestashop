@@ -150,20 +150,18 @@
                      <span>{l s='Click to learn more' mod='younitedpay'}</span>
                   </p>
                </a>
-               {if $iso_code !== 'it'}
-                  <p class="yp-low-grey-text yp-mt-3 yp-text-center">
-                     {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
-                     {l s='obligation of repayment.' mod='younitedpay'}
-                     {if $iso_code == 'fr'}
-                        {l s='Verify your ability' mod='younitedpay'}
-                        {l s='to repay the loan' mod='younitedpay'}
-                     {else}
-                        {l s='Verify your ability' mod='younitedpay'}
-                        {l s='to repay the loan' mod='younitedpay'}
-                     {/if}
-                     {l s='before committing.' mod='younitedpay'}
-                  </p>
-               {/if}
+               <p class="yp-low-grey-text yp-mt-3 yp-text-center">
+                  {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
+                  {l s='obligation of repayment.' mod='younitedpay'}
+                  {if $iso_code == 'fr'}
+                     {l s='Verify your ability' mod='younitedpay'}
+                     {l s='to repay the loan' mod='younitedpay'}
+                  {else}
+                     {l s='Verify your ability' mod='younitedpay'}
+                     {l s='to repay the loan' mod='younitedpay'}
+                  {/if}
+                  {l s='before committing.' mod='younitedpay'}
+               </p>
             </span>
          </div>
       {/if}

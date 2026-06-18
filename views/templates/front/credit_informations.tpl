@@ -98,7 +98,7 @@
 
 <div class="yp-info-buy yp-flex yp-font-family-rg yp-mt-6 yp-mb-6 yp-justify-between yp-items-center yp-not-down-amount-parent {if $offers[$selected_offer].down_payment_amount > 0}hidden{/if}">
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed">
-      <span>{l s='Your purchase in' mod='younitedpay'}</span>
+      {if $iso_code != 'it'}if $<span>{l s='Your purchase in' mod='younitedpay'}</span>{/if}
       <span class="yp-maturity">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}</span>
       <span class="yp-without-fee-text {if $offers[$selected_offer].fee_total == 0}hidden{/if}">{l s='times without fees, for' mod='younitedpay'}</span>
       <span class="yp-with-fee-text {if $offers[$selected_offer].fee_total > 0}hidden{/if}">{l s='times, for' mod='younitedpay'}</span>
