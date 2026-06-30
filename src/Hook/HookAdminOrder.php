@@ -96,7 +96,7 @@ class HookAdminOrder extends AbstractHook
         $orderservice = ServiceContainer::getInstance()->get(OrderService::class);
 
         if (in_array((string) $orderStatus->id, $statusActivating) === true) {
-            $orderservice->activateOrder($order->id);
+            $orderservice->activateOrder($order->id, $order->id_shop);
 
             return;
         }
@@ -104,7 +104,7 @@ class HookAdminOrder extends AbstractHook
         $idOrderCanceled = false !== getenv('_PS_OS_CANCELED_') ? _PS_OS_CANCELED_ : (int) Configuration::get('PS_OS_CANCELED');
 
         if ((int) $idOrderCanceled === (int) $orderStatus->id) {
-            $orderservice->cancelContract($order->id, '');
+            $orderservice->cancelContract($order->id, $order->id_shop, '');
 
             return;
         }
@@ -116,7 +116,7 @@ class HookAdminOrder extends AbstractHook
             $younitedContract = $orderservice->getYounitedContract($order->id, 'order');
             $amountWithdrawn = $order->getTotalPaid() - $younitedContract->withdrawn_amount;
 
-            $orderservice->withdrawnContract($order->id, '', $amountWithdrawn);
+            $orderservice->withdrawnContract($order->id, $order->id_shop, '', $amountWithdrawn);
         }
     }
 
@@ -328,7 +328,7 @@ class HookAdminOrder extends AbstractHook
             $params = array_merge(Tools::getAllValues(), $params);
             $amountToRefund = $orderservice->calculatePartialRefund($params);
 
-            return $orderservice->withdrawnContract($params['order']->id, '', (float) $amountToRefund);
+            return $orderservice->withdrawnContract($params['order']->id, $params['order']->id_shop, '', (float) $amountToRefund);
         }
     }
 
