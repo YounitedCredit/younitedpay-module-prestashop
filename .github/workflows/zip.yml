@@ -1,6 +1,9 @@
 name: Create module zip
 on: [ push ]
 
+permissions:
+  contents: read
+
 env:
   PROJECT_NAME: younitedpay
   PROJECT_VERSION: ${{ github.sha }}
