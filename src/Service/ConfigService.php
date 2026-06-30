@@ -121,7 +121,7 @@ class ConfigService
         $status = [];
         $merchantCountryCode = [];
         $paymentsAvailables = [
-            'loan' => false,
+            'loanPayment' => false,
             'splitPayment' => false,
         ];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {

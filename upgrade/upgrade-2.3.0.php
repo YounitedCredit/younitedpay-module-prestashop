@@ -95,16 +95,21 @@ function upgradeYounitedMaturitiesSplitPayment($context)
         ],
     ];
 
-    foreach ($splitPaymentMaturities as $splitPaymentMaturity) {
-        $exists = false;
-        foreach ($existingSplitMaturities as $existingSplitMaturity) {
-            if ((int) $existingSplitMaturity['maturity'] === (int) $splitPaymentMaturity['maturity']) {
-                $exists = true;
-                break;
+    foreach (\Shop::getShops(true) as $shop) {
+        foreach ($splitPaymentMaturities as $splitPaymentMaturity) {
+            $exists = false;
+            foreach ($existingSplitMaturities as $existingSplitMaturity) {
+                $sameMaturity = (int) $existingSplitMaturity['maturity'] === (int) $splitPaymentMaturity['maturity'];
+                $sameShop = (int) $existingSplitMaturity['id_shop'] === (int) $shop['id_shop'];
+                if ($sameMaturity && $sameShop) {
+                    $exists = true;
+                    break;
+                }
             }
-        }
-        if (!$exists) {
-            $result &= \Db::getInstance()->insert('younitedpay_configuration', $splitPaymentMaturity);
+            if (!$exists) {
+                $splitPaymentMaturity['id_shop'] = $shop['id_shop'];
+                $result &= \Db::getInstance()->insert('younitedpay_configuration', $splitPaymentMaturity);
+            }
         }
     }
 

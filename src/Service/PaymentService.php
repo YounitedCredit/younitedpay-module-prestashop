@@ -28,6 +28,7 @@ use Customer;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayAddon\Model\CustomerExperience as CustomerExperiencePrestaShop;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Adapter\PostPaymentAdapter;
@@ -271,8 +272,12 @@ class PaymentService
     {
         $technicalInformation = (new TechnicalInformation())->setWebhookNotificationUrl($webhookUrl);
 
-        $customExperience = (new CustomExperience())
+        $customExperience = (new CustomerExperiencePrestaShop())
             ->setCustomerRedirectUrl($redirectUrl);
+
+        if ($this->type === 'SplitPayment') {
+            $customExperience->setExecutionMode('MANUAL');
+        }
 
         /** @var PostPaymentsRequest $adapter */
         $adapter = (new PostPaymentAdapter())
@@ -439,6 +444,28 @@ class PaymentService
                 ->setMerchantReference($merchantReference);
             $updateMerchantReferenceRequest = (new UpdateMerchantReferenceRequest())->setModel($updateMerchantReferenceRequestModel);
             $updateMerchantReferenceResponse = $client->sendRequest($updateMerchantReferenceRequestModel, $updateMerchantReferenceRequest);
+            if ($updateMerchantReferenceResponse['success'] === true) {
+                $type = $younitedContract->type === YounitedPayContract::TYPE_SPLIT_PAYMENT ? 'SplitPayment' : 'PersonalLoan';
+                if ($type === 'SplitPayment') {
+                    $this->loggerservice->addLog(
+                        sprintf(
+                            'Automatic contract activation for order N°%d and reference: %s', 
+                            $order->id, 
+                            $younitedContract->id_external_younitedpay_contract
+                        ), 
+                        'Info', 
+                        $this
+                    );
+                }
+            } else {
+                $this->logError(
+                    sprintf(
+                        'Error while updating merchant reference for contract reference: %s - Please activate it manually via dashboard or Shipped in order', 
+                        $younitedContract->id_external_younitedpay_contract
+                    ),
+                    'Error automatic Split payment activation'
+                );
+            }
         } catch (\Exception $ex) {
             $this->loggerservice->addLogAPI('[updateMerchantReference] Exception - ' . $ex->getMessage(), 'Info', $this);
             $this->loggerservice->addLogAPI('[updateMerchantReference] Trace - ' . $ex->getTraceAsString(), 'Info', $this);
