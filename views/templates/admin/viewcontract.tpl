@@ -26,7 +26,6 @@
         </p>
         <h2>{l s='Contract informations in database (PrestaShop)' mod='younitedpay'}</h2>
         {include file='../hook/displayAdminOrderContentOrder.tpl'}
-        <div style="display:none">{$contract|escape:'htmlall':'UTF-8'|replace:"\n":'<br/>'}</div>
         <h2>{l s='API Response (Younited)' mod='younitedpay'}</h2>
         <div>
             {if $api != false && $api != 'false'}

@@ -91,6 +91,8 @@ class CommonHook extends AbstractHook
                 break;
             case $controller instanceof \OrderController:
             case $controller instanceof \TheCheckoutModuleFrontController:
+            case class_exists('StEasyCheckoutDefaultModuleFrontController', false)
+                && $controller instanceof \StEasyCheckoutDefaultModuleFrontController:
             case $controller instanceof \OnePageCheckoutPSPaymentModuleFrontController:
                 $invoiceAddress = new \Address(Context::getContext()->cart->id_address_invoice);
                 $langId = Context::getContext()->language->id;

@@ -31,10 +31,10 @@ use YounitedpayAddon\Logger\ApiLogger;
 use YounitedpayAddon\Repository\ConfigRepository;
 use YounitedpayClasslib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Model\NewAPI\GetOffers;
+use YounitedPaySDK\Model\NewAPI\Request\GetOffers;
 use YounitedPaySDK\Model\NewAPI\WebHookIntegration;
 use YounitedPaySDK\Request\NewAPI\GetMerchantRequest;
-use YounitedPaySDK\Request\NewAPI\GetOffersRequest;
+use YounitedPaySDK\Request\NewAPI\GetPaymentOptionsRequest;
 use YounitedPaySDK\Request\NewAPI\ShopsRequest;
 use YounitedPaySDK\Request\NewAPI\WebHooksIntegrationRequest;
 
@@ -120,6 +120,10 @@ class ConfigService
         $maturityList = [];
         $status = [];
         $merchantCountryCode = [];
+        $paymentsAvailables = [
+            'loan' => false,
+            'splitPayment' => false,
+        ];
         foreach (Younitedpay::AVAILABLE_COUNTRIES as $availableCountry) {
             $countryCode = strtolower($availableCountry);
             $langId = (int) Language::getIdByIso($countryCode);
@@ -159,7 +163,8 @@ class ConfigService
                 ->setMaturityRangeMin(1)
                 ->setMaturityRangeMax(84);
 
-            $request = new GetOffersRequest();
+            $request = new GetPaymentOptionsRequest();
+            $maturityList = self::DEF_MATURITIES;
 
             if (empty($client->shopCode) === false) {
                 /** @var mixed $response */
@@ -174,11 +179,14 @@ class ConfigService
                 }
                 foreach ($response['response'] as $oneOffer) {
                     $maturity = (int) $oneOffer->getMaturityInMonths();
-                    if ($maturity < 5) {
-                        ++$maturity;
-                    }
                     if (in_array($maturity, $maturityList) === false) {
                         $maturityList[] = $maturity;
+                    }
+                    $type = $oneOffer->getType() ?? 'Loan';
+                    if ($type === 'SplitPayment') {
+                        $paymentsAvailables['splitPayment'] = true;
+                    } else {
+                        $paymentsAvailables['loanPayment'] = true;
                     }
                 }
             }
@@ -191,6 +199,8 @@ class ConfigService
                 'shopCodeList' => $shopCodeList,
                 'status' => $status,
                 'merchantCountryCode' => $merchantCountryCode,
+                'splitPaymentAvailable' => $paymentsAvailables['splitPayment'],
+                'loanPaymentAvailable' => $paymentsAvailables['loanPayment'],
             ];
         }
 
@@ -207,6 +217,8 @@ class ConfigService
             'shopCodeList' => $shopCodeList,
             'status' => $status,
             'merchantCountryCode' => $merchantCountryCode,
+            'splitPaymentAvailable' => $paymentsAvailables['splitPayment'],
+            'loanPaymentAvailable' => $paymentsAvailables['loanPayment'],
         ];
     }
 
@@ -267,6 +279,8 @@ class ConfigService
         return [
             'maturityList' => $isApiConnected['maturityList'],
             'shopCodeList' => $isApiConnected['shopCodeList'],
+            'splitPaymentAvailable' => $isApiConnected['splitPaymentAvailable'],
+            'loanPaymentAvailable' => $isApiConnected['loanPaymentAvailable'],
             'merchantCountryCode' => $isApiConnected['merchantCountryCode'],
             'connected' => $isApiConnectedStatus,
             'status' => $isApiConnected['status'],

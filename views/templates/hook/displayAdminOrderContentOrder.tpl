@@ -43,6 +43,10 @@
         </p>
     {else}
         <p>
+            <b>{l s='Type' mod='younitedpay'}</b><br />
+            {$younitedcontract->type|escape:'htmlall':'UTF-8'}
+        </p>
+        <p>
             <b>{l s='Order ID' mod='younitedpay'}</b><br />
             {$younitedcontract->id_order|escape:'htmlall':'UTF-8'}
         </p>
