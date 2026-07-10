@@ -105,10 +105,10 @@
         </label>
         <div class="col-lg-4 align-item-center">
             <span class="ps-switch ps-switch-lg" id="show_ranges_switch">
-                <input type="radio" name="show_ranges" id="show_ranges_off" {$disabledLoan}
+                <input type="radio" name="show_ranges" id="show_ranges_off" {$disabledLoan|escape:'htmlall':'UTF-8'}
                     value="0"{if $configuration.show_ranges === false} checked{/if}/>
                 <label for="show_ranges_off">Off</label>
-                <input type="radio" name="show_ranges" id="show_ranges_on" {$disabledLoan}
+                <input type="radio" name="show_ranges" id="show_ranges_on" {$disabledLoan|escape:'htmlall':'UTF-8'}
                     value="1"{if $configuration.show_ranges === true} checked{/if}/>
                 <label for="show_ranges_on">On</label>
                 <span class="slide-button"></span>
