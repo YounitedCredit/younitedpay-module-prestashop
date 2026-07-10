@@ -109,13 +109,13 @@
          <div class="yp-cursor-pointer yp-flex yp-flex-row yp-justify-center yp-items-center yp-flex-wrap yp-text-xs">
             <span class="yp-offer-zone {if ($offers[$selected_offer]['type'] !== 'SplitPayment')}hidden{/if}">
                <p class="yp-text-center yp-pol-black">
-                  <span class="yp-install-maturity-split">{{$offers[$selected_offer]['maturity']}}&nbsp;x</span>
+                  <span class="yp-install-maturity-split">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}&nbsp;x</span>
                   <span class="younitedpay_info installment yp-install-amount yp-inline">
-                     {{$offers[$selected_offer]['installment_amount']}}&nbsp;€
+                     {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'}&nbsp;€
                   </span>
                   <span class="yp-with-fee">
                      <span>({l s='including' mod='younitedpay'}</span>
-                     <span class="yp-fee">{{$offers[$selected_offer]['fee_total']}}&nbsp;€</span>
+                     <span class="yp-fee">{$offers[$selected_offer].fee_total|escape:'htmlall':'UTF-8'}&nbsp;€</span>
                      <span>{l s='fees' mod='younitedpay'})</span>
                   </span>
                   <span class="yp-without-fee">

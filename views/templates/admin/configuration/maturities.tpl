@@ -24,7 +24,7 @@
 {/if}
 {assign var=loanPaymentAvailable value=$configuration.loan_payment_available}
 {assign var=disabledLoan value=''}
-{if $disabledLoan === false}
+{if $loanPaymentAvailable === false}
     {$configuration.show_loan_payment = false}
     {assign var=disabledLoan value=' disabled'}
 {/if}
