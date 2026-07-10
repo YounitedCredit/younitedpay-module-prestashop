@@ -39,7 +39,6 @@ use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
-use YounitedPaySDK\Model\NewAPI\CustomExperience;
 use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
 use YounitedPaySDK\Model\NewAPI\Request\UpdateMerchantReference;
 use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
@@ -449,18 +448,18 @@ class PaymentService
                 if ($type === 'SplitPayment') {
                     $this->loggerservice->addLog(
                         sprintf(
-                            'Automatic contract activation for order N°%d and reference: %s', 
-                            $order->id, 
+                            'Automatic contract activation for order N°%d and reference: %s',
+                            $order->id,
                             $younitedContract->id_external_younitedpay_contract
-                        ), 
-                        'Info', 
+                        ),
+                        'Info',
                         $this
                     );
                 }
             } else {
                 $this->logError(
                     sprintf(
-                        'Error while updating merchant reference for contract reference: %s - Please activate it manually via dashboard or Shipped in order', 
+                        'Error while updating merchant reference for contract reference: %s - Please activate it manually via dashboard or Shipped in order',
                         $younitedContract->id_external_younitedpay_contract
                     ),
                     'Error automatic Split payment activation'

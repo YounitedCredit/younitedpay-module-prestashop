@@ -39,6 +39,10 @@ class CommonHook extends AbstractHook
 
     public function actionAdminControllerSetMedia($params)
     {
+        if (\Tools::getValue('ajax') !== false) {
+            return;
+        }
+
         /** @var \AdminController $controller */
         $controller = Context::getContext()->controller;
         if ($controller->controller_name === 'AdminOrders') {

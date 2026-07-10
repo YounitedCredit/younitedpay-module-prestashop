@@ -27,11 +27,11 @@ class CustomerExperience extends \YounitedPaySDK\Model\NewAPI\CustomExperience
 {
     /** @var string */
     protected $executionMode;
-    
+
     /**
      * Get the value of executionMode
      *
-     * @return  string
+     * @return string
      */
     public function getExecutionMode()
     {
@@ -41,9 +41,9 @@ class CustomerExperience extends \YounitedPaySDK\Model\NewAPI\CustomExperience
     /**
      * Set the value of executionMode
      *
-     * @param   string  $executionMode
+     * @param string $executionMode
      *
-     * @return  self
+     * @return self
      */
     public function setExecutionMode($executionMode)
     {
