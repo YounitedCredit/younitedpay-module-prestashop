@@ -28,7 +28,7 @@ use Customer;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
-use YounitedpayAddon\Model\CustomerExperience as CustomerExperiencePrestaShop;
+use YounitedpayAddon\Model\CustomerExperience;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Adapter\PostPaymentAdapter;
@@ -271,8 +271,8 @@ class PaymentService
     {
         $technicalInformation = (new TechnicalInformation())->setWebhookNotificationUrl($webhookUrl);
 
-        $customExperience = (new CustomerExperiencePrestaShop())
-            ->setCustomerRedirectUrl($redirectUrl);
+        $customExperience = new CustomerExperience();
+        $customExperience->setCustomerRedirectUrl($redirectUrl);
 
         if ($this->type === 'SplitPayment') {
             $customExperience->setExecutionMode('MANUAL');
@@ -452,6 +452,7 @@ class PaymentService
                             $order->id,
                             $younitedContract->id_external_younitedpay_contract
                         ),
+                        null,
                         'Info',
                         $this
                     );

@@ -16,10 +16,10 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  *}
 <div class="younitedpay_product_info" data-hook="{$hook_younited|escape:'htmlall':'UTF-8'}" {if $hook_younited == 'widget'}data-widget{/if}>
-<div class="younitedpay-widget-root yp-bg-purple-light yp-rounded-bg yp-p-2">
+<div class="younitedpay-widget-root yp-rounded-bg yp-p-2">
    {if count($offers) > 0}
    <div class="younited_block yp-pb-2 yp-pt-2 yp-my-2{if isset($widget_borders) && (bool) $widget_borders === true} widget_border{/if}">
-      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-justify-center yp-flex-wrap">
+      <div class="yp-cursor-pointer yp-flex yp-flex-row yp-items-center yp-flex-wrap">
          <img class="yp-mb-1 yp-p-2 yp-logo lazyloaded" src="{$shop_url|escape:'htmlall':'UTF-8'}{$logo_younitedpay_black_url|escape:'htmlall':'UTF-8'}" alt="logo Younited Pay" data-ll-status="loaded">
          <div class="yp-flex yp-flex-row yp-justify-center yp-items-center yp-flex-wrap">
          {foreach from=$offers item=offer key=key}
@@ -108,7 +108,7 @@
          </div>
          <div class="yp-cursor-pointer yp-flex yp-flex-row yp-justify-center yp-items-center yp-flex-wrap yp-text-xs">
             <span class="yp-offer-zone {if ($offers[$selected_offer]['type'] !== 'SplitPayment')}hidden{/if}">
-               <p class="yp-text-center yp-pol-black">
+               <p class="yp-pol-black">
                   <span class="yp-install-maturity-split">{$offers[$selected_offer].maturity|escape:'htmlall':'UTF-8'}&nbsp;x</span>
                   <span class="younitedpay_info installment yp-install-amount yp-inline">
                      {$offers[$selected_offer].installment_amount|escape:'htmlall':'UTF-8'}&nbsp;€
@@ -123,7 +123,7 @@
                   </span>
                </p>
                {if $iso_code !== 'it'}
-                  <p class="yp-with-fee yp-low-grey-text yp-mt-3 yp-text-center">
+                  <p class="yp-with-fee yp-low-grey-text yp-mt-3">
                      {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
                      {l s='obligation of repayment.' mod='younitedpay'}
                      {if $iso_code == 'fr'}
@@ -139,7 +139,7 @@
             </span>
 
             <span class="yp-more-details-zone {if ($offers[$selected_offer]['type'] === 'SplitPayment')}hidden{/if}">
-               <a class="yp-text-center" href="#younited_popupzone" id="yp-kml">
+               <a href="#younited_popupzone" id="yp-kml">
                   <p class="yp-pol-black">
                      <span class="yp-range-text">
                         <span>{l s='Until' mod='younitedpay'}</span>
@@ -150,7 +150,7 @@
                      <span>{l s='Click to learn more' mod='younitedpay'}</span>
                   </p>
                </a>
-               <p class="yp-low-grey-text yp-mt-3 yp-text-center">
+               <p class="yp-low-grey-text yp-mt-3">
                   {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
                   {l s='obligation of repayment.' mod='younitedpay'}
                   {if $iso_code == 'fr'}
