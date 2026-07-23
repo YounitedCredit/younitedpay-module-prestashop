@@ -33,11 +33,11 @@
         {l s='Show payment options from 2x to 4x' mod='younitedpay'}
     </label>
     <div class="col-lg-4 align-item-center">
-        <span class="ps-switch ps-switch-lg" id="show_split_payment_switch"{$disabledSplit}>
-            <input type="radio" name="show_split_payment" id="show_split_payment_off" {$disabledSplit}
+        <span class="ps-switch ps-switch-lg" id="show_split_payment_switch"{$disabledSplit|escape:'htmlall':'UTF-8'}>
+            <input type="radio" name="show_split_payment" id="show_split_payment_off" {$disabledSplit|escape:'htmlall':'UTF-8'}
                 value="0"{if $configuration.show_split_payment === false} checked{/if}/>
             <label for="show_split_payment_off">Off</label>
-            <input type="radio" name="show_split_payment" id="show_split_payment_on" {$disabledSplit}
+            <input type="radio" name="show_split_payment" id="show_split_payment_on" {$disabledSplit|escape:'htmlall':'UTF-8'}
                 value="1"{if $configuration.show_split_payment === true} checked{/if}/>
             <label for="show_split_payment_on">On</label>
             <span class="slide-button"></span>
