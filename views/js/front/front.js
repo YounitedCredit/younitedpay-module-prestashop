@@ -142,7 +142,7 @@ function updateGlobalUI(dataset)
     $('.yp-taeg').text(taeg);
     $('.yp-total').text(totalAmount);
     $('.yp-interest').text(interestTotal);
-    $('.yp-fee').text(feeTotal);
+    $('.yp-fee').text(feeTotal + " €");
     $('.yp-amount').text(initialAmount);
     $('.yp-down-amount').text(downPaymentAmount);
     $('.yp-custom-range').val(getIndexFromMaturity(currentMaturity));
