@@ -179,9 +179,18 @@ class PaymentService
         $customer = $this->context->customer;
         $country = new \Country($customerAddress->id_country);
 
-        $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
-            ? (new \DateTime($customer->birthday))->format('Y-m-d')
-            : null;
+        $birthdate = null;
+        if (empty($customer->birthday) === false && $customer->birthday !== '0000-00-00') {
+            $date = new \DateTimeImmutable($customer->birthday);
+            $today = new \DateTimeImmutable('today');
+
+            $minBirthdate = $today->modify('-80 years');
+            $maxBirthdate = $today->modify('-18 years');
+
+            if ($date > $minBirthdate && $date <= $maxBirthdate) {
+                $birthdate = $date->format('Y-m-d');
+            }
+        }
 
         $adresseStreet = $customerAddress->address1;
         $additionalAdress = '';

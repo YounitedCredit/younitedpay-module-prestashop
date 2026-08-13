@@ -151,6 +151,7 @@ class YounitedClient
                 'response' => $response->getReasonPhrase(),
                 'status' => $response->getStatusCode(),
                 'success' => false,
+                'errors' => $response->getModel() ? $response->getModel()->getErrors() : null,
             ];
 
             $this->logger->logError(
