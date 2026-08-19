@@ -34,6 +34,7 @@ use YounitedPaySDK\Cache\Registry;
 use YounitedPaySDK\Cache\RegistryItem;
 use YounitedPaySDK\Client;
 use YounitedPaySDK\Model\AbstractModel;
+use YounitedPaySDK\Model\NewAPI\Error;
 use YounitedPaySDK\Request\AbstractRequest;
 use YounitedPaySDK\Response\AbstractResponse;
 
@@ -147,10 +148,14 @@ class YounitedClient
                 ];
             }
 
+            /** @var Error|null $errorModel */
+            $errorModel = $response->getModel();
+
             $errorResponse = [
                 'response' => $response->getReasonPhrase(),
                 'status' => $response->getStatusCode(),
                 'success' => false,
+                'errors' => $errorModel ? $errorModel->getErrors() : null,
             ];
 
             $this->logger->logError(

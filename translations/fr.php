@@ -6,6 +6,7 @@ $_MODULE['<{younitedpay}prestashop>younitedpay_bb8956c67b82c7444a80c6b2433dd8b4'
 $_MODULE['<{younitedpay}prestashop>younitedpay_4edca116def73110ec69474ff52d16b2'] = 'YounitedPay - Solution de paiement par crédit instantané';
 $_MODULE['<{younitedpay}prestashop>younitedpay_71ed18e89d45a93baadf99ee7f9248de'] = 'Améliorez l’expérience de vos clients avec le crédit instantané et augmentez votre taux de conversion';
 $_MODULE['<{younitedpay}prestashop>payment_bd977e4e0df5b77d0692529a85e7a00f'] = 'Erreur pendant le paiement, merci d\'essayer à nouveau.';
+$_MODULE['<{younitedpay}prestashop>payment_ee5185dcf9ef960d91e56068cc6e64fb'] = 'La date de naissance n\'est pas valide. L\'âge doit être compris entre 18 et 80 ans.';
 $_MODULE['<{younitedpay}prestashop>validation_1b73668f7dfe439c5e2ccd547188da5f'] = 'Vous avez annulé le paiement.';
 $_MODULE['<{younitedpay}prestashop>validation_69c805a66c1d403dcc818c63e45d9a05'] = 'Paiement refusé, ou une erreur est survenue pendant la validation. Merci d\'essayer à nouveau.';
 $_MODULE['<{younitedpay}prestashop>success_3770b6bfff2dbe20053b13ba9d199d80'] = 'Erreur avec la récupération du panier. Merci de rafraîchir votre page.';
