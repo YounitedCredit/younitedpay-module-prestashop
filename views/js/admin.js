@@ -42,6 +42,9 @@ document.onreadystatechange = function() {
     $('#younitedpay_maturitybtn').click(function(e) {
         addMaturity(e);
     });
+    $('#younitedpay_maturitybtn_split').click(function(e) {
+        addMaturity(e, 'SplitPayment');
+    });
     $('.copy-clipboard').click(function(e) {
         copyToClipboard(e);
     });
@@ -254,13 +257,16 @@ function addEventsMaturity()
     $('.younitedpay_maturity_change').on('change keyup', UpdateMaturity);
 }
 
-function addMaturity(event)
+function addMaturity(event, type = 'LoanPayment')
 {
   event.preventDefault();
 
   var formData = new FormData();
   formData.append('younitedpay_maturities', younitedpay.maturities);
   formData.append('younitedpay_add_maturity', true);
+  formData.append('younitedpay_type_maturity', type);
+
+  let selector = type === 'SplitPayment' ? "#younitedpay_maturities_split" : "#younitedpay_maturities"
 
   $.ajax({
     type: "POST",
@@ -271,7 +277,7 @@ function addMaturity(event)
     cache : false,
     url: younitedpay.admin_url,
     success: function(response){
-        $("#younitedpay_maturities").append( response );
+        $(selector).append( response );
         addEventsMaturity();
         updateShowHideRanges();
         younitedpay.maturities += 1;

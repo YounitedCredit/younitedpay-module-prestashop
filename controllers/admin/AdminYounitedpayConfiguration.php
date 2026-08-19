@@ -550,6 +550,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'show_loan_payment' => $this->showLoanPayment,
             ],
             'maturitylist' => $this->maturitylist,
+            'maturityType' => Tools::getValue('younitedpay_type_maturity', 'LoanPayment'),
             'maturity' => [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $idShop,
