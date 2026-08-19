@@ -21,7 +21,9 @@ if (!defined('_PS_VERSION_')) {
 }
 
 require_once dirname(__FILE__) . '/../src/Entity/YounitedPayPayment.php';
+require_once dirname(__FILE__) . '/../src/Entity/YounitedPayContract.php';
 
+use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Entity\YounitedPayPayment;
 use YounitedpayClasslib\Install\ModuleInstaller;
 
@@ -37,6 +39,7 @@ function upgrade_module_2_3_1($module)
     $result = true;
 
     $installer = new ModuleInstaller($module);
+    $result &= $installer->installObjectModel(YounitedPayContract::class);
     $result &= $installer->installObjectModel(YounitedPayPayment::class);
     $result &= $installer->installAdminControllers();
 
