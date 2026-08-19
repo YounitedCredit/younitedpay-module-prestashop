@@ -62,10 +62,10 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
                 if ($key === 'CustomerInformation.BirthDate') {
                     $error = $this->l('The birth date is not valid. Must be at least 18 years old and at most 80 years old.', 'payment');
                     $this->errors[] = $this->l($error, 'payment');
+                } else {
+                    $this->errors[] = $key . ': ' . $error;
                 }
             }
-        } else {
-            $this->errors[] = $this->l($response['response'], 'payment');
         }
 
         $this->redirectPayment();

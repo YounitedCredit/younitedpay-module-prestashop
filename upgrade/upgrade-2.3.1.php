@@ -20,6 +20,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once dirname(__FILE__) . '/../src/Entity/YounitedPayPayment.php';
+
 use YounitedpayAddon\Entity\YounitedPayPayment;
 use YounitedpayClasslib\Install\ModuleInstaller;
 
