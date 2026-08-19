@@ -13,6 +13,7 @@ parameters:
   ignoreErrors:
       - '#Class TheCheckoutModuleFrontController not found+#'
       - '#Class OnePageCheckoutPSPaymentModuleFrontController not found+#'
+      - '#Function upgradeYounitedMaturitiesSplitPayment not found.+#'
 
   reportUnmatchedIgnoredErrors: false
   level: 5

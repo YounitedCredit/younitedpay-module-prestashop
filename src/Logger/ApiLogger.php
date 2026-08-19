@@ -156,7 +156,9 @@ class ApiLogger
 
         if (substr($type, 0, 8) === 'Response') {
             $response = $data->getModel();
-            if ($type === 'ResponseGetOffersRequest' && \Tools::getvalue('younitedfulllogs') === false) {
+            $typeResponseOffers = ['GetPaymentOptionsRequest', 'GetOffersRequest', 'BestPriceRequest'];
+            $typeResponse = str_replace('Response', '', $type);
+            if (in_array($typeResponse, $typeResponseOffers) === true && \Tools::getvalue('younitedfulllogs') === false) {
                 if ($response instanceof Error || $response instanceof Errorv1) {
                     $this->logger->info($this->getClass($object) . ' - Response Data error: ' . json_encode($response));
                 } else {
@@ -165,7 +167,7 @@ class ApiLogger
                     } catch (Exception $ex) {
                         $count = 'Error count';
                     }
-                    $this->logger->info($this->getClass($object) . ' - Response BestPrice count: ' . $count);
+                    $this->logger->info($this->getClass($object) . ' - Response offers count: ' . $count);
                 }
             } else {
                 $this->logger->info($this->getClass($object) . ' - Response Data: ' . json_encode($response));

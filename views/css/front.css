@@ -28,8 +28,7 @@
    font-style: normal;
    font-weight: 700;
    line-height: 150%; /* 21px */
-   border-radius: 999px;
-   background: #DEE2E6;
+   border-radius: 8px;
    cursor:pointer;
 }
 
@@ -173,7 +172,7 @@
     outline: 5px auto -webkit-focus-ring-color
 }
 
-.yp-right .younited_btnhide {    
+.yp-right .younited_btnhide {
     padding: 10px 12px !important;
     border-radius: 4px;
     border: 1px solid #1C1C1C;
@@ -194,7 +193,7 @@
     padding: 0
 }
 
-.younitedpay-widget-root html {    
+.younitedpay-widget-root html {
     line-height: 1.5
 }
 
@@ -436,6 +435,11 @@
   border-color: black!important;
 }
 
+.yp-low-grey-text {
+    color: rgb(102, 102, 102) !important;
+    font-size: 0.8rem !important;
+}
+
 .yp-pol-white {
   color: white!important;
 }
@@ -482,6 +486,10 @@
 
 .yp-rounded-bg {
     border-radius: 8px !important
+}
+
+.yp-rounded-xxl {
+    border-radius: 24px !important
 }
 
 .yp-border {
@@ -546,6 +554,10 @@
 
 .yp-justify-between {
     justify-content: space-between !important
+}
+
+.yp-justify-around {
+    justify-content: space-around !important
 }
 
 .yp-flex-grow {
@@ -699,6 +711,18 @@
     margin-bottom: 12px !important
 }
 
+.yp-mb-4 {
+    margin-bottom: 16px !important
+}
+
+.yp-mb-5 {
+    margin-bottom: 20px !important
+}
+
+.yp-mb-6 {
+    margin-bottom: 24px !important
+}
+
 .yp-mr-2 {
     margin-right: 6px !important
 }
@@ -709,10 +733,6 @@
 
 .yp-left-title-text {
     margin-top:54px !important;
-}
-
-.yp-mb-5 {
-    margin-bottom: 20px !important
 }
 
 .yp-mt-3 {
@@ -799,7 +819,7 @@
 }
 
 .yp-popup-logo img {
-    width: 95px;
+    width: 125px;
 }
 
 .yp-p-1 {
@@ -901,6 +921,11 @@
 
 .yp-pl-8 {
     padding-left: 32px !important
+}
+
+.yp-py-8 {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important
 }
 
 .yp-pb-24 {
@@ -1155,6 +1180,7 @@
 .younitedpay-widget-root {
     --text-opacity: 1;
     color: #000000!important;
+    margin: 12px 0 !important;
 }
 
 
@@ -1165,10 +1191,10 @@
 }
 
 .yp-linumber {
-    background-color: #c5a1fe;
-    color: #564c5d;
+    color: black !important;
     padding: 8px 14px!important;
     margin-right: 12px!important;
+    font-weight: 600 !important;
 }
 
 .plan-pill-multiplier {
@@ -1242,7 +1268,7 @@
     .md\:yp-h-580 {
         height: auto !important
     }
-    
+
     .yp-mobile {
         display:none!important;
     }
@@ -1335,9 +1361,13 @@
     border: 1px solid #1C1C1C;
 }
 
-.yp-plus, .yp-minus {    
+.yp-logo-range {
+    max-width: 24px !important;
+}
+
+.yp-plus, .yp-minus {
     border-radius: 16px;
-    background: #C5A1FE !important;
+    background: #1B1221 !important;
     color: white !important;
     font-size: 26px !important;
     width: 32px;
@@ -1352,8 +1382,8 @@ input[type=range].yp-custom-range {
     font: inherit;
     outline: none;
     height: 8px;
-    color: #C5A1FE;
-    background: #C5A1FE;
+    color: #1B1221;
+    background: #1B1221;
     cursor: pointer;
     box-sizing: border-box;
     border-radius: 8px;
@@ -1365,7 +1395,7 @@ input[type=range].yp-custom-range::-moz-range-thumb {
     width: 24px;
     height: 24px;
     border: none;
-    background-color: #C5A1FE;
+    background-color: #1B1221;
     transition: .2s ease-in-out;
     border-radius: 50%;
 }
@@ -1374,18 +1404,18 @@ input[type=range].yp-custom-range::-ms-thumb {
     width: 24px;
     height: 24px;
     border: none;
-    background-color: #C5A1FE;
+    background-color: #1B1221;
     transition: .2s ease-in-out;
     border-radius: 50%;
 }
 
 input[type=range].yp-custom-range::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none; 
+    appearance: none;
     width: 24px;
     height: 24px;
     border: none;
-    background-color: #C5A1FE;
+    background-color: #1B1221;
     transition: .2s ease-in-out;
     border-radius: 50%;
 }
@@ -1397,7 +1427,7 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
     .yp-font-normal {
         font-size: 14px;
     }
-    .yp-right .younited_btnhide {    
+    .yp-right .younited_btnhide {
         width:100%;
     }
     .yp-popup-logo img {
@@ -1411,7 +1441,7 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
         width: 32px;
         height: 32px;
     }
-    
+
     input[type=range].yp-custom-range::-webkit-slider-thumb {
         width: 32px;
         height: 32px;
@@ -1420,4 +1450,51 @@ input[type=range].yp-custom-range::-webkit-slider-thumb {
 
 #yp-kml {
     text-decoration: underline!important;
+}
+
+.yp-timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 60px;
+    margin-top: 3px !important;
+}
+
+.yp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: #2d2230;
+}
+
+.yp-timeline__item {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 22px !important;
+}
+
+.yp-timeline__circle {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    border: 2px solid #2d2230;
+    background: white;
+    z-index: 1;
+}
+
+.yp-timeline__circle--active {
+    background: #2d2230;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yp-timeline__circle--active::after {
+    content: "✔";
+    color: white;
+    font-size: 18px;
 }

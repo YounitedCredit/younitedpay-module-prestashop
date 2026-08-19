@@ -57,6 +57,7 @@ class AdminYounitedpayContractsController extends ModuleAdminController
             'id_cart' => ['title' => $this->l('Cart Id')],
             'id_order' => ['title' => $this->l('Order Id')],
             'payment_id' => ['title' => $this->l('API Payment ID')],
+            'type' => ['title' => $this->l('Type (Loan / Split)'), 'callback' => 'displayType'],
             'id_external_younitedpay_contract' => ['title' => $this->l('Contract reference')],
             'date_add' => ['title' => $this->l('Added on')],
             'date_upd' => ['title' => $this->l('Last update')],
@@ -86,6 +87,25 @@ class AdminYounitedpayContractsController extends ModuleAdminController
     public function initContent()
     {
         parent::initContent();
+    }
+
+    public function displayType($value, $contract)
+    {
+        $typeAndValue = explode(' - ', $value);
+        $typePayment = isset($typeAndValue[1]) ? $typeAndValue[1] : 'L';
+        $result = '';
+        if (count($typeAndValue) === 2) {
+            // If we have maturity x and type payment
+            $result = $typeAndValue[0] . ' - ';
+        }
+        switch ($typePayment) {
+            case YounitedPayContract::TYPE_LOAN_PAYMENT:
+                return $result . $this->l('Loan');
+            case YounitedPayContract::TYPE_SPLIT_PAYMENT:
+                return $result . $this->l('Split Payment');
+            default:
+                return $value;
+        }
     }
 
     public function renderView()
@@ -119,6 +139,8 @@ class AdminYounitedpayContractsController extends ModuleAdminController
                 'viewyounitedpay_contract' => '',
             ]);
         }
+
+        $younitedContract->type = $this->displayType($younitedContract->type, null);
 
         $this->context->smarty->assign([
             'younitedcontract' => $younitedContract,

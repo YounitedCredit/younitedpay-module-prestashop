@@ -27,6 +27,8 @@ use ObjectModel;
 
 class YounitedPayContract extends ObjectModel
 {
+    const TYPE_LOAN_PAYMENT = 'L';
+    const TYPE_SPLIT_PAYMENT = 'S';
     /** @var int */
     public $id_younitedpay_contract;
 
@@ -77,6 +79,9 @@ class YounitedPayContract extends ObjectModel
 
     /** @var string */
     public $country_code;
+
+    /** @var string */
+    public $type;
 
     /** @var string */
     public $date_add;
@@ -162,6 +167,11 @@ class YounitedPayContract extends ObjectModel
             'country_code' => [
                 'type' => self::TYPE_STRING,
                 'required' => false,
+            ],
+            'type' => [
+                'type' => self::TYPE_STRING,
+                'required' => false,
+                'default' => self::TYPE_LOAN_PAYMENT,
             ],
             'date_add' => [
                 'type' => self::TYPE_DATE,

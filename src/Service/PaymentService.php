@@ -28,9 +28,10 @@ use Customer;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayAddon\Model\CustomerExperience;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
-use YounitedPaySDK\Adapter\CreatePaymentAdapter;
+use YounitedPaySDK\Adapter\PostPaymentAdapter;
 use YounitedPaySDK\Model\Address;
 use YounitedPaySDK\Model\ArrayCollection;
 use YounitedPaySDK\Model\Basket;
@@ -38,13 +39,13 @@ use YounitedPaySDK\Model\BasketItem;
 use YounitedPaySDK\Model\InitializeContract;
 use YounitedPaySDK\Model\MerchantOrderContext;
 use YounitedPaySDK\Model\MerchantUrls;
-use YounitedPaySDK\Model\NewAPI\CustomExperience;
 use YounitedPaySDK\Model\NewAPI\Request\GetPayment;
 use YounitedPaySDK\Model\NewAPI\Request\UpdateMerchantReference;
 use YounitedPaySDK\Model\NewAPI\TechnicalInformation;
 use YounitedPaySDK\Model\PersonalInformation;
 use YounitedPaySDK\Request\InitializeContractRequest;
 use YounitedPaySDK\Request\NewAPI\GetPaymentRequest;
+use YounitedPaySDK\Request\NewAPI\PostPaymentsRequest;
 use YounitedPaySDK\Request\NewAPI\UpdateMerchantReferenceRequest;
 
 class PaymentService
@@ -76,6 +77,15 @@ class PaymentService
     /** @var string */
     public $countryCode;
 
+    /** @var string */
+    public $totalAmount;
+
+    /** @var string */
+    public $type;
+
+    /** @var int */
+    public $maturity;
+
     public function __construct(
         LoggerService $loggerservice,
         PaymentRepository $paymentrepository,
@@ -90,12 +100,15 @@ class PaymentService
     /**
      * Create contract payment with maturity choosed
      */
-    public function createContract($maturity, $totalAmount)
+    public function createContract($maturity, $totalAmount, $type = 'SplitPayment')
     {
         $customerAddress = new \Address($this->context->cart->id_address_invoice);
         $country = new \Country($customerAddress->id_country);
         $this->countryCode = strtoupper($country->iso_code);
         $langId = (int) \Language::getIdByIso($country->iso_code);
+        $this->type = $type;
+        $this->totalAmount = $totalAmount;
+        $this->maturity = (int) $maturity;
 
         $isPhoneInternational = $this->isInternationalPhone($customerAddress);
 
@@ -117,7 +130,7 @@ class PaymentService
         }
 
         try {
-            $response = $this->sendContractRequest($maturity, $totalAmount, $customerAddress, $client);
+            $response = $this->sendContractRequest($maturity, $totalAmount, $customerAddress, $client, $type);
         } catch (\PrestaShopDatabaseException $e) {
             $this->logError($e->getMessage(), 'sendContractRequest PrestaShopDatabaseException');
             $this->logError($e->getTraceAsString(), 'sendContractRequest PrestaShopDatabaseException');
@@ -161,7 +174,7 @@ class PaymentService
      * @throws \PrestaShopException
      * @throws \Exception
      */
-    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, YounitedClient $client)
+    protected function sendContractRequest($maturity, $totalAmount, $customerAddress, YounitedClient $client, $type = 'PersonalLoan')
     {
         $customer = $this->context->customer;
         $country = new \Country($customerAddress->id_country);
@@ -245,6 +258,7 @@ class PaymentService
 
         $webhookUrl = $this->getLink('notification', ['id_cart' => $this->context->cart->id]);
         $redirectUrl = $this->getLink('validation', ['id_cart' => $this->context->cart->id]);
+        /** @var PostPaymentAdapter $request */
         $request = $this->convertOldRequest($request->setModel($body), $client->shopCode, $webhookUrl, $redirectUrl);
 
         return $client->sendRequest($body, $request);
@@ -253,17 +267,23 @@ class PaymentService
     /**
      * @throws \Exception
      */
-    private function convertOldRequest($oldRequest, $shopCode, $webhookUrl, $redirectUrl, $apiVersion = '2025-01-01')
+    private function convertOldRequest($oldRequest, $shopCode, $webhookUrl, $redirectUrl)
     {
-        $technicalInformation = (new TechnicalInformation())
-            ->setWebhookNotificationUrl($webhookUrl)
-            ->setApiVersion($apiVersion);
+        $technicalInformation = (new TechnicalInformation())->setWebhookNotificationUrl($webhookUrl);
 
-        $customExperience = (new CustomExperience())
-            ->setCustomerRedirectUrl($redirectUrl);
+        $customExperience = new CustomerExperience();
+        $customExperience->setCustomerRedirectUrl($redirectUrl);
 
-        $adapter = (new CreatePaymentAdapter())
+        if ($this->type === 'SplitPayment') {
+            $customExperience->setExecutionMode('MANUAL');
+        }
+
+        /** @var PostPaymentsRequest $adapter */
+        $adapter = (new PostPaymentAdapter())
             ->setShopCode($shopCode)
+            ->setType($this->type)
+            ->setInstallmentCount($this->maturity)
+            ->setPurchaseAmount($this->totalAmount)
             ->setTechnicalInformation($technicalInformation)
             ->setCustomExperience($customExperience)
             ->convertInitializeContract($oldRequest);
@@ -290,7 +310,13 @@ class PaymentService
             $getPaymentResponse = $this->getApiPaymentById($paymentId, 0, $this->countryCode);
 
             if ($getPaymentResponse !== false) {
-                $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+                $contractRef = '';
+                if (isset($getPaymentResponse['personalLoanPaymentDetails']['loanReference'])) {
+                    $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
+                }
+                if (isset($getPaymentResponse['splitPaymentDetails']['loanReference'])) {
+                    $contractRef = $getPaymentResponse['splitPaymentDetails']['loanReference'];
+                }
                 $apiVersion = $getPaymentResponse['apiVersion'];
 
                 $this->saveContractInit($contractRef, $paymentId, $apiVersion);
@@ -350,6 +376,8 @@ class PaymentService
         $contractYounited->withdrawn_date = '';
         $contractYounited->withdrawn_amount = 0;
         $contractYounited->canceled_date = '';
+        $type = $this->type === 'SplitPayment' ? YounitedPayContract::TYPE_SPLIT_PAYMENT : YounitedPayContract::TYPE_LOAN_PAYMENT;
+        $contractYounited->type = $this->maturity . 'x - ' . $type;
         $contractYounited->api_version = $apiVersion;
         $contractYounited->client_id = substr($this->client->clientId, 0, 4) . '****' . substr($this->client->clientId, -4, 4);
         $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
@@ -415,6 +443,29 @@ class PaymentService
                 ->setMerchantReference($merchantReference);
             $updateMerchantReferenceRequest = (new UpdateMerchantReferenceRequest())->setModel($updateMerchantReferenceRequestModel);
             $updateMerchantReferenceResponse = $client->sendRequest($updateMerchantReferenceRequestModel, $updateMerchantReferenceRequest);
+            if ($updateMerchantReferenceResponse['success'] === true) {
+                $type = $younitedContract->type === YounitedPayContract::TYPE_SPLIT_PAYMENT ? 'SplitPayment' : 'PersonalLoan';
+                if ($type === 'SplitPayment') {
+                    $this->loggerservice->addLog(
+                        sprintf(
+                            'Automatic contract activation for order N°%d and reference: %s',
+                            $order->id,
+                            $younitedContract->id_external_younitedpay_contract
+                        ),
+                        null,
+                        'Info',
+                        $this
+                    );
+                }
+            } else {
+                $this->logError(
+                    sprintf(
+                        'Error while updating merchant reference for contract reference: %s - Please activate it manually via dashboard or Shipped in order',
+                        $younitedContract->id_external_younitedpay_contract
+                    ),
+                    'Error automatic Split payment activation'
+                );
+            }
         } catch (\Exception $ex) {
             $this->loggerservice->addLogAPI('[updateMerchantReference] Exception - ' . $ex->getMessage(), 'Info', $this);
             $this->loggerservice->addLogAPI('[updateMerchantReference] Trace - ' . $ex->getTraceAsString(), 'Info', $this);
