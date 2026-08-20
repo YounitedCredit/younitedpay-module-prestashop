@@ -28,6 +28,7 @@ use Customer;
 use Younitedpay;
 use YounitedpayAddon\API\YounitedClient;
 use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayAddon\Entity\YounitedPayPayment;
 use YounitedpayAddon\Model\CustomerExperience;
 use YounitedpayAddon\Repository\PaymentRepository;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
@@ -179,9 +180,18 @@ class PaymentService
         $customer = $this->context->customer;
         $country = new \Country($customerAddress->id_country);
 
-        $birthdate = empty($customer->birthday) === false && $customer->birthday !== '0000-00-00'
-            ? (new \DateTime($customer->birthday))->format('Y-m-d')
-            : null;
+        $birthdate = null;
+        if (empty($customer->birthday) === false && $customer->birthday !== '0000-00-00') {
+            $date = new \DateTimeImmutable($customer->birthday);
+            $today = new \DateTimeImmutable('today');
+
+            $minBirthdate = $today->modify('-80 years');
+            $maxBirthdate = $today->modify('-18 years');
+
+            if ($date > $minBirthdate && $date <= $maxBirthdate) {
+                $birthdate = $date->format('Y-m-d');
+            }
+        }
 
         $adresseStreet = $customerAddress->address1;
         $additionalAdress = '';
@@ -298,6 +308,9 @@ class PaymentService
         /** @var ArrayCollection $responseObject */
         $responseObject = $response['response'];
 
+        $contractRef = '';
+        $paymentId = '';
+
         if (false === empty($responseObject['contractReference']) && false === empty($responseObject['redirectUrl'])) {
             $urlPayment = $responseObject['redirectUrl'];
             $contractRef = $responseObject['contractReference'];
@@ -310,7 +323,6 @@ class PaymentService
             $getPaymentResponse = $this->getApiPaymentById($paymentId, 0, $this->countryCode);
 
             if ($getPaymentResponse !== false) {
-                $contractRef = '';
                 if (isset($getPaymentResponse['personalLoanPaymentDetails']['loanReference'])) {
                     $contractRef = $getPaymentResponse['personalLoanPaymentDetails']['loanReference'];
                 }
@@ -321,9 +333,11 @@ class PaymentService
 
                 $this->saveContractInit($contractRef, $paymentId, $apiVersion);
             } else {
-                $this->saveContractInit('', $paymentId, '2025-01-01');
+                $this->saveContractInit($contractRef, $paymentId, '2025-01-01');
             }
         }
+
+        $this->savePaymentAttempt($contractRef, $paymentId);
 
         $response['url'] = $urlPayment;
 
@@ -383,6 +397,16 @@ class PaymentService
         $invoiceAddress = new \Address($this->context->cart->id_address_invoice);
         $contractYounited->country_code = (new \Country($invoiceAddress->id_country))->iso_code;
         $contractYounited->save();
+    }
+
+    public function savePaymentAttempt($contractRef, $paymentId)
+    {
+        $younitedPayment = new YounitedPayPayment();
+        $younitedPayment->payment_id = $paymentId;
+        $younitedPayment->id_cart = $this->context->cart->id;
+        $younitedPayment->id_external_younitedpay_contract = $contractRef;
+        $younitedPayment->date_add = date('Y-m-d H:i:s');
+        $younitedPayment->save();
     }
 
     /**

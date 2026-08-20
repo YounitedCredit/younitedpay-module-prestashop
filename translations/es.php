@@ -49,6 +49,7 @@ $_MODULE['<{younitedpay}prestashop>validation_bfff51d2ba89115f7161b4f99f648898']
 $_MODULE['<{younitedpay}prestashop>validation_ae26c8dfe5e8e70ba3f146cfaf4677c9'] = 'Carrito: %s€ - Contrato: %s€';
 $_MODULE['<{younitedpay}prestashop>validation_0d004564c3fbbee1d9ff7fb532ade422'] = 'Error en la creación del pedido. Por favor, inténtelo otra vez';
 $_MODULE['<{younitedpay}prestashop>payment_bd977e4e0df5b77d0692529a85e7a00f'] = 'Error durante el pago, inténtalo de nuevo.';
+$_MODULE['<{younitedpay}prestashop>payment_ee5185dcf9ef960d91e56068cc6e64fb'] = 'La fecha de nacimiento no es válida. La edad debe estar entre 18 y 80 años.';
 $_MODULE['<{younitedpay}prestashop>success_3770b6bfff2dbe20053b13ba9d199d80'] = 'Error con el carrito. Actualice su página.';
 $_MODULE['<{younitedpay}prestashop>success_c59f7641151b3baf1419ec0f778dd21b'] = 'Error con el cliente. Por favor verifique su pedido.';
 $_MODULE['<{younitedpay}prestashop>success_8189ead612e0e6b2703df395262f8c04'] = 'Error: imposible recuperar el monto del pago realizado en Younited Pay';

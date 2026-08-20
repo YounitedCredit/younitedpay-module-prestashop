@@ -22,6 +22,7 @@
         value="{$maturity.id_younitedpay_configuration|escape:'htmlall':'UTF-8'}"
     />
     <input type="hidden" name="maturity[{$key|escape:'htmlall':'UTF-8'}][deleted]" id="younitedpay_delete{$key|escape:'htmlall':'UTF-8'}" value="0" />
+    <input type="hidden" name="maturity[{$key|escape:'htmlall':'UTF-8'}][type]" id="younitedpay_type{$key|escape:'htmlall':'UTF-8'}" value="{$maturityType|escape:'htmlall':'UTF-8'}" />
     <div class="row">
         <div class="col-xl-6 form-group d-flex align-items-center">
             <label class="form-control-label col-lg-6 justify-content-center pt-1" for="maturity[{$key|escape:'htmlall':'UTF-8'}][maturity]">

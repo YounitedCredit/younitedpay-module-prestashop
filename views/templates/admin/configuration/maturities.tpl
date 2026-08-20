@@ -53,11 +53,20 @@
                 {l s='Selected maturities' mod='younitedpay'}
             </span>
         </label>
-        <div class="col-lg-7 ml-3 align-item-center" id="younitedpay_maturities">
+        <div class="col-lg-7 ml-3 align-item-center" id="younitedpay_maturities_split">
             {foreach from=$configuration.maturities item=maturity key=key}
                 {if $maturity.type == 'L'}{continue}{/if}
                 {include file="./maturity.tpl" maturity=$maturity maturitylist=$configuration.maturitylist maturityType='SplitPayment' key=$key}
             {/foreach}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-control-label col-lg-3 justify-content-end pt-1">
+        </label>
+        <div class="col-lg-5 align-item-center">
+            <button class="btn btn-lg btn-outline-primary" id="younitedpay_maturitybtn_split" type="submit">
+                {l s='Add a maturity' mod='younitedpay'}
+            </button>
         </div>
     </div>
     <div class="divhr">

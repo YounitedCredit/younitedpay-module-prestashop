@@ -25,6 +25,7 @@ require_once _PS_MODULE_DIR_ . 'younitedpay/vendor/autoload.php';
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use YounitedpayAddon\Entity\YounitedPayAvailability;
 use YounitedpayAddon\Entity\YounitedPayContract;
+use YounitedpayAddon\Entity\YounitedPayPayment;
 use YounitedpayAddon\Hook\HookDispatcher;
 use YounitedpayAddon\Service\ProductService;
 use YounitedpayAddon\Utils\ModuleInitialiser;
@@ -61,6 +62,7 @@ class Younitedpay extends PaymentModule implements WidgetInterface
      */
     public $objectModels = [
         YounitedPayContract::class,
+        YounitedPayPayment::class,
         YounitedPayAvailability::class,
     ];
 
@@ -114,6 +116,16 @@ class Younitedpay extends PaymentModule implements WidgetInterface
                 'es' => 'Contratos',
             ],
             'class_name' => 'AdminYounitedpayContracts',
+            'parent_class_name' => 'AdminYounitedParent',
+            'visible' => true,
+        ],
+        [
+            'name' => [
+                'en' => 'Payments',
+                'fr' => 'Paiements',
+                'es' => 'Pagos',
+            ],
+            'class_name' => 'AdminYounitedpayPayments',
             'parent_class_name' => 'AdminYounitedParent',
             'visible' => true,
         ],

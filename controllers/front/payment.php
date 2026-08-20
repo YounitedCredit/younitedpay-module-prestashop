@@ -47,8 +47,8 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
                 'response' => $ex->getMessage(),
                 'success' => false,
             ];
-            $paymentService->logError($ex->getMessage(), 'Payent error');
-            $paymentService->logError($ex->getTraceAsString(), 'Payent error');
+            $paymentService->logError($ex->getMessage(), 'Payment error');
+            $paymentService->logError($ex->getTraceAsString(), 'Payment error');
         }
 
         if ($response['success'] === true) {
@@ -57,7 +57,16 @@ class YounitedpayPaymentModuleFrontController extends ModuleFrontController
         }
 
         $this->errors[] = $this->l('Error during payment, please try again.', 'payment');
-        $this->errors[] = $this->l($response['response'], 'payment');
+        if (isset($response['errors']) && is_array($response['errors'])) {
+            foreach ($response['errors'] as $key => $error) {
+                if ($key === 'CustomerInformation.BirthDate') {
+                    $error = $this->l('The birth date is not valid. Must be at least 18 years old and at most 80 years old.', 'payment');
+                    $this->errors[] = $this->l($error, 'payment');
+                } else {
+                    $this->errors[] = $key . ': ' . $error;
+                }
+            }
+        }
 
         $this->redirectPayment();
     }
