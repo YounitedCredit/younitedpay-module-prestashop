@@ -200,6 +200,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
 
         /* @var ConfigService $configService */
         $this->configService = ServiceContainer::getInstance()->get(ConfigService::class);
+        $this->configService->updateMaturitiesType();
 
         $this->content .= $this->renderConfiguration();
         parent::initContent();
@@ -550,7 +551,7 @@ class AdminYounitedpayConfigurationController extends ModuleAdminController
                 'show_loan_payment' => $this->showLoanPayment,
             ],
             'maturitylist' => $this->maturitylist,
-            'maturityType' => Tools::getValue('younitedpay_type_maturity', 'LoanPayment'),
+            'maturityType' => Tools::getValue('younitedpay_type_maturity', 'L'),
             'maturity' => [
                 'id_younitedpay_configuration' => 0,
                 'id_shop' => $idShop,

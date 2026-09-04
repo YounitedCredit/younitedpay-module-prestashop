@@ -257,7 +257,7 @@ function addEventsMaturity()
     $('.younitedpay_maturity_change').on('change keyup', UpdateMaturity);
 }
 
-function addMaturity(event, type = 'LoanPayment')
+function addMaturity(event, type = 'L')
 {
   event.preventDefault();
 
@@ -266,7 +266,7 @@ function addMaturity(event, type = 'LoanPayment')
   formData.append('younitedpay_add_maturity', true);
   formData.append('younitedpay_type_maturity', type);
 
-  let selector = type === 'SplitPayment' ? "#younitedpay_maturities_split" : "#younitedpay_maturities"
+  let selector = type === 'S' ? "#younitedpay_maturities_split" : "#younitedpay_maturities"
 
   $.ajax({
     type: "POST",
