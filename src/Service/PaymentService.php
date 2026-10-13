@@ -31,8 +31,6 @@ use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Entity\YounitedPayPayment;
 use YounitedpayAddon\Model\CustomerExperience;
 use YounitedpayAddon\Repository\PaymentRepository;
-use YounitedpayAddon\Service\LoggerService;
-use YounitedpayAddon\Service\OrderService;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Adapter\PostPaymentAdapter;
 use YounitedPaySDK\Model\Address;
