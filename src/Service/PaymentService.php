@@ -31,6 +31,8 @@ use YounitedpayAddon\Entity\YounitedPayContract;
 use YounitedpayAddon\Entity\YounitedPayPayment;
 use YounitedpayAddon\Model\CustomerExperience;
 use YounitedpayAddon\Repository\PaymentRepository;
+use YounitedpayAddon\Service\LoggerService;
+use YounitedpayAddon\Service\OrderService;
 use YounitedpayClasslib\Utils\Translate\TranslateTrait;
 use YounitedPaySDK\Adapter\PostPaymentAdapter;
 use YounitedPaySDK\Model\Address;
@@ -480,6 +482,9 @@ class PaymentService
                         'Info',
                         $this
                     );
+                    /** @var OrderService $orderService */
+                    $orderService = new OrderService($this->loggerservice, $this->paymentrepository, $this->module);
+                    $orderService->activateOrder($order->id, $order->id_shop);
                 }
             } else {
                 $this->logError(
