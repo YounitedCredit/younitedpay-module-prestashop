@@ -122,6 +122,7 @@ class PaymentService
         }
 
         $client = new YounitedClient($this->context->shop->id, $langId, [], $this->countryCode);
+        $this->client = $client;
         if ($client->isCrendentialsSet() === false || $client->shopCode === '') {
             return [
                 'success' => false,
