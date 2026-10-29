@@ -463,14 +463,20 @@ class PaymentService
         $this->loggerservice->addLogAPI('With paymentId: ' . $paymentId, 'Info', $this);
 
         try {
+            if ((int) $younitedContract->id_order <= 0) {
+                \Db::getInstance()->update(
+                    'younitedpay_contract',
+                    ['id_order' => $order->id],
+                    'id_cart = ' . (int) $order->id_cart
+                );
+            }
             $updateMerchantReferenceRequestModel = (new UpdateMerchantReference())
                 ->setPaymentId($paymentId)
                 ->setMerchantReference($merchantReference);
             $updateMerchantReferenceRequest = (new UpdateMerchantReferenceRequest())->setModel($updateMerchantReferenceRequestModel);
             $updateMerchantReferenceResponse = $client->sendRequest($updateMerchantReferenceRequestModel, $updateMerchantReferenceRequest);
             if ($updateMerchantReferenceResponse['success'] === true) {
-                $type = $younitedContract->type === YounitedPayContract::TYPE_SPLIT_PAYMENT ? 'SplitPayment' : 'PersonalLoan';
-                if ($type === 'SplitPayment') {
+                if (strpos($younitedContract->type, '- S') !== false) {
                     $this->loggerservice->addLog(
                         sprintf(
                             'Automatic contract activation for order N°%d and reference: %s',
@@ -484,6 +490,8 @@ class PaymentService
                     /** @var OrderService $orderService */
                     $orderService = new OrderService($this->loggerservice, $this->paymentrepository, $this->module);
                     $orderService->activateOrder($order->id, $order->id_shop);
+                } else {
+                    $this->loggerservice->addLog('Not in split Payment - no automatic activation');
                 }
             } else {
                 $this->logError(

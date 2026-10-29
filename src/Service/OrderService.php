@@ -302,12 +302,19 @@ class OrderService
 
         $this->paymentrepository->activateContract($idOrder);
 
+        $this->loggerservice->addLog(
+            'Set payment Id for execution to : ' . $younitedContract->payment_id,
+            'Order ' . $idOrder,
+            'Error',
+            $this
+        );
+
         $body = (new ExecutePayment())
             ->setId((string) $younitedContract->payment_id);
 
         $request = new ExecutePaymentRequest();
 
-        $this->sendRequest($body, $request, 'activate order', $younitedContract->payment_id);
+        $this->sendRequest($body, $request->setModel($body), 'activate order', $younitedContract->payment_id);
 
         return true;
     }
