@@ -115,7 +115,7 @@
                   </span>
                   <span class="yp-with-fee">
                      <span>({l s='including' mod='younitedpay'}</span>
-                     <span class="yp-fee">{$offers[$selected_offer].fee_total|escape:'htmlall':'UTF-8'}&nbsp;€</span>
+                     <span class="yp-fee">{$offers[$selected_offer].fee_total|escape:'htmlall':'UTF-8'}</span>&nbsp;€
                      <span>{l s='fees' mod='younitedpay'})</span>
                   </span>
                   <span class="yp-without-fee">

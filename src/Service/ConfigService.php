@@ -164,7 +164,6 @@ class ConfigService
                 ->setMaturityRangeMax(84);
 
             $request = new GetPaymentOptionsRequest();
-            $maturityList = self::DEF_MATURITIES;
 
             if (empty($client->shopCode) === false) {
                 /** @var mixed $response */
@@ -213,7 +212,7 @@ class ConfigService
 
         return [
             'message' => $message,
-            'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : $maturityList,
+            'maturityList' => count($maturityList) > 0 ? $this->sortOffers($maturityList) : self::DEF_MATURITIES,
             'shopCodeList' => $shopCodeList,
             'status' => $status,
             'merchantCountryCode' => $merchantCountryCode,
@@ -475,5 +474,15 @@ class ConfigService
         }
 
         return true;
+    }
+
+    public function updateMaturitiesType()
+    {
+        $maturitiesInTypeLong = \Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'younitedpay_configuration` WHERE `type` IN ("LoanPayment", "SplitPayment")');
+        if (empty($maturitiesInTypeLong) === true) {
+            return;
+        }
+        \Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'younitedpay_configuration` SET `type` = "L" WHERE `type` = "LoanPayment"');
+        \Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'younitedpay_configuration` SET `type` = "S" WHERE `type` = "SplitPayment"');
     }
 }

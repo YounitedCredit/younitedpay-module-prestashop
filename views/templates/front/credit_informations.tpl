@@ -223,6 +223,11 @@
       {if isset($yperror)}
       younitedpay.url_payment = "{$credit_link|escape:'htmlall':'UTF-8'}";
       {/if}
+      {if isset($offers[$selected_offer].installment[0].dueDate)}
+         document.addEventListener("DOMContentLoaded", (event) => { 
+            YpchangeInstallment({$selected_offer|escape:'htmlall':'UTF-8'}) 
+         });
+      {/if}
    </script>
 </div>
 

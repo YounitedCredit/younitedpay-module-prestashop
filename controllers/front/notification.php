@@ -267,6 +267,20 @@ class YounitedpayNotificationModuleFrontController extends ModuleFrontController
             return false;
         }
 
+        try {
+            // Update currency to fit with order - Fix PS9 error with ComputingPrecision
+            $this->context->currency = new Currency(
+                (int) $order->id_currency,
+                null,
+                (int) $order->id_shop
+            );
+        } catch (Exception $ex) {
+            $this->logError($ex->getMessage(), 'setCurrentState Exception');
+            $this->logError($ex->getTraceAsString(), 'setCurrentState Exception');
+
+            return false;
+        }
+
         $history = new OrderHistory();
         $history->id_order = (int) $order->id;
         $history->id_employee = 0;

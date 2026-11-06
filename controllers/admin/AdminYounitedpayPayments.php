@@ -87,6 +87,8 @@ class AdminYounitedpayPaymentsController extends ModuleAdminController
         $api = $paymentService->getApiPaymentById($younitedPayment->payment_id, $younitedPayment->id_cart);
 
         $this->context->smarty->assign([
+            'shop_url' => __PS_BASE_URI__,
+            'logo_younitedpay_url' => 'modules/younitedpay/views/img/logo-younitedpay.png',
             'younitedpayment' => $younitedPayment,
             'api' => json_encode($api, JSON_PRETTY_PRINT),
             'payments_url' => \Context::getContext()->link->getAdminLink('AdminYounitedpayPayments'),
