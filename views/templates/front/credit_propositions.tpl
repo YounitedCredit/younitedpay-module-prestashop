@@ -122,20 +122,9 @@
                      <span>({l s='without fees' mod='younitedpay'})</span>
                   </span>
                </p>
-               {if $iso_code !== 'it'}
-                  <p class="yp-with-fee yp-low-grey-text yp-mt-3">
-                     {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
-                     {l s='obligation of repayment.' mod='younitedpay'}
-                     {if $iso_code == 'fr'}
-                        {l s='Verify your ability' mod='younitedpay'}
-                        {l s='to repay the loan' mod='younitedpay'}
-                     {else}
-                        {l s='Verify your ability' mod='younitedpay'}
-                        {l s='to repay the loan' mod='younitedpay'}
-                     {/if}
-                     {l s='before committing.' mod='younitedpay'}
-                  </p>
-               {/if}
+               <p class="yp-with-fee yp-low-grey-text yp-mt-3">
+                  {l s='Warning! A loan costs money and must be repaid.' mod='younitedpay'}
+               </p>
             </span>
 
             <span class="yp-more-details-zone {if ($offers[$selected_offer]['type'] === 'SplitPayment')}hidden{/if}">
@@ -151,16 +140,7 @@
                   </p>
                </a>
                <p class="yp-low-grey-text yp-mt-3">
-                  {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
-                  {l s='obligation of repayment.' mod='younitedpay'}
-                  {if $iso_code == 'fr'}
-                     {l s='Verify your ability' mod='younitedpay'}
-                     {l s='to repay the loan' mod='younitedpay'}
-                  {else}
-                     {l s='Verify your ability' mod='younitedpay'}
-                     {l s='to repay the loan' mod='younitedpay'}
-                  {/if}
-                  {l s='before committing.' mod='younitedpay'}
+                  {l s='Warning! A loan costs money and must be repaid.' mod='younitedpay'}
                </p>
             </span>
          </div>
