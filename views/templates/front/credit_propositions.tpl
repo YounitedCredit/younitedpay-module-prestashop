@@ -123,7 +123,7 @@
                   </span>
                </p>
                <p class="yp-with-fee yp-low-grey-text yp-mt-3">
-                  {l s='Warning! A loan costs money and must be repaid.' mod='younitedpay'}
+                  {l s='Warning ! Taking out a loan costs money and must be repaid.' mod='younitedpay'}
                </p>
             </span>
 
@@ -140,7 +140,7 @@
                   </p>
                </a>
                <p class="yp-low-grey-text yp-mt-3">
-                  {l s='Warning! A loan costs money and must be repaid.' mod='younitedpay'}
+                  {l s='Warning ! Taking out a loan costs money and must be repaid.' mod='younitedpay'}
                </p>
             </span>
          </div>

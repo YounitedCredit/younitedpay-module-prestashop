@@ -236,7 +236,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_3d8bdadc574b071acc6d05c3f
 $_MODULE['<{younitedpay}prestashop>credit_informations_cf1a13db4892dc497407a6568ff284e6'] = ' antes de comprometerte.';
 $_MODULE['<{younitedpay}prestashop>credit_informations_4aad22f3df1bc0d72f68b9d8bb37c3b2'] = 'Pago en';
 $_MODULE['<{younitedpay}prestashop>credit_informations_f2b798f672d4b42c0359ced11d4f10cd'] = 'plazos';
-$_MODULE['<{younitedpay}prestashop>credit_informations_a50c382b3f69a9a1b6246f61be7e3aa4'] = '¡Atención! Un crédito cuesta dinero y debe ser reembolsado.';
+$_MODULE['<{younitedpay}prestashop>credit_informations_a0f60b3e73f5900a95dd76d1d54d19d4'] = '¡Atención! Un crédito cuesta dinero y debe ser reembolsado.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_d114aa83545b406fa108e137f8b46a2b'] = 'Importe total adeudado de %s€.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_593dd52a5af57d12839b6a6ca69b5cab'] = 'Pagarás %s';
 $_MODULE['<{younitedpay}prestashop>payment_infos_efa966fd6ee131ed0c2ae702e9ac40b7'] = 'cuotas mensuales de %s€';
@@ -275,7 +275,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6ce
 $_MODULE['<{younitedpay}prestashop>credit_propositions_3d8bdadc574b071acc6d05c3fdd02f82'] = ' de pagar el préstamo';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_cf1a13db4892dc497407a6568ff284e6'] = ' antes de comprometerte.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_fa6829ab4ab765e39c905d9c92d7c095'] = 'Haga clic para obtener más información';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_a50c382b3f69a9a1b6246f61be7e3aa4'] = '¡Atención! Un crédito cuesta dinero y debe ser reembolsado.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_a0f60b3e73f5900a95dd76d1d54d19d4'] = '¡Atención! Un crédito cuesta dinero y debe ser reembolsado.';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'No disponible en esta moneda (solo EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'No disponible para este país (solo Francia para la dirección de facturación).';
 $_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'] = 'Paga a plazos con';

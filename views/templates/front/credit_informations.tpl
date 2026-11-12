@@ -233,7 +233,7 @@
 
 <div class="yp-text-responsabilities{if isset($yperror)} yp-my-4{else} yp-mt-6{/if}">
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed yp-text-lg yp-font-bold">
-      {l s='Warning! A loan costs money and must be repaid.' mod='younitedpay'}
+      {l s='Warning ! Taking out a loan costs money and must be repaid.' mod='younitedpay'}
    </p>
 </div>
 

@@ -115,7 +115,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_7b7813f00f42b7e5366e7065a
 $_MODULE['<{younitedpay}prestashop>credit_propositions_a1ff09453cc85d1a8cc7fb1f4911f8e4'] = 'de frais de financement';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_3728af837fe70019577ddb0ed7125ee5'] = 'Jusqu\'à';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_d851a9b545796e02deeef998c66789c0'] = 'mensualités';
-$_MODULE['<{younitedpay}prestashop>credit_propositions_a50c382b3f69a9a1b6246f61be7e3aa4'] = 'Attention ! Un crédit coûte de l\'argent et doit être remboursé.';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_a0f60b3e73f5900a95dd76d1d54d19d4'] = 'Attention ! Un crédit coûte de l\'argent et doit être remboursé.';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_489d5355c8ebf85ad59500645d7a5b6e'] = 'Un crédit vous engage et doit';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_25ff5aab384673e670be53f2ba39ce82'] = 'être remboursé. Vérifiez vos';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_0d2817b3bb4f955d0257ce6cef5f56a4'] = 'capacités de';
@@ -146,7 +146,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_56f7a91f24616a4b5bebec849
 $_MODULE['<{younitedpay}prestashop>credit_informations_d755012b5d3ff0180b4c12fa668eea02'] = 'hors assurance facultative et le taux débiteur fixe de';
 $_MODULE['<{younitedpay}prestashop>credit_informations_07fce9628c3f8ef8de71a2bf4eee4b6c'] = 'Personnaliser';
 $_MODULE['<{younitedpay}prestashop>credit_informations_da36cfaf48b9e19896e23e1207040d1e'] = 'mois';
-$_MODULE['<{younitedpay}prestashop>credit_informations_a50c382b3f69a9a1b6246f61be7e3aa4'] = 'Attention ! Un crédit coûte de l\'argent et doit être remboursé.';
+$_MODULE['<{younitedpay}prestashop>credit_informations_a0f60b3e73f5900a95dd76d1d54d19d4'] = 'Attention ! Un crédit coûte de l\'argent et doit être remboursé.';
 $_MODULE['<{younitedpay}prestashop>credit_informations_489d5355c8ebf85ad59500645d7a5b6e'] = 'Un crédit vous engage et doit';
 $_MODULE['<{younitedpay}prestashop>credit_informations_25ff5aab384673e670be53f2ba39ce82'] = 'être remboursé. Vérifiez vos';
 $_MODULE['<{younitedpay}prestashop>credit_informations_0d2817b3bb4f955d0257ce6cef5f56a4'] = 'capacités de';
