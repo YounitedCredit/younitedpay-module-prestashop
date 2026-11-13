@@ -224,28 +224,17 @@
       younitedpay.url_payment = "{$credit_link|escape:'htmlall':'UTF-8'}";
       {/if}
       {if isset($offers[$selected_offer].installment[0].dueDate)}
-         document.addEventListener("DOMContentLoaded", (event) => { 
-            YpchangeInstallment({$selected_offer|escape:'htmlall':'UTF-8'}) 
+         document.addEventListener("DOMContentLoaded", (event) => {
+            YpchangeInstallment({$selected_offer|escape:'htmlall':'UTF-8'})
          });
       {/if}
    </script>
 </div>
 
 <div class="yp-text-responsabilities{if isset($yperror)} yp-my-4{else} yp-mt-6{/if}">
-{if $iso_code == 'fr'}
    <p class="yp-pol-purpledark yp-text-lg yp-leading-relaxed yp-text-lg yp-font-bold">
-      {l s='Taking out a loan is a commitment with an' mod='younitedpay'}
-      {l s='obligation of repayment.' mod='younitedpay'}
-      {if $iso_code == 'fr'}
-         {l s='Verify your ability' mod='younitedpay'}
-         {l s='to repay the loan' mod='younitedpay'}
-      {else}
-         {l s='Verify your ability' mod='younitedpay'}
-         {l s='to repay the loan' mod='younitedpay'}
-      {/if}
-      {l s='before committing.' mod='younitedpay'}
+      {l s='Warning ! Taking out a loan costs money and must be repaid.' mod='younitedpay'}
    </p>
-{/if}
 </div>
 
 {if isset($yperror)}

@@ -256,6 +256,7 @@ $_MODULE['<{younitedpay}prestashop>credit_informations_b9148a679af4b25233f14dbe9
 $_MODULE['<{younitedpay}prestashop>credit_informations_a4704fd35f0308287f2937ba3eccf5fe'] = 'Il';
 $_MODULE['<{younitedpay}prestashop>credit_informations_56f7a91f24616a4b5bebec849aca997f'] = 'TAEG fisso è';
 $_MODULE['<{younitedpay}prestashop>credit_informations_d755012b5d3ff0180b4c12fa668eea02'] = 'esclusa l\'assicurazione facoltativa e il tasso di interesse fisso sul prestito di';
+$_MODULE['<{younitedpay}prestashop>credit_informations_a0f60b3e73f5900a95dd76d1d54d19d4'] = 'Attenzione! Un credito costa denaro e deve essere rimborsato.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_d114aa83545b406fa108e137f8b46a2b'] = 'Importo totale dovuto di %s€.';
 $_MODULE['<{younitedpay}prestashop>payment_infos_593dd52a5af57d12839b6a6ca69b5cab'] = 'Hai ripagato %s';
 $_MODULE['<{younitedpay}prestashop>payment_infos_efa966fd6ee131ed0c2ae702e9ac40b7'] = 'rate mensili di %s€';
@@ -304,6 +305,7 @@ $_MODULE['<{younitedpay}prestashop>credit_propositions_961f2247a2070bedff9f9cd8d
 $_MODULE['<{younitedpay}prestashop>credit_propositions_adb55c4795a113b40175dc15a7903d1a'] = 'al pagamento';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_b8bd2d9a57eea89e96eb098a69a8e161'] = 'Seleziona il numero delle ';
 $_MODULE['<{younitedpay}prestashop>credit_propositions_64a29d0797c011db258fea6502d8d3b6'] = 'rate';
+$_MODULE['<{younitedpay}prestashop>credit_propositions_a0f60b3e73f5900a95dd76d1d54d19d4'] = 'Attenzione! Un credito costa denaro e deve essere rimborsato.';
 $_MODULE['<{younitedpay}prestashop>hookpayment_341e336165b3763c14fbe1d0074ce921'] = 'Non disponibile in questa valuta (Solo EUR)';
 $_MODULE['<{younitedpay}prestashop>hookpayment_6c6ab12ca682f9a307465bd75fe5c509'] = 'No disponible para este país (solo Francia para la dirección de facturación).';
 $_MODULE['<{younitedpay}prestashop>hookpayment_e26a8c233daa119eb95282b7ead8fb20'] = 'Pagate man mano con';
