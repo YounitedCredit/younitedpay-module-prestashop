@@ -70,7 +70,8 @@ class ProductService
             return $this->noOffers();
         }
 
-        $client = new YounitedClient($this->context->shop->id, $idLang ?? $this->context->language->id);
+        $idLang = (int) ($idLang ?? $this->context->language->id);
+        $client = new YounitedClient($this->context->shop->id, $idLang);
         if ($client->isCrendentialsSet() === false || $this->configRepository->checkIPWhitelist() === false || $client->shopCode === '') {
             return $this->noOffers();
         }
@@ -85,7 +86,8 @@ class ProductService
 
         /** @var CacheYounited $cachestorage */
         $cachestorage = new CacheYounited();
-        $cacheExists = $cachestorage->exist((string) $productPrice);
+        $cacheKey = $idLang . '_' . $productPrice;
+        $cacheExists = $cachestorage->exist($cacheKey) && $cachestorage->isExpired($cacheKey) === false;
 
         $isRangeEnabled = (bool) $this->configRepository->getConfig(Younitedpay::SHOW_RANGE_OFFERS);
         $minRange = $this->configRepository->getConfig(Younitedpay::MIN_RANGE_OFFERS, 0);
@@ -102,8 +104,8 @@ class ProductService
 
         $offers = [];
         $rangeOffers = [];
-        if ($cacheExists === true && $cachestorage->isExpired((string) $this->context->language->id . '_' . $productPrice) === false) {
-            $cacheInformations = $cachestorage->get((string) $productPrice);
+        if ($cacheExists === true) {
+            $cacheInformations = $cachestorage->get($cacheKey);
             $offers = $cacheInformations['content']['offers'];
             $rangeOffers = $cacheInformations['content']['ranges'];
             $emptyRangeOffers = $isRangeEnabled === true && empty($rangeOffers) === true;
@@ -113,7 +115,7 @@ class ProductService
         }
 
         $isRangeForced = false;
-        if ($cacheExists === false || $cachestorage->isExpired((string) $productPrice) === true) {
+        if ($cacheExists === false) {
             $maturities = $this->getAllMaturities($productPrice, $isRangeEnabled);
 
             if (count($maturities) > 5 && $isRangeEnabled === false) {
@@ -195,7 +197,7 @@ class ProductService
                 $offers[] = $rangeOffers[count($rangeOffers) - 1];
             }
 
-            $cachestorage->set((string) $this->context->language->id . '_' . $productPrice, [
+            $cachestorage->set($cacheKey, [
                 'offers' => $offers,
                 'ranges' => $rangeOffers,
             ]);
